@@ -4,7 +4,7 @@ description: gitmap clone-pick (cpk) does sparse-checkout of selected paths from
 type: feature
 ---
 
-# gitmap clone-pick / cpk (spec 100, --replay v4.19.0, --ask v4.20.0, clone-once v4.21.0)
+# gitmap clone-pick / cpk (spec 100, --replay v4.19.0, --ask v4.20.0, clone-once v4.21.0, windowed scroller v4.22.0)
 
 ## What it does
 Sparse-checkout a subset of a git repo into the current dir (or `--dest`).

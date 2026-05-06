@@ -1,8 +1,11 @@
 ---
-title: gitmap Database ERD (v3.12.1 — current canonical schema)
+title: gitmap Database ERD (canonical)
 ---
-%% Generated 2026-04-20 from gitmap/constants/constants_*.go SQLCreate* blocks.
-%% Supersedes gitmap-database-erd.mmd (v3.5.0) and gitmap-core-schema-simplified.mmd (v15 Phase 1.2).
+%% Source of truth: gitmap/constants/constants_*.go SQLCreate* blocks.
+%% Table-name parity is enforced by gitmap/store/erd_parity_test.go — any
+%% new SQLCreate* constant MUST be reflected here in the same commit, or
+%% CI fails. Per-column accuracy is best-effort; the parity test is
+%% intentionally name-only so legitimate column tweaks don't churn the ERD.
 %% All tables singular, PascalCase, INTEGER PRIMARY KEY AUTOINCREMENT (per project memory).
 %% Note: Repo.ScanFolderId is added via ALTER without a declared FOREIGN KEY clause
 %% (SQLite limitation) — application code enforces the relationship.

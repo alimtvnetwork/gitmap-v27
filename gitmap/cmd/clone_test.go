@@ -127,3 +127,32 @@ func TestRepoNameFromURL_EdgeCases(t *testing.T) {
 		}
 	}
 }
+
+// TestRepoNameFromURL_TrailingSlash is a regression guard for the
+// "downloader gets confused with trailing slash" bug: a URL ending
+// in `/` (or `\`, or `.git/`) used to collapse the basename to ""
+// which made the clone target equal to CWD and triggered the
+// destructive "target exists" replace flow.
+func TestRepoNameFromURL_TrailingSlash(t *testing.T) {
+	cases := []struct {
+		input string
+		want  string
+	}{
+		{"https://github.com/alimtvnetwork/gitmap-v18/", "gitmap-v18"},
+		{"https://github.com/alimtvnetwork/gitmap-v18.git/", "gitmap-v18"},
+		{"https://github.com/alimtvnetwork/gitmap-v18///", "gitmap-v18"},
+		{"https://github.com/alimtvnetwork/gitmap-v18\\", "gitmap-v18"},
+		{"git@github.com:owner/repo.git/", "repo"},
+		{"git@github.com:owner/repo/", "repo"},
+		{"ssh://git@github.com/owner/repo/", "repo"},
+	}
+	for _, tc := range cases {
+		got := repoNameFromURL(tc.input)
+		if got != tc.want {
+			t.Errorf("repoNameFromURL(%q) = %q, want %q (regression: trailing slash collapses basename)", tc.input, got, tc.want)
+		}
+		if got == "" {
+			t.Errorf("repoNameFromURL(%q) returned empty — would target CWD and trigger replace flow", tc.input)
+		}
+	}
+}

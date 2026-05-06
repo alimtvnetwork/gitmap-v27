@@ -158,6 +158,10 @@ const (
 	ErrClonePickDBInsert       = "clone-pick: save selection: %v"
 	ErrClonePickDBLookup       = "clone-pick: lookup selection: %v"
 	ErrClonePickPickerLaunch   = "clone-pick: launch picker: %v"
+	// %v = err. Emitted when promoting the picker's pre-cloned
+	// metadata dir into DestDir fails (rename + cross-fs copy
+	// fallback both errored).
+	ErrClonePickPromoteSrc = "clone-pick: promote pre-cloned source: %v"
 )
 
 // User-cancel exit code. 130 mirrors the SIGINT convention so shell

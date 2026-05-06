@@ -99,6 +99,35 @@ func buildClonePickPlan(parsed clonePickParsed) (clonepick.Plan, int64, error) {
 	return plan, replayId, nil
 }
 
+// maybeRunClonePickPicker launches the bubbletea --ask picker when
+// requested, replaces plan.Paths with the user's selection, and
+// translates ErrPickerCancelled into the spec'd exit-130 path. A
+// no-op when ask is false so the non-interactive flow stays a
+// single straight-line call.
+func maybeRunClonePickPicker(plan clonepick.Plan, ask bool) clonepick.Plan {
+	if !ask {
+		return plan
+	}
+	picked, err := clonepick.RunPicker(plan)
+	if err != nil {
+		if errors.Is(err, clonepick.ErrPickerCancelled) {
+			fmt.Fprintln(os.Stderr, constants.MsgClonePickUserCancelled)
+			maybeExitOnCmdFaithfulMismatch()
+			os.Exit(130)
+		}
+		cliexit.Fail(constants.CmdClonePick, "picker", plan.RepoUrl, err, 1)
+	}
+	if len(picked) == 0 {
+		fmt.Fprintln(os.Stderr, constants.MsgClonePickMissingPaths)
+		maybeExitOnCmdFaithfulMismatch()
+		os.Exit(2)
+	}
+	plan.Paths = picked
+	plan.UsedAsk = true
+
+	return plan
+}
+
 // clonePickParsed bundles every output of parseClonePickFlags so a
 // new audit/debug toggle can be added without churning the call
 // site signature each time. Fields are exported because the struct

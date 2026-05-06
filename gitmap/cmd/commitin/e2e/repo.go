@@ -123,18 +123,6 @@ func (r *Repo) git(args ...string) {
 	}
 }
 
-// headSha returns the current HEAD SHA; fatals on error.
-func (r *Repo) headSha() string {
-	r.t.Helper()
-	cmd := exec.Command("git", "rev-parse", "HEAD")
-	cmd.Dir = r.Path
-	out, err := cmd.Output()
-	if err != nil {
-		r.t.Fatalf("rev-parse HEAD: %v", err)
-	}
-	return strings.TrimSpace(string(out))
-}
-
 // MustExist fatals if `rel` (relative to r.Path) is missing.
 func (r *Repo) MustExist(rel string) {
 	r.t.Helper()

@@ -34,6 +34,9 @@ import {
   GitCompare,
   Download,
   Trash2,
+  Replace as ReplaceIcon,
+  Wrench,
+  Globe,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 
@@ -106,9 +109,14 @@ const navItems = [
   { title: "Merge Both", url: "/merge-both", icon: GitMerge },
   { title: "Merge Left", url: "/merge-left", icon: GitMerge },
   { title: "Merge Right", url: "/merge-right", icon: GitMerge },
+  { title: "Commit In (cin)", url: "/commit-in", icon: GitCommit },
   { title: "Commit Left (planned)", url: "/commit-left", icon: GitCommit },
   { title: "Commit Right (planned)", url: "/commit-right", icon: GitCommit },
   { title: "Commit Both (planned)", url: "/commit-both", icon: GitCommit },
+  { title: "Replace (rpl)", url: "/replace", icon: ReplaceIcon },
+  { title: "Fix Repo (fr)", url: "/fix-repo", icon: Wrench },
+  { title: "Clone + Fix Repo (cfr)", url: "/clone-fix-repo", icon: Wrench },
+  { title: "Make Public Repo", url: "/make-public", icon: Globe },
   { title: "History Rewrite (purge/pin)", url: "/history-rewrite", icon: Trash2 },
   { title: "Register (as)", url: "/as", icon: Tag },
   { title: "Release Alias", url: "/release-alias", icon: Rocket },

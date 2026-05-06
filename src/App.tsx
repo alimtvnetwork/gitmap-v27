@@ -76,6 +76,11 @@ import CommitRightPage from "./pages/CommitRight";
 import CommitBothPage from "./pages/CommitBoth";
 import HistoryRewritePage from "./pages/HistoryRewrite";
 import ReleaseAliasPage from "./pages/ReleaseAlias";
+import ReplacePage from "./pages/Replace";
+import FixRepoPage from "./pages/FixRepo";
+import CloneFixRepoPage from "./pages/CloneFixRepo";
+import MakePublicPage from "./pages/MakePublic";
+import CommitInPage from "./pages/CommitIn";
 
 const queryClient = new QueryClient();
 
@@ -159,6 +164,11 @@ const App = () => (
           <Route path="/as" element={<ReleaseAliasPage />} />
           <Route path="/release-alias" element={<ReleaseAliasPage />} />
           <Route path="/release-alias-pull" element={<ReleaseAliasPage />} />
+          <Route path="/replace" element={<ReplacePage />} />
+          <Route path="/fix-repo" element={<FixRepoPage />} />
+          <Route path="/clone-fix-repo" element={<CloneFixRepoPage />} />
+          <Route path="/make-public" element={<MakePublicPage />} />
+          <Route path="/commit-in" element={<CommitInPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

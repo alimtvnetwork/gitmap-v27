@@ -17,25 +17,32 @@ import (
 )
 
 // maybeRunClonePickPicker launches the --ask picker when requested,
-// replaces plan.Paths with the user's selection, and translates
-// ErrPickerCancelled into the spec'd exit-130 path. No-op when ask
-// is false so the non-interactive flow stays a single straight-line
-// call from runClonePick.
+// replaces plan.Paths with the user's selection, attaches the
+// picker's metadata clone as plan.PreClonedSrc (clone-once
+// optimisation), and translates ErrPickerCancelled into the spec'd
+// exit-130 path. No-op when ask is false so the non-interactive
+// flow stays a single straight-line call from runClonePick.
 func maybeRunClonePickPicker(plan clonepick.Plan, ask bool) clonepick.Plan {
 	if !ask {
 		return plan
 	}
-	picked, err := clonepick.RunPicker(plan)
+	picked, tmp, err := clonepick.RunPickerKeep(plan)
 	if err != nil {
 		handleClonePickPickerError(plan, err)
 	}
 	if len(picked) == 0 {
+		os.RemoveAll(tmp)
 		fmt.Fprintln(os.Stderr, constants.MsgClonePickMissingPaths)
 		maybeExitOnCmdFaithfulMismatch()
 		os.Exit(2)
 	}
 	plan.Paths = picked
 	plan.UsedAsk = true
+	if !plan.DryRun {
+		plan.PreClonedSrc = tmp
+	} else {
+		os.RemoveAll(tmp)
+	}
 
 	return plan
 }

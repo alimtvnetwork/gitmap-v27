@@ -1476,6 +1476,57 @@ bypass; combine with `--prefer-left` / `--prefer-right` /
 
 <div align="center">
 
+### Repo-wide Rewrite, One-shot Publish & Chronological Replay
+
+</div>
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `replace` | `rpl` | Repo-wide find/replace across every text file. Literal swap or version-suffix bump driven by the `-vK` git remote URL. `--audit` reports without writing. |
+| `fix-repo` | `fr` | Rewrite prior `{base}-vN` versioned-repo-name tokens to the current version. Negative-lookahead guards `-v1` from matching `-v18`. `--strict` runs `go test` on touched packages. |
+| `clone-fix-repo` | `cfr` | One-shot: `clone <url>` then `fix-repo --all` inside the new folder. Versioned URLs auto-flatten. |
+| `clone-fix-repo-pub` | `cfrp` | Same as `cfr`, plus `make-public --yes` at the end. |
+| `make-public` | — | Make the current repo **public** on GitHub or GitLab via the matching CLI (`gh` / `glab`). Verifies visibility post-edit. |
+| `commit-in` | `cin` | Walk one or more SOURCE repos chronologically and APPEND each commit into a TARGET repo, preserving both AuthorDate AND CommitterDate. Idempotent via `ShaMap`. |
+
+```bash
+# Generic find/replace (preview first)
+gitmap replace "github.com/old-org" "github.com/new-org" --dry-run
+gitmap rpl     "github.com/old-org" "github.com/new-org" -y
+
+# Bump prior 3 versions of {base}-vN -> current vK
+gitmap replace -3 -y
+gitmap replace all --audit                # report-only
+
+# Just the version bump (Go-native fix-repo, --strict runs `go test`)
+gitmap fix-repo --all --strict
+gitmap fr -5 --dry-run --verbose
+
+# Clone + fix in one shot (versioned URLs auto-flatten)
+gitmap clone-fix-repo https://github.com/acme/myrepo-v13.git
+gitmap cfr            git@github.com:acme/myrepo-v13.git myrepo-fresh
+
+# Clone + fix + publish public in one shot
+gitmap cfrp https://github.com/acme/myrepo-v13.git
+
+# Flip current repo public on GitHub or GitLab
+gitmap make-public                          # interactive
+gitmap make-public --yes                    # CI / scripts
+gitmap make-public --dry-run --verbose      # preview the gh/glab call
+
+# Stitch every versioned sibling's history into one canonical repo
+gitmap commit-in ./canonical all --save-profile Default --set-default
+gitmap cin       ./canonical -3 --dry-run --function-intel on --languages Go,TypeScript
+```
+
+→ Specs: [`spec/04-generic-cli/15-replace-command.md`](spec/04-generic-cli/15-replace-command.md) ·
+[`spec/04-generic-cli/27-fix-repo-command.md`](spec/04-generic-cli/27-fix-repo-command.md) ·
+[`spec/03-commit-in/`](spec/03-commit-in/)
+
+---
+
+<div align="center">
+
 ### Git Operations
 
 </div>

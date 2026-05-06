@@ -1,5 +1,33 @@
 # Changelog
 
+## v4.26.0 — Repo-wide gofmt sweep (CI gofmt-clean gate fix)
+
+### Fixed
+- 73 `.go` files across `gitmap/` (clonepick, commitin/{dedupe,
+  finalize, funcintel, message, orchestrator, profile, ...},
+  store, tui, vscodeworkspace, etc.) were missing the trailing
+  final-newline that `gofmt` enforces. CI's `gofmt -l .` gate
+  was failing as a result.
+- Ran `gofmt -w` across the whole tree; `gofmt -l .` now reports
+  zero files. No semantic / token changes — newline-only edits.
+
+### Why
+The CI lint job's gofmt-clean gate started failing (`The
+following .go files are not gofmt-clean: ...`). The
+`gitmap fix-repo` audit step in CI (per memory: FIX-REPO GOFMT
+v4.11.0+) is intentionally narrow — it only checks files
+fix-repo touched. A bulk historical drift outside that scope
+slipped past it. This sweep restores the global gate; future
+edits should keep files gofmt-clean on save.
+
+### Notes
+- No version-bearing tokens (`-vN`) were rewritten, so the
+  fix-repo digit-capture rule and `--strict` test gate are not
+  involved.
+- All edits are whitespace-only (final newline). No behaviour
+  change. CI `gofmt -l .` and `lint` jobs should now go green.
+
+
 ## v4.25.0 — ERD-vs-SQLCreate parity test (v3.12.1 publish-audit follow-up)
 
 ### Added

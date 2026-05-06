@@ -88,6 +88,20 @@ func RenameByPath(rootPath, newName string) (bool, error) {
 	return true, writeEntriesAtomic(path, entries)
 }
 
+// ListEntries returns every Entry currently persisted in projects.json
+// without mutating the file. Used by `gitmap vscode-pm-sync` to walk
+// the existing entries and rebuild Pair tuples for re-tagging. Missing
+// projects.json => empty slice + nil error so callers can soft-report
+// "nothing to do" instead of erroring out.
+func ListEntries() ([]Entry, error) {
+	path, err := ProjectsJSONPath()
+	if err != nil {
+		return nil, err
+	}
+
+	return readEntries(path)
+}
+
 // readEntries returns the parsed entries. Missing file -> empty slice.
 func readEntries(path string) ([]Entry, error) {
 	data, err := os.ReadFile(path)

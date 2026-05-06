@@ -50,5 +50,9 @@ func coreDispatchEntries() []dispatchEntry {
 			[]string{constants.CmdCloneFixRepoPub, constants.CmdCloneFixRepoPubAlias},
 			func() { runCloneFixRepoPub(argsTail()) },
 		},
+		{
+			[]string{constants.CmdVSCodePMSync, constants.CmdVSCodePMSyncAlias},
+			func() { runVSCodePMSync(argsTail()) },
+		},
 	}
 }

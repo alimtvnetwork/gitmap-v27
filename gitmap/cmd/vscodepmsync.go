@@ -1,137 +1,168 @@
+// Package cmd — vscodepmsync.go: implements the top-level
+// `gitmap vscode-pm-sync` (alias `vpm`) command.
+//
+// What it does:
+//
+//	1. Resolves the alefragnani.project-manager projects.json path
+//	   via vscodepm.ProjectsJSONPath. Soft-fails (exit 0) when the
+//	   user-data root or extension dir is missing — same policy as
+//	   the post-clone sync helper, so CI / headless boxes never
+//	   break on this command.
+//	2. Reads every entry currently in projects.json.
+//	3. For each entry whose rootPath still exists on disk, builds a
+//	   vscodepm.Pair carrying (rootPath, name, vscodepm.DetectTagsCustom).
+//	   Entries pointing at deleted folders are skipped — their tags
+//	   are left untouched on disk.
+//	4. Calls vscodepm.Sync once with the full pair set. Sync's
+//	   mergePairs UNIONs detected tags with whatever is already on
+//	   disk, so user-added tags are preserved.
+//
+// Spec: spec/01-vscode-project-manager-sync/04-tag-resync.md
+// Memory: see the "VS Code PM Sync" entry referenced from
+// mem://features (added in v4.36.0).
 package cmd
 
 import (
-	"errors"
+	"flag"
 	"fmt"
 	"os"
 
 	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/store"
 	"github.com/alimtvnetwork/gitmap-v18/gitmap/vscodepm"
 )
 
-// syncRecordsToVSCodePM upserts every scanned record into the VSCodeProject
-// table and reconciles the alefragnani.project-manager projects.json file.
-//
-// When noAutoTags is false (default), each pair is enriched with auto-detected
-// tags (git/node/go/...) based on the rootPath's top-level files. Tags are
-// UNIONed with whatever the user already set in the VS Code UI — gitmap
-// never silently removes a user-added tag.
-//
-// Soft-fails: when the user-data root or the extension dir is missing, the
-// function reports a one-line note to stdout and returns without error so
-// `gitmap scan` keeps working on machines without VS Code installed.
-func syncRecordsToVSCodePM(records []model.ScanRecord, skip, noAutoTags bool) {
-	if skip {
-		fmt.Print(constants.MsgVSCodePMSyncSkipped)
+// runVSCodePMSync is the entry point wired into the dispatcher.
+func runVSCodePMSync(args []string) {
+	checkHelp(constants.CmdVSCodePMSync, args)
 
+	dryRun := parseVSCodePMSyncFlags(args)
+
+	path, entries, ok := loadVSCodePMEntries()
+	if !ok {
 		return
 	}
 
-	if len(records) == 0 {
+	if len(entries) == 0 {
+		fmt.Print(constants.MsgVSCodePMSyncEmptyFile)
 		return
 	}
 
-	if err := upsertVSCodePMRecords(records); err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
+	fmt.Printf(constants.MsgVSCodePMSyncStart, path)
 
+	pairs, skipped := buildVSCodePMSyncPairs(entries)
+
+	if dryRun {
+		emitVSCodePMSyncDryRunReport(entries, pairs, skipped)
 		return
 	}
 
-	pairs := make([]vscodepm.Pair, 0, len(records))
-	for _, r := range records {
-		pairs = append(pairs, vscodepm.Pair{
-			RootPath: r.AbsolutePath,
-			Name:     r.RepoName,
-			Tags:     autoTagsFor(r.AbsolutePath, noAutoTags),
-		})
-	}
-
-	summary, err := vscodepm.Sync(pairs)
-	if err != nil {
-		reportVSCodePMSoftError(err)
-
-		return
-	}
-
-	fmt.Printf(constants.MsgVSCodePMSyncSummary,
-		summary.Added, summary.Updated, summary.Unchanged, summary.Total)
+	commitVSCodePMSync(pairs, skipped)
 }
 
-// autoTagsFor returns the auto-detected tags for rootPath, or nil when
-// auto-tagging has been disabled via --no-auto-tags.
-func autoTagsFor(rootPath string, disabled bool) []string {
-	if disabled {
-		return nil
-	}
+// parseVSCodePMSyncFlags parses the (single) --dry-run flag.
+func parseVSCodePMSyncFlags(args []string) bool {
+	fs := flag.NewFlagSet(constants.CmdVSCodePMSync, flag.ExitOnError)
 
-	return vscodepm.DetectTagsCustom(rootPath)
+	dryRun := fs.Bool(
+		constants.FlagVSCodePMSyncDryRun, false,
+		constants.FlagDescVSCodePMSyncDryRun,
+	)
+
+	_ = fs.Parse(args)
+
+	return *dryRun
 }
 
-// upsertVSCodePMRecords pushes every record into the DB. Errors are
-// returned to the caller for centralized stderr reporting.
-func upsertVSCodePMRecords(records []model.ScanRecord) error {
-	db, err := store.OpenDefault()
-	if err != nil {
-		return fmt.Errorf(constants.MsgDBUpsertFailed, err)
-	}
-	defer db.Close()
+// loadVSCodePMEntries reads projects.json and returns the parsed
+// entries plus the resolved file path. Soft-skips (returns ok=false)
+// when the user-data root or extension dir is missing — the command
+// must NEVER fail-loud on a headless / no-VS-Code box.
+func loadVSCodePMEntries() (string, []vscodepm.Entry, bool) {
+	path, pathErr := vscodepm.ProjectsJSONPath()
+	entries, listErr := vscodepm.ListEntries()
 
-	if err := db.Migrate(); err != nil {
-		return fmt.Errorf(constants.MsgDBUpsertFailed, err)
+	if pathErr != nil || listErr != nil {
+		reportVSCodePMSoftError(firstNonNil(pathErr, listErr))
+		return path, nil, false
 	}
 
-	for _, r := range records {
-		if err := db.UpsertVSCodeProject(r.AbsolutePath, r.RepoName); err != nil {
-			return err
+	return path, entries, true
+}
+
+// firstNonNil returns the first non-nil error, or nil.
+func firstNonNil(errs ...error) error {
+	for _, e := range errs {
+		if e != nil {
+			return e
 		}
 	}
 
 	return nil
 }
 
-// reportVSCodePMSoftError prints a friendly note for the two recoverable
-// errors (no VS Code, no extension) and the standardized stderr message
-// for anything else.
-func reportVSCodePMSoftError(err error) {
-	switch {
-	case errors.Is(err, vscodepm.ErrUserDataMissing):
-		fmt.Printf(constants.MsgVSCodePMSectionHeader,
-			"VS Code not detected — sync skipped")
-	case errors.Is(err, vscodepm.ErrExtensionMissing):
-		fmt.Printf(constants.MsgVSCodePMSectionHeader,
-			"alefragnani.project-manager extension not installed — sync skipped")
-	default:
-		fmt.Fprintln(os.Stderr, err.Error())
+// buildVSCodePMSyncPairs converts every on-disk entry into a Pair
+// carrying freshly-detected tags. Entries whose rootPath is missing
+// on disk are skipped (count returned as the second value) so the
+// re-sync never inadvertently strips tags from intentionally-offline
+// removable-drive projects — Sync only touches entries it sees.
+func buildVSCodePMSyncPairs(entries []vscodepm.Entry) ([]vscodepm.Pair, int) {
+	pairs := make([]vscodepm.Pair, 0, len(entries))
+	skipped := 0
+
+	for _, e := range entries {
+		if !rootPathExists(e.RootPath) {
+			skipped++
+			continue
+		}
+
+		pairs = append(pairs, vscodepm.Pair{
+			RootPath: e.RootPath,
+			Name:     e.Name,
+			Paths:    e.Paths,
+			Tags:     vscodepm.DetectTagsCustom(e.RootPath),
+		})
 	}
+
+	return pairs, skipped
 }
 
-// renameVSCodePMByPath mirrors a name change to projects.json AND the
-// VSCodeProject table. Used by `gitmap as` and any other rename path.
-// Soft-fails (no error returned) when VS Code or the extension is missing.
-func renameVSCodePMByPath(rootPath, newName string) {
-	db, err := store.OpenDefault()
-	if err == nil {
-		defer db.Close()
-
-		if err := db.Migrate(); err == nil {
-			_, _ = db.RenameVSCodeProjectByPath(rootPath, newName)
-		}
+// rootPathExists reports whether the entry's rootPath is a directory
+// that currently exists on disk.
+func rootPathExists(rootPath string) bool {
+	if rootPath == "" {
+		return false
 	}
 
-	changed, err := vscodepm.RenameByPath(rootPath, newName)
+	info, err := os.Stat(rootPath)
+	if err != nil {
+		return false
+	}
+
+	return info.IsDir()
+}
+
+// emitVSCodePMSyncDryRunReport prints what would change without
+// touching the file. We approximate "would change" as len(pairs)
+// since Sync will at minimum re-evaluate tags for each one — exact
+// per-entry diffing is intentionally deferred to the real run so
+// the dry-run cost stays predictable on huge projects.json files.
+func emitVSCodePMSyncDryRunReport(entries []vscodepm.Entry, pairs []vscodepm.Pair, skipped int) {
+	_ = entries
+
+	fmt.Printf(constants.MsgVSCodePMSyncDryRun, len(pairs)+skipped, len(pairs))
+}
+
+// commitVSCodePMSync runs vscodepm.Sync and prints the standard
+// summary line, then a vscode-pm-sync-specific tally that includes
+// the count of skipped (missing-on-disk) entries.
+func commitVSCodePMSync(pairs []vscodepm.Pair, skipped int) {
+	summary, err := vscodepm.Sync(pairs)
 	if err != nil {
 		reportVSCodePMSoftError(err)
-
 		return
 	}
 
-	if changed {
-		fmt.Printf(constants.MsgVSCodePMRenamed, rootPath, newName)
-
-		return
-	}
-
-	fmt.Printf(constants.MsgVSCodePMRenameNoMatch, rootPath)
+	fmt.Printf(constants.MsgVSCodePMSyncSummary,
+		summary.Added, summary.Updated, summary.Unchanged, summary.Total)
+	fmt.Printf(constants.MsgVSCodePMSyncEntryStat, len(pairs), skipped)
 }

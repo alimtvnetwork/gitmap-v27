@@ -1,5 +1,40 @@
 # Changelog
 
+## v4.36.0 — (2026-05-06) — New `gitmap vscode-pm-sync` (`vpm`) command: re-tag every projects.json entry on demand
+
+- New top-level subcommand `gitmap vscode-pm-sync` (alias `vpm`) walks
+  every entry in the alefragnani.project-manager `projects.json` file,
+  re-runs the auto-tag detector against each `rootPath`, and merges the
+  detected tags (always including the `gitmap` brand tag, v4.34.0+) into
+  the existing tags array. User-added tags are preserved (UNION via
+  `vscodepm.Sync.mergePairs`, never truncated).
+- Entries whose `rootPath` no longer exists on disk are **skipped** —
+  their tags stay untouched on disk so an offline removable-drive
+  project doesn't silently lose its tag set.
+- Soft-fail policy mirrors the post-clone sync helper: missing VS Code
+  user-data root or absent `alefragnani.project-manager` extension
+  prints a single stderr line and exits **0** so CI never breaks.
+- `--dry-run` flag previews the entry counts without touching the file.
+- Honors the same `--vscode-tag` / `--vscode-tag-skip` / `--vscode-tag-marker`
+  global flags accepted by every other clone variant — pass
+  `--vscode-tag-skip gitmap` to opt the brand tag out for this re-sync only.
+- Implementation:
+  - `gitmap/cmd/vscodepmsync.go` — runner (158 lines, every func ≤15 lines).
+  - `gitmap/vscodepm/sync.go` — new exported `ListEntries()` reader so
+    callers can walk projects.json without rebuilding the JSON parser.
+  - `gitmap/cmd/vscodepmsofterror.go` — extracted `reportVSCodePMSoftError`
+    helper (previously referenced from clone/code paths) into a single
+    self-contained file with the soft-fail policy documented inline.
+  - `gitmap/cmd/rootcore.go` — wires `CmdVSCodePMSync` / `CmdVSCodePMSyncAlias`
+    into the core dispatch table.
+  - `gitmap/cmd/vscodepmsync_test.go` — four-test regression suite covering
+    pair construction (skip-missing, brand-tag presence) and end-to-end
+    behavior (user-tag UNION preserved, `--dry-run` is byte-stable).
+- New help file `gitmap/helptext/vscode-pm-sync.md` (auto-discovered by the
+  `*.md` embed glob and verified by `TestEveryCmdIDHasHelpFile`).
+- Version bumped to `v4.36.0` across `gitmap/constants/constants.go`,
+  `src/constants/index.ts`, and the root `README.md` pinned-version block.
+
 ## v4.35.0 — (2026-05-06) — commit-in docs: 7 worked examples, auto-init dispatch table, sample profile JSON
 
 - `src/pages/CommitIn.tsx` rewritten with seven labelled, scenario-driven

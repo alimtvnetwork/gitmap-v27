@@ -246,6 +246,8 @@ func topLevelCmds() map[string]string {
 		"CmdCommitInAlias":        CmdCommitInAlias,
 		"CmdVSCodeWorkspace":      CmdVSCodeWorkspace,
 		"CmdVSCodeWorkspaceAlias": CmdVSCodeWorkspaceAlias,
+		"CmdVSCodePMSync":         CmdVSCodePMSync,
+		"CmdVSCodePMSyncAlias":    CmdVSCodePMSyncAlias,
 	}
 }
 

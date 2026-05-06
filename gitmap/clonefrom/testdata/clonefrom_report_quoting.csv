@@ -4,4 +4,4 @@ https://example.com/quoted.git,quoted,,0,failed,"error: ref ""refs/heads/x"" not
 https://example.com/multiline.git,multiline,,0,failed,"line one
 line two",0.025
 https://example.com/crlf.git,crlf,,0,failed,"  hint: leading space
-plus crlf inside",0.010
+plus crlf inside",0.010

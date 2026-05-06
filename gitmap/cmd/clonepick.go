@@ -189,7 +189,9 @@ func parseClonePickFlags(args []string) clonePickParsed {
 
 // runClonePickExecute opens the DB (best-effort), runs the
 // sparse-checkout, and translates the Result to an exit code.
-func runClonePickExecute(plan clonepick.Plan, noVSCodeSync bool) {
+// replayId is non-zero when the Plan came from --replay; on success
+// CreatedAt is bumped so most-recently-replayed sorts to the top.
+func runClonePickExecute(plan clonepick.Plan, noVSCodeSync bool, replayId int64) {
 	progress := io.Writer(os.Stderr)
 	if plan.Quiet {
 		progress = io.Discard
@@ -204,14 +206,7 @@ func runClonePickExecute(plan clonepick.Plan, noVSCodeSync bool) {
 	}
 
 	result := clonepick.Execute(plan, db, progress)
-	if result.SelectionId > 0 {
-		name := plan.Name
-		if len(name) == 0 {
-			name = "(unnamed)"
-		}
-		fmt.Fprintf(os.Stderr, constants.MsgClonePickSaved,
-			result.SelectionId, plan.RepoCanonicalId, name)
-	}
+	announceClonePickPersistence(plan, result, replayId, db)
 
 	if result.Status == clonepick.StatusFailed {
 		maybeExitOnCmdFaithfulMismatch()
@@ -227,6 +222,29 @@ func runClonePickExecute(plan clonepick.Plan, noVSCodeSync bool) {
 		WriteShellHandoff(result.Detail)
 	}
 	maybeExitOnCmdFaithfulMismatch()
+}
+
+// announceClonePickPersistence prints the saved/replayed line and,
+// for replays, bumps the CreatedAt column. Split out so the main
+// executor stays under the function-length cap.
+func announceClonePickPersistence(plan clonepick.Plan, result clonepick.Result, replayId int64, db *store.DB) {
+	name := plan.Name
+	if len(name) == 0 {
+		name = "(unnamed)"
+	}
+	switch {
+	case replayId > 0 && result.Status == clonepick.StatusOK:
+		fmt.Fprintf(os.Stderr, constants.MsgClonePickReplayed,
+			replayId, plan.RepoCanonicalId, name)
+		if !plan.DryRun && db != nil {
+			if err := clonepick.TouchAfterReplay(db, replayId, plan.DryRun); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+			}
+		}
+	case result.SelectionId > 0:
+		fmt.Fprintf(os.Stderr, constants.MsgClonePickSaved,
+			result.SelectionId, plan.RepoCanonicalId, name)
+	}
 }
 
 // syncClonePickResultToVSCodePM registers a successful sparse-checkout

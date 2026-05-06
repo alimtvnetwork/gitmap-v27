@@ -1,5 +1,42 @@
 # Changelog
 
+## v4.18.0 — `gitmap commit-in` / `cin` — chronological multi-source commit replay
+
+### Added
+
+- **`gitmap commit-in <source> <inputs...>`** (alias **`cin`**) — replay every
+  first-parent commit from one or more input repos (folders or Git URLs) into
+  a single destination repo, deduped by source SHA, with byte-exact author
+  AND committer date replication. Spec: `spec/03-commit-in/`.
+
+  | Capability                | Behavior                                                                              |
+  |---------------------------|---------------------------------------------------------------------------------------|
+  | Source auto-init          | URL → `git clone`. Existing repo → reuse. Non-repo dir → `git init`. Missing → mkdir. |
+  | Sibling discovery         | `all` keyword walks every `<base>` / `<base>-vN` sibling of `<source>` in version order. |
+  | Tail discovery            | `-N` keyword keeps only the N highest-version siblings.                               |
+  | Dedupe                    | Per-workspace `ShaMap` skips any `SourceSha` ever seen — re-runs are a no-op.        |
+  | Date replication          | Both `AuthorDate` AND `CommitterDate` of the rewritten commit equal the source's.    |
+  | Conflict modes            | `ForceMerge` (default) takes the source side and logs the clobber list. `Prompt` aborts. |
+  | Concurrency               | Single advisory lock per workspace (`<.gitmap>/commit-in.lock`); second run exits 9.  |
+  | Profiles                  | JSON profiles under `<.gitmap>/commit-in/profiles/<name>.json`. CLI > profile > defaults. |
+
+- **Profile pipeline** — message rules (`StartsWith` / `EndsWith` / `Contains`
+  line strip), title prefix/suffix, message prefix/suffix, function-intel
+  detectors per language, weak-word override gates, and exclusions
+  (`PathFolder` / `PathFile`). Strict-decode JSON refuses unknown fields.
+
+- **Run audit** — every run inserts a `CommitInRun` row plus per-input
+  `CommitInInputRepo` and per-commit `CommitInSourceCommit` /
+  `CommitInRewritten` rows (PascalCase schema, `SchemaVersion 24`).
+
+### Tested
+
+- 13 end-to-end tests in `cmd/commitin/e2e/` cover happy-path, dedupe,
+  sibling discovery (`all` + `-N`), auto-init, profile precedence,
+  Prompt-mode abort, ForceMerge clobber audit, and lock-busy concurrent
+  runs. Plus the existing per-package unit suites for parser, walk,
+  dedupe, replay, profile, message pipeline, and finalize.
+
 ## v3.48.0 — (2026-04-21) — `gitmap self-install --shell-mode` with strict `zsh+pwsh` combos
 
 ### Added

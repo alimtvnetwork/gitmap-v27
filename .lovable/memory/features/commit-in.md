@@ -72,6 +72,11 @@ All 7 gated phases complete (2026-05-06, v4.18.0):
 7. Function-intel detectors + finalize + dispatcher entry
    (`commitin/{funcintel,finalize}` + `cmd/commitin.go` + helptext).
 
-Deferred non-blocking follow-ups: end-to-end orchestration glue
-inside `runCommitIn`, `// gitmap:cmd top-level` marker on the
-`CmdCommitIn` const block, CHANGELOG v4.18.0 entry.
+Closeout (2026-05-06): full E2E harness + 9 pipeline tests live at
+`gitmap/cmd/commitin/e2e/` (happy-path, dedupe, sibling `all`/`-N`,
+auto-init, profile precedence, Prompt abort, ForceMerge clobber,
+lock-busy). `// gitmap:cmd top-level` marker confirmed already-active
+on the parent const block in `constants/constants_cli.go` (line 3 →
+line 161); `go generate ./...` populated `commit-in` + `cin` into
+`completion/allcommands_generated.go`. CHANGELOG v4.18.0 entry
+prepended. Commit-in feature is release-ready.

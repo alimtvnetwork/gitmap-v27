@@ -1,5 +1,40 @@
 # Changelog
 
+## v4.22.0 — clone-pick `--ask` windowed scroller
+
+### Added
+- Picker now renders only the visible window (terminal height minus
+  header + footer chrome) instead of dumping every tracked path. Large
+  repos (Linux kernel, Chromium-scale trees) finally fit on screen.
+- New nav keys: `pgup` / `ctrl+b` (page up), `pgdown` / `ctrl+f`
+  (page down), `g` / `home` (first row), `G` / `end` (last row). Vim
+  muscle memory carried over from the existing `j/k`.
+- Header now includes the visible row range, e.g.
+  `gitmap clone-pick --ask  (12/487 selected, rows 41-60)`.
+- Reacts to `tea.WindowSizeMsg` so terminal resizes re-flow the
+  window in real time. Default viewport (20 rows) is used until the
+  first size message arrives.
+
+### Changed
+- `pickerModel` gains `viewportHeight` and `scrollOffset` fields.
+  Cursor moves re-clamp `scrollOffset` via the pure `clampScroll`
+  helper so the cursor row is always in view.
+- `gitmap/clonepick/picker.go` split into four files to stay under
+  the strict <200 lines/file core rule:
+  - `picker.go` (178) — model + key dispatch.
+  - `picker_run.go` (52) — bubbletea program lifecycle
+    (`RunPicker`, `RunPickerKeep`).
+  - `picker_nav.go` (70) — pure cursor + scroll math
+    (`applyCursorMove`, `clampScroll`, `minInt`/`maxInt`).
+  - `picker_view.go` (103) — render loop (windowed).
+
+### Tests
+- `gitmap/clonepick/picker_window_test.go`: `clampScroll` table,
+  `tea.WindowSizeMsg` viewport sizing, `pgdown` jump distance,
+  `G` end-of-list, and a "rendered row count == viewportHeight"
+  guard so future View() tweaks can't silently regress the window.
+
+
 ## v4.21.1 — clone-pick cmd file split (200-line cap audit)
 
 ### Changed

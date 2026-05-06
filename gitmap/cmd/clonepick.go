@@ -26,6 +26,7 @@ import (
 	"github.com/alimtvnetwork/gitmap-v16/gitmap/cliexit"
 	"github.com/alimtvnetwork/gitmap-v16/gitmap/clonepick"
 	"github.com/alimtvnetwork/gitmap-v16/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v16/gitmap/store"
 )
 
 // runClonePick is the dispatcher entry registered in rootcore.go.
@@ -36,7 +37,8 @@ func runClonePick(args []string) {
 	setCmdFaithfulVerify(parsed.VerifyCmdFaithful)
 	setCmdFaithfulExitOnMismatch(parsed.VerifyCmdFaithfulExitOnMismatch)
 	setCmdPrintArgv(parsed.PrintCloneArgv)
-	plan, err := clonepick.ParseArgs(parsed.RawURL, parsed.RawPaths, parsed.Flags)
+
+	plan, replayId, err := buildClonePickPlan(parsed)
 	if err != nil {
 		cliexit.Fail(constants.CmdClonePick, "parse-args", parsed.RawURL, err, 2)
 	}
@@ -62,7 +64,38 @@ func runClonePick(args []string) {
 	if parsed.Output == constants.OutputTerminal {
 		printClonePickTermBlock(plan)
 	}
-	runClonePickExecute(plan, parsed.NoVSCodeSync)
+	runClonePickExecute(plan, parsed.NoVSCodeSync, replayId)
+}
+
+// buildClonePickPlan picks between the parse path (positional args)
+// and the replay path (--replay <id|name> hits the DB). Returns the
+// Plan plus the replayed SelectionId (0 for fresh runs) so the
+// executor can bump CreatedAt without re-deriving the id.
+func buildClonePickPlan(parsed clonePickParsed) (clonepick.Plan, int64, error) {
+	if len(parsed.Flags.Replay) == 0 {
+		plan, err := clonepick.ParseArgs(parsed.RawURL, parsed.RawPaths, parsed.Flags)
+
+		return plan, 0, err
+	}
+	loader, err := openDB()
+	if err != nil {
+		return clonepick.Plan{}, 0, err
+	}
+	plan, replayId, loadErr := clonepick.LoadFromDB(loader, parsed.Flags.Replay)
+	if loadErr != nil {
+		return clonepick.Plan{}, 0, loadErr
+	}
+	// Runtime-only flags from THIS invocation override the
+	// persisted Plan -- spec rule: replay reproduces the
+	// selection, not the verbosity choice.
+	plan.DryRun = parsed.Flags.DryRun
+	plan.Quiet = parsed.Flags.Quiet
+	plan.Force = parsed.Flags.Force
+	if len(parsed.Flags.Dest) > 0 && parsed.Flags.Dest != "." {
+		plan.DestDir = parsed.Flags.Dest
+	}
+
+	return plan, replayId, nil
 }
 
 // clonePickParsed bundles every output of parseClonePickFlags so a
@@ -114,6 +147,8 @@ func parseClonePickFlags(args []string) clonePickParsed {
 		constants.FlagDescClonePickQuiet)
 	fs.BoolVar(&flags.Force, constants.FlagClonePickForce, defaults.Force,
 		constants.FlagDescClonePickForce)
+	fs.StringVar(&flags.Replay, constants.FlagClonePickReplay, defaults.Replay,
+		constants.FlagDescClonePickReplay)
 	output := fs.String(constants.FlagCloneTermOutput, "",
 		constants.FlagDescCloneTermOutput)
 	verify := fs.Bool(constants.FlagCloneVerifyCmdFaithful, false,
@@ -128,9 +163,13 @@ func parseClonePickFlags(args []string) clonePickParsed {
 	reordered := reorderFlagsBeforeArgs(args)
 	fs.Parse(reordered)
 
-	if fs.NArg() < 1 {
+	if fs.NArg() < 1 && len(flags.Replay) == 0 {
 		fmt.Fprintln(os.Stderr, constants.MsgClonePickMissingURL)
 		os.Exit(2)
+	}
+	rawURL := ""
+	if fs.NArg() >= 1 {
+		rawURL = fs.Arg(0)
 	}
 	rawPaths := ""
 	if fs.NArg() >= 2 {
@@ -138,7 +177,7 @@ func parseClonePickFlags(args []string) clonePickParsed {
 	}
 
 	return clonePickParsed{
-		RawURL:                          fs.Arg(0),
+		RawURL:                          rawURL,
 		RawPaths:                        rawPaths,
 		Flags:                           flags,
 		Output:                          *output,
@@ -151,7 +190,9 @@ func parseClonePickFlags(args []string) clonePickParsed {
 
 // runClonePickExecute opens the DB (best-effort), runs the
 // sparse-checkout, and translates the Result to an exit code.
-func runClonePickExecute(plan clonepick.Plan, noVSCodeSync bool) {
+// replayId is non-zero when the Plan came from --replay; on success
+// CreatedAt is bumped so most-recently-replayed sorts to the top.
+func runClonePickExecute(plan clonepick.Plan, noVSCodeSync bool, replayId int64) {
 	progress := io.Writer(os.Stderr)
 	if plan.Quiet {
 		progress = io.Discard
@@ -166,14 +207,7 @@ func runClonePickExecute(plan clonepick.Plan, noVSCodeSync bool) {
 	}
 
 	result := clonepick.Execute(plan, db, progress)
-	if result.SelectionId > 0 {
-		name := plan.Name
-		if len(name) == 0 {
-			name = "(unnamed)"
-		}
-		fmt.Fprintf(os.Stderr, constants.MsgClonePickSaved,
-			result.SelectionId, plan.RepoCanonicalId, name)
-	}
+	announceClonePickPersistence(plan, result, replayId, db)
 
 	if result.Status == clonepick.StatusFailed {
 		maybeExitOnCmdFaithfulMismatch()
@@ -189,6 +223,29 @@ func runClonePickExecute(plan clonepick.Plan, noVSCodeSync bool) {
 		WriteShellHandoff(result.Detail)
 	}
 	maybeExitOnCmdFaithfulMismatch()
+}
+
+// announceClonePickPersistence prints the saved/replayed line and,
+// for replays, bumps the CreatedAt column. Split out so the main
+// executor stays under the function-length cap.
+func announceClonePickPersistence(plan clonepick.Plan, result clonepick.Result, replayId int64, db *store.DB) {
+	name := plan.Name
+	if len(name) == 0 {
+		name = "(unnamed)"
+	}
+	switch {
+	case replayId > 0 && result.Status == clonepick.StatusOK:
+		fmt.Fprintf(os.Stderr, constants.MsgClonePickReplayed,
+			replayId, plan.RepoCanonicalId, name)
+		if !plan.DryRun && db != nil {
+			if err := clonepick.TouchAfterReplay(db, replayId, plan.DryRun); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+			}
+		}
+	case result.SelectionId > 0:
+		fmt.Fprintf(os.Stderr, constants.MsgClonePickSaved,
+			result.SelectionId, plan.RepoCanonicalId, name)
+	}
 }
 
 // syncClonePickResultToVSCodePM registers a successful sparse-checkout

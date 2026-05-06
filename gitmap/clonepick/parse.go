@@ -81,6 +81,11 @@ type Flags struct {
 	DryRun  bool
 	Quiet   bool
 	Force   bool
+	// Replay is the raw value of --replay (numeric SelectionId or
+	// Name). Empty means "no replay -- parse positional args
+	// normally". Non-empty short-circuits ParseArgs in the cmd
+	// dispatcher: the Plan is loaded from the DB instead.
+	Replay string
 }
 
 // DefaultFlags returns the flag bundle with the spec'd defaults.

@@ -1,5 +1,56 @@
 # Changelog
 
+## v4.20.0 — `gitmap clone-pick --ask` interactive picker shipped
+
+### Added
+- `gitmap clone-pick --ask` opens a bubbletea picker before the
+  sparse-checkout, listing every tracked path in the target repo
+  (enumerated via a metadata-only `--filter=blob:none --no-checkout
+  --depth=1` clone + `git ls-tree -r --name-only HEAD` in a temp dir,
+  so no blob bytes are downloaded just to render the list).
+- Picker keys: `up/k` / `down/j` move, `space` toggles, `a` selects
+  every non-auto-greyed row, `n` clears, `s` / `enter` save & continue,
+  `q` / `ctrl-c` cancels (exits 130 with `MsgClonePickUserCancelled`).
+- Pre-checked rows: any path passed via the positional `<paths>`
+  argument seeds the initial selection so re-running with `--ask` is
+  a confirmation pass, not a do-over.
+- Auto-greyed rows: anything matching `constants.ClonePickAutoExclude`
+  (`.git`, `node_modules`, `vendor`, `dist`, `build`, `__pycache__`,
+  `.venv`, `target`) renders with `[-]` instead of `[ ]` and is
+  skipped by `a` (select-all). Individual greyed rows can still be
+  toggled via `space` for the rare case the user wants them.
+- `<paths>` is now optional when `--ask` is set: `normalisePaths`
+  short-circuits empty input in ask mode, the picker fills the slot.
+  An empty pick from the picker still exits 2 with the canonical
+  missing-paths message — silent no-op clones are user-hostile.
+- `Plan.UsedAsk` is set to true when the picker is used so the
+  persisted `CloneInteractiveSelection` row records the provenance
+  (no schema migration needed — the column was reserved in v3.153.0
+  scaffolding).
+
+### Code-quality notes
+- `cmd/clonepick.go` grew past the 200-line file cap; the new picker
+  glue lives in `cmd/clonepick_picker.go` to keep the new code itself
+  cap-compliant. A follow-up should split `cmd/clonepick.go` further
+  (flag-binding into its own file is the obvious cut).
+- `clonepick/picker.go` (156), `picker_view.go` (88), `picker_tree.go`
+  (108), `picker_test.go` (129) are all under the cap.
+- Picker model unit tests in `clonepick/picker_test.go` drive
+  `pickerModel.handleKey` directly without launching a real terminal,
+  covering: preselection, space-toggle, cursor clamp, select-all
+  skipping greyed rows, select-none, quit-cancel, save-with-selection,
+  prefix-match auto-exclude, view counter + key hints, empty-repo view.
+- `Version` constant bumped to `4.20.0`.
+
+### Known follow-ups
+- Spec §"--ask picker" wants the temp clone reused as the final
+  destination ("cloned once, not twice"). v1 ships clone-twice (the
+  first clone is metadata-only so the wire cost is negligible). The
+  reuse refactor lands when we have a cross-filesystem-safe move
+  helper for the `<temp>` -> `<dest>` step.
+- A windowed scroller for repos with >1k tracked paths is deferred
+  until we hit a real-world repo where the flat render hurts.
+
 ## v4.19.0 — `gitmap clone-pick --replay <id|name>` shipped
 
 ### Added

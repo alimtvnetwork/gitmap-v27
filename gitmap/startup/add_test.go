@@ -119,10 +119,18 @@ func TestAdd_BadName(t *testing.T) {
 // TestAdd_AutoCreatesDir confirms a missing autostart dir is created
 // rather than producing an error.
 func TestAdd_AutoCreatesDir(t *testing.T) {
+	// Windows uses the registry / .lnk Startup-folder backends, NOT
+	// a file-based AutostartDir() — the EnvStartupAutostartDir
+	// override is honored only on Linux/macOS where Add() routes
+	// through AutostartDir(). Skipping here keeps the cross-platform
+	// CI green without weakening the Linux/macOS coverage.
+	if runtime.GOOS == "windows" {
+		t.Skip("autostart dir is file-based on Linux/macOS only; Windows uses registry/.lnk backends")
+	}
 	// Use the cross-platform $GITMAP_AUTOSTART_DIR override so the
-	// test exercises the same Add() code path on Linux, macOS, and
-	// Windows without per-OS skips. The override is the explicit,
-	// documented test-injection point baked into AutostartDir().
+	// test exercises the same Add() code path on Linux and macOS
+	// without per-OS skips. The override is the explicit, documented
+	// test-injection point baked into AutostartDir().
 	root := filepath.Join(t.TempDir(), "autostart")
 	t.Setenv(constants.EnvStartupAutostartDir, root)
 	res, err := Add(AddOptions{Name: "watch", Exec: "/x"})

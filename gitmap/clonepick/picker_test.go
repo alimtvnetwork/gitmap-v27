@@ -74,7 +74,7 @@ func TestQuitFlagsCancelled(t *testing.T) {
 	m := newTestModel([]string{"a"}, nil)
 	next, cmd := m.handleKey(keyMsg("q"))
 	if !next.(pickerModel).cancelled { //nolint:misspell // matches pickerModel.cancelled field spelling.
-		t.Fatal("'q' should set cancelled flag") //nolint:misspell // matches pickerModel.cancelled field spelling.
+		t.Fatal("'q' should set the cancel flag")
 	}
 	if cmd == nil {
 		t.Fatal("'q' should return tea.Quit cmd (non-nil)")

@@ -1,5 +1,27 @@
 # Changelog
 
+## v4.23.0 — web `VERSION` resynced + drift-guard test
+
+### Fixed
+- `src/constants/index.ts` `VERSION` had silently drifted from the
+  Go binary version: it was stuck at `v4.14.0` while the binary
+  shipped `v4.15.0` … `v4.22.0` (eight releases of stale "Current
+  version" badges in the docs site, the home page, and every
+  changelog entry that mentions `VERSION`). Now resynced to
+  `v4.23.0`.
+
+### Added
+- `src/test/version-sync.test.ts`: reads
+  `gitmap/constants/constants.go`, extracts the `Version` literal,
+  and asserts `VERSION === "v" + goVersion`. Future Go bumps that
+  forget the TS sync now fail Vitest in CI instead of shipping a
+  stale badge. 2 assertions, sub-10ms runtime, zero new
+  dependencies.
+- `mem://project/version-bump-procedure.md`: updated to list
+  `src/constants/index.ts` as a mandatory step alongside
+  `gitmap/constants/constants.go` so future agents bump both.
+
+
 ## v4.22.0 — clone-pick `--ask` windowed scroller
 
 ### Added

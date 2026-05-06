@@ -130,6 +130,17 @@ _gitmap() {
             local -a flags=("--prefer-newer" "--prefer-left" "--prefer-right" "--prefer-larger" "--dry-run" "--verbose")
             _describe 'flag' flags
             ;;
+        vscode-pm-sync|vpm)
+            if [[ "${words[CURRENT-1]}" == "--mode" ]]; then
+                local -a modes=("union" "replace" "intersection")
+                _describe 'mode' modes
+            elif [[ "${words[CURRENT-1]}" == "--projects-json" ]]; then
+                _files
+            else
+                local -a flags=("--dry-run" "--projects-json" "--tag" "--mode")
+                _describe 'flag' flags
+            fi
+            ;;
         *)
             if [[ "${words[CURRENT-1]}" == "-A" || "${words[CURRENT-1]}" == "--alias" ]]; then
                 local -a aliases=($(gitmap completion --list-aliases))

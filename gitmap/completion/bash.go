@@ -97,6 +97,15 @@ func generateBash() string {
         merge-both|mb|merge-left|ml|merge-right|mr)
             COMPREPLY=($(compgen -W "--prefer-newer --prefer-left --prefer-right --prefer-larger --dry-run --verbose" -- "$cur"))
             ;;
+        vscode-pm-sync|vpm)
+            if [[ "$prev" == "--mode" ]]; then
+                COMPREPLY=($(compgen -W "union replace intersection" -- "$cur"))
+            elif [[ "$prev" == "--projects-json" ]]; then
+                COMPREPLY=($(compgen -f -- "$cur"))
+            else
+                COMPREPLY=($(compgen -W "--dry-run --projects-json --tag --mode" -- "$cur"))
+            fi
+            ;;
         *)
             if [[ "$prev" == "-A" || "$prev" == "--alias" ]]; then
                 COMPREPLY=($(compgen -W "$(gitmap completion --list-aliases)" -- "$cur"))

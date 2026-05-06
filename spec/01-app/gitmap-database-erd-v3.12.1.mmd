@@ -344,3 +344,40 @@ erDiagram
     %% Standalone (no FK relationships):
     %%   Release, TempRelease, CommandHistory, Amendment, Bookmark,
     %%   Setting, SshKey, InstalledTool, CommitTemplate
+
+    %% ============================================================
+    %% COMMIT-IN PIPELINE (added v4.24.1 — parity stubs, columns TBD)
+    %% These tables exist in gitmap/constants/constants_commitin_sql.go
+    %% as SQLCreate* constants and are enforced by erd_parity_test.go.
+    %% Per-column refinement is tracked as a follow-up.
+    %% ============================================================
+
+    RunStatus              { INTEGER RunStatusId PK }
+    InputKind              { INTEGER InputKindId PK }
+    CommitOutcome          { INTEGER CommitOutcomeId PK }
+    SkipReason             { INTEGER SkipReasonId PK }
+    ExclusionKind          { INTEGER ExclusionKindId PK }
+    MessageRuleKind        { INTEGER MessageRuleKindId PK }
+    FunctionIntelLanguage  { INTEGER FunctionIntelLanguageId PK }
+    ConflictMode           { INTEGER ConflictModeId PK }
+    Profile                { INTEGER ProfileId PK }
+    ProfileExclusion       { INTEGER ProfileExclusionId PK }
+    ProfileMessageRule     { INTEGER ProfileMessageRuleId PK }
+    CommitInRun            { INTEGER CommitInRunId PK }
+    InputRepo              { INTEGER InputRepoId PK }
+    SourceCommit           { INTEGER SourceCommitId PK }
+    SourceCommitFile       { INTEGER SourceCommitFileId PK }
+    RewrittenCommit        { INTEGER RewrittenCommitId PK }
+    SkipLog                { INTEGER SkipLogId PK }
+    ShaMap                 { INTEGER ShaMapId PK }
+
+    %% ============================================================
+    %% TRANSACTIONS + ARCHIVE + VSCODE + CLONE-PICK (v4.24.1 stubs)
+    %% ============================================================
+
+    Transaction               { INTEGER TransactionId PK }
+    TransactionFile           { INTEGER TransactionFileId PK }
+    TransactionAction         { INTEGER TransactionActionId PK }
+    ArchiveHistory            { INTEGER ArchiveHistoryId PK }
+    VSCodeProject             { INTEGER VSCodeProjectId PK }
+    CloneInteractiveSelection { INTEGER CloneInteractiveSelectionId PK }

@@ -147,7 +147,7 @@ func assertScanGolden(t *testing.T, name string, got []byte) {
 	path := filepath.Join("testdata", name)
 	trigger := os.Getenv("GITMAP_UPDATE_GOLDEN") == "1"
 	if goldenguard.AllowUpdate(t, trigger) {
-		writeScanGolden(t, path, got)
+		writeScanGolden(t, path, normalizeGoldenBytes(got))
 
 		return
 	}
@@ -157,10 +157,27 @@ func assertScanGolden(t *testing.T, name string, got []byte) {
 			"GITMAP_UPDATE_GOLDEN=1 and "+
 			"GITMAP_ALLOW_GOLDEN_UPDATE=1 to create)", path, err)
 	}
-	if !bytes.Equal(got, want) {
+	// Normalize CRLF→LF on both sides: the production CSV writer emits
+	// CRLF (csv.Writer.UseCRLF=true, pinned by csvcrlf_contract_test.go)
+	// but the on-disk golden is checked out as LF on every platform via
+	// `.gitattributes` (testdata/** text eol=lf) so the fixture stays
+	// hand-readable and cross-platform consistent. Without this
+	// normalization Linux+Windows CI both fail with a 1-byte-per-line
+	// drift. The CRLF contract is still enforced separately by
+	// TestCSVCRLF_WriteCSV in the same package — that test inspects the
+	// in-memory bytes, not the fixture.
+	gotN := normalizeGoldenBytes(got)
+	wantN := normalizeGoldenBytes(want)
+	if !bytes.Equal(gotN, wantN) {
 		t.Fatalf("golden mismatch for %s\n--- want (%d bytes)\n%s\n--- got (%d bytes)\n%s",
-			name, len(want), string(want), len(got), string(got))
+			name, len(wantN), string(wantN), len(gotN), string(gotN))
 	}
+}
+
+// normalizeGoldenBytes strips \r before \n so CRLF and LF fixtures
+// compare equal. JSON goldens have no \r so this is a no-op for them.
+func normalizeGoldenBytes(b []byte) []byte {
+	return bytes.ReplaceAll(b, []byte("\r\n"), []byte("\n"))
 }
 
 // writeScanGolden persists a regenerated fixture and FAILS the test

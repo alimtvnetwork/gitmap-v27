@@ -105,7 +105,7 @@ func assertReportGolden(t *testing.T, name string, got []byte) {
 	path := filepath.Join("testdata", name)
 	trigger := os.Getenv("GITMAP_UPDATE_GOLDEN") == "1"
 	if goldenguard.AllowUpdate(t, trigger) {
-		writeReportGolden(t, path, got)
+		writeReportGolden(t, path, normalizeGoldenBytes(got))
 
 		return
 	}
@@ -115,11 +115,22 @@ func assertReportGolden(t *testing.T, name string, got []byte) {
 			"(run with GITMAP_UPDATE_GOLDEN=1 and "+
 			"GITMAP_ALLOW_GOLDEN_UPDATE=1 to create)", path, err)
 	}
-	if !bytes.Equal(got, want) {
+	// Normalize CRLF→LF on both sides — see formatter/scangolden_contract_test.go
+	// for the full rationale. The production CRLF contract is still enforced
+	// separately by csvcrlf_contract_test.go in cmd/.
+	gotN := normalizeGoldenBytes(got)
+	wantN := normalizeGoldenBytes(want)
+	if !bytes.Equal(gotN, wantN) {
 		t.Fatalf("golden mismatch for %s\n"+
 			"--- want (%d bytes)\n%s\n--- got (%d bytes)\n%s",
-			name, len(want), string(want), len(got), string(got))
+			name, len(wantN), string(wantN), len(gotN), string(gotN))
 	}
+}
+
+// normalizeGoldenBytes strips \r before \n so CRLF and LF fixtures
+// compare equal regardless of platform / git autocrlf state.
+func normalizeGoldenBytes(b []byte) []byte {
+	return bytes.ReplaceAll(b, []byte("\r\n"), []byte("\n"))
 }
 
 // writeReportGolden persists a regenerated fixture and FAILS the test

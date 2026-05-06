@@ -47,7 +47,9 @@ func NewRepo(t *testing.T, name string) *Repo {
 
 // Commit writes `path` with `body`, stages it, and commits with
 // `message` at `when` (both author and committer date). Returns the
-// new commit SHA so callers can assert on dedupe behavior.
+// new commit SHA. Uses plumbing (write-tree + commit-tree + update-ref)
+// so the harness works inside sandboxes that block porcelain `git
+// add` / `git commit`.
 func (r *Repo) Commit(path, body, message string, when time.Time) string {
 	r.t.Helper()
 	full := filepath.Join(r.Path, path)
@@ -57,11 +59,14 @@ func (r *Repo) Commit(path, body, message string, when time.Time) string {
 	if err := os.WriteFile(full, []byte(body), 0o644); err != nil {
 		r.t.Fatalf("write %s: %v", full, err)
 	}
-	// Use plumbing `update-index --add` instead of porcelain `add` so
-	// the harness works inside sandboxes that block `git add`.
 	r.git("update-index", "--add", path)
+	tree := r.gitOut("write-tree")
 	stamp := when.UTC().Format(time.RFC3339)
-	cmd := exec.Command("git", "commit", "-m", message, "--date", stamp)
+	args := []string{"commit-tree", tree, "-m", message}
+	if parent, ok := r.headShaOpt(); ok {
+		args = append(args, "-p", parent)
+	}
+	cmd := exec.Command("git", args...)
 	cmd.Dir = r.Path
 	cmd.Env = append(os.Environ(),
 		"GIT_AUTHOR_DATE="+stamp,
@@ -71,10 +76,40 @@ func (r *Repo) Commit(path, body, message string, when time.Time) string {
 		"GIT_COMMITTER_NAME=E2E Bot",
 		"GIT_COMMITTER_EMAIL=e2e@gitmap.test",
 	)
-	if out, err := cmd.CombinedOutput(); err != nil {
-		r.t.Fatalf("git commit %q: %v\n%s", message, err, out)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		r.t.Fatalf("git commit-tree: %v\n%s", err, out)
 	}
-	return r.headSha()
+	sha := strings.TrimSpace(string(out))
+	r.git("update-ref", "refs/heads/main", sha)
+	r.git("symbolic-ref", "HEAD", "refs/heads/main")
+	return sha
+}
+
+// gitOut runs a git subcommand and returns trimmed stdout; fatals on
+// error. Used for plumbing reads (write-tree, rev-parse).
+func (r *Repo) gitOut(args ...string) string {
+	r.t.Helper()
+	cmd := exec.Command("git", args...)
+	cmd.Dir = r.Path
+	out, err := cmd.Output()
+	if err != nil {
+		r.t.Fatalf("git %s: %v", strings.Join(args, " "), err)
+	}
+	return strings.TrimSpace(string(out))
+}
+
+// headShaOpt returns (sha, true) when refs/heads/main exists, else
+// ("", false). Used by Commit to decide whether to pass `-p <parent>`.
+func (r *Repo) headShaOpt() (string, bool) {
+	cmd := exec.Command("git", "rev-parse", "--verify", "--quiet", "refs/heads/main")
+	cmd.Dir = r.Path
+	out, err := cmd.Output()
+	if err != nil {
+		return "", false
+	}
+	sha := strings.TrimSpace(string(out))
+	return sha, sha != ""
 }
 
 // git runs a git subcommand inside r.Path and fatals on error. Used

@@ -149,7 +149,7 @@ func resolveBuildOutputDir(repoPath, buildOutput string) string {
 	// authored on Linux/macOS routinely use "/custom/bin" to mean
 	// "absolute, root of current drive". Honor that intent so a
 	// shared config doesn't silently get re-rooted under repoPath.
-	if filepath.IsAbs(buildOutput) || strings.HasPrefix(buildOutput, "/") {
+	if isAbsolutePath(buildOutput) {
 		return filepath.Clean(buildOutput)
 	}
 

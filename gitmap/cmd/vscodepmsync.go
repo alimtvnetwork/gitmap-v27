@@ -4,26 +4,30 @@
 // What it does:
 //
 //	1. Resolves the alefragnani.project-manager projects.json path
-//	   via vscodepm.ProjectsJSONPath. Soft-fails (exit 0) when the
-//	   user-data root or extension dir is missing — same policy as
-//	   the post-clone sync helper, so CI / headless boxes never
-//	   break on this command.
+//	   via vscodepm.ProjectsJSONPath — OR uses --projects-json when
+//	   the user supplied an absolute override. Soft-fails (exit 0)
+//	   when discovery returns a missing user-data root / extension
+//	   dir, so CI / headless boxes never break on this command.
 //	2. Reads every entry currently in projects.json.
 //	3. For each entry whose rootPath still exists on disk, builds a
-//	   vscodepm.Pair carrying (rootPath, name, vscodepm.DetectTagsCustom).
-//	   Entries pointing at deleted folders are skipped — their tags
-//	   are left untouched on disk.
-//	4. Calls vscodepm.Sync once with the full pair set. Sync's
-//	   mergePairs UNIONs detected tags with whatever is already on
-//	   disk, so user-added tags are preserved.
+//	   vscodepm.Pair carrying (rootPath, name, tags). Tags come from
+//	   vscodepm.DetectTagsCustom by default; --tag <name> (repeat /
+//	   comma-list) replaces the per-pair detected set with the
+//	   user-supplied list verbatim — the brand tag is NOT
+//	   auto-prepended in that mode.
+//	4. Calls vscodepm.SyncMode (or SyncAtMode when --projects-json
+//	   is set) once with the full pair set. The MergeMode picked by
+//	   --mode (union | replace | intersection) governs how the
+//	   detected/override tag set is reconciled with whatever is
+//	   already on disk.
 //
 // Spec: spec/01-vscode-project-manager-sync/04-tag-resync.md
 // Memory: see the "VS Code PM Sync" entry referenced from
-// mem://features (added in v4.36.0).
+// mem://features (added in v4.36.0; --projects-json + --tag wired
+// in v4.37.0 alongside --mode).
 package cmd
 
 import (
-	"flag"
 	"fmt"
 	"os"
 
@@ -35,13 +39,13 @@ import (
 func runVSCodePMSync(args []string) {
 	checkHelp(constants.CmdVSCodePMSync, args)
 
-	dryRun, mode, err := parseVSCodePMSyncFlags(args)
+	opts, err := parseVSCodePMSyncFlags(args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
 
-	path, entries, ok := loadVSCodePMEntries()
+	path, entries, ok := loadVSCodePMEntries(opts)
 	if !ok {
 		return
 	}
@@ -53,47 +57,35 @@ func runVSCodePMSync(args []string) {
 
 	fmt.Printf(constants.MsgVSCodePMSyncStart, path)
 
-	pairs, skipped := buildVSCodePMSyncPairs(entries)
+	pairs, skipped := buildVSCodePMSyncPairs(entries, opts)
 
-	if dryRun {
+	if opts.DryRun {
 		emitVSCodePMSyncDryRunReport(entries, pairs, skipped)
 		return
 	}
 
-	commitVSCodePMSync(pairs, skipped, mode)
-}
-
-// parseVSCodePMSyncFlags parses --dry-run and --mode. Returns the
-// dry-run bool, the resolved MergeMode, and a validation error from
-// ParseMergeMode (unknown --mode values fail loud per the
-// zero-swallow rule rather than silently defaulting to union).
-func parseVSCodePMSyncFlags(args []string) (bool, vscodepm.MergeMode, error) {
-	fs := flag.NewFlagSet(constants.CmdVSCodePMSync, flag.ExitOnError)
-
-	dryRun := fs.Bool(
-		constants.FlagVSCodePMSyncDryRun, false,
-		constants.FlagDescVSCodePMSyncDryRun,
-	)
-	modeRaw := fs.String(
-		constants.FlagVSCodePMSyncMode, constants.VSCodePMSyncModeUnion,
-		constants.FlagDescVSCodePMSyncMode,
-	)
-
-	_ = fs.Parse(args)
-
-	mode, err := vscodepm.ParseMergeMode(*modeRaw)
-	if err != nil {
-		return false, vscodepm.MergeModeUnion, err
-	}
-
-	return *dryRun, mode, nil
+	commitVSCodePMSync(pairs, skipped, opts)
 }
 
 // loadVSCodePMEntries reads projects.json and returns the parsed
-// entries plus the resolved file path. Soft-skips (returns ok=false)
-// when the user-data root or extension dir is missing — the command
-// must NEVER fail-loud on a headless / no-VS-Code box.
-func loadVSCodePMEntries() (string, []vscodepm.Entry, bool) {
+// entries plus the resolved file path. When opts.ProjectsJSON is set
+// the resolver is bypassed and the override path is used verbatim
+// (vscodepm.ListEntriesAt treats a missing file as an empty list, so
+// the override path can also be used to bootstrap a fresh file).
+// Otherwise the same soft-skip semantics as v4.36.0 apply: a missing
+// user-data root or extension dir returns ok=false so headless boxes
+// never fail-loud.
+func loadVSCodePMEntries(opts vscodePMSyncOpts) (string, []vscodepm.Entry, bool) {
+	if opts.ProjectsJSON != "" {
+		entries, err := vscodepm.ListEntriesAt(opts.ProjectsJSON)
+		if err != nil {
+			reportVSCodePMSoftError(err)
+			return opts.ProjectsJSON, nil, false
+		}
+
+		return opts.ProjectsJSON, entries, true
+	}
+
 	path, pathErr := vscodepm.ProjectsJSONPath()
 	entries, listErr := vscodepm.ListEntries()
 
@@ -117,11 +109,17 @@ func firstNonNil(errs ...error) error {
 }
 
 // buildVSCodePMSyncPairs converts every on-disk entry into a Pair
-// carrying freshly-detected tags. Entries whose rootPath is missing
-// on disk are skipped (count returned as the second value) so the
-// re-sync never inadvertently strips tags from intentionally-offline
-// removable-drive projects — Sync only touches entries it sees.
-func buildVSCodePMSyncPairs(entries []vscodepm.Entry) ([]vscodepm.Pair, int) {
+// carrying tags. Tag source:
+//
+//   - opts.HasTagOverride => opts.TagOverride verbatim (the
+//     `gitmap` brand tag is NOT auto-prepended; the user owns the
+//     full set).
+//   - otherwise           => vscodepm.DetectTagsCustom(rootPath).
+//
+// Entries whose rootPath is missing on disk are skipped (count
+// returned as the second value) so the re-sync never inadvertently
+// strips tags from intentionally-offline removable-drive projects.
+func buildVSCodePMSyncPairs(entries []vscodepm.Entry, opts vscodePMSyncOpts) ([]vscodepm.Pair, int) {
 	pairs := make([]vscodepm.Pair, 0, len(entries))
 	skipped := 0
 
@@ -135,11 +133,23 @@ func buildVSCodePMSyncPairs(entries []vscodepm.Entry) ([]vscodepm.Pair, int) {
 			RootPath: e.RootPath,
 			Name:     e.Name,
 			Paths:    e.Paths,
-			Tags:     vscodepm.DetectTagsCustom(e.RootPath),
+			Tags:     resolveVSCodePMSyncTags(e.RootPath, opts),
 		})
 	}
 
 	return pairs, skipped
+}
+
+// resolveVSCodePMSyncTags returns the override list when --tag was
+// passed, else falls back to the detector. Centralised so the
+// "brand-tag NOT auto-prepended in override mode" contract is in
+// one place.
+func resolveVSCodePMSyncTags(rootPath string, opts vscodePMSyncOpts) []string {
+	if opts.HasTagOverride {
+		return append([]string(nil), opts.TagOverride...)
+	}
+
+	return vscodepm.DetectTagsCustom(rootPath)
 }
 
 // rootPathExists reports whether the entry's rootPath is a directory
@@ -168,13 +178,13 @@ func emitVSCodePMSyncDryRunReport(entries []vscodepm.Entry, pairs []vscodepm.Pai
 	fmt.Printf(constants.MsgVSCodePMSyncDryRun, len(pairs)+skipped, len(pairs))
 }
 
-// commitVSCodePMSync runs vscodepm.SyncMode and prints the standard
-// summary line, then a vscode-pm-sync-specific tally that includes
-// the count of skipped (missing-on-disk) entries. The MergeMode is
-// threaded through from the CLI flag so the merge engine knows
-// whether to union / replace / intersect tags.
-func commitVSCodePMSync(pairs []vscodepm.Pair, skipped int, mode vscodepm.MergeMode) {
-	summary, err := vscodepm.SyncMode(pairs, mode)
+// commitVSCodePMSync runs the appropriate sync entry point and
+// prints the standard summary line plus a vscode-pm-sync-specific
+// tally that includes the count of skipped (missing-on-disk)
+// entries. SyncAtMode is used when --projects-json bypassed the
+// resolver; otherwise the default-discovery SyncMode runs.
+func commitVSCodePMSync(pairs []vscodepm.Pair, skipped int, opts vscodePMSyncOpts) {
+	summary, err := runVSCodePMSyncWriter(pairs, opts)
 	if err != nil {
 		reportVSCodePMSoftError(err)
 		return
@@ -183,4 +193,15 @@ func commitVSCodePMSync(pairs []vscodepm.Pair, skipped int, mode vscodepm.MergeM
 	fmt.Printf(constants.MsgVSCodePMSyncSummary,
 		summary.Added, summary.Updated, summary.Unchanged, summary.Total)
 	fmt.Printf(constants.MsgVSCodePMSyncEntryStat, len(pairs), skipped)
+}
+
+// runVSCodePMSyncWriter dispatches to SyncAtMode (override path) or
+// SyncMode (default discovery). Split out so commitVSCodePMSync
+// stays under the 15-line function budget.
+func runVSCodePMSyncWriter(pairs []vscodepm.Pair, opts vscodePMSyncOpts) (vscodepm.SyncSummary, error) {
+	if opts.ProjectsJSON != "" {
+		return vscodepm.SyncAtMode(opts.ProjectsJSON, pairs, opts.Mode)
+	}
+
+	return vscodepm.SyncMode(pairs, opts.Mode)
 }

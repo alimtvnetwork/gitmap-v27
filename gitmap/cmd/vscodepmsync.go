@@ -35,7 +35,11 @@ import (
 func runVSCodePMSync(args []string) {
 	checkHelp(constants.CmdVSCodePMSync, args)
 
-	dryRun := parseVSCodePMSyncFlags(args)
+	dryRun, mode, err := parseVSCodePMSyncFlags(args)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
 
 	path, entries, ok := loadVSCodePMEntries()
 	if !ok {
@@ -56,21 +60,33 @@ func runVSCodePMSync(args []string) {
 		return
 	}
 
-	commitVSCodePMSync(pairs, skipped)
+	commitVSCodePMSync(pairs, skipped, mode)
 }
 
-// parseVSCodePMSyncFlags parses the (single) --dry-run flag.
-func parseVSCodePMSyncFlags(args []string) bool {
+// parseVSCodePMSyncFlags parses --dry-run and --mode. Returns the
+// dry-run bool, the resolved MergeMode, and a validation error from
+// ParseMergeMode (unknown --mode values fail loud per the
+// zero-swallow rule rather than silently defaulting to union).
+func parseVSCodePMSyncFlags(args []string) (bool, vscodepm.MergeMode, error) {
 	fs := flag.NewFlagSet(constants.CmdVSCodePMSync, flag.ExitOnError)
 
 	dryRun := fs.Bool(
 		constants.FlagVSCodePMSyncDryRun, false,
 		constants.FlagDescVSCodePMSyncDryRun,
 	)
+	modeRaw := fs.String(
+		constants.FlagVSCodePMSyncMode, constants.VSCodePMSyncModeUnion,
+		constants.FlagDescVSCodePMSyncMode,
+	)
 
 	_ = fs.Parse(args)
 
-	return *dryRun
+	mode, err := vscodepm.ParseMergeMode(*modeRaw)
+	if err != nil {
+		return false, vscodepm.MergeModeUnion, err
+	}
+
+	return *dryRun, mode, nil
 }
 
 // loadVSCodePMEntries reads projects.json and returns the parsed
@@ -152,11 +168,13 @@ func emitVSCodePMSyncDryRunReport(entries []vscodepm.Entry, pairs []vscodepm.Pai
 	fmt.Printf(constants.MsgVSCodePMSyncDryRun, len(pairs)+skipped, len(pairs))
 }
 
-// commitVSCodePMSync runs vscodepm.Sync and prints the standard
+// commitVSCodePMSync runs vscodepm.SyncMode and prints the standard
 // summary line, then a vscode-pm-sync-specific tally that includes
-// the count of skipped (missing-on-disk) entries.
-func commitVSCodePMSync(pairs []vscodepm.Pair, skipped int) {
-	summary, err := vscodepm.Sync(pairs)
+// the count of skipped (missing-on-disk) entries. The MergeMode is
+// threaded through from the CLI flag so the merge engine knows
+// whether to union / replace / intersect tags.
+func commitVSCodePMSync(pairs []vscodepm.Pair, skipped int, mode vscodepm.MergeMode) {
+	summary, err := vscodepm.SyncMode(pairs, mode)
 	if err != nil {
 		reportVSCodePMSoftError(err)
 		return

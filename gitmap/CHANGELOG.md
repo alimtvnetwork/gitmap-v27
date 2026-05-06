@@ -1,5 +1,30 @@
 # Changelog
 
+## v4.29.0 — golden CSVs: pin CRLF via .gitattributes (real root cause)
+
+### Fixed
+- v4.28.0 regenerated `gitmap/clonefrom/testdata/clonefrom_report_*.csv`
+  and `gitmap/formatter/testdata/scan_*.csv` but the broad
+  `testdata/** text eol=lf` rule in `.gitattributes` immediately re-stripped
+  every `\r` on the next checkout — so CI saw a 1-byte-per-line drift again
+  (`want 267 / got 271`, `want 429 / got 436`, etc.). The CSV writers
+  (`clonefrom/summary.go` `writeReportRows`, `formatter/csv.go`) set
+  `csv.Writer.UseCRLF = true` per `csvcrlf_contract_test.go`, so the disk
+  fixture MUST stay CRLF.
+- Added more-specific overrides in `.gitattributes`:
+  ```
+  gitmap/clonefrom/testdata/clonefrom_report_*.csv  -text eol=crlf
+  gitmap/formatter/testdata/scan_*.csv              -text eol=crlf
+  ```
+  `-text` flags them as binary (no munging) AND `eol=crlf` belt-and-suspenders
+  forces the line ending on any platform. More-specific patterns win over the
+  generic `testdata/**` rule.
+
+### Notes
+- This is the durable fix for the v4.27.0 / v4.28.0 CRLF regression class.
+  Any future CRLF-emitting golden CSV must add a `-text eol=crlf` override.
+- No production code changed. Fixture-only + `.gitattributes`.
+
 ## v4.28.0 — golden CSVs: regenerate after gofmt-sweep CRLF→LF drift
 
 ### Fixed

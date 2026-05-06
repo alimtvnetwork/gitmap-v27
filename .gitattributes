@@ -16,3 +16,13 @@ testdata/**         text eol=lf
 
 # Go sources: enforce LF so gofmt / CI gofmt audit isn't fighting CRLF.
 *.go                text eol=lf
+
+# CRLF-emitting golden CSVs: writeReportRows / formatter csv.go set
+# csv.Writer.UseCRLF=true (per csvcrlf_contract_test.go) so the on-disk
+# fixture MUST keep \r\n. The broad `testdata/** text eol=lf` rule above
+# was stripping the \r on every checkout, breaking byte-exact golden
+# comparisons with a 1-byte-per-line drift. More-specific rules win, so
+# pin these CSVs to CRLF (and `binary` to belt-and-suspenders disable
+# any future text munging like BOM/whitespace fixers).
+gitmap/clonefrom/testdata/clonefrom_report_*.csv  -text eol=crlf
+gitmap/formatter/testdata/scan_*.csv              -text eol=crlf

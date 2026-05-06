@@ -175,6 +175,24 @@ const (
 const (
 	FlagVSCodePMSyncDryRun     = "dry-run"
 	FlagDescVSCodePMSyncDryRun = "Preview projects.json changes without writing"
+	// FlagVSCodePMSyncProjectsJSON overrides the resolved
+	// projects.json location for a single run. Useful when VS Code
+	// is installed in a non-standard location (portable build,
+	// remote-dev container, second user profile) or when scripting
+	// against a backup copy. Path must be absolute. When omitted the
+	// command falls back to the default discovery chain.
+	FlagVSCodePMSyncProjectsJSON     = "projects-json"
+	FlagDescVSCodePMSyncProjectsJSON = "Absolute path to projects.json (overrides VS Code user-data discovery)"
+	// FlagVSCodePMSyncTag REPLACES the auto-detected tag set for
+	// every entry with the user-supplied list. Repeatable AND
+	// accepts a comma-separated value: `--tag a --tag b,c` produces
+	// {a,b,c}. Differs from the global `--vscode-tag` (which only
+	// ADDS to detection); use this when you want exact control over
+	// what lands in projects.json. The "gitmap" brand tag is NOT
+	// auto-prepended in this mode — pass it explicitly if you want
+	// to keep it.
+	FlagVSCodePMSyncTag     = "tag"
+	FlagDescVSCodePMSyncTag = "Replace detected tags with this name (repeatable; accepts comma-list). Use instead of --vscode-tag for exact control"
 )
 
 // Audit-legacy defaults + flag names. Patterns are comma-separated regexes.

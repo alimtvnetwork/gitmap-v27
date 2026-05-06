@@ -160,6 +160,19 @@ func generatePowerShell() string {
         return
     }
 
+    if ($cmd -eq "vscode-pm-sync" -or $cmd -eq "vpm") {
+        if ($prev -eq "--mode") {
+            $items = @("union", "replace", "intersection")
+        } elseif ($prev -eq "--projects-json") {
+            $items = @()
+        } else {
+            $items = @("--dry-run", "--projects-json", "--tag", "--mode")
+        }
+        $items | Where-Object { $_ -like "$wordToComplete*" } |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_) }
+        return
+    }
+
     if ($cmd -eq "llm-docs" -or $cmd -eq "ld") {
         if ($prev -eq "--format") {
             $items = @("markdown", "json")

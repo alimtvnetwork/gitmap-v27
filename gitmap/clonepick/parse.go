@@ -50,7 +50,7 @@ func ParseArgs(rawURL, rawPaths string, flags Flags) (Plan, error) {
 	plan.RepoUrl = url
 	plan.RepoCanonicalId = gitutil.CanonicalRepoID(url)
 
-	paths, err := normalisePaths(rawPaths)
+	paths, err := normalisePaths(rawPaths, flags.Ask)
 	if err != nil {
 		return plan, err
 	}
@@ -164,10 +164,15 @@ func shorthandToURL(host, owner, repo, mode string) string {
 }
 
 // normalisePaths splits, validates, deduplicates, and sorts the
-// comma-separated path list. Returns the cleaned slice or the first
-// validation error.
-func normalisePaths(raw string) ([]string, error) {
+// comma-separated path list. askMode==true permits an empty list:
+// the picker will fill it in interactively, so requiring `<paths>`
+// up front would be a usability bug.
+func normalisePaths(raw string, askMode bool) ([]string, error) {
 	if len(strings.TrimSpace(raw)) == 0 {
+		if askMode {
+			return nil, nil
+		}
+
 		return nil, fmt.Errorf("%s", constants.MsgClonePickMissingPaths)
 	}
 	seen := make(map[string]struct{})

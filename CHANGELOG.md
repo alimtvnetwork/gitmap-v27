@@ -1,5 +1,22 @@
 # Changelog
 
+## v4.32.0 — (2026-05-06) — Routing-test guard for new docs pages + pinned-version refresh in root README
+
+- New `src/test/new-command-pages.test.ts` (26 tests) regression-guards
+  the v4.31.0 docs additions: for each of `commit-in`, `replace`,
+  `fix-repo`, `clone-fix-repo`, and `make-public` it asserts the page
+  file exists, renders the expected `<h1>`, is imported + routed in
+  `App.tsx`, and has a matching `DocsSidebar` entry. A final assertion
+  verifies all five `<Route>`s are declared before the wildcard
+  `NotFound` route so they stay reachable.
+- Root `README.md` install section: pinned-version block, version
+  matrix, and all download URLs / asset filenames refreshed from
+  `v4.1.0` → `v4.32.0` so the documented pinned build matches the
+  current binary.
+- Web `VERSION` constant bumped to `v4.32.0` (kept in lockstep with
+  the Go binary by `version-sync.test.ts`).
+
+
 ## v4.31.0 — (2026-05-06) — Docs UI: dedicated pages + sidebar entries for `commit-in`, `replace`, `fix-repo`, `clone-fix-repo`, and `make-public`; root README refresh
 
 - New docs pages added under their own routes:

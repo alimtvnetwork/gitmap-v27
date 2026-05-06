@@ -1,5 +1,34 @@
 # Changelog
 
+## v4.24.0 — release-version snippet Vitest wiring (spec 105 follow-up)
+
+### Added
+- `src/pages/releaseVersionSnippets.ts` — extracted the pure
+  snippet builder (`buildReleaseSnippets`), semver guard
+  (`isValidReleaseVersion`), and `normalizeReleaseVersion` from
+  `ReleaseVersion.tsx` so they can be unit-tested without
+  mounting React.
+- `src/test/release-version-snippets.test.ts` — 12 Vitest cases
+  covering: semver acceptance/rejection (incl. `latest` rejected),
+  Windows + Unix pinned/generic snippet structure, inline
+  snapshots for both platforms, and **spec 105 invariants** —
+  the word "latest" never appears, `/releases/latest` is never
+  referenced, and the requested version is baked into every URL.
+
+### Changed
+- `src/pages/ReleaseVersion.tsx` now imports the helpers from
+  `releaseVersionSnippets.ts` instead of defining them inline.
+  Zero behaviour change; rendered output is byte-identical.
+
+### Why
+Spec 105 promises that the `/release/:version` page never
+silently resolves to `latest`. Until now that promise lived only
+in the page source — easy to regress in a quick edit. The new
+test suite locks the contract: any future change that lets the
+word "latest" or a `/releases/latest` URL slip into either
+snippet, or that drops the version from a URL, fails CI.
+
+
 ## v4.23.0 — web `VERSION` resynced + drift-guard test
 
 ### Fixed

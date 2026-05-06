@@ -4,7 +4,7 @@ description: Dedicated `release-version.ps1` / `.sh` used ONLY by /release/:vers
 type: feature
 ---
 
-# Feature: `release-version.ps1` / `release-version.sh` (spec 105, planned v3.39.0)
+# Feature: `release-version.ps1` / `release-version.sh` (spec 105, shipped v3.39.0; web Vitest wiring v4.24.0)
 
 **Spec:** `spec/01-app/105-release-version-script.md`
 **Replaces:** the (incorrect) practice of pointing `/release/:version` pages at the generic latest-resolving `install.ps1`.

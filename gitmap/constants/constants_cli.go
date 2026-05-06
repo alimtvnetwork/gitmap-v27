@@ -158,6 +158,23 @@ const (
 	// short alias is `cin`.
 	CmdCommitIn      = "commit-in"
 	CmdCommitInAlias = "cin"
+	// CmdVSCodePMSync walks every entry already present in the
+	// alefragnani.project-manager projects.json file and re-runs the
+	// gitmap auto-tag detector against each rootPath, then merges the
+	// detected tags (always including the "gitmap" brand tag) into the
+	// existing tags array. User-added tags are preserved (union, never
+	// truncate). Foreign entries that point at deleted folders are
+	// skipped — their tags are left untouched. Spec:
+	// spec/01-vscode-project-manager-sync/04-tag-resync.md.
+	// Help: vscode-pm-sync.md.
+	CmdVSCodePMSync      = "vscode-pm-sync"
+	CmdVSCodePMSyncAlias = "vpm"
+)
+
+// vscode-pm-sync flag names + descriptions.
+const (
+	FlagVSCodePMSyncDryRun     = "dry-run"
+	FlagDescVSCodePMSyncDryRun = "Preview projects.json changes without writing"
 )
 
 // Audit-legacy defaults + flag names. Patterns are comma-separated regexes.

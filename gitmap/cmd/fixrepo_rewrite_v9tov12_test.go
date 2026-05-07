@@ -38,17 +38,22 @@ import (
 // rename collapsed every `-v9` token into `-v16` and silently broke
 // the test (rewriter found 0 tokens to bump). See
 // .lovable/memory/issues/2026-05-01-fixrepo-digit-capture-desync.md.
-const fixRepoV9ToV12FixtureBody = `// fixture-stamp: name=fixrepo-v9-to-v12 generation=2 min-current=12 for=v9->v12-width-cross sha=7e1463d1eae6
+// IMPORTANT: base MUST be a synthetic name (e.g. `acme`) — using the
+// project's own module suffix (`gitmap`) collapses to `gitmap-v19` /
+// `gitmap-v110` under fix-repo runs against this very repo, silently
+// erasing the v9 tokens. See mem://FIX-REPO DIGIT-CAPTURE GAP and
+// .lovable/memory/issues/2026-05-01-fixrepo-digit-capture-desync.md.
+const fixRepoV9ToV12FixtureBody = `// fixture-stamp: name=fixrepo-v9-to-v12 generation=3 min-current=12 for=v9->v12-width-cross sha=916cb2573c38
 module example.com/consumer
 
 require (
-	github.com/alimtvnetwork/gitmap-v9 v0.0.0
+	github.com/example/acme-v9 v0.0.0
 )
 
-import gm "github.com/alimtvnetwork/gitmap-v9/gitmap/cmd"
+import gm "github.com/example/acme-v9/pkg"
 
-// repo URL: https://github.com/alimtvnetwork/gitmap-v9.git
-// guarded:  gitmap-v10 must NOT be rewritten by target=9 (v9 is a
+// repo URL: https://github.com/example/acme-v9.git
+// guarded:  acme-v10 must NOT be rewritten by target=9 (v9 is a
 //           prefix of v10 — the negative-lookahead guard skips it)
 `
 
@@ -58,7 +63,7 @@ import gm "github.com/alimtvnetwork/gitmap-v9/gitmap/cmd"
 // and feeds the new slug back through remoteSlugRe.
 func TestFixRepoRewriteV9ToV12Fixture(t *testing.T) {
 	const (
-		base    = "gitmap"
+		base    = "acme"
 		target  = 9
 		current = 12
 	)

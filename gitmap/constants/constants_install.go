@@ -352,6 +352,7 @@ var InstallToolDescriptions = map[string]string{
 	ToolOBS:           "OBS Studio screen recorder and streamer",
 	ToolVSCodeCtx:     "Add VS Code to Windows right-click context menu",
 	ToolPwshCtx:       "Add PowerShell to Windows right-click context menu",
+	ToolCtx:           ToolCtxDesc,
 	ToolAllDevTools:   "Install all core developer tools at once",
 	ToolNpp:           "NPP + Settings -- Notepad++ with settings",
 	ToolNppSettings:   "NPP Settings -- Notepad++ settings sync only",

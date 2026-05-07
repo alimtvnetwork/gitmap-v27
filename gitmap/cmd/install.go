@@ -133,6 +133,8 @@ func specialInstallHandler(tool string) func(installOptions) {
 		return func(installOptions) { runVSCodeContextMenu() }
 	case constants.ToolPwshCtx:
 		return func(installOptions) { runPwshContextMenu() }
+	case constants.ToolCtx:
+		return func(installOptions) { runInstallCtx() }
 	case constants.ToolAllDevTools:
 		return func(opts installOptions) { runAllDevTools(opts) }
 	}

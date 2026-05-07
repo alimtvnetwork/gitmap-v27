@@ -41,10 +41,10 @@ type RawArgs struct {
 	FunctionIntel string   // "on" | "off" | "" (unset)
 	Languages     []string // FunctionIntelLanguage literals
 
-	IsNoPrompt         bool
-	IsDryRun           bool
-	IsKeepTemp         bool
-	IsNoReleaseBranch  bool // --no-release-branch; default false (branches ON)
+	IsNoPrompt        bool
+	IsDryRun          bool
+	IsKeepTemp        bool
+	IsNoReleaseBranch bool // --no-release-branch; default false (branches ON)
 }
 
 // MessageRuleArg is the parsed shape of one `--message-exclude` entry.

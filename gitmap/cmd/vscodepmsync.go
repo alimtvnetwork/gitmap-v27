@@ -11,6 +11,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/alimtvnetwork/gitmap-v19/gitmap/cliexit"
 	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"

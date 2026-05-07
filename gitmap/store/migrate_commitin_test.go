@@ -40,6 +40,8 @@ func TestCommitInMigrationCreatesAllTables(t *testing.T) {
 		"Profile", "ProfileExclusion", "ExclusionKind",
 		"ProfileMessageRule", "MessageRuleKind",
 		"FunctionIntelLanguage", "ConflictMode",
+		// Migration 007 — tag replay map (spec §09).
+		"CommitInReplayMap", "TagReplayOutcome",
 	}
 	for _, name := range wantTables {
 		if !db.tableExists(name) {
@@ -66,6 +68,7 @@ func TestCommitInMigrationSeedsEnumMirrors(t *testing.T) {
 		{"MessageRuleKind", []string{"Contains", "EndsWith", "StartsWith"}},
 		{"FunctionIntelLanguage", []string{"CSharp", "Go", "Java", "JavaScript", "Php", "Python", "Rust", "TypeScript"}},
 		{"ConflictMode", []string{"ForceMerge", "Prompt"}},
+		{"TagReplayOutcome", []string{"AlreadyExists", "Created", "CreatedDryRun", "Failed", "Skipped"}},
 	}
 	for _, tc := range cases {
 		got := selectNames(t, db, tc.table)

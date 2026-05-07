@@ -141,7 +141,7 @@ func TestLookupTagReplayMissesOnFailedOutcome(t *testing.T) {
 	runID, rewID := seedRewrittenRow(t, db, "src4", "new4")
 	_, _ = RecordTagReplay(db, runID, rewID, TagReplayFacts{
 		SourceTagName: "v3.0.0", SourceTagSha: "tag-sha-4",
-		SourceCommitSha: "src4", IsVersionTag: true,
+		SourceCommitSha: "src4", IsAnnotated: true, IsVersionTag: true,
 		Outcome: constants.TagReplayOutcomeFailed,
 	})
 	if _, err := LookupTagReplay(db, "v3.0.0", "tag-sha-4"); !errors.Is(err, ErrTagReplayMiss) {

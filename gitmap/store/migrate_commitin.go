@@ -46,6 +46,12 @@ func commitInDDL() []string {
 		constants.SQLCreateCommitInSkipLog,
 		constants.SQLCreateCommitInShaMap,
 		constants.SQLCreateCommitInShaMapIdx,
+		// Migration 007 — tag replay map (spec §09).
+		constants.SQLCreateCommitInTagOutcome,
+		constants.SQLCreateCommitInReplayMap,
+		constants.SQLCreateCommitInReplayMapTagNameIdx,
+		constants.SQLCreateCommitInReplayMapDestShaIdx,
+		constants.SQLCreateCommitInReplayMapBranchIdx,
 		// Enum-mirror seeds.
 		constants.SQLSeedCommitInRunStatus,
 		constants.SQLSeedCommitInInputKind,

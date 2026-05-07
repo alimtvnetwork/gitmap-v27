@@ -41,7 +41,7 @@ func TestVSCodePMSyncSkipsMissingRootPaths(t *testing.T) {
 		{Name: "blank", RootPath: "", Tags: []string{"user"}},
 	}
 
-	pairs, skipped := buildVSCodePMSyncPairs(entries)
+	pairs, skipped := buildVSCodePMSyncPairs(entries, vscodePMSyncOpts{})
 
 	if got, want := len(pairs), 1; got != want {
 		t.Fatalf("pairs: got %d, want %d", got, want)
@@ -64,7 +64,7 @@ func TestVSCodePMSyncPairsCarryGitmapBrandTag(t *testing.T) {
 	}
 
 	entries := []vscodepm.Entry{{Name: "x", RootPath: tmp, Tags: nil}}
-	pairs, _ := buildVSCodePMSyncPairs(entries)
+	pairs, _ := buildVSCodePMSyncPairs(entries, vscodePMSyncOpts{})
 
 	if len(pairs) != 1 {
 		t.Fatalf("expected 1 pair, got %d", len(pairs))

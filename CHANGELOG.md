@@ -1,5 +1,15 @@
 # Changelog
 
+## v4.40.0 — (2026-05-07) — Minor version bump; pin root README install snippets and version matrix to v4.40.0
+
+### Changed
+
+- Bumped `Version` constant to `4.40.0` (Go) and `VERSION` to `v4.40.0` (web)
+  in lock-step to satisfy the `version-sync` regression test.
+- Re-pinned the root `README.md` "Pinned version" section, one-line installers,
+  and the per-platform version matrix (Windows/macOS/Linux × amd64/arm64) to
+  the new `v4.40.0` release tag and `gitmap-v19.40.0-*` asset names.
+
 ## v4.39.0 — (2026-05-07) — CI lint cleanup: misspellings (`centralised`/`materialises`/`honoured`), unused `mergePairs`, gofmt drift, `string(before) != string(after)` → `bytes.Equal`
 
 ### Fixed

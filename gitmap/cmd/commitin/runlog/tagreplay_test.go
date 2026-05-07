@@ -164,15 +164,67 @@ func TestRecordTagReplayUniqueConstraintBlocksDuplicateInRun(t *testing.T) {
 	runID, rewID := seedRewrittenRow(t, db, "src5", "new5")
 	if _, err := RecordTagReplay(db, runID, rewID, TagReplayFacts{
 		SourceTagName: "v4.0.0", SourceTagSha: "t1", SourceCommitSha: "src5",
-		IsVersionTag: true, Outcome: constants.TagReplayOutcomeCreated,
+		IsAnnotated: true, IsVersionTag: true, Outcome: constants.TagReplayOutcomeCreated,
 	}); err != nil {
 		t.Fatalf("first insert: %v", err)
 	}
 	if _, err := RecordTagReplay(db, runID, rewID, TagReplayFacts{
 		SourceTagName: "v4.0.0", SourceTagSha: "t1", SourceCommitSha: "src5",
-		IsVersionTag: true, Outcome: constants.TagReplayOutcomeCreated,
+		IsAnnotated: true, IsVersionTag: true, Outcome: constants.TagReplayOutcomeCreated,
 	}); err == nil {
 		t.Fatal("expected UNIQUE violation, got nil")
+	}
+}
+
+// TestRecordTagReplayRejectsLightweightVersionTag locks the strict-
+// semver gate at the persistence boundary: a caller asserting
+// IsVersionTag=true on a lightweight tag (IsAnnotated=false) MUST be
+// rejected with ErrLightweightVersionTag and NOT insert a row.
+func TestRecordTagReplayRejectsLightweightVersionTag(t *testing.T) {
+	db := openTagReplayDB(t)
+	runID, rewID := seedRewrittenRow(t, db, "src6", "new6")
+	_, err := RecordTagReplay(db, runID, rewID, TagReplayFacts{
+		SourceTagName: "v5.0.0", SourceTagSha: "t-lw", SourceCommitSha: "src6",
+		IsAnnotated: false, IsVersionTag: true,
+		Outcome: constants.TagReplayOutcomeCreated,
+	})
+	if !errors.Is(err, ErrLightweightVersionTag) {
+		t.Fatalf("expected ErrLightweightVersionTag, got %v", err)
+	}
+	var n int
+	if err := db.QueryRow(
+		`SELECT COUNT(*) FROM CommitInReplayMap WHERE SourceTagName=?`, "v5.0.0",
+	).Scan(&n); err != nil {
+		t.Fatalf("count: %v", err)
+	}
+	if n != 0 {
+		t.Fatalf("rejected insert leaked a row: count=%d", n)
+	}
+}
+
+// TestClassifyVersionTagStrictMatrix locks the canonical strict-semver
+// classifier: annotated AND name-matches → true; everything else false.
+func TestClassifyVersionTagStrictMatrix(t *testing.T) {
+	cases := []struct {
+		name        string
+		isAnnotated bool
+		want        bool
+	}{
+		{"v1.2.3", true, true},
+		{"v1.2.3", false, false}, // lightweight rejected even with valid name
+		{"1.2.3", true, true},
+		{"1.2.3", false, false},
+		{"nightly", true, false}, // annotated but not semver
+		{"nightly", false, false},
+		{"v1.2", true, false}, // annotated but not full semver
+		{"", true, false},
+	}
+	for _, tc := range cases {
+		got := ClassifyVersionTag(tc.name, tc.isAnnotated)
+		if got != tc.want {
+			t.Errorf("ClassifyVersionTag(%q, annotated=%v) = %v, want %v",
+				tc.name, tc.isAnnotated, got, tc.want)
+		}
 	}
 }
 

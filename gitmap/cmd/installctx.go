@@ -9,51 +9,6 @@ import (
 	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 )
 
-// ctxEntry defines the structure for the context menu hierarchy.
-type ctxEntry struct {
-	KeyName  string
-	MUIVerb  string
-	Args     []string
-	Mode     string
-	Children []ctxEntry
-}
-
-// ctxMenu defines the gitmap context menu structure.
-func ctxMenu() []ctxEntry {
-	return []ctxEntry{
-		{
-			KeyName: "gitmap_status",
-			MUIVerb: "Status",
-			Mode:    constants.CtxModeSilent,
-			Args:    []string{"status"},
-		},
-		{
-			KeyName: "gitmap_log",
-			MUIVerb: "Log",
-			Mode:    constants.CtxModeTerminal,
-			Args:    []string{"log"},
-		},
-		{
-			KeyName: "gitmap_remote",
-			MUIVerb: "Remote",
-			Children: []ctxEntry{
-				{
-					KeyName: "gitmap_remote_fetch",
-					MUIVerb: "Fetch",
-					Mode:    constants.CtxModeSilent,
-					Args:    []string{"fetch"},
-				},
-				{
-					KeyName: "gitmap_remote_pull",
-					MUIVerb: "Pull",
-					Mode:    constants.CtxModeTerminal,
-					Args:    []string{"pull"},
-				},
-			},
-		},
-	}
-}
-
 // runInstallCtx installs the gitmap right-click context menu (Windows-only v1).
 // Spec: spec/04-generic-cli/30-install-ctx.md.
 func runInstallCtx() {
@@ -92,8 +47,6 @@ func runUninstallCtx() {
 }
 
 // resolveCtxExe returns the absolute path to the running gitmap binary.
-// Used to template absolute exe paths into every \command key so the
-// context menu keeps working even when CWD differs.
 func resolveCtxExe() string {
 	exe, err := os.Executable()
 	if err != nil || exe == "" {

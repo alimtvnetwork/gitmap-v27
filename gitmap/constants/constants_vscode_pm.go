@@ -104,8 +104,8 @@ const (
 	MsgVSCodePMPathExtMissing  = "vscode: project-manager extension storage dir not found near %s (open VS Code, install the alefragnani.project-manager extension, then retry)\n"
 
 	// vscode-pm-sync (v4.36.0+) — full re-tag of every projects.json entry.
-	MsgVSCodePMSyncStart       = "→ vscode-pm-sync: re-tagging projects.json entries at %s\n"
-	MsgVSCodePMSyncDryRun      = "  • dry-run: %d entries scanned, %d would change (no write)\n"
-	MsgVSCodePMSyncEntryStat   = "  ✓ scanned %d entries, %d skipped (rootPath missing on disk)\n"
-	MsgVSCodePMSyncEmptyFile   = "  • projects.json contains 0 entries — nothing to re-tag\n"
+	MsgVSCodePMSyncStart     = "→ vscode-pm-sync: re-tagging projects.json entries at %s\n"
+	MsgVSCodePMSyncDryRun    = "  • dry-run: %d entries scanned, %d would change (no write)\n"
+	MsgVSCodePMSyncEntryStat = "  ✓ scanned %d entries, %d skipped (rootPath missing on disk)\n"
+	MsgVSCodePMSyncEmptyFile = "  • projects.json contains 0 entries — nothing to re-tag\n"
 )

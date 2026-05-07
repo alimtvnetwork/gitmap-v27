@@ -9,19 +9,19 @@
 // Modes:
 //
 //   - UNION         existing ∪ incoming, dedup'd, existing-order first.
-//                   The original v4.36.0 behavior. Default.
+//     The original v4.36.0 behavior. Default.
 //
 //   - REPLACE       incoming verbatim. User-added tags are dropped.
-//                   The detector (DetectTagsCustom) already pre-pends
-//                   the "gitmap" brand tag, so REPLACE naturally keeps
-//                   the brand without any special-case code path.
+//     The detector (DetectTagsCustom) already pre-pends
+//     the "gitmap" brand tag, so REPLACE naturally keeps
+//     the brand without any special-case code path.
 //
 //   - INTERSECTION  (existing ∩ incoming) ∪ {AutoTagGitmap}.
-//                   Strict set-AND, but the brand tag is ALWAYS pinned
-//                   so re-syncs never silently strip the gitmap brand
-//                   from an entry whose detector run no longer fires
-//                   (e.g. .git/ folder moved). Matches the brand-
-//                   everywhere rule introduced in v4.36.0.
+//     Strict set-AND, but the brand tag is ALWAYS pinned
+//     so re-syncs never silently strip the gitmap brand
+//     from an entry whose detector run no longer fires
+//     (e.g. .git/ folder moved). Matches the brand-
+//     everywhere rule introduced in v4.36.0.
 //
 // Magic strings: the literal mode names live in `constants_cli.go`
 // alongside the flag itself, never duplicated here.

@@ -132,4 +132,3 @@ func TestVSCodePMSyncDryRunDoesNotMutate(t *testing.T) {
 		t.Errorf("dry-run mutated projects.json")
 	}
 }
-

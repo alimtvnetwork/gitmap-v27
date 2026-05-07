@@ -5,13 +5,13 @@
 //
 //  1. UNION (default, no flag)        — existing ∪ detected, dedup'd.
 //  2. REPLACE (`--mode replace`)       — detector wins, user tags dropped,
-//                                        brand survives because the detector
-//                                        always pre-pends it.
+//     brand survives because the detector
+//     always pre-pends it.
 //  3. INTERSECTION (`--mode intersection`)
-//                                      — only tags in BOTH sources survive,
-//                                        plus the gitmap brand is PINNED
-//                                        (added back even when intersection
-//                                        is empty) per the v4.37.0 contract.
+//     — only tags in BOTH sources survive,
+//     plus the gitmap brand is PINNED
+//     (added back even when intersection
+//     is empty) per the v4.37.0 contract.
 //
 // The "bad mode" path (unknown literal) is covered by the package-
 // level ParseMergeMode unit test in vscodepm/mergemode_test.go;

@@ -49,6 +49,12 @@ func runUninstall(args []string) {
 
 	validateToolName(tool)
 
+	if tool == constants.ToolCtx {
+		runUninstallCtx()
+
+		return
+	}
+
 	db, err := openDB()
 	if err != nil {
 		if !force {

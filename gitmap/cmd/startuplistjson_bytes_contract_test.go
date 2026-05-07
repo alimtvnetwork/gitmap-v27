@@ -34,7 +34,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/startup"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/startup"
 )
 
 // TestStartupListJSONBytes_MultiEntry pins the exact bytes for a

@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/setup"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/setup"
 )
 
 // selfDeployDir returns the directory the live binary is installed in.

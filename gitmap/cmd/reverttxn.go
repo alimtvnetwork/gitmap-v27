@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/store"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/txn"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/txn"
 )
 
 // handleRevertTxnFlags dispatches the transaction-journal sub-modes of

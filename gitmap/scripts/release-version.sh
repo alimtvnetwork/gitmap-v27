@@ -33,7 +33,7 @@ fi
 
 set -euo pipefail
 
-REPO="alimtvnetwork/gitmap-v18"
+REPO="alimtvnetwork/gitmap-v19"
 BINARY_NAME="gitmap"
 
 VERSION=""

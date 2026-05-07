@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 )
 
 // WriteAtomic encodes ws and commits it to outPath via temp-file +

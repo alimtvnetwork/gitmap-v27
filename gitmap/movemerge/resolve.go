@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 )
 
 // ResolveEndpoint takes a raw CLI token and returns a fully resolved

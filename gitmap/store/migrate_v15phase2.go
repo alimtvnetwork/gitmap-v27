@@ -12,7 +12,7 @@ package store
 import (
 	"fmt"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 )
 
 // migrateV15Phase2 runs all Phase 1.2 table rebuilds in dependency-safe order.

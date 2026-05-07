@@ -23,9 +23,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/formatter"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/formatter"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
 )
 
 // ParseFile is the package's only public parser entry point.

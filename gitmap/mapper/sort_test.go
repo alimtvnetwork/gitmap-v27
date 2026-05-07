@@ -7,7 +7,7 @@ package mapper
 import (
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
 )
 
 // TestSortRecords_PathPrimaryKey pins the documented primary key:

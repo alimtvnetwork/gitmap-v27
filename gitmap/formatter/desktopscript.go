@@ -8,7 +8,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
 )
 
 // WriteDesktopScript writes a PowerShell script that registers repos with GitHub Desktop.

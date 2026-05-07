@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/vscodepm"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/vscodepm"
 )
 
 // syncRecordsToVSCodePM upserts every scanned repo into projects.json.

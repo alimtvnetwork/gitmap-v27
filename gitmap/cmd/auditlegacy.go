@@ -1,5 +1,5 @@
 // Package cmd: audit-legacy scans the workspace for forbidden legacy
-// strings (default: gitmap-v18 / gitmap-v18 / gitmap-v18) and exits 1 on // gitmap-legacy-ref-allow
+// strings (default: gitmap-v19 / gitmap-v19 / gitmap-v19) and exits 1 on // gitmap-legacy-ref-allow
 // any hit. Designed as a regression guard for remixes / rename commits.
 package cmd
 
@@ -12,8 +12,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/cliexit"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/cliexit"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 )
 
 // auditLegacyHit is one matched line.

@@ -12,8 +12,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/clonenext"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/clonenext"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 )
 
 // batchRowResult records one repo's outcome for the CSV report.

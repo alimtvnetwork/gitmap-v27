@@ -1,3 +1,3 @@
-module github.com/alimtvnetwork/gitmap-v18/scripts/changelog
+module github.com/alimtvnetwork/gitmap-v19/scripts/changelog
 
 go 1.24

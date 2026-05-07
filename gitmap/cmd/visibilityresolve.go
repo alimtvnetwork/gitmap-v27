@@ -13,9 +13,9 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/gitutil"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/release"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/gitutil"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/release"
 )
 
 // visibilityContext bundles the data resolved from the current repo.

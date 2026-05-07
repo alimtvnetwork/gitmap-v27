@@ -1,6 +1,6 @@
 package mapper
 
-import "github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
+import "github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 
 // BuildOptions bundles every configurable knob BuildRecords* exposes
 // so adding a new option later doesn't grow the helper signatures

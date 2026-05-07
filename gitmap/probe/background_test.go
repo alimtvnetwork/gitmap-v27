@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
 )
 
 // recordingSink captures every (record, result) pair under its own

@@ -14,7 +14,7 @@ tag**, regardless of:
 
 * whether a newer tag has since been published,
 * whether a newer **versioned sibling repo** exists
-  (`gitmap-v18`, `gitmap-v18`, …),
+  (`gitmap-v19`, `gitmap-v19`, …),
 * whether the user is offline from the GitHub releases API.
 
 The snippet is the **single source of truth** for "give me v3.11.1". It is
@@ -41,14 +41,14 @@ The exact template lives in `constants_release.go` as
 
 ```powershell
 $ver = 'v3.11.1'
-$installer = irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v18/main/gitmap/scripts/install.ps1
+$installer = irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v19/main/gitmap/scripts/install.ps1
 & ([scriptblock]::Create($installer)) -Version $ver -NoDiscovery
 ```
 
 ### 2.2 Bash snippet (rendered)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v18/main/gitmap/scripts/install.sh \
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v19/main/gitmap/scripts/install.sh \
   | bash -s -- --version v3.11.1 --no-discovery
 ```
 
@@ -88,7 +88,7 @@ When cutting a new release tag:
 4. **Run `gitmap release`**. The publisher auto-appends the pinned
    snippet — do not paste it manually.
 5. **Verify on the release page** that the snippet renders the correct
-   tag (e.g. `v3.12.0`) and points at `gitmap-v18` (not `gitmap-v18`).
+   tag (e.g. `v3.12.0`) and points at `gitmap-v19` (not `gitmap-v19`).
 
 ## 5. Test contract
 
@@ -103,4 +103,4 @@ Negative case for CI (future work, not yet wired):
 
 | Version | Change |
 |---|---|
-| v3.12.0 | Initial spec + implementation. Snippet auto-appended; both installers honor `--version` / `-Version` to skip discovery + latest lookup. Repo renamed `gitmap-v18` → `gitmap-v18` everywhere. |
+| v3.12.0 | Initial spec + implementation. Snippet auto-appended; both installers honor `--version` / `-Version` to skip discovery + latest lookup. Repo renamed `gitmap-v19` → `gitmap-v19` everywhere. |

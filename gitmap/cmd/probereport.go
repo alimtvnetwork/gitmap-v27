@@ -13,11 +13,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/probe"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/render"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/probe"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/render"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/store"
 )
 
 // probeJSONEntry is a single repo-level result emitted under `--json`.

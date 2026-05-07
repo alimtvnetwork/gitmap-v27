@@ -16,9 +16,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/store"
 )
 
 // runProbe dispatches `gitmap probe [<repo-path>|--all] [--json] [--workers N]`.

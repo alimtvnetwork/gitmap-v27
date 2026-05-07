@@ -1,3 +1,3 @@
-module github.com/alimtvnetwork/gitmap-v18/gitmap-updater
+module github.com/alimtvnetwork/gitmap-v19/gitmap-updater
 
 go 1.23.0

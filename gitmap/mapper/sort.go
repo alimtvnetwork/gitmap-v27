@@ -32,7 +32,7 @@ package mapper
 import (
 	"sort"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
 )
 
 // SortRecords sorts the slice in place using the documented

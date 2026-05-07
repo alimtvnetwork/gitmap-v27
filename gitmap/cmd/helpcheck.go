@@ -3,8 +3,8 @@ package cmd
 import (
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/gitutil"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/helptext"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/gitutil"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/helptext"
 )
 
 // checkHelp prints embedded help and exits if --help or -h is present.

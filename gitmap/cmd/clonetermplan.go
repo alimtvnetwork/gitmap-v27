@@ -27,9 +27,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/clonenow"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/clonepick"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/clonenow"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/clonepick"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 )
 
 // printCloneNowTermBlocks emits one block per plan row to stdout

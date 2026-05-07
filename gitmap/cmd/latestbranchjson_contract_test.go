@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/gitutil"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/gitutil"
 )
 
 // canonicalLatestResult builds a deterministic latestBranchResult

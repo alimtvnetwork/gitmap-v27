@@ -1,7 +1,7 @@
 package profile
 
 import (
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 )
 
 // Resolved is the final flattened settings after applying the load

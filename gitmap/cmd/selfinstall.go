@@ -13,9 +13,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/lockfile"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/scripts"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/lockfile"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/scripts"
 )
 
 // selfInstallOpts holds parsed flags for self-install.

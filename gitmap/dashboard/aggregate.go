@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
 )
 
 // authorAcc accumulates per-author commit data during aggregation.

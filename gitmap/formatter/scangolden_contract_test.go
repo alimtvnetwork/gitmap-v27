@@ -28,8 +28,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/goldenguard"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/goldenguard"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/model"
 )
 
 // canonicalScanRecords builds a deterministic 2-row fixture covering

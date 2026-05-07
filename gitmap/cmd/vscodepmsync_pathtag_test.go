@@ -16,7 +16,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/vscodepm"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/vscodepm"
 )
 
 // writeOverrideFixture creates a repo dir + a projects.json at an

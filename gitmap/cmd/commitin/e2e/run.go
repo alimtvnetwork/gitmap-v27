@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/cmd/commitin"
-	"github.com/alimtvnetwork/gitmap-v18/gitmap/cmd/commitin/orchestrator"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/cmd/commitin"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/cmd/commitin/orchestrator"
 )
 
 // RunResult bundles every output channel an E2E test needs to assert

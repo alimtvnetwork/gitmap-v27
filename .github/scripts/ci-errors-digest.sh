@@ -74,13 +74,15 @@ for dir in "$ROOT"/test-results-* "$ROOT"/e2e-output-* "$ROOT"/full-suite-output
     suite=$(basename "$dir" | sed 's/^test-results-//; s/^e2e-output-//')
     emit "── TEST FAILURES — ${suite} (${fails} failed) ──"
     # For each failing test, dump its name + the body lines that
-    # carry .go:NN:CC or expected/got/Error markers.
-    awk '
+    # carry .go:NN:CC or expected/got/Error markers. Capture awk
+    # output to a variable first — piping into `while read | emit`
+    # would run emit in a subshell and silently drop the appends.
+    body=$(awk '
       /^=== RUN[[:space:]]/   { name=$3; body=""; capturing=1; next }
       /^--- FAIL:/            {
                                  if (capturing) {
                                    print "  --- FAIL: " name
-                                   if (body != "") print body
+                                   if (body != "") printf "%s", body
                                  }
                                  capturing=0; body=""
                                  next
@@ -88,7 +90,8 @@ for dir in "$ROOT"/test-results-* "$ROOT"/e2e-output-* "$ROOT"/full-suite-output
       /^--- PASS:/            { capturing=0; body=""; next }
       capturing && /\.go:[0-9]+:/                                { body=body "    " $0 "\n" }
       capturing && /(expected|got:|want:|Error:|panic:|undefined|mismatch)/ { body=body "    " $0 "\n" }
-    ' "$log" | head -n "$MAX_PER_SECTION" | while IFS= read -r line; do emit "$line"; done
+    ' "$log" | head -n "$MAX_PER_SECTION")
+    while IFS= read -r line; do emit "$line"; done <<< "$body"
     emit ""
     totalErrors=$((totalErrors + fails))
   done

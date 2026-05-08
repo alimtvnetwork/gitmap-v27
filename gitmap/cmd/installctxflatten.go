@@ -46,11 +46,12 @@ func flatEntry(category string, e ctxEntry) flatCtxEntry {
 	label += e.MUIVerb
 
 	return flatCtxEntry{
-		Label: label,
-		Slug:  slugifyCtx(label),
-		Args:  append([]string(nil), e.Args...),
-		Mode:  e.Mode,
-		Exe:   e.Exe,
+		Label:    label,
+		Slug:     slugifyCtx(label),
+		Args:     append([]string(nil), e.Args...),
+		Mode:     e.Mode,
+		Exe:      e.Exe,
+		Extended: e.Extended,
 	}
 }
 

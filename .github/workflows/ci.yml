@@ -1604,7 +1604,104 @@ jobs:
       - name: Run installer smoke (source mode)
         if: needs.sha-check.outputs.already-built != 'true'
         shell: pwsh
-        run: pwsh -File .github/scripts/smoke-installer.ps1 source
+
+  e2e-cross-platform:
+    # Runs the end-to-end test suites on each target OS so platform-
+    # specific code paths actually execute on the OS they ship to —
+    # not just on the cross-compile-clean ubuntu host.
+    #
+    # Coverage:
+    #   * gitmap/cmd/installctx_*_e2e_test.go — Windows registry,
+    #     macOS Automator .workflow bundles, Linux Nautilus/Dolphin/
+    #     Thunar artifacts. Each suite is gated by `//go:build` tags
+    #     that match its target GOOS, so running the full ./cmd/...
+    #     test binary on each runner exercises the right subset
+    #     without needing per-OS -run filters.
+    #   * gitmap/cmd/commitin/e2e/... — commit-in pipeline e2e.
+    #
+    # `cross-platform.yml` already runs `go test ./...` across the
+    # same OS triplet, but its scope is build-tag leak detection (it
+    # has no shard parallelism, no SHA-dedupe, no artifact upload).
+    # This job is the in-CI counterpart that gates merge on the
+    # actually-OS-tagged e2e suites passing on every PR, with the
+    # same dedupe + artifact pattern as the rest of `test` /
+    # `installer-smoke` so a re-run skips when the SHA already passed.
+    name: E2E (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    needs: [sha-check, lint]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        working-directory: gitmap
+    steps:
+      - name: Already validated
+        if: needs.sha-check.outputs.already-built == 'true'
+        shell: bash
+        run: echo "OK SHA ${{ github.sha }} already passed e2e (${{ matrix.os }})"
+
+      - uses: actions/checkout@v6
+        if: needs.sha-check.outputs.already-built != 'true'
+
+      - uses: actions/setup-go@v6
+        if: needs.sha-check.outputs.already-built != 'true'
+        with:
+          go-version-file: gitmap/go.mod
+          cache-dependency-path: gitmap/go.sum
+
+      # Per-OS GOCACHE slot. `runner.os` discriminates Linux/macOS/
+      # Windows so each runner warms its own cache and they never
+      # collide (the build artifacts are not portable across GOOS).
+      - name: Cache Go build cache (GOCACHE)
+        if: needs.sha-check.outputs.already-built != 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/Library/Caches/go-build
+            ~\AppData\Local\go-build
+          key: go-build-${{ runner.os }}-e2e-${{ hashFiles('gitmap/go.sum') }}-${{ github.sha }}
+          restore-keys: |
+            go-build-${{ runner.os }}-e2e-${{ hashFiles('gitmap/go.sum') }}-
+            go-build-${{ runner.os }}-e2e-
+
+      # Run the e2e-bearing packages with -count=1 (no test cache) so
+      # the OS-tagged suites really execute every run. Output is tee'd
+      # to a per-OS log for the artifact upload below. We deliberately
+      # do NOT pass -run filters: each installctx_*_e2e_test.go file
+      # is gated by `//go:build <goos>` so the test binary on each
+      # runner already only contains the suites that belong there.
+      - name: Run e2e suites
+        if: needs.sha-check.outputs.already-built != 'true'
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          go test ./cmd/... ./cmd/commitin/e2e/... -count=1 -v 2>&1 | tee e2e-output.txt
+          exit_code=${PIPESTATUS[0]}
+          set -e
+
+          if [ "$exit_code" -ne 0 ]; then
+            echo ""
+            echo "========================================="
+            echo "  FAILED E2E TESTS (${{ matrix.os }})"
+            echo "========================================="
+            grep -E -A 5 '^--- FAIL:' e2e-output.txt || true
+            echo "========================================="
+          fi
+
+          exit "$exit_code"
+
+      - name: Upload e2e log
+        if: always() && needs.sha-check.outputs.already-built != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-output-${{ matrix.os }}
+          path: gitmap/e2e-output.txt
+          retention-days: 7
+
 
   full-suite-guard:
     # Belt-and-suspenders gate that mirrors what a contributor runs locally:

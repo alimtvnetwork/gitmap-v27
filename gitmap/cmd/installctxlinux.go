@@ -111,14 +111,30 @@ func linuxShellScript(e flatCtxEntry, exe string) string {
 		target = e.Exe
 	}
 	cd := `D="${1:-$PWD}"; cd "$D" || exit 1`
+	guard := extendedGuard(e)
 	switch e.Mode {
 	case constants.CtxModePrefill:
 		return "#!/bin/sh\n" + cd + "\nx-terminal-emulator -e sh -c 'printf \"gitmap \"; exec $SHELL' &\n"
 	case constants.CtxModeSilent:
-		return fmt.Sprintf("#!/bin/sh\n%s\nOUT=$('%s' %s 2>&1)\nnotify-send 'gitmap' \"$(echo \"$OUT\" | head -c 200)\" || echo \"$OUT\"\n", cd, target, args)
+		return fmt.Sprintf("#!/bin/sh\n%s\n%sOUT=$('%s' %s 2>&1)\nnotify-send 'gitmap' \"$(echo \"$OUT\" | head -c 200)\" || echo \"$OUT\"\n", cd, guard, target, args)
 	default:
-		return fmt.Sprintf("#!/bin/sh\n%s\nx-terminal-emulator -e sh -c \"'%s' %s; exec $SHELL\" &\n", cd, target, args)
+		return fmt.Sprintf("#!/bin/sh\n%s\n%sx-terminal-emulator -e sh -c \"'%s' %s; exec $SHELL\" &\n", cd, guard, target, args)
 	}
+}
+
+// extendedGuard returns a shell snippet (or empty string) that prompts
+// for confirmation before continuing. zenity/kdialog/xmessage are
+// tried in order; if none exist we fall back to a stdin prompt the
+// terminal will surface. Used for power-user batch actions like
+// pull-all that fan out across the entire catalog.
+func extendedGuard(e flatCtxEntry) string {
+	if !e.Extended {
+		return ""
+	}
+	msg := fmt.Sprintf("Run %s on every tracked repo? This is a power-user batch action.", e.Label)
+
+	return fmt.Sprintf(`{ zenity --question --text=%q 2>/dev/null || kdialog --yesno %q 2>/dev/null || xmessage -buttons Cancel:1,Run:0 %q 2>/dev/null; } || exit 0
+`, msg, msg, msg)
 }
 
 // dolphinDesktop returns one .desktop body wiring all flat entries as

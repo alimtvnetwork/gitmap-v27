@@ -161,9 +161,10 @@ func commandTemplate(e ctxEntry, exe string) string {
 		target = e.Exe // resolved from PATH at runtime (e.g. "git")
 	}
 	args := strings.Join(e.Args, " ")
+	prefix := ctxExplainPrefixPwsh(target, e.Args)
 	if e.Mode == constants.CtxModeSilent {
-		return fmt.Sprintf(`pwsh -NoProfile -WindowStyle Hidden -Command "Set-Location '%%V'; & '%s' %s 2>&1 | Out-String | %% { msg.exe * $_ }"`, target, args)
+		return fmt.Sprintf(`pwsh -NoProfile -WindowStyle Hidden -Command "Set-Location '%%V'; %s& '%s' %s 2>&1 | Out-String | %% { msg.exe * $_ }"`, prefix, target, args)
 	}
 
-	return fmt.Sprintf(`pwsh -NoExit -NoProfile -Command "Set-Location '%%V'; & '%s' %s"`, target, args)
+	return fmt.Sprintf(`pwsh -NoExit -NoProfile -Command "Set-Location '%%V'; %s& '%s' %s"`, prefix, target, args)
 }

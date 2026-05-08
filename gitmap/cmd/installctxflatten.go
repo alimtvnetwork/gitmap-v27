@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"strings"
+
 	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
 )
 
@@ -57,8 +59,13 @@ func flatEntry(category string, e ctxEntry) flatCtxEntry {
 
 // slugifyCtx returns a filesystem-safe id: lowercase alphanumerics
 // joined by "-". Used as workflow folder, .desktop file, and Nautilus
-// script base names.
+// script base names. Common disambiguating glyphs (`+`, `#`) are
+// transliterated to letters BEFORE the strip pass so labels like
+// "C++ projects" vs "C# projects" do not collide on the same slug.
 func slugifyCtx(s string) string {
+	s = strings.ReplaceAll(s, "++", "pp")
+	s = strings.ReplaceAll(s, "+", "p")
+	s = strings.ReplaceAll(s, "#", "sharp")
 	out := make([]byte, 0, len(s))
 	dashed := false
 	for i := 0; i < len(s); i++ {

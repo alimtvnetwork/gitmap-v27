@@ -31,3 +31,13 @@ type: feature
 - Uninstall is scoped: never wildcards parent keys, only strips marker-delimited block in Thunar.
 
 Spec: `spec/04-generic-cli/30-install-ctx.md`.
+
+**Test coverage** (added v4.x, 5-step E2E suite under `gitmap/cmd/`):
+- `installctx_harness_test.go` — shared harness: `collectCtxLeaves`, `withExplain`, `fakeGitmapExe`, `containsAll`.
+- `installctx_argv_e2e_test.go` — cross-platform argv contract + Extended/explain coverage on every leaf via combined Win/Linux/mac render.
+- `installctx_windows_e2e_test.go` — both HKCU roots, `\command` key per leaf, mode-specific bodies, idempotent build, `--explain` toggle, uninstall.
+- `installctx_linux_e2e_test.go` (`linux||darwin`) — true HOME-redirected install/uninstall: Nautilus scripts, Dolphin `.desktop`, Thunar `uca.xml` marker block (idempotent), Extended zenity guard, `--explain` injection.
+- `installctx_darwin_e2e_test.go` (`darwin||linux`) — true `~/Library/Services` install: per-leaf `.workflow` bundle (`Info.plist` + `document.wflow`), Extended `display dialog`, `--explain` announce, idempotent snapshot.
+- `installctx_parity_e2e_test.go` — slug-set parity Win↔Linux↔mac, intentional `90_terminal`/`91_docs` top-level duplication regression (lines 29-32), flatten dedup proof, joined-argv parity Linux↔mac.
+
+**Intentional duplication**: `90_terminal` + `91_docs` are declared TWICE at the top level of `ctxMenu()` so the shortcuts surface both at the start AND end of the categorized list. `flattenCtxMenu()` dedupes them. Locked in by `TestCtxDuplicateTopLevelTerminalDocsRegression` + `TestCtxFlattenDedupesDuplicateTopLevelEntries`.

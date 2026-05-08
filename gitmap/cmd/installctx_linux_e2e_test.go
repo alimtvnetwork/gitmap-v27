@@ -52,7 +52,7 @@ func assertNautilusScripts(t *testing.T, home string, leaves []ctxFlatLeaf) {
 			continue
 		}
 		if !strings.HasPrefix(string(body), "#!/bin/sh") {
-			t.Errorf("%s missing shebang. body=%q", path, string(body[:min(len(body), 40)]))
+			t.Errorf("%s missing shebang. body starts: %q", path, firstN(string(body), 40))
 		}
 		assertLinuxBodyMatchesMode(t, path, string(body), l)
 	}

@@ -60,15 +60,6 @@ if [ -x "$DEPLOY_GUARD" ]; then
   echo "  ✓ deploy-layout guard passed"
 fi
 
-# 4. gofmt — block unformatted Go files (mirrors CI gofmt -l . gate)
-#
-# Runs against staged .go files only (not the full tree) so contributors
-# get fast feedback on the exact files they're committing. Uses `gofmt -l`
-# which prints filenames of unformatted files and exits 0 either way —
-# we treat any output as failure. Auto-fix recipe is printed verbatim.
-#
-# Note: must run BEFORE golangci-lint because gofmt-dirty files produce
-# noisy, confusing lint output that masks the real (formatting) cause.
 # 4. gofmt — auto-format staged .go files in place, then re-stage.
 #
 # Delegates to scripts/format-go.sh --staged so the same logic is reusable

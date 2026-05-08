@@ -102,31 +102,6 @@ func installDolphin(flat []flatCtxEntry, exe string) bool {
 	return true
 }
 
-// installThunar appends a marker-delimited <action> block to
-// ~/.config/Thunar/uca.xml. If the file is missing we create one with a
-// minimal <actions/> root.
-func installThunar(flat []flatCtxEntry, exe string) bool {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return false
-	}
-	path := filepath.Join(home, constants.CtxLinuxThunarRel)
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-		fmt.Fprintf(os.Stderr, constants.MsgCtxFsWriteFail, path, err)
-
-		return false
-	}
-	cur, _ := os.ReadFile(path)
-	body := thunarMerged(string(cur), flat, exe)
-	if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
-		fmt.Fprintf(os.Stderr, constants.MsgCtxFsWriteFail, path, err)
-
-		return false
-	}
-
-	return true
-}
-
 // linuxShellScript wraps one entry's command. $NAUTILUS_SCRIPT_CURRENT_URI
 // is unset under Dolphin/Thunar — we fall back to the first arg.
 func linuxShellScript(e flatCtxEntry, exe string) string {
@@ -172,29 +147,3 @@ func dolphinExec(e flatCtxEntry, exe string) string {
 }
 
 
-// stripThunarBlock removes the marker block from uca.xml, leaving
-// user-managed entries intact. Returns 1 if the file was rewritten.
-func stripThunarBlock(path string) int {
-	cur, err := os.ReadFile(path)
-	if err != nil {
-		return 0
-	}
-	s := string(cur)
-	begin, end := constants.CtxThunarMarkBegin, constants.CtxThunarMarkEnd
-	i := strings.Index(s, begin)
-	if i < 0 {
-		return 0
-	}
-	j := strings.Index(s[i:], end)
-	if j < 0 {
-		return 0
-	}
-	out := s[:i] + s[i+j+len(end):]
-	if err := os.WriteFile(path, []byte(out), 0o644); err != nil {
-		fmt.Fprintf(os.Stderr, constants.MsgCtxFsRmFail, path, err)
-
-		return 0
-	}
-
-	return 1
-}

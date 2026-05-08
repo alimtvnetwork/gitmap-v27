@@ -13,6 +13,7 @@ type flatCtxEntry struct {
 	Slug  string   // filesystem-safe id derived from label, "gitmap-release-release-next"
 	Args  []string // {"release", "--bump", "minor"}
 	Mode  constants.CtxMode
+	Exe   string // override executable; empty => use the gitmap binary
 }
 
 // flattenCtxMenu walks ctxMenu() into a flat list. Categories with

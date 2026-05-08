@@ -9,11 +9,12 @@ import (
 // Services / Nautilus scripts, so we flatten "Category ▸ Child" into a
 // single labelled entry. Single source of truth: ctxMenu().
 type flatCtxEntry struct {
-	Label string   // "gitmap: Release — Release next (bump minor)"
-	Slug  string   // filesystem-safe id derived from label, "gitmap-release-release-next"
-	Args  []string // {"release", "--bump", "minor"}
-	Mode  constants.CtxMode
-	Exe   string // override executable; empty => use the gitmap binary
+	Label    string   // "gitmap: Release — Release next (bump minor)"
+	Slug     string   // filesystem-safe id derived from label, "gitmap-release-release-next"
+	Args     []string // {"release", "--bump", "minor"}
+	Mode     constants.CtxMode
+	Exe      string // override executable; empty => use the gitmap binary
+	Extended bool   // power-user action: confirm-gated on macOS/Linux (Shift+click on Windows)
 }
 
 // flattenCtxMenu walks ctxMenu() into a flat list. Categories with

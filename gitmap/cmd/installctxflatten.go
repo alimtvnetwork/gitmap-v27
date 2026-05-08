@@ -49,6 +49,7 @@ func flatEntry(category string, e ctxEntry) flatCtxEntry {
 		Slug:  slugifyCtx(label),
 		Args:  append([]string(nil), e.Args...),
 		Mode:  e.Mode,
+		Exe:   e.Exe,
 	}
 }
 

@@ -27,6 +27,8 @@ func topLevelCmds() map[string]string {
 		"CmdGitHubDesktopAlias":    CmdGitHubDesktopAlias,
 		"CmdPull":                  CmdPull,
 		"CmdPullAlias":             CmdPullAlias,
+		"CmdPullAll":               CmdPullAll,
+		"CmdPullAllAlias":          CmdPullAllAlias,
 		"CmdRescan":                CmdRescan,
 		"CmdRescanAlias":           CmdRescanAlias,
 		"CmdRescanSubtree":         CmdRescanSubtree,

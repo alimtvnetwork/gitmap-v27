@@ -106,7 +106,7 @@ func TestCtxWindowsExtendedFlagOnlyOnExtended(t *testing.T) {
 	wantExtSlugs := map[string]bool{}
 	for _, l := range collectCtxLeaves(t) {
 		if l.Extended {
-			wantExtSlugs[lastSegment(l.Path)] = true
+			wantExtSlugs[lastPathSegment(l.Path)] = true
 		}
 	}
 
@@ -128,6 +128,17 @@ func lastSegment(key string) string {
 	}
 
 	return key
+}
+
+// lastPathSegment splits a dotted ctxFlatLeaf.Path ("20_clone.30_pull_all")
+// and returns the trailing segment ("30_pull_all"), which corresponds to
+// the leaf's Windows registry KeyName.
+func lastPathSegment(p string) string {
+	if i := strings.LastIndex(p, "."); i >= 0 {
+		return p[i+1:]
+	}
+
+	return p
 }
 
 // TestCtxWindowsCommandBodyMatchesMode asserts the per-mode pwsh

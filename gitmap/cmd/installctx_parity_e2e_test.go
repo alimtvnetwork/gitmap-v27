@@ -21,28 +21,32 @@ func TestCtxParityWindowsLinuxMacEmitSameLeafSet(t *testing.T) {
 		t.Fatal("no leaves to compare")
 	}
 
-	// Build the canonical (slug, argv, mode, extended, target) tuple set.
+	// Build the canonical (slug, argv, mode, extended, target, path) tuple set.
 	type tup struct {
-		Slug, Mode, Target string
-		Args               []string
-		Extended           bool
+		Slug, Mode, Target, Path string
+		Args                     []string
+		Extended                 bool
 	}
 	canonical := map[string]tup{}
 	for _, l := range leaves {
 		canonical[l.Slug] = tup{
 			Slug: l.Slug, Mode: string(l.Mode), Target: l.resolvedTarget(exe),
+			Path: l.Path,
 			Args: append([]string(nil), l.Args...), Extended: l.Extended,
 		}
 	}
 
 	// Windows view: derive from buildCtxInstallCommands — every leaf
-	// must have at least one \command write whose body references the
-	// resolved target.
+	// must have at least one \command write whose key matches the
+	// nested KeyName cascade (Path "20_clone.30_pull_all" =>
+	// "...\shell\20_clone\shell\30_pull_all\command") and whose body
+	// references the resolved target.
 	winSlugs := map[string]bool{}
 	for _, c := range buildCtxInstallCommands(exe) {
 		joined := strings.Join(c, " ")
 		for slug, tu := range canonical {
-			if strings.Contains(joined, `\shell\`+slug+`\command`) &&
+			winKey := `\shell\` + strings.ReplaceAll(tu.Path, ".", `\shell\`) + `\command`
+			if strings.Contains(joined, winKey) &&
 				strings.Contains(joined, tu.Target) {
 				winSlugs[slug] = true
 			}

@@ -99,6 +99,7 @@ const (
 	FlagDescInstallList    = "List all supported tools"
 	FlagDescInstallStatus  = "Show installed tools from database"
 	FlagDescInstallUpgrade = "Upgrade an already-installed tool"
+	FlagDescInstallExplain = "ctx only: each generated menu entry prints '> gitmap <args>' to the terminal/notification before executing, so users see the exact resolved invocation"
 	FlagDescInstallYes     = "Auto-confirm install without prompting"
 )
 

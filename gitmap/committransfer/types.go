@@ -114,6 +114,12 @@ type ReplayPlan struct {
 	BaseSHA     string         // git merge-base output (or "" if unrelated)
 	Commits     []SourceCommit // oldest-first
 	SkippedDrop int            // commits dropped by the drop filter
+
+	// MergeExcluded is the number of merge commits stripped from the
+	// source range because Options.IncludeMerges was false. Surfaced
+	// in PrintPlan / PrintSummary so the user can reconcile the plan
+	// count against `git log` (which includes merges by default).
+	MergeExcluded int
 }
 
 // ReplayResult is the outcome after the replay loop runs.

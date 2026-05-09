@@ -20,12 +20,38 @@ func BuildPlan(sourceDir, targetDir string, opts Options) (ReplayPlan, error) {
 	if err != nil {
 		return ReplayPlan{}, fmt.Errorf("rev-list source: %w", err)
 	}
+	mergeExcluded := countMergeExcluded(sourceDir, base, opts.IncludeMerges, len(shas))
 	if opts.Limit > 0 && len(shas) > opts.Limit {
 		shas = shas[:opts.Limit]
 	}
 	recentTargetLog, _ := recentLogSubjectsAndBodies(targetDir, 200)
 
-	return assemblePlan(sourceDir, targetDir, sourceHead, base, shas, recentTargetLog, opts)
+	plan, err := assemblePlan(sourceDir, targetDir, sourceHead, base, shas, recentTargetLog, opts)
+	if err == nil {
+		plan.MergeExcluded = mergeExcluded
+	}
+
+	return plan, err
+}
+
+// countMergeExcluded reports how many merge commits the planner
+// stripped from the source range. When IncludeMerges is true, merges
+// are kept and the count is always 0. When false, we re-run rev-list
+// without --no-merges and subtract.
+func countMergeExcluded(sourceDir, base string, includeMerges bool, mainlineCount int) int {
+	if includeMerges {
+		return 0
+	}
+	withMerges, err := revListReverse(sourceDir, base, "HEAD", true)
+	if err != nil {
+		return 0
+	}
+	delta := len(withMerges) - mainlineCount
+	if delta < 0 {
+		return 0
+	}
+
+	return delta
 }
 
 // resolveBase honors --since when set; otherwise asks git for the

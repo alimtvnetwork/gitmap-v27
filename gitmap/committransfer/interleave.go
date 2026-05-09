@@ -105,10 +105,15 @@ func replayInterleaveSteps(stream []interleaveStep, ltr, rtl ReplayPlan, opts Op
 
 			continue
 		}
-		newSHA, err := replayOne(plan, step.Commit, opts)
+		newSHA, _, err := replayOne(plan, step.Commit, opts)
 		if err != nil {
 			return fmt.Errorf("interleave step %d (%s %s): %w",
 				i+1, step.Direction, step.Commit.ShortSHA, err)
+		}
+		if newSHA == "" {
+			results[step.Direction].SkippedEmpty++
+
+			continue
 		}
 		results[step.Direction].NewSHAs = append(results[step.Direction].NewSHAs, newSHA)
 		results[step.Direction].Replayed++

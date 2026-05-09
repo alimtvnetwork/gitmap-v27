@@ -66,6 +66,33 @@ func PrintSummary(w io.Writer, prefix string, res ReplayResult) {
 	}
 }
 
+// PrintReconciliation writes a count-parity line so users can reconcile
+// what they saw in `git log` against what landed on the target. When
+// source-considered != accounted, a `discrepancy` line is written to
+// errW so CI scripts can detect drift.
+//
+// Issue: .lovable/memory/issues/2026-05-09-commit-transfer-count-mismatch.md
+func PrintReconciliation(w, errW io.Writer, prefix string, plan ReplayPlan, res ReplayResult) {
+	considered := len(plan.Commits) + plan.MergeExcluded
+	accounted := res.Replayed + res.SkippedDrop + res.SkippedReplayed +
+		res.SkippedEmpty + plan.MergeExcluded
+	mark := "ok"
+	if considered != accounted {
+		mark = "discrepancy"
+	}
+	fmt.Fprintf(w,
+		"%s reconcile: source-considered=%d, replayed=%d, skipped=%d (drop=%d, already-replayed=%d, empty=%d), merge-excluded=%d → accounted=%d [%s]\n",
+		prefix, considered, res.Replayed,
+		res.SkippedDrop+res.SkippedReplayed+res.SkippedEmpty,
+		res.SkippedDrop, res.SkippedReplayed, res.SkippedEmpty,
+		plan.MergeExcluded, accounted, mark)
+	if considered != accounted && errW != nil {
+		fmt.Fprintf(errW,
+			"%s reconcile DISCREPANCY: source-considered=%d but accounted=%d (delta=%d)\n",
+			prefix, considered, accounted, considered-accounted)
+	}
+}
+
 // Confirm reads "y" / "yes" from os.Stdin and returns true. Anything
 // else (including EOF) returns false.
 func Confirm(prefix string) bool {

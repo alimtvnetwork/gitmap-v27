@@ -160,22 +160,17 @@ jobs:
         if: needs.sha-check.outputs.already-built == 'true'
         run: echo "✅ SHA ${{ github.sha }} already passed spell-check"
 
-      - uses: actions/checkout@v6
-        if: needs.sha-check.outputs.already-built != 'true'
-
-      - uses: actions/setup-go@v6
-        if: needs.sha-check.outputs.already-built != 'true'
+      # Composite: checkout + setup-go + warm GOCACHE in one step.
+      # See .github/actions/setup-go-cached/action.yml.
+      - if: needs.sha-check.outputs.already-built != 'true'
+        uses: ./.github/actions/setup-go-cached
         with:
-          go-version: '1.24.13'
-          cache: false
+          cache-suffix: spell-check
 
-      - name: Install misspell (pinned)
-        if: needs.sha-check.outputs.already-built != 'true'
-        # Pinned to v0.3.4 (latest published tag of client9/misspell) —
-        # never use @latest per Core memory rule on
-        # third-party tool versions. Same locale (US) as the misspell
-        # entry inside .golangci.yml so verdicts cannot diverge.
-        run: go install github.com/client9/misspell/cmd/misspell@v0.3.4
+      # Composite: pinned `go install client9/misspell@v0.3.4`.
+      # See .github/actions/install-misspell/action.yml.
+      - if: needs.sha-check.outputs.already-built != 'true'
+        uses: ./.github/actions/install-misspell
 
       - name: Fetch base ref for PR diff
         if: needs.sha-check.outputs.already-built != 'true' && github.event_name == 'pull_request'
@@ -305,33 +300,12 @@ jobs:
         if: needs.sha-check.outputs.already-built == 'true'
         run: echo "✅ SHA ${{ github.sha }} already passed lint"
 
-      - uses: actions/checkout@v6
-        if: needs.sha-check.outputs.already-built != 'true'
-
-      - uses: actions/setup-go@v6
-        if: needs.sha-check.outputs.already-built != 'true'
+      # Composite: checkout + setup-go + warm GOCACHE in one step.
+      # See .github/actions/setup-go-cached/action.yml.
+      - if: needs.sha-check.outputs.already-built != 'true'
+        uses: ./.github/actions/setup-go-cached
         with:
-          go-version-file: gitmap/go.mod
-          cache-dependency-path: gitmap/go.sum
-
-      # Persist the Go build cache (GOCACHE) across runs so the
-      # compile gate and downstream `go test` invocations don't have
-      # to recompile every package from scratch on each push. setup-go
-      # already caches GOMODCACHE (~/go/pkg/mod) keyed by go.sum, but
-      # NOT ~/.cache/go-build — that's what makes the compile gate
-      # slow. We key by go.sum (toolchain/deps) + SHA (so each run
-      # saves its own entry) and fall back to any prior entry on the
-      # same go.sum via restore-keys, which is the standard pattern
-      # for warm Go build caches in CI.
-      - name: Cache Go build cache (GOCACHE)
-        if: needs.sha-check.outputs.already-built != 'true'
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/go-build
-          key: go-build-${{ runner.os }}-lint-${{ hashFiles('gitmap/go.sum') }}-${{ github.sha }}
-          restore-keys: |
-            go-build-${{ runner.os }}-lint-${{ hashFiles('gitmap/go.sum') }}-
-            go-build-${{ runner.os }}-lint-
+          cache-suffix: lint
 
       - name: fix-repo gofmt audit (affected .go files only)
         # Targeted pre-gate that fires BEFORE the global `gofmt -l .`

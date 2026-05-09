@@ -80,44 +80,13 @@ jobs:
   # context". Everything you need to diagnose a skipped/deduped run is
   # in one place.
   # ─────────────────────────────────────────────────────────────────
+  # Diagnostic header — extracted into a reusable workflow so the
+  # build-context print isn't 40 lines of YAML in the orchestrator.
+  # Always runs first, no `needs:`, no skipping. See the called file
+  # for the full step body.
   diag:
     name: Diagnostics
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print build context
-        run: |
-          echo "::group::🔎 Build context"
-          echo "Event             : ${{ github.event_name }}"
-          echo "Ref               : ${{ github.ref }}"
-          echo "Ref name          : ${{ github.ref_name }}"
-          echo "Ref type          : ${{ github.ref_type }}"
-          echo "SHA (full)        : ${{ github.sha }}"
-          echo "SHA (short)       : ${GITHUB_SHA:0:7}"
-          echo "Repository        : ${{ github.repository }}"
-          echo "Actor             : ${{ github.actor }}"
-          echo "Triggering actor  : ${{ github.triggering_actor }}"
-          echo "Workflow          : ${{ github.workflow }}"
-          echo "Run ID / attempt  : ${{ github.run_id }} / ${{ github.run_attempt }}"
-          echo "Run number        : ${{ github.run_number }}"
-          echo "Head ref (PR src) : ${{ github.head_ref }}"
-          echo "Base ref (PR dst) : ${{ github.base_ref }}"
-          echo "::endgroup::"
-
-          {
-            echo "## 🔎 Build context"
-            echo ""
-            echo "| Field | Value |"
-            echo "|---|---|"
-            echo "| Event | \`${{ github.event_name }}\` |"
-            echo "| Ref | \`${{ github.ref }}\` |"
-            echo "| Branch / tag | \`${{ github.ref_name }}\` (${{ github.ref_type }}) |"
-            echo "| SHA | \`${{ github.sha }}\` |"
-            echo "| Actor | @${{ github.actor }} |"
-            echo "| Run | [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) (attempt ${{ github.run_attempt }}) |"
-            if [ -n "${{ github.head_ref }}" ]; then
-              echo "| PR | \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\` |"
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+    uses: ./.github/workflows/_diagnostics.yml
 
   sha-check:
     name: Check if already built
@@ -2005,59 +1974,21 @@ jobs:
         run: bash .github/scripts/test-summary.sh results
 
       - name: Coverage report
+        # Merges per-package coverage profiles from every matrix leg
+        # and prints a per-package + total breakdown. Implementation
+        # extracted to .github/scripts/coverage-report.sh — keeps the
+        # workflow readable and lets the script be unit-tested.
         if: always() && needs.sha-check.outputs.already-built != 'true'
         working-directory: gitmap
         shell: bash
-        run: |
-          echo ""
-          echo "========================================="
-          echo "  COVERAGE BY PACKAGE"
-          echo "========================================="
+        run: bash ../.github/scripts/coverage-report.sh results
 
-          # Merge all coverage profiles
-          echo "mode: atomic" > combined-coverage.out
-          for f in ../results/test-results-*/coverage-*.out; do
-            if [ -f "$f" ]; then
-              grep -v '^mode:' "$f" >> combined-coverage.out 2>/dev/null || true
-            fi
-          done
-
-          if [ "$(wc -l < combined-coverage.out)" -le 1 ]; then
-            echo "No coverage data collected."
-            exit 0
-          fi
-
-          # Per-package breakdown
-          go tool cover -func=combined-coverage.out | \
-            awk '
-              /^total:/ { total=$NF; next }
-              {
-                pkg=$1; sub(/\/[^/]+$/, "", pkg)
-                if (!(pkg in seen)) { seen[pkg]=1; order[++n]=pkg }
-                split($NF, a, "%"); pct[pkg] += a[1]; cnt[pkg]++
-              }
-              END {
-                for (i=1; i<=n; i++) {
-                  p = order[i]
-                  avg = pct[p] / cnt[p]
-                  printf "  %-55s %5.1f%%\n", p, avg
-                }
-                printf "\n  %-55s %s\n", "Total", total
-              }
-            '
-
-          echo "========================================="
-
+      # SHA-dedup passthrough: stamp + save the per-commit cache entry
+      # so subsequent pushes of the same SHA short-circuit the whole
+      # pipeline. Two-step composite — see .github/actions/mark-sha-built.
       - name: Mark SHA as built
         if: success() && needs.sha-check.outputs.already-built != 'true'
-        run: mkdir -p /tmp/ci-passed && echo "${{ github.sha }}" > /tmp/ci-passed/sha.txt
-
-      - name: Save SHA to cache
-        if: success() && needs.sha-check.outputs.already-built != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: /tmp/ci-passed
-          key: ci-passed-${{ github.sha }}
+        uses: ./.github/actions/mark-sha-built
 
   ci-errors-digest:
     # Single consolidated error block printed to the run log so the

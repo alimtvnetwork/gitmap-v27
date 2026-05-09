@@ -92,11 +92,56 @@ if [ "$lintIssues" -gt 0 ]; then
   firstLintLines=$(grep -E '^[^[:space:]].+:[0-9]+:[0-9]+:' "$LINT_OUT" | head -n 10 || true)
 fi
 
+# Gate dashboard — turn each `needs.<job>.result` env var into a glanceable
+# row (✅ pass / ❌ fail / ⏭ skipped / ♻ deduped / ⚠ unknown). We render a
+# fixed list of gates so the table shape stays stable across pushes even
+# when GitHub skips a job (e.g. SHA-dedup short-circuit). The env names
+# are GATE_<UPPERCASE_NAME>; values come straight from `needs.*.result`.
+gateRow() {
+  local label="$1" envName="$2" detail="$3"
+  local raw="${!envName:-}"
+  local icon
+  case "$raw" in
+    success)   icon="✅ pass" ;;
+    failure)   icon="❌ fail" ;;
+    cancelled) icon="🛑 cancelled" ;;
+    skipped)   icon="⏭ skipped" ;;
+    "")        icon="⏭ not run" ;;
+    *)         icon="⚠ ${raw}" ;;
+  esac
+  # SHA-dedup passthrough: a "success" with the dedup flag set means the
+  # job intentionally short-circuited. Surface that as ♻ deduped so a
+  # green row isn't mistaken for a real run.
+  if [ "$raw" = "success" ] && [ "${SHA_DEDUPED:-false}" = "true" ]; then
+    icon="♻ deduped"
+  fi
+  echo "| ${label} | ${icon} | ${detail} |"
+}
+
 {
   echo "<!-- gitmap-ci-summary -->"
   echo "## ${overallEmoji} CI Summary — \`${SHA:0:10}\`"
   echo ""
   echo "Full Suite Guard: **${RESULT}**"
+  echo ""
+  echo "### Gates"
+  echo ""
+  echo "| Gate | Status | Detail |"
+  echo "| --- | --- | --- |"
+  gateRow "Spell check (misspell)"        "GATE_SPELL_CHECK"        "US locale, whole repo"
+  gateRow "Lint (golangci-lint + vet + gofmt + goimports)" "GATE_LINT" "v1.64.8 strict, --issues-exit-code=1"
+  gateRow "Lint script unit tests"        "GATE_LINT_SCRIPT_TESTS"  "bash + jq"
+  gateRow "Lint baseline diff"            "GATE_LINT_BASELINE_DIFF" "soft-gate, new-issues only"
+  gateRow "Repo-policy checks"            "GATE_REPO_POLICY"        "naming, legacy-refs, generate-drift, layout"
+  gateRow "Vulnerability scan (govulncheck)" "GATE_VULNCHECK"       "v1.1.4, third-party = fail"
+  gateRow "Tests (go test ./... -count=1)" "GATE_TEST"              "${testsPassed} pkg(s) ok, ${testsFailed} failed"
+  gateRow "JSON snapshot smoke"           "GATE_JSON_SNAPSHOT_FAST" "fast subset"
+  gateRow "Installer smoke (Linux/macOS)" "GATE_INSTALLER_SMOKE"    "install.sh contract"
+  gateRow "Installer smoke (Windows)"     "GATE_INSTALLER_SMOKE_WINDOWS" "install.ps1 contract"
+  gateRow "Full-suite guard"              "GATE_FULL_SUITE_GUARD"   "test + lint replay, SARIF upload"
+  gateRow "Cross-compile build"           "GATE_BUILD"              "6 GOOS/GOARCH targets"
+  echo ""
+  echo "### Detail"
   echo ""
   echo "| Stage | Result | Detail |"
   echo "| --- | --- | --- |"

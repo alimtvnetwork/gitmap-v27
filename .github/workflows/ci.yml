@@ -591,12 +591,9 @@ jobs:
           restore-keys: |
             golangci-baseline-main-${{ inputs.lint_baseline_cache_version || 'v1' }}-
 
-      - name: Install golangci-lint v1.64.8
+      - name: Install golangci-lint (pinned)
         if: needs.sha-check.outputs.already-built != 'true'
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-            | sh -s -- -b "$(go env GOPATH)/bin" v1.64.8
-          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+        uses: ./.github/actions/install-golangci-lint
 
       - name: Run golangci-lint (JSON, non-blocking)
         if: needs.sha-check.outputs.already-built != 'true'

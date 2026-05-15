@@ -33,12 +33,13 @@ const (
 	MsgAssetCrossCompile = "\n  Cross-compiling %d target(s)...\n"
 	MsgAssetBuilt        = "  ✓ Built %s (%s/%s)\n"
 	MsgAssetBuildSummary = "  → Built %d/%d binaries successfully\n"
-	MsgAssetUploaded     = "  ✓ Uploaded %s\n"
-	MsgAssetUploadStart  = "\n  Uploading %d asset(s) to GitHub...\n"
+	MsgAssetUploaded     = "  " + ColorGreen + "✓ Uploaded" + ColorReset + " %s\n"
+	MsgAssetUploadStart  = "\n  " + ColorCyan + "▲ Uploading %d asset(s) to GitHub..." + ColorReset + "\n"
 	MsgAssetSkipped      = ""
 	MsgAssetNoMain       = "  → No buildable main package found, skipping binaries\n"
 	MsgAssetNoGoProject  = ""
 	MsgAssetStagingClean = "  ✓ Cleaned up staging directory\n"
+	MsgTokenFromSource   = "  " + ColorGreen + "🔑 Authenticated via " + ColorReset + ColorCyan + "%s" + ColorReset + "\n"
 )
 
 // Release-version snapshot install scripts (spec 105).
@@ -70,8 +71,10 @@ const (
 const (
 	ErrAssetBuildFailed = "Error: build failed for %s/%s: %s (operation: compile)\n"
 	ErrAssetUploadFinal = "Error: upload failed for asset %s: %v (operation: upload)\n"
-	ErrAssetNoToken     = "Error: GITHUB_TOKEN not set — skipping asset upload (reason: environment variable not set)\n"
-	ErrAssetRemoteParse = "Error: could not parse remote origin: %v (operation: resolve)\n"
+	ErrAssetNoToken     = ColorYellow + "  ⚠ No GitHub token available — skipping asset upload." + ColorReset + "\n" +
+		"    " + ColorDim + "Tried: GITHUB_TOKEN, GH_TOKEN, `gh auth token`." + ColorReset + "\n" +
+		"    " + ColorCyan + "Fix: run `gh auth login` once, or set GITHUB_TOKEN." + ColorReset + "\n"
+	ErrAssetRemoteParse = ColorRed + "Error: could not parse remote origin: %v" + ColorReset + " (operation: resolve)\n"
 )
 
 // Retry constants.

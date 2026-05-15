@@ -6,10 +6,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/ghtoken"
 )
 
 // RepoExists checks whether a GitHub repository exists via the API.
@@ -22,7 +21,7 @@ func RepoExists(owner, repo string) (bool, error) {
 		return false, fmt.Errorf("create request: %w", err)
 	}
 
-	token := os.Getenv(constants.GitHubTokenEnv)
+	token, _, _ := ghtoken.Resolve()
 	if len(token) > 0 {
 		req.Header.Set("Authorization", "token "+token)
 	}
@@ -48,9 +47,9 @@ func RepoExists(owner, repo string) (bool, error) {
 // It detects whether the owner is a user or organization and calls the
 // appropriate endpoint. The repo is created as private by default.
 func CreateRepo(owner, repoName string, private bool) error {
-	token := os.Getenv(constants.GitHubTokenEnv)
-	if len(token) == 0 {
-		return fmt.Errorf("GITHUB_TOKEN not set — cannot create repository")
+	token, _, err := ghtoken.Resolve()
+	if err != nil || len(token) == 0 {
+		return fmt.Errorf("no GitHub token available — set GITHUB_TOKEN or run `gh auth login`")
 	}
 
 	// Try org endpoint first; if 404, fall back to user endpoint.

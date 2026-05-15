@@ -19,7 +19,7 @@ Clone-next flattens by default (v2.75.0+): clones into base name folder, tracks 
 Clone-next `-f` / `--force` (v3.50.0+): chdir-to-parent before remove when cwd IS target folder; refuses versioned-folder fallback.
 Completion generator uses marker-comment opt-in (v3.0.0+): `// gitmap:cmd top-level` on const block, `// gitmap:cmd skip` per spec. CI `generate-check` enforces drift.
 VS Code Project Manager sync: resolve user-data root per OS first, then append `User/globalStorage/alefragnani.project-manager/projects.json` — never hardcode the full path.
-Current version: v4.43.0 (cfrp skip-no-vN + `gitmap open` + self-install auto-setup added).
+Current version: v4.43.0 (cfrp skip-no-vN + `gitmap open` + self-install auto-setup + gh-CLI token fallback added).
 Consumer-facing JSON outputs use `gitmap/stablejson` (key-by-key, no struct reflection) so field order cannot drift across Go versions or encoding/json/v2.
 `gitmap cn` accepts folder-arg forms (v3.117.0+): `cn vX <folder>`, `cn v+1 <folder>`, `cn <folder>` (defaults v++). Dispatcher in `clonenextfolderdispatch.go` runs BEFORE alias dispatcher; uses path-hint + os.Stat heuristic. Hero card uses `--accent-success` semantic token (no hardcoded greens).
 `gitmap clone <url>` cds into cloned folder via WriteShellHandoff (v3.118.0+) — single-URL only; multi-URL deliberately skips handoff.
@@ -85,3 +85,4 @@ commit-in / cin (SPEC ONLY, spec 03-commit-in/, plan 2026-05-06): replays commit
 - [cfrp Skip No-vN](mem://features/cfrp-skip-no-version) — clone-fix-repo / cfrp gracefully skip fix-repo (one-line notice) when repo has no -vN suffix; --require-version restores strict exit. v4.43.0+.
 - [Open Command](mem://features/open-command) — `gitmap open` (op): launches BOTH GitHub Desktop and VS Code on the cwd repo, re-injecting on every call. v4.43.0+.
 - [Self-Install Auto-Setup](mem://features/selfinstall-auto-setup) — `gitmap self-install` invokes `gitmap setup` as a final non-fatal step so the gcd shell wrapper is installed without a separate command. v4.43.0+.
+- [GitHub Token gh CLI Fallback](mem://features/github-token-gh-cli-fallback) — `ghtoken.Resolve()` tries GITHUB_TOKEN → GH_TOKEN → `gh auth token`; release upload + repo creation use it transparently. v4.43.0+.

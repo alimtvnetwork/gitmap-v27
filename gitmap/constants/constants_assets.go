@@ -33,12 +33,13 @@ const (
 	MsgAssetCrossCompile = "\n  Cross-compiling %d target(s)...\n"
 	MsgAssetBuilt        = "  ✓ Built %s (%s/%s)\n"
 	MsgAssetBuildSummary = "  → Built %d/%d binaries successfully\n"
-	MsgAssetUploaded     = "  ✓ Uploaded %s\n"
-	MsgAssetUploadStart  = "\n  Uploading %d asset(s) to GitHub...\n"
+	MsgAssetUploaded     = "  " + ColorGreen + "✓ Uploaded" + ColorReset + " %s\n"
+	MsgAssetUploadStart  = "\n  " + ColorCyan + "▲ Uploading %d asset(s) to GitHub..." + ColorReset + "\n"
 	MsgAssetSkipped      = ""
 	MsgAssetNoMain       = "  → No buildable main package found, skipping binaries\n"
 	MsgAssetNoGoProject  = ""
 	MsgAssetStagingClean = "  ✓ Cleaned up staging directory\n"
+	MsgTokenFromSource   = "  " + ColorGreen + "🔑 Authenticated via " + ColorReset + ColorCyan + "%s" + ColorReset + "\n"
 )
 
 // Release-version snapshot install scripts (spec 105).

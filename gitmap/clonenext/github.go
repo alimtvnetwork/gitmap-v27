@@ -23,7 +23,7 @@ func RepoExists(owner, repo string) (bool, error) {
 		return false, fmt.Errorf("create request: %w", err)
 	}
 
-	token := os.Getenv(constants.GitHubTokenEnv)
+	token, _, _ := ghtoken.Resolve()
 	if len(token) > 0 {
 		req.Header.Set("Authorization", "token "+token)
 	}

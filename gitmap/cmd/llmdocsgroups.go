@@ -85,7 +85,7 @@ func buildReleaseInfoGroup() llmCmdGroup {
 			{"release-pending", "rp", "Show unreleased commits since last tag", "gitmap release-pending"},
 			{"revert", "—", "Revert to a specific release version", "gitmap revert v2.48.0"},
 			{"clear-release-json", "crj", "Remove orphaned release metadata files", "gitmap clear-release-json"},
-			{"prune", "pr", "Delete stale release branches that have been tagged", "gitmap prune"},
+			{"prune", "prn", "Delete stale release branches that have been tagged", "gitmap prune"},
 		},
 	}
 }

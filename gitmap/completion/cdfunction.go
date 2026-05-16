@@ -149,7 +149,7 @@ func replaceCDFunction(text, snippet string) string {
 		return text
 	}
 	end += start + len(constants.CDFuncMarkerEnd)
-	replacement := constants.CDFuncMarker + "\n" + snippet + "\n"
+	replacement := constants.CDFuncMarker + "\n" + snippet
 
 	return text[:start] + replacement + text[end:]
 }

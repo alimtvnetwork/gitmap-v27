@@ -8,6 +8,17 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.13.0",
+    date: "2026-05-16",
+    subtitle: "Re-pin root README to v5.13.0, sync Go + web VERSION constants, drop branch=main filter on CI badges",
+    items: [
+      "Bumped the `📌 Pinned version` section in the root `README.md` from `v5.12.0` to `v5.13.0` — heading, PowerShell + Bash one-line installers, the Version matrix table (all five OS/arch rows), and the release-page link all now resolve to the `v5.13.0` tag and the `release-version-v5.13.0.{ps1,sh}` assets.",
+      "Synced version constants so the regression test in `src/test/version-sync.test.ts` stays green: `gitmap/constants/constants.go` `Version` `5.10.0` → `5.13.0`, and `src/constants/index.ts` web `VERSION` `v5.10.0` → `v5.13.0`.",
+      "Dropped the `&branch=main` filter from the four workflow status badges in `README.md` (`ci.yml`, `vulncheck.yml`, `cross-platform.yml`, `startup-build-tags.yml`). Lovable pushes commits to whichever branch the project is connected to (not `main`), so the `main` view was stale and rendered the `CI` badge red while the active branch was actually green; the unfiltered badge now reflects the latest run.",
+      "Files: `README.md` (pinned-version block + 4 CI badge URLs), `gitmap/constants/constants.go` (`Version`), `src/constants/index.ts` (`VERSION`), `CHANGELOG.md` (v5.13.0 entry), `src/data/changelog.ts` (this entry).",
+    ],
+  },
+  {
     version: "v4.14.0",
     date: "2026-05-02",
     subtitle: "fix-repo --strict / -Strict: post-rewrite `go test` on touched packages catches semantic desyncs the byte rewriter cannot see; new exit code 9",

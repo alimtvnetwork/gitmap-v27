@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/alimtvnetwork/gitmap-v19/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/theme"
 )
 
 // Run is the main entry point for the CLI.
@@ -17,6 +18,13 @@ func Run() {
 		printUsage()
 		os.Exit(1)
 	}
+
+	// Strip the global `--theme` palette selector first so it is
+	// honored even when no subcommand-specific args are present.
+	// theme.Install must run AFTER the env var is set but BEFORE
+	// any subcommand writes colored output.
+	os.Args = append(os.Args[:1], stripThemeFlag(os.Args[1:])...)
+	theme.Install()
 
 	// Strip the global `--vscode-sync-disabled` kill switch from argv
 	// (and flip the env var) before any subcommand sees its flagset.

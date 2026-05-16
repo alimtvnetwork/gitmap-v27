@@ -12,7 +12,11 @@
 // gate inline.
 package render
 
-import "os"
+import (
+	"os"
+
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/theme"
+)
 
 // PrettyMode is the tri-state requested by the caller.
 type PrettyMode int
@@ -74,7 +78,15 @@ func Decide(mode PrettyMode, isTTY, isMarkdown bool) bool {
 // using a dependency-free os.Stat / ModeCharDevice check. Exported so
 // callers in cmd/, helptext/, and any future markdown-printing surface
 // can share one TTY probe instead of reimplementing it locally.
+//
+// When the theme package has wrapped os.Stdout with a pipe (standard /
+// monochrome modes) the live Stat would report "pipe" and falsely
+// disable pretty rendering — we defer to the pre-wrap TTY state
+// theme.Install captured before swapping the handle.
 func StdoutIsTerminal() bool {
+	if theme.Active() != theme.ModeBright {
+		return theme.IsStdoutTTY()
+	}
 	info, err := os.Stdout.Stat()
 	if err != nil {
 		return false
@@ -82,3 +94,4 @@ func StdoutIsTerminal() bool {
 
 	return (info.Mode() & os.ModeCharDevice) != 0
 }
+

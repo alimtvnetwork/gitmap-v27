@@ -48,14 +48,17 @@ func stripThemeFlag(args []string) []string {
 }
 
 // matchThemeArg recognizes the four legal flag forms and returns the
-// extracted value plus how many argv slots it consumed.
+// extracted value plus how many argv slots it consumed. The split
+// `--theme <mode>` form only consumes the next slot when it looks
+// like a theme label — otherwise a bare `--theme` would silently
+// steal the subcommand name.
 func matchThemeArg(a string, args []string, i int, short, long string) (val string, consumed int, matched bool) {
 	if a == short || a == long {
-		if i+1 >= len(args) {
-			return "", 1, true
+		if i+1 < len(args) && theme.IsValidLabel(args[i+1]) {
+			return args[i+1], 2, true
 		}
 
-		return args[i+1], 2, true
+		return "", 1, true
 	}
 	if v, ok := stripEqPrefix(a, long+"="); ok {
 		return v, 1, true

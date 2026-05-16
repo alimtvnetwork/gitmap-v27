@@ -82,7 +82,8 @@ function global:Invoke-GitmapAndSetLocation {
   }
   finally {
     Remove-Item -LiteralPath $handoff -ErrorAction SilentlyContinue
-    Remove-Item Env:\
+    Remove-Item Env:\GITMAP_HANDOFF_FILE -ErrorAction SilentlyContinue
+  }
 }
 # gitmap shell wrapper v2 end`
 )

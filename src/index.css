@@ -62,6 +62,11 @@
     --accent-success: 158 64% 38%;
     --accent-success-bg: 158 64% 38% / 0.12;
     --accent-success-border: 158 64% 38% / 0.5;
+
+    --help-recommended: 38 92% 50%;
+    --help-power: 190 86% 40%;
+    --help-pinned: 158 64% 38%;
+    --help-danger: 348 82% 52%;
   }
 
   /* ───── VS Code Dark+ palette (per spec) ─────
@@ -124,6 +129,11 @@
     --accent-success: 152 76% 60%;
     --accent-success-bg: 152 76% 60% / 0.12;
     --accent-success-border: 152 76% 60% / 0.5;
+
+    --help-recommended: 41 96% 56%;
+    --help-power: 188 86% 53%;
+    --help-pinned: 152 76% 60%;
+    --help-danger: 348 86% 66%;
   }
 }
 

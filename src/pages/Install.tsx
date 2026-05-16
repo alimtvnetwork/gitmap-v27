@@ -1,6 +1,7 @@
 import DocsLayout from "@/components/docs/DocsLayout";
 import CodeBlock from "@/components/docs/CodeBlock";
 import TerminalDemo from "@/components/docs/TerminalDemo";
+import InstallHelpSection from "@/components/docs/InstallHelpSection";
 import { Download, Trash2, Database, Wrench, FolderDown, Monitor, Terminal, Shield, FileText, AlertTriangle } from "lucide-react";
 
 const terminalLines = [
@@ -163,6 +164,8 @@ const InstallPage = () => {
           <CodeBlock code={`gitmap install <tool> [flags]
 gitmap uninstall <tool> [flags]`} />
         </section>
+
+        <InstallHelpSection />
 
         {/* How it works */}
         <section className="mb-10">

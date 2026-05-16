@@ -842,8 +842,8 @@ function Add-CommandWrapperToProfile([string]$profilePath, [string]$dir) {
     $content = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue
     if ($content -and ($content -match [regex]::Escape($marker))) {
         $pattern = "(?s)" + [regex]::Escape($marker) + ".*?" + [regex]::Escape($endMarker)
-        $rewritten = [regex]::Replace($content, $pattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $block }, 1)
-        if ($rewritten -eq $content) { Add-Content -Path $profilePath -Value $block -Encoding UTF8; return $true }
+        $without = [regex]::Replace($content, $pattern, "", 1).TrimEnd()
+        $rewritten = if ([string]::IsNullOrWhiteSpace($without)) { "$block`r`n" } else { "$without`r`n`r`n$block`r`n" }
         Set-Content -Path $profilePath -Value $rewritten -Encoding UTF8
         return $true
     }

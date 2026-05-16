@@ -73,7 +73,7 @@ func TestAppendCDFunctionDoesNotSkipPathSnippetMarker(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read profile failed: %v", err)
 	}
-	if strings.Count(string(data), constants.CDFuncMarker) != 1 {
+	if countCDFunctionStartMarkers(string(data)) != 1 {
 		t.Fatal("expected command wrapper after legacy PATH snippet marker")
 	}
 }

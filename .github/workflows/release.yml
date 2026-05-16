@@ -152,8 +152,25 @@ jobs:
       - name: Compress and checksum
         working-directory: gitmap/dist
         run: |
-          for f in gitmap-*-windows-*; do
-            [[ -f "$f" ]] && zip "${f%.exe}.zip" "$f" && rm "$f"
+          for f in gitmap-*-windows-*.exe; do
+            [[ -f "$f" ]] || continue
+            tmp="$(mktemp -d)"
+            cp "$f" "$tmp/gitmap.exe"
+            cat > "$tmp/gitmap.ps1" << 'PWSHIM'
+          $real = Join-Path -Path $PSScriptRoot -ChildPath 'gitmap.exe'
+          if (-not (Test-Path -LiteralPath $real)) { Write-Error "gitmap executable not found: $real"; return }
+          if ($args.Count -gt 0 -and ($args[0] -eq 'cd' -or $args[0] -eq 'go')) {
+            $env:GITMAP_WRAPPER = "1"; $env:GITMAP_COMMAND_WRAPPER = "1"
+            $dest = & $real @args
+            if ($LASTEXITCODE -ne 0) { $global:LASTEXITCODE = $LASTEXITCODE; return }
+            if ($dest -and (Test-Path -LiteralPath $dest)) { Set-Location -LiteralPath $dest }
+            return
+          }
+          & $real @args
+          $global:LASTEXITCODE = $LASTEXITCODE
+          PWSHIM
+            zip "${f%.exe}.zip" -j "$tmp/gitmap.exe" "$tmp/gitmap.ps1"
+            rm -rf "$tmp" "$f"
           done
           for f in gitmap-*-linux-* gitmap-*-darwin-*; do
             [[ -f "$f" ]] && tar czf "${f}.tar.gz" "$f" && rm "$f"

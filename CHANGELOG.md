@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.4.0 — (2026-05-16) — Install PowerShell command wrapper from installer profile block
+
+### Fixed
+
+- Windows installer/profile setup now writes the `gitmap`/`gcd` PowerShell
+  command wrapper directly into the managed profile block and loads it into the
+  current `irm ... | iex` session. This closes the stale-binary gap where users
+  could reinstall/update and still have `gitmap cd` resolve to the exe until a
+  separate `gitmap setup` from the new binary had run and the profile was reloaded.
+- Root cause of the repeated old warning: the user was still invoking a deployed
+  binary that predates the command-wrapper marker fix, and the Windows
+  `install.ps1` path block only added PATH, not the shell function that can call
+  `Set-Location` in the parent PowerShell session.
+
 ## v5.3.0 — (2026-05-16) — Fix command-wrapper false-positive detection
 
 ### Fixed

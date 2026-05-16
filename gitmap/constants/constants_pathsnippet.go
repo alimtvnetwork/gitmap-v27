@@ -44,6 +44,35 @@ fish_add_path %[2]s
 	PathSnippetPwshFmt = `# gitmap shell wrapper v2 - managed by %[1]s. Do not edit manually.
 $env:GITMAP_WRAPPER = "1"
 if (-not ($env:Path -split ';' | Where-Object { $_.TrimEnd('\') -ieq '%[2]s' })) { $env:Path = "$env:Path;%[2]s" }
+function global:Get-GitmapCommand {
+  $candidate = Join-Path -Path '%[2]s' -ChildPath 'gitmap.exe'
+  if (Test-Path -LiteralPath $candidate) { return $candidate }
+  $cmd = Get-Command gitmap.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
+  if ($cmd) { return $cmd.Source }
+  return $null
+}
+function global:gcd {
+  $real = Get-GitmapCommand
+  if (-not $real) { Write-Error "gitmap executable not found"; return }
+  $env:GITMAP_WRAPPER = "1"
+  $env:GITMAP_COMMAND_WRAPPER = "1"
+  $dest = & $real cd @args
+  if ($LASTEXITCODE -ne 0) { return }
+  if ($dest -and (Test-Path -LiteralPath $dest)) { Set-Location -LiteralPath $dest }
+}
+function global:gitmap {
+  $real = Get-GitmapCommand
+  if (-not $real) { Write-Error "gitmap executable not found"; return }
+  if ($args.Count -gt 0 -and ($args[0] -eq 'cd' -or $args[0] -eq 'go')) {
+    $env:GITMAP_WRAPPER = "1"
+    $env:GITMAP_COMMAND_WRAPPER = "1"
+    $dest = & $real @args
+    if ($LASTEXITCODE -ne 0) { return }
+    if ($dest -and (Test-Path -LiteralPath $dest)) { Set-Location -LiteralPath $dest }
+    return
+  }
+  & $real @args
+}
 # gitmap shell wrapper v2 end`
 )
 

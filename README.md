@@ -1614,7 +1614,7 @@ the exact command + flags gitmap runs. It mirrors
 | Clone ▸ Pull all (every tracked repo) | `gitmap pull-all` (= `pull --all`) | Terminal | **Power-user batch.** On Windows it's hidden behind **Shift+right-click** (HKCU `Extended` REG_SZ). On macOS/Linux there's no Shift filter, so the entry is visible but gated by an OS confirm dialog (`osascript display dialog` / `zenity`/`kdialog`/`xmessage`) before it fans out. |
 | Release ▸ Release current       | `gitmap release`                     | Terminal | Auto-bump-minor prompt; reads `latest.json` first, falls back to git tags. |
 | Release ▸ Release next          | `gitmap release --bump minor`        | Terminal | Hard-pinned to `--bump minor`. `--bump major` and `--bump patch` are deliberately not surfaced (one-click should never ship a breaking change). |
-| Release ▸ Release pull          | `gitmap release-pull`                | Terminal | `git pull` then `release`. |
+| Release ▸ Pull release          | `gitmap pull-release`                | Terminal | `git pull` then `release`. Accepts `pr`, legacy `release-pull` / `relp` / `rlp`. |
 | Release ▸ Release pending       | `gitmap release-pending`             | Silent   | Reports unpublished commits since the last pinned tag. |
 | Release ▸ List releases         | `gitmap list-releases`               | Silent   | Single-repo view. **No `--all-repos`** — clicking inside one folder shouldn't surprise the user with a catalog-wide list. |
 | Release ▸ List versions         | `gitmap list-versions`               | Silent   | Local + remote version siblings. |

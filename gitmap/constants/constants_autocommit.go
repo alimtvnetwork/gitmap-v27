@@ -2,7 +2,10 @@ package constants
 
 // Auto-commit messages for post-release commit behavior.
 const (
-	MsgAutoCommitScanning    = "\n  " + ColorCyan + "■ Checking for uncommitted changes..." + ColorReset + "\n"
+	// Extra leading newline creates a clear visual gap between the
+	// release-complete block and the auto-commit scanner so the two
+	// phases feel like distinct steps in the pipeline.
+	MsgAutoCommitScanning = "\n\n  " + ColorBlue + "🔍 Checking for uncommitted changes..." + ColorReset + "\n"
 	MsgAutoCommitReleaseOnly = "  " + ColorGreen + "✓ Release metadata committed:" + ColorReset + " %s\n"
 	MsgAutoCommitPushed      = "  " + ColorGreen + "✓ Pushed to" + ColorReset + " %s\n"
 	MsgAutoCommitNone        = "  " + ColorGreen + "✓ Working tree clean" + ColorReset + " — nothing else to commit\n"

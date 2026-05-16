@@ -1,14 +1,27 @@
 package constants
 
 // ANSI color codes.
+//
+// We deliberately use the bright + bold variants (`\033[1;9Xm`) for the
+// primary palette so gitmap's terminal output stays vivid and readable
+// on dark-themed terminals (the common case on Windows Terminal, iTerm,
+// VS Code's integrated terminal, etc.). The legacy 3X codes looked
+// muddy on most modern dark themes — see the v5.13 terminal-color
+// refresh in chat history.
 const (
 	ColorReset  = "\033[0m"
-	ColorGreen  = "\033[32m"
-	ColorRed    = "\033[31m"
-	ColorYellow = "\033[33m"
-	ColorCyan   = "\033[36m"
-	ColorWhite  = "\033[97m"
-	ColorDim    = "\033[90m"
+	ColorGreen  = "\033[1;92m" // bright bold green — successes, checkmarks
+	ColorRed    = "\033[1;91m" // bright bold red — failures
+	ColorYellow = "\033[1;93m" // bright bold yellow — warnings, prompts
+	ColorCyan   = "\033[1;96m" // bright bold cyan — paths, URLs, emphasis
+	ColorWhite  = "\033[1;97m" // bright bold white — primary text accents
+	ColorDim    = "\033[2;37m" // dim grey — secondary / hint text
+
+	// Accent palette — used sparingly to break up long success runs
+	// (e.g. release pipeline output) so each phase is visually distinct.
+	ColorMagenta = "\033[1;95m" // bright bold magenta — release/version highlights
+	ColorBlue    = "\033[1;94m" // bright bold blue — info banners
+	ColorOrange  = "\033[38;5;208m\033[1m" // 256-color bold orange — upload/transfer accents
 )
 
 // Status banner box-drawing.

@@ -49,6 +49,12 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        help: {
+          recommended: "hsl(var(--help-recommended))",
+          power: "hsl(var(--help-power))",
+          pinned: "hsl(var(--help-pinned))",
+          danger: "hsl(var(--help-danger))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",

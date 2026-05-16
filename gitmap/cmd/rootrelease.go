@@ -13,7 +13,7 @@ func dispatchRelease(command string) bool {
 func releaseDispatchEntries() []dispatchEntry {
 	return []dispatchEntry{
 		{[]string{constants.CmdRelease, constants.CmdReleaseShort}, func() { runRelease(argsTail()) }},
-		{[]string{constants.CmdReleasePull, constants.CmdReleasePullAlias, constants.CmdReleasePullAlias2}, func() { runReleasePull(argsTail()) }},
+		{[]string{constants.CmdReleasePull, constants.CmdReleasePullAlias, constants.CmdReleasePullAlias2, constants.CmdReleasePullAlias3, constants.CmdReleasePullAlias4}, func() { runReleasePull(argsTail()) }},
 		{
 			[]string{constants.CmdReleaseSelf, constants.CmdReleaseSelfAlias, constants.CmdReleaseSelfAlias2},
 			func() { runReleaseSelf(argsTail()) },

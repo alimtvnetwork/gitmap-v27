@@ -1,5 +1,53 @@
 # Changelog
 
+## v5.6.0 — (2026-05-16) — Rename `release-pull` → `pull-release` (`pr`), refreshed help
+
+### Changed
+
+- **Renamed `release-pull` → `pull-release`.** The verb-first form reads as
+  "pull, then release" — clearer at a glance. The canonical short alias is now
+  **`pr`** (e.g. `gitmap pr v1.4.0`).
+- **`prune` short alias changed from `pr` → `prn`** to free up `pr` for
+  `pull-release`. `gitmap prune` (long form) is unchanged.
+- Help text for `pull-release` was rewritten with section headers, an aliases
+  table, a "Pull modes" table, and a tagged example list. The markdown is
+  rendered through the standard ANSI pipeline so all bold/headings/tables get
+  colorful output in any TTY (and strip cleanly with `--no-pretty`).
+
+### Backward compatibility (no breaking changes)
+
+- `gitmap release-pull …`, `gitmap relp …`, and `gitmap rlp …` continue to
+  work — they are wired as aliases of `pull-release` and route to the exact
+  same handler. Existing scripts, docs, and right-click context menu entries
+  do not need to change.
+- All `--ff-only` / `--rebase` / `--merge` / `--dry-run` / `--verbose` flags
+  and their forwarding semantics to `gitmap release` are unchanged.
+
+### Files
+
+- `gitmap/constants/constants_cli.go` — `CmdReleasePull = "pull-release"`,
+  `CmdReleasePullAlias = "pr"`, added `Alias2..Alias4` for `release-pull`,
+  `relp`, `rlp`. Updated `HelpReleasePull` summary line.
+- `gitmap/constants/constants_prune.go` — `CmdPruneAlias = "prn"` (was `"pr"`).
+- `gitmap/constants/constants_releasepull.go` — error/log prefixes now say
+  `pull-release:` / `[pull-release]`.
+- `gitmap/constants/constants_helpgroups.go` — `CompactRelease` shows
+  `pull-release (pr)`.
+- `gitmap/cmd/rootrelease.go` — dispatcher accepts all four aliases.
+- `gitmap/cmd/llmdocsgroups.go` — release group lists `pull-release (pr)`;
+  prune entry uses `prn`.
+- `gitmap/helptext/pull-release.md` — new enhanced help page (replaces
+  `release-pull.md`).
+- `gitmap/completion/allcommands_generated.go` — adds `pull-release` + `prn`,
+  keeps `release-pull` / `relp` / `rlp` / `pr` for completion.
+- `gitmap/completion/completion_test.go`, `gitmap/constants/cmd_constants_test.go`
+  — updated for the new aliases.
+- `src/data/commands.ts` — web docs use `pull-release (pr)` and updated
+  prune alias note.
+- `src/constants/index.ts`, `gitmap/constants/constants.go` — version
+  bumped to **v5.6.0**.
+
+
 ## v5.5.0 — (2026-05-16) — Add PowerShell command shim for `gitmap cd`
 
 ### Fixed

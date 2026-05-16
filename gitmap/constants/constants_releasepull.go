@@ -1,9 +1,10 @@
 package constants
 
-// release-pull mode flags and messages. Mode flags are mutually
-// exclusive; --ff-only is the safe default. The --merge mode passes
-// `--no-rebase` to git so it overrides any user-level
-// `pull.rebase=true` setting.
+// pull-release mode flags and messages (canonical command name as of
+// v5.6.0 — the legacy `release-pull` alias still routes here). Mode
+// flags are mutually exclusive; --ff-only is the safe default. The
+// --merge mode passes `--no-rebase` to git so it overrides any
+// user-level `pull.rebase=true` setting.
 const (
 	FlagRPFFOnly  = "ff-only"
 	FlagRPRebase  = "rebase"
@@ -21,12 +22,12 @@ const (
 	RPModeRebase = "rebase"
 	RPModeMerge  = "merge"
 
-	ErrRPNotInRepo       = "release-pull: must be run inside a git repository\n"
-	ErrRPCwdFailedFmt    = "release-pull: cannot resolve cwd: %v\n"
-	ErrRPModeConflictFmt = "release-pull: --ff-only, --rebase, and --merge are mutually exclusive (got %s)\n"
-	ErrRPPullFailedFmt   = "release-pull: git pull %s failed in %s: %v\n"
-	ErrRPRebaseAbortFmt  = "release-pull: rebase failed in %s: %v (attempted git rebase --abort)\n"
+	ErrRPNotInRepo       = "pull-release: must be run inside a git repository\n"
+	ErrRPCwdFailedFmt    = "pull-release: cannot resolve cwd: %v\n"
+	ErrRPModeConflictFmt = "pull-release: --ff-only, --rebase, and --merge are mutually exclusive (got %s)\n"
+	ErrRPPullFailedFmt   = "pull-release: git pull %s failed in %s: %v\n"
+	ErrRPRebaseAbortFmt  = "pull-release: rebase failed in %s: %v (attempted git rebase --abort)\n"
 
-	MsgRPPullingFmt = "[release-pull] git pull %s in %s\n"
-	MsgRPDryRunFmt  = "[release-pull] dry-run: would run `git pull %s` in %s\n"
+	MsgRPPullingFmt = "[pull-release] git pull %s in %s\n"
+	MsgRPDryRunFmt  = "[pull-release] dry-run: would run `git pull %s` in %s\n"
 )

@@ -32,7 +32,7 @@ var expectedCtxArgv = map[string]struct {
 	// Release — verifies FlagBumpDash + BumpMinor compose to "--bump minor"
 	"30_release/10_release":         {"", []string{"release"}},
 	"30_release/20_release_next":    {"", []string{"release", "--bump", "minor"}},
-	"30_release/30_release_pull":    {"", []string{"release-pull"}},
+	"30_release/30_release_pull":    {"", []string{"pull-release"}},
 	"30_release/40_release_pending": {"", []string{"release-pending"}},
 	"30_release/50_list_releases":   {"", []string{"list-releases"}},
 	"30_release/60_list_versions":   {"", []string{"list-versions"}},

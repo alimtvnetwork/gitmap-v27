@@ -56,7 +56,7 @@ func releaseChildren() []ctxEntry {
 	return []ctxEntry{
 		{KeyName: "10_release", MUIVerb: "Release current", Args: []string{constants.CmdRelease}, Mode: constants.CtxModeTerminal},
 		{KeyName: "20_release_next", MUIVerb: "Release next (bump minor)", Args: []string{constants.CmdRelease, constants.FlagBumpDash, constants.BumpMinor}, Mode: constants.CtxModeTerminal},
-		{KeyName: "30_release_pull", MUIVerb: "Release pull", Args: []string{constants.CmdReleasePull}, Mode: constants.CtxModeTerminal},
+		{KeyName: "30_release_pull", MUIVerb: "Pull then release", Args: []string{constants.CmdReleasePull}, Mode: constants.CtxModeTerminal},
 		{KeyName: "40_release_pending", MUIVerb: "Release pending", Args: []string{constants.CmdReleasePending}, Mode: constants.CtxModeSilent},
 		{KeyName: "50_list_releases", MUIVerb: "List releases", Args: []string{constants.CmdListReleases}, Mode: constants.CtxModeSilent},
 		{KeyName: "60_list_versions", MUIVerb: "List versions", Args: []string{constants.CmdListVersions}, Mode: constants.CtxModeSilent},

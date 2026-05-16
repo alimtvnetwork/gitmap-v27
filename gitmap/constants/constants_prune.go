@@ -4,7 +4,7 @@ package constants
 // Prune command names.
 const (
 	CmdPrune      = "prune"
-	CmdPruneAlias = "pr"
+	CmdPruneAlias = "prn" // short alias (was "pr" before v5.6.0; "pr" now belongs to pull-release)
 )
 
 // Prune flag names.
@@ -42,4 +42,4 @@ const (
 )
 
 // Prune help text.
-const HelpPrune = "  prune (pr)          Delete stale release branches that have been tagged"
+const HelpPrune = "  prune (prn)         Delete stale release branches that have been tagged"

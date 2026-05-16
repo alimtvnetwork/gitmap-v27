@@ -10,6 +10,7 @@ const (
 	bkHeading
 	bkSubtitle
 	bkFence
+	bkList
 	bkBlank
 )
 

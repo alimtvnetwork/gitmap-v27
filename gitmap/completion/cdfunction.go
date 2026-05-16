@@ -58,14 +58,14 @@ func appendCDFunctions(snippet string, profilePaths []string) error {
 	return nil
 }
 
-// appendCDFunction appends the gcd function to the profile if not present.
+// appendCDFunction appends the gitmap command wrapper to the profile if not present.
 func appendCDFunction(snippet, profilePath string) error {
 	if err := os.MkdirAll(filepath.Dir(profilePath), 0o755); err != nil {
 		return fmt.Errorf(constants.ErrCompProfileWrite, profilePath, err)
 	}
 
 	existing, err := os.ReadFile(profilePath)
-	if err == nil && strings.Contains(string(existing), constants.CDFuncMarker) {
+	if err == nil && hasCurrentCDFunction(string(existing)) {
 		fmt.Fprintf(os.Stderr, constants.MsgCDFuncAlready)
 
 		return nil
@@ -85,4 +85,8 @@ func appendCDFunction(snippet, profilePath string) error {
 	fmt.Fprintf(os.Stderr, constants.MsgCDFuncInstalled)
 
 	return nil
+}
+
+func hasCurrentCDFunction(text string) bool {
+	return strings.Contains(text, constants.CDFuncMarker)
 }

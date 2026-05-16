@@ -12,7 +12,11 @@
 // gate inline.
 package render
 
-import "os"
+import (
+	"os"
+
+	"github.com/alimtvnetwork/gitmap-v19/gitmap/theme"
+)
 
 // PrettyMode is the tri-state requested by the caller.
 type PrettyMode int

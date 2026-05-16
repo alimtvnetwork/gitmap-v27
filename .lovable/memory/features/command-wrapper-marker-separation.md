@@ -1,10 +1,10 @@
 ---
 name: Command Wrapper Marker Separation
-description: `gitmap`/`gcd` command-wrapper marker and runtime sentinel are separate from PATH snippet marker/env; fixes false wrapper-active reports. v5.3.0+.
+description: `gitmap`/`gcd` command-wrapper marker and runtime sentinel are separate from PATH snippet marker/env; Windows installers must write/load the PowerShell command wrapper. v5.4.0+.
 type: feature
 ---
 
-# Command Wrapper Marker Separation (v5.3.0+)
+# Command Wrapper Marker Separation (v5.3.0+; installer hardening v5.4.0+)
 
 ## Rule
 
@@ -31,3 +31,6 @@ exe. Result: `gitmap cd <repo>` printed a path but could not change directory.
 - `isWrapperActive` must check `EnvGitmapCommandWrapper`, not `EnvGitmapWrapper`.
 - Keep `GITMAP_WRAPPER` for legacy compatibility only; do not use it for active
   command-wrapper detection.
+- Windows install/profile snippets must install and load the PowerShell
+  `function gitmap` / `function gcd` wrapper. Adding PATH alone is not enough,
+  because an executable can never `Set-Location` in the parent PowerShell session.

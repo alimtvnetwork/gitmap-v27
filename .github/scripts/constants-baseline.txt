@@ -71,6 +71,7 @@ BumpMinor
 BumpPatch
 CDDefaultsFile
 CDFuncMarker
+CDFuncMarkerLegacy
 CMakeBuildPfx
 ChangelogFile
 ChangelogGenFormat
@@ -541,6 +542,7 @@ EnvExportFmt
 EnvExportPrefix
 EnvGitMapQuiet
 EnvGitMapQuietTrue
+EnvGitmapCommandWrapper
 EnvGitmapWrapper
 EnvGitmapWrapperVal
 EnvManagedComment

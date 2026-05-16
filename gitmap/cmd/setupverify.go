@@ -26,9 +26,9 @@ func verifyShellWrapper(dryRun bool) {
 	printWrapperReloadTip(shell)
 }
 
-// isWrapperActive returns true if the GITMAP_WRAPPER env var is set.
+// isWrapperActive returns true if the command wrapper env var is set.
 func isWrapperActive() bool {
-	return os.Getenv(constants.EnvGitmapWrapper) == constants.EnvGitmapWrapperVal
+	return os.Getenv(constants.EnvGitmapCommandWrapper) == constants.EnvGitmapWrapperVal
 }
 
 // printWrapperReloadTip prints reload instructions for the detected shell.

@@ -45,12 +45,17 @@ const (
 )
 
 // CD shell wrapper functions — installed by setup/completion.
-const CDFuncMarker = "# gitmap shell wrapper v2"
+const CDFuncMarker = "# gitmap command wrapper v1"
+
+// Legacy markers identify older/broken command-wrapper blocks that must be
+// replaced instead of causing setup to skip installation.
+const CDFuncMarkerLegacy = "# gitmap shell wrapper v2"
 
 // CD shell wrapper env var — set by wrappers so the binary can detect them.
 const (
-	EnvGitmapWrapper    = "GITMAP_WRAPPER"
-	EnvGitmapWrapperVal = "1"
+	EnvGitmapWrapper        = "GITMAP_WRAPPER"
+	EnvGitmapCommandWrapper = "GITMAP_COMMAND_WRAPPER"
+	EnvGitmapWrapperVal     = "1"
 )
 
 // Shell-handoff sentinel file env var. Set by the wrapper function to a
@@ -65,16 +70,16 @@ const ErrShellHandoffWriteFmt = "  ⚠ Could not write shell-handoff file %s: %v
 
 // CD wrapper verification messages.
 const (
-	WarnWrapperInstallFmt = "  ⚠ Could not auto-install shell wrapper: %v\n"
-	MsgWrapperNotLoaded   = "  %s! Shell wrapper not active%s — 'gitmap cd' printed the path but cannot change your directory yet.\n    Wrapper install was attempted; run: %s. $PROFILE%s (PowerShell) or %ssource ~/.bashrc%s / %ssource ~/.zshrc%s, then retry.\n"
-	MsgWrapperVerifyOK    = "  %s✓%s Shell wrapper is active (gitmap resolves as a function)\n"
+	WarnWrapperInstallFmt = "  ⚠ Could not auto-install command wrapper: %v\n"
+	MsgWrapperNotLoaded   = "  %s! Command wrapper not active%s — 'gitmap cd' printed the path but cannot change your directory yet.\n    Wrapper install/update was attempted; run: %s. $PROFILE%s (PowerShell) or %ssource ~/.bashrc%s / %ssource ~/.zshrc%s, then retry.\n"
+	MsgWrapperVerifyOK    = "  %s✓%s Command wrapper is active (gitmap resolves as a function)\n"
 	MsgWrapperVerifyTip   = "\n  %s→%s To activate: restart your terminal or reload your profile\n    PowerShell: %s. $PROFILE%s | Bash: %ssource ~/.bashrc%s | Zsh: %ssource ~/.zshrc%s\n"
 )
 
 // CDFuncBash installs gitmap and gcd wrappers for Bash.
 const CDFuncBash = `gcd() {
   local dest status
-  dest="$(GITMAP_WRAPPER=1 command gitmap cd "$@")"
+  dest="$(GITMAP_COMMAND_WRAPPER=1 GITMAP_WRAPPER=1 command gitmap cd "$@")"
   status=$?
   if [ $status -ne 0 ]; then
     return $status
@@ -87,7 +92,7 @@ const CDFuncBash = `gcd() {
 gitmap() {
   if [ "$1" = "cd" ] || [ "$1" = "go" ]; then
     local dest status
-    dest="$(GITMAP_WRAPPER=1 command gitmap "$@")"
+    dest="$(GITMAP_COMMAND_WRAPPER=1 GITMAP_WRAPPER=1 command gitmap "$@")"
     status=$?
     if [ $status -ne 0 ]; then
       return $status
@@ -100,7 +105,7 @@ gitmap() {
   local handoff status
   handoff="$(mktemp -t gitmap-handoff.XXXXXX 2>/dev/null)" || handoff=""
   if [ -n "$handoff" ]; then
-    GITMAP_HANDOFF_FILE="$handoff" GITMAP_WRAPPER=1 command gitmap "$@"
+    GITMAP_HANDOFF_FILE="$handoff" GITMAP_COMMAND_WRAPPER=1 GITMAP_WRAPPER=1 command gitmap "$@"
     status=$?
     if [ -s "$handoff" ]; then
       local target
@@ -119,7 +124,7 @@ gitmap() {
 const CDFuncZsh = `gcd() {
   local dest
   local status
-  dest="$(GITMAP_WRAPPER=1 command gitmap cd "$@")"
+  dest="$(GITMAP_COMMAND_WRAPPER=1 GITMAP_WRAPPER=1 command gitmap cd "$@")"
   status=$?
   if (( status != 0 )); then
     return $status
@@ -133,7 +138,7 @@ gitmap() {
   if [[ "$1" == "cd" || "$1" == "go" ]]; then
     local dest
     local status
-    dest="$(GITMAP_WRAPPER=1 command gitmap "$@")"
+    dest="$(GITMAP_COMMAND_WRAPPER=1 GITMAP_WRAPPER=1 command gitmap "$@")"
     status=$?
     if (( status != 0 )); then
       return $status
@@ -146,7 +151,7 @@ gitmap() {
   local handoff status
   handoff="$(mktemp -t gitmap-handoff.XXXXXX 2>/dev/null)" || handoff=""
   if [[ -n "$handoff" ]]; then
-    GITMAP_HANDOFF_FILE="$handoff" GITMAP_WRAPPER=1 command gitmap "$@"
+    GITMAP_HANDOFF_FILE="$handoff" GITMAP_COMMAND_WRAPPER=1 GITMAP_WRAPPER=1 command gitmap "$@"
     status=$?
     if [[ -s "$handoff" ]]; then
       local target
@@ -169,6 +174,7 @@ const CDFuncPowerShell = `function gcd {
     return
   }
   $env:GITMAP_WRAPPER = "1"
+  $env:GITMAP_COMMAND_WRAPPER = "1"
   $dest = & $real cd @args
   if ($LASTEXITCODE -ne 0) {
     return
@@ -198,6 +204,7 @@ function gitmap {
   }
   if ($args.Count -gt 0 -and ($args[0] -eq 'cd' -or $args[0] -eq 'go')) {
     $env:GITMAP_WRAPPER = "1"
+    $env:GITMAP_COMMAND_WRAPPER = "1"
     $dest = & $real @args
     if ($LASTEXITCODE -ne 0) {
       return
@@ -211,6 +218,7 @@ function gitmap {
   try {
     $env:GITMAP_HANDOFF_FILE = $handoff
     $env:GITMAP_WRAPPER = "1"
+    $env:GITMAP_COMMAND_WRAPPER = "1"
     & $real @args
     if ((Test-Path -LiteralPath $handoff) -and ((Get-Item -LiteralPath $handoff).Length -gt 0)) {
       $target = (Get-Content -LiteralPath $handoff -Raw).Trim()

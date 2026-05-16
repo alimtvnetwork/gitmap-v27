@@ -58,6 +58,26 @@ func TestAppendCDFunctionSkipsManagedWrapperWhenPresent(t *testing.T) {
 	}
 }
 
+func TestAppendCDFunctionDoesNotSkipPathSnippetMarker(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "profile")
+	pathSnippet := "\n" + constants.CDFuncMarkerLegacy + " - managed by installer. Do not edit manually.\n"
+
+	if err := os.WriteFile(path, []byte(pathSnippet), 0o644); err != nil {
+		t.Fatalf("seed profile failed: %v", err)
+	}
+	if err := appendCDFunction(constants.CDFuncPowerShell, path); err != nil {
+		t.Fatalf("appendCDFunction failed: %v", err)
+	}
+
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read profile failed: %v", err)
+	}
+	if strings.Count(string(data), constants.CDFuncMarker) != 1 {
+		t.Fatal("expected command wrapper after legacy PATH snippet marker")
+	}
+}
+
 func TestAppendCDFunctionAppendsManagedWrapperAfterLegacyMarker(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "profile")
 	legacy := "\n# gitmap cd wrapper\ngcd() {\n  cd \"$(gitmap cd \"$@\")\"\n}\n"

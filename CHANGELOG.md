@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.3.0 — (2026-05-16) — Fix command-wrapper false-positive detection
+
+### Fixed
+
+- `gitmap cd` no longer treats the PATH snippet as proof that the command
+  wrapper is active. The command wrapper now uses its own marker
+  (`# gitmap command wrapper v1`) and runtime sentinel (`GITMAP_COMMAND_WRAPPER`),
+  so `gitmap setup` appends/updates the actual `function gitmap { ... }` /
+  `gcd` wrapper even when the older PATH block already exists.
+- Root cause: both the PATH snippet and the `gitmap`/`gcd` command wrapper used
+  the same `# gitmap shell wrapper v2` text, and `isWrapperActive` trusted
+  `GITMAP_WRAPPER`, which the PATH snippet also exports. That caused setup to
+  report wrapper success while PowerShell still resolved `gitmap` as the exe.
+
 ## v5.2.0 — (2026-05-16) — Gate pinned-install snippet to gitmap-vN repos only
 
 ### Fixed

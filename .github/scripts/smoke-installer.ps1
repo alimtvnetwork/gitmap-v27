@@ -116,6 +116,11 @@ try {
                 Get-ChildItem -Path $dest -Recurse -Depth 4 -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.FullName }
                 exit 3
             }
+            $shim = Join-Path (Split-Path $bin -Parent) 'gitmap.ps1'
+            if (-not (Test-Path $shim -PathType Leaf)) {
+                Write-Error "::error::Installed release is missing gitmap.ps1 beside gitmap.exe"
+                exit 3
+            }
             Write-Host "▶ Located binary: $bin"
         }
     }

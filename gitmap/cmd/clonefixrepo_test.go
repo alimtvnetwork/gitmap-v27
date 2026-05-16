@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	TestCloneFixGitInitCmd  = "init"
-	TestCloneFixRepoName    = "gitmap-v20"
-	TestCloneFixFolderName  = "gitmap"
-	TestCloneFixRemoteURL   = "https://github.com/alimtvnetwork/gitmap-v20.git"
-	TestCloneFixRemoteKey   = "remote.origin.url"
+	TestCloneFixGitInitCmd = "init"
+	TestCloneFixRepoName   = "gitmap-v20"
+	TestCloneFixFolderName = "gitmap"
+	TestCloneFixRemoteURL  = "https://github.com/alimtvnetwork/gitmap-v20.git"
+	TestCloneFixRemoteKey  = "remote.origin.url"
 )
 
 func TestResolveCloneFixRepoNameUsesRemote(t *testing.T) {

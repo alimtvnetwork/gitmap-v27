@@ -48,10 +48,19 @@ func PrintWithMode(command string, mode render.PrettyMode) {
 // PrintWithMode(command, render.PrettyOff) but spelled out for clarity
 // at call sites that always want raw output regardless of TTY state.
 func PrintRaw(command string) {
-	data, err := files.ReadFile(command + ".md")
+	data, err := ReadRaw(command)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "No help available for '%s'\n", command)
 		os.Exit(1)
 	}
 	fmt.Print(string(data))
+}
+
+// ReadRaw returns the embedded help markdown for the given command
+// without exiting the process on miss. Test-friendly counterpart to
+// PrintRaw — callers that want to assert on help contents (alias
+// coverage, link integrity, etc.) should use this so the test binary
+// is not torn down by os.Exit when a lookup fails.
+func ReadRaw(command string) ([]byte, error) {
+	return files.ReadFile(command + ".md")
 }

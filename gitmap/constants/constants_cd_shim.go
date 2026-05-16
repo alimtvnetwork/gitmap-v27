@@ -11,7 +11,7 @@ if (-not (Test-Path -LiteralPath $real)) { Write-Error "gitmap executable not fo
 if ($args.Count -gt 0 -and ($args[0] -eq 'cd' -or $args[0] -eq 'go')) {
   $env:GITMAP_WRAPPER = "1"; $env:GITMAP_COMMAND_WRAPPER = "1"
   $dest = & $real @args
-  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+  if ($LASTEXITCODE -ne 0) { $global:LASTEXITCODE = $LASTEXITCODE; return }
   if ($dest -and (Test-Path -LiteralPath $dest)) { Set-Location -LiteralPath $dest }
   return
 }
@@ -24,7 +24,8 @@ try {
     $target = (Get-Content -LiteralPath $handoff -Raw).Trim()
     if ($target -and (Test-Path -LiteralPath $target)) { Set-Location -LiteralPath $target }
   }
-  exit $exitCode
+  $global:LASTEXITCODE = $exitCode
+  return
 }
 finally {
   Remove-Item -LiteralPath $handoff -ErrorAction SilentlyContinue

@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.44.0 — (2026-05-16) — Minor version bump; re-pin root README install snippets and version matrix to v4.44.0
+
+- Bumped `Version` constant to `4.44.0` (Go) and `VERSION` to `v4.44.0` (web)
+- Re-pinned the root `README.md` "Pinned version" section, one-line installers, and version matrix asset URLs to `v4.44.0` / `gitmap-v19.44.0-*`
+
+
 ## v4.42.0 — (2026-05-09) — Minor version bump; re-pin root README install snippets and version matrix to v4.42.0
 
 - Bumped `Version` constant to `4.42.0` (Go) and `VERSION` to `v4.42.0` (web)

@@ -36,6 +36,18 @@ func TestRenderPathSnippet_Fish_UsesFishAddPath(t *testing.T) {
 	}
 }
 
+func TestRenderPathSnippet_Pwsh_InstallsCommandWrapper(t *testing.T) {
+	got, err := RenderPathSnippet("pwsh", `C:\gitmap-cli`, "installer")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	for _, want := range []string{"function global:gitmap", "function global:gcd", "GITMAP_COMMAND_WRAPPER"} {
+		if !strings.Contains(got, want) {
+			t.Errorf("pwsh snippet missing %q\nfull output:\n%s", want, got)
+		}
+	}
+}
+
 func TestRenderPathSnippet_UnknownShell_Errors(t *testing.T) {
 	_, err := RenderPathSnippet("ksh", "/opt/gitmap", "run.sh")
 	if err == nil {

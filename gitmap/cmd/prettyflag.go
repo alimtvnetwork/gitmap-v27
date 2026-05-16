@@ -29,22 +29,23 @@ var prettyFlagPrefixes = []string{
 	flagColorPositive, flagColorNegative,
 }
 
-// ParsePrettyFlag pulls --pretty / --no-pretty out of args and returns
-// the cleaned slice + the resolved render.PrettyMode. Accepted forms:
+// ParsePrettyFlag pulls --pretty / --no-pretty (and the --color /
+// --no-color synonyms) out of args and returns the cleaned slice + the
+// resolved render.PrettyMode. Accepted forms:
 //
-//	--pretty            → PrettyOn
-//	--pretty=true       → PrettyOn
-//	--pretty=on         → PrettyOn
-//	--pretty=1          → PrettyOn
-//	--pretty=false      → PrettyOff
-//	--pretty=off        → PrettyOff
-//	--pretty=0          → PrettyOff
-//	--pretty=auto       → PrettyAuto (explicit reset)
-//	--no-pretty         → PrettyOff
+//	--pretty | --color                 → PrettyOn
+//	--pretty=true|on|1|yes|y           → PrettyOn
+//	--color=true|on|1|yes|y            → PrettyOn
+//	--pretty=false|off|0|no|n          → PrettyOff
+//	--color=false|off|0|no|n           → PrettyOff
+//	--pretty=auto | --color=auto       → PrettyAuto (explicit reset)
+//	--no-pretty | --no-color           → PrettyOff
 //
 // When the same flag is repeated, the **last** occurrence wins (matches
-// stdlib flag.Parse semantics). When neither appears, the returned mode
-// is PrettyAuto so callers can rely on Decide()'s default ladder.
+// stdlib flag.Parse semantics) — and "same flag" spans the synonym
+// pair, so `--pretty --no-color` resolves to PrettyOff. When neither
+// appears, the returned mode is PrettyAuto so callers can rely on
+// Decide()'s default ladder.
 //
 // Unrecognized values fall through to PrettyAuto and the token is left
 // in place so the downstream parser can produce a meaningful error.

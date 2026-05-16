@@ -1,5 +1,15 @@
 # Changelog
 
+## v5.13.0 — (2026-05-16) — Re-pin root README to v5.13.0, sync version constants
+
+### Docs
+- Bumped `Pinned version` section in root `README.md` from `v5.12.0` → `v5.13.0` (heading, one-line installers, version-matrix table, release page link).
+
+### Chore
+- `gitmap/constants/constants.go`: `Version` constant `5.10.0` → `5.13.0`.
+- `src/constants/index.ts`: web `VERSION` `v5.10.0` → `v5.13.0` (keeps `version-sync.test.ts` in sync).
+- CI badges in `README.md` no longer pin to `branch=main`, so workflow status reflects the active branch where CI is green.
+
 ## v5.12.0 — (2026-05-16) — README alias mapping for `pull-release` family
 
 ### Docs

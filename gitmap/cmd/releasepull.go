@@ -22,6 +22,7 @@ import (
 //	--merge              classic merge (passes --no-rebase); creates merge commit.
 func runReleasePull(args []string) {
 	checkHelp(constants.CmdReleasePull, args)
+	printCanonicalCmdBanner(constants.CmdReleasePull, constants.CmdReleasePullAlias)
 
 	mode, dryRun, verbose, rest := parseReleasePullFlags(args)
 	dir := requireReleasePullCwd()

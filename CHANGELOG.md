@@ -1,5 +1,26 @@
 # Changelog
 
+## v5.23.0 — (2026-05-18) — Root-level installer URLs (`/install.ps1`, `/install.sh`)
+
+### Added
+- **`/install.ps1`** and **`/install.sh`** now live at the repository root. The one-liner installer URL is now:
+  - Windows: `irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v20/main/install.ps1 | iex`
+  - macOS / Linux: `curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v20/main/install.sh | sh`
+- Shorter, more discoverable URLs — no more `gitmap/scripts/` segment for end users.
+
+### Kept
+- `gitmap/scripts/install.ps1` + `gitmap/scripts/install.sh` are unchanged — they remain the source of truth consumed by:
+  - `gitmap/scripts/embed.go` (`go:embed` for `gitmap self-install`).
+  - `release-version.ps1` / `release-version.sh` generators.
+  - `.github/workflows/ci.yml`, `.github/workflows/release.yml`, smoke tests.
+  - ~50 spec / memory docs.
+  The root files are byte-identical copies — same checksum contract, same behavior.
+
+### Pinned
+- README pinned-version block + version matrix moved to **v5.23.0**.
+- All README install URLs rewritten from `main/gitmap/scripts/install.{ps1,sh}` → `main/install.{ps1,sh}` (11 occurrences).
+- Version constants synced: `gitmap/constants/constants.go` (`Version = "5.23.0"`), `src/constants/index.ts` (`VERSION = "v5.23.0"`).
+
 ## v5.22.0 — (2026-05-18) — Pin bump (rolls up v5.21.0 ssh view/copy/create)
 
 ### Pinned

@@ -1,5 +1,14 @@
 # Changelog
 
+## v5.14.0 — (2026-05-18) — Colorful help text: green comments, magenta keys, padded lists
+
+### Added
+- Markdown help renderer (`gitmap/render`) now color-codes `# comments` inside code fences in green and credential-like tokens (`API_KEY`, `GITMAP_TOKEN`, etc.) and the `hd` alias in magenta.
+- List and table blocks in help output now render with vertical padding for better readability.
+
+### Tests
+- New pretty-renderer test fixtures: `case-010-fence-comments-and-keys` (green comments + magenta keys) and `case-011-list-and-table` (list/table padding).
+
 ## v5.13.0 — (2026-05-16) — Re-pin root README to v5.13.0, sync version constants
 
 ### Docs

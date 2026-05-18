@@ -1229,6 +1229,11 @@ gitmap clone https://github.com/alimtvnetwork/gitmap-v20 my-folder
 gitmap clone git@github.com:alimtvnetwork/gitmap-v20.git my-folder
 gitmap clone https://github.com/alimtvnetwork/gitmap-v20 --replace   # see spec 96
 
+# force the transport — auto-converts HTTPS <-> SSH-shorthand before git runs
+gitmap clone https://github.com/alimtvnetwork/gitmap-v20.git --ssh    # -> git@github.com:alimtvnetwork/gitmap-v20.git
+gitmap clone git@github.com:alimtvnetwork/gitmap-v20.git --https      # -> https://github.com/alimtvnetwork/gitmap-v20.git
+gitmap clone "https://github.com/a/x,https://github.com/a/y" --ssh    # batch — every URL converted
+
 # clone-next: jump to the next (or specific) versioned sibling
 gitmap cn v++                                   # my-app-v3 -> my-app-v4
 gitmap cn v15 --delete                          # jump to v15, delete current

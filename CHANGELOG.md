@@ -1,5 +1,37 @@
 # Changelog
 
+## v5.20.0 — (2026-05-18) — `gitmap clone --ssh` / `--https` coerce every URL into the requested transport
+
+### Added
+- **`gitmap clone --ssh`** rewrites every recognised Git URL into its `git@host:owner/repo.git` SSH-shorthand form before `git clone` runs. HTTPS (`https://github.com/owner/repo`) and `ssh://git@host[:port]/owner/repo` URLs are both converted; already-shorthand URLs are normalized (`.git` suffix appended). Flows through the multi-URL form too — `clone url1,url2,url3 --ssh` converts the whole batch.
+- **`gitmap clone --https`** is the symmetric counterpart — forces every URL into `https://host/owner/repo.git`. Useful in CI/headless environments where the SSH agent isn't unlocked.
+- `--ssh` and `--https` are mutually exclusive; when both are set, `--ssh` wins and a one-line stderr warning is printed.
+
+### Behaviour
+- Conversion happens AFTER `applySSHKey` and BEFORE the multi-URL / direct-URL routers, so the multi-URL detector sees the converted URLs.
+- Non-URL positionals (folder names, `json` / `csv` / `text` shorthands) are skipped via the existing `isDirectURL` predicate.
+- Port hints in `ssh://` URLs are dropped (SSH-shorthand has no port slot — use `~/.ssh/config` for non-default ports).
+- A `↪ --ssh rewrite: <before> → <after>` breadcrumb is printed before git runs.
+
+### Examples
+```powershell
+gitmap clone https://github.com/alimtvnetwork/wp-onboarding.git --ssh
+#   ↪ --ssh rewrite: https://github.com/alimtvnetwork/wp-onboarding.git → git@github.com:alimtvnetwork/wp-onboarding.git
+
+gitmap clone "https://github.com/a/x,https://github.com/a/y" --ssh
+gitmap clone git@github.com:alimtvnetwork/wp-onboarding.git --https
+```
+
+### Files
+- `gitmap/cmd/cloneurlconvert.go` — new: `ConvertURLToSSH`, `ConvertURLToHTTPS`, plus helpers.
+- `gitmap/cmd/rootflags.go` — `UseSSH` / `UseHTTPS` on `CloneFlags`, `--ssh` / `--https` registration.
+- `gitmap/cmd/clone.go` — `applyURLSchemeFlags`, wired into `runClone`.
+
+### Spec / Memory
+- Spec: `spec/01-app/110-clone-ssh-flag.md`
+- Memory: `.lovable/memory/features/clone-ssh-flag.md`
+
+
 ## v5.19.0 — (2026-05-18) — `gitmap rp` (release-pending) rejects version args + canonical command banner
 
 ### Fixed

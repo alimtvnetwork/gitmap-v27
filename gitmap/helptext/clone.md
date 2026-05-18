@@ -217,6 +217,16 @@ Delete the cache file to force a full reclone of every entry.
     ...
     Clone complete: 5 succeeded, 0 failed
 
+### Example 6: Force every URL into SSH-shorthand (`--ssh`)
+
+    gitmap clone https://github.com/alimtvnetwork/wp-onboarding.git --ssh
+
+**Output:**
+
+      ↪ --ssh rewrite: https://github.com/alimtvnetwork/wp-onboarding.git → git@github.com:alimtvnetwork/wp-onboarding.git
+    Cloning wp-onboarding into wp-onboarding...
+    Cloned wp-onboarding successfully.
+
 ## See Also
 
 - [scan](scan.md) — Scan directories to generate output files

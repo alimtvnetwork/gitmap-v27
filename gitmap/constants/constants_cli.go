@@ -190,6 +190,13 @@ const (
 	// Help: vscode-pm-sync.md.
 	CmdVSCodePMSync      = "vscode-pm-sync"
 	CmdVSCodePMSyncAlias = "vpm"
+	// CmdPullReleaseCD is a multi-repo, one-shot pull-release runner.
+	// Accepts a comma-separated list of `<name-or-url> <version>` pairs;
+	// chdirs into each (cloning URLs first) and runs `gitmap pull-release
+	// <version> -y` as an isolated subprocess. Spec:
+	// spec/01-app/112-pull-release-cd.md.
+	CmdPullReleaseCD      = "pull-release-cd"
+	CmdPullReleaseCDAlias = "prc"
 )
 
 // vscode-pm-sync flag names + descriptions.

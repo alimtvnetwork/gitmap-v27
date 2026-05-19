@@ -8,6 +8,17 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.26.0",
+    date: "2026-05-18",
+    subtitle: "Pin bump — rolls up the `clone --ssh` flag-position fix as the stable build",
+    items: [
+      "Pinned: README pinned-version block + version matrix moved to **v5.26.0** (PowerShell + Bash installer URLs and all per-platform release assets).",
+      "Synced: `gitmap/constants/constants.go` (`Version = \"5.26.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.26.0\"`).",
+      "Rolled up: `gitmap clone <url> --ssh` (and every other bool clone flag) is honoured regardless of position — `parseCloneFlags` routes through `reorderFlagsBeforeArgs` so a trailing `--ssh` no longer slips past Go's `flag` package.",
+      "Clarified: SSH-shorthand and `ssh://` URLs still clone natively through `git`; the `--ssh` converter only fires to coerce an HTTPS URL into shorthand before `git` runs.",
+    ],
+  },
+  {
     version: "v5.24.0",
     date: "2026-05-18",
     subtitle: "`gitmap clone --ssh` now works when the flag follows the URL",

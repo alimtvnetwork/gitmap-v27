@@ -247,8 +247,10 @@ func parseCloneFlags(args []string) CloneFlags {
 		constants.FlagDescDebugPaths)
 	sshFlag := fs.Bool("ssh", false,
 		"Force every clone URL into `git@host:owner/repo.git` SSH-shorthand form before git runs (auto-converts HTTPS / `ssh://` URLs)")
+	fs.BoolVar(sshFlag, "sh", false, "Short alias for --ssh")
 	httpsFlag := fs.Bool("https", false,
 		"Force every clone URL into `https://host/owner/repo.git` form (auto-converts SSH-shorthand / `ssh://` URLs)")
+	fs.BoolVar(httpsFlag, "ht", false, "Short alias for --https")
 	// Reorder so `gitmap clone <url> --ssh` works — Go's flag pkg
 	// stops parsing at the first non-flag, which would otherwise
 	// silently drop `--ssh` / `--https` / every other bool flag

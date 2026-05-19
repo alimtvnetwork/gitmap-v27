@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.28.0",
+    date: "2026-05-19",
+    subtitle: "`gitmap pull` works like `git pull` in a repo + new `gitm` short alias",
+    items: [
+      "Added: `gitmap pull` with no args now short-circuits to a plain `git pull` when run inside a git repo — stdin/stdout/stderr forwarded, underlying exit code propagated. Slug / `--group` / `--all` / aliased-repo modes are unchanged.",
+      "Added: `gitm` shell alias — Bash / Zsh / PowerShell wrappers installed by `gitmap setup` now also define `gitm` as a thin forwarder to `gitmap`, so `gitm pull`, `gitm cd <name>`, `gitm clone <url>` all behave identically. Re-run `gitmap setup` (or reinstall) to pick up the new wrapper block.",
+      "Confirmed: `gitmap setup` auto-run after install has shipped since v5.18.0 — both `install.ps1` and `install.sh` call `gitmap setup` as a non-fatal final step, so `gitm` is registered automatically on fresh installs.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.28.0**.",
+      "Synced: `gitmap/constants/constants.go` (`Version = \"5.28.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.28.0\"`).",
+    ],
+  },
+  {
     version: "v5.27.0",
     date: "2026-05-19",
     subtitle: "`gitmap cfrp` / `cfr` now honour `--ssh` / `--https`",

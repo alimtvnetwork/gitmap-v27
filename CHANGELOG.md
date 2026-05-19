@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.34.0 — (2026-05-19) — `cfr` / `cfrp` help refresh + full clone-flag parity surfaced
+
+### Added
+- **Colorful, emoji-rich help text** for `gitmap clone-fix-repo` (`cfr`) and `gitmap clone-fix-repo-pub` (`cfrp`). The pretty markdown renderer (`gitmap/render`) already cyans double-quoted spans, greens shell comments, magentas credential-looking tokens, and yellow-collapses fenced blocks that mirror their preceding paragraph — the help files now lean into that with status emojis (🚀 📥 📂 🔧 🌍 🔐 🌐 ✅ ❌), exit-code tables, and per-flag glyphs.
+- Help docs now explicitly document the **`--ssh` / `-ssh` / `--sh`** and **`--https` / `-https` / `--ht`** transport flags on both `cfr` and `cfrp` (the wiring shipped in v5.27.0 but was undocumented). Behaviour mirrors `gitmap clone --ssh` exactly: URL is rewritten in-place before the clone step runs, `↪ --ssh rewrite: <old> → <new>` is printed to stdout, and `--ssh` wins when both flags are set.
+- Help docs surface the **`--require-version`** strict-mode flag (exit 4 when the cloned repo identity has no `-vN` suffix) that was previously only discoverable by reading `parseCloneFixRepoArgs`.
+
+### Pinned
+- README pinned-version block + version matrix moved to **v5.34.0**.
+- Synced `gitmap/constants/constants.go` (`Version = "5.34.0"`) and `src/constants/index.ts` (`VERSION = "v5.34.0"`).
+
 ## v5.33.0 — (2026-05-19) — Pinned-version + README sync rollup
 
 ### Notes

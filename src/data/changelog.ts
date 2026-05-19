@@ -22,6 +22,7 @@ export const changelog: ChangelogEntry[] = [
       "Synced: `gitmap/constants/constants.go` (`Version = \"5.29.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.29.0\"`).",
     ],
   },
+  {
     version: "v5.28.0",
     date: "2026-05-19",
     subtitle: "`gitmap pull` works like `git pull` in a repo + new `gitm` short alias",

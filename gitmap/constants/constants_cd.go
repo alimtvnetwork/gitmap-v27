@@ -125,6 +125,8 @@ gitmap() {
   fi
   command gitmap "$@"
 }
+
+gitm() { gitmap "$@"; }
 # gitmap command wrapper v1 end`
 
 // CDFuncZsh installs gitmap and gcd wrappers for Zsh.

@@ -19,7 +19,7 @@ import { VERSION } from "@/constants/index";
  * `.lovable/memory/project/version-bump-procedure.md`.
  */
 describe("VERSION sync between web and Go binary", () => {
-  const goConstantsPath = resolve(__dirname, "../../gitmap-v22/constants/constants.go");
+  const goConstantsPath = resolve(__dirname, "../../gitmap/constants/constants.go");
 
   it("can locate the Go constants file", () => {
     expect(existsSync(goConstantsPath)).toBe(true);

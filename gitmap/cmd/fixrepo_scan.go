@@ -49,35 +49,94 @@ func runFixRepoSweep(identity fixRepoIdentity, targets []int, opts fixRepoOption
 }
 
 // processFixRepoFile is the per-file branch extracted from the sweep
-// loop so runFixRepoSweep stays under the 15-line cap.
+// loop so runFixRepoSweep stays under the 15-line cap. Dry-run takes
+// a separate path that emits a per-rule breakdown without writing.
 func processFixRepoFile(rel string, identity fixRepoIdentity, targets []int,
 	opts fixRepoOptions, result *fixRepoSweepResult,
 ) {
 	full := filepath.Join(identity.root, rel)
-	if isFixRepoIgnoredPath(rel) {
-		return
-	}
-	if !isFixRepoScannable(full) {
+	if isFixRepoIgnoredPath(rel) || !isFixRepoScannable(full) {
 		return
 	}
 	result.scanned++
-	reps, err := rewriteFixRepoFileR(full, identity.base, identity.current, targets, opts.isDryRun, opts.restrictNoVersion)
+	if opts.isDryRun {
+		previewOneFile(full, rel, identity, targets, opts, result)
+
+		return
+	}
+	rewriteOneFile(full, rel, identity, targets, opts, result)
+}
+
+// rewriteOneFile is the write-path branch. Mutates disk and records
+// the modified .go path for the gofmt + strict post-steps.
+func rewriteOneFile(full, rel string, identity fixRepoIdentity, targets []int,
+	opts fixRepoOptions, result *fixRepoSweepResult,
+) {
+	reps, err := rewriteFixRepoFileR(full, identity.base, identity.current, targets, false, opts.restrictNoVersion)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.FixRepoErrWriteFmt, rel, err)
 		result.failed = true
 
 		return
 	}
-	if reps > 0 {
-		result.changed++
-		result.replacements += reps
-		if isGoSourceFile(rel) {
-			result.goFiles = append(result.goFiles, full)
-		}
-		if opts.isVerbose {
-			fmt.Printf(constants.FixRepoMsgModified, rel, reps)
-		}
+	if reps == 0 {
+		return
 	}
+	result.changed++
+	result.replacements += reps
+	if isGoSourceFile(rel) {
+		result.goFiles = append(result.goFiles, full)
+	}
+	if opts.isVerbose {
+		fmt.Printf(constants.FixRepoMsgModified, rel, reps)
+	}
+}
+
+// previewOneFile is the dry-run branch. Always prints a per-file
+// `[dry-run]` line plus a per-rule breakdown so the user sees every
+// would-be substitution without touching disk.
+func previewOneFile(full, rel string, identity fixRepoIdentity, targets []int,
+	opts fixRepoOptions, result *fixRepoSweepResult,
+) {
+	reps, hits, err := previewFixRepoFile(full, identity.base, identity.current, targets, opts.restrictNoVersion)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.FixRepoErrWriteFmt, rel, err)
+		result.failed = true
+
+		return
+	}
+	if reps == 0 {
+		return
+	}
+	result.changed++
+	result.replacements += reps
+	fmt.Printf(constants.FixRepoMsgDryRunPreview, rel, reps, formatFixRepoHits(hits))
+}
+
+// formatFixRepoHits renders the per-rule breakdown as a compact
+// comma-joined list, e.g. `v1×3, v2×1, bare×2`. Empty slice yields
+// an empty string (caller still prints the count).
+func formatFixRepoHits(hits []fixRepoTargetHit) string {
+	if len(hits) == 0 {
+		return ""
+	}
+	parts := make([]string, 0, len(hits))
+	for _, h := range hits {
+		parts = append(parts, formatOneFixRepoHit(h))
+	}
+
+	return strings.Join(parts, ", ")
+}
+
+// formatOneFixRepoHit renders a single rule hit. The bare-base
+// sentinel (n == -1) is rendered as `bare` to distinguish it from
+// the numbered `{base}-vN` rules in the dry-run breakdown.
+func formatOneFixRepoHit(h fixRepoTargetHit) string {
+	if h.n == fixRepoBareBaseSentinel {
+		return fmt.Sprintf(constants.FixRepoMsgDryRunHitBare, h.count)
+	}
+
+	return fmt.Sprintf(constants.FixRepoMsgDryRunHit, h.n, h.count)
 }
 
 // listTrackedFiles runs `git ls-files` in repoRoot. Failures yield

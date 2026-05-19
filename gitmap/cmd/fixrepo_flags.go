@@ -66,7 +66,14 @@ func consumeOneFixRepoArg(args []string, i int, out *fixRepoOptions,
 
 		return 1, nil
 	}
-	consumed, ok, err := consumeFixRepoConfigArg(args, i, out)
+	consumed, ok, err := consumeFixRepoRestrictArg(args, i, out)
+	if err != nil {
+		return 0, err
+	}
+	if ok {
+		return consumed, nil
+	}
+	consumed, ok, err = consumeFixRepoConfigArg(args, i, out)
 	if err != nil {
 		return 0, err
 	}

@@ -107,6 +107,41 @@ the script to the binary.
   each ≤ 200 lines, functions ≤ 15 lines, positive conditionals only,
   no swallowed errors (logged to `os.Stderr` via the standard format).
 
+## Bare-base scope rule (v5.38.0+)
+
+The rewrite engine has an extra pass that substitutes standalone
+`{base}` tokens (no `-vN` suffix) for the case where the original
+repository shipped without a `-v1` suffix and downstream references
+read the bare name.
+
+**This pass is restricted to the v1→v2 transition only.** Concretely,
+the bare-base sweep runs if and only if both of these are true:
+
+1. `1` is in the target version set (i.e. v1 is being rewritten), AND
+2. The current repo version is exactly `2` (`current == 2`).
+
+For any current version ≥ 3 the bare-base pass is skipped even when v1
+is in the target span. Rationale: once the project has shipped past
+v2, a bare `{base}` token in source / docs / scripts is overwhelmingly
+NOT the pre-versioned origin URL — it is the binary name, package
+identifier, brand string, or an unrelated repo reference, and rewriting
+it to `{base}-v{current}` silently corrupts the repo.
+
+Example — running `gitmap fix-repo` inside `gitmap-v4`:
+
+- BEFORE v5.38.0: every bare `gitmap` mention (including
+  `https://github.com/owner/gitmap`, the `gitmap` binary name in
+  install scripts, `gitmap-cli` package descriptions, etc.) got
+  rewritten to `gitmap-v4` — corrupting the working tree.
+- v5.38.0+: bare `gitmap` is left alone. Only `gitmap-v1`, `gitmap-v2`,
+  `gitmap-v3` are rewritten to `gitmap-v4`.
+
+Implementation: `applyAllTargets` in `gitmap/cmd/fixrepo_rewrite.go`,
+guarded by `if n == 1 && current == 2`. Regression locks:
+`TestApplyAllTargets_BareBase_SkippedAtV3Plus` and
+`TestApplyAllTargets_BareBase_SkippedAtV4WithV1InTargets` in
+`fixrepo_rewrite_barebase_test.go`.
+
 ## Cross-references
 
 - PowerShell script: `fix-repo.ps1` + `scripts/fix-repo/*.ps1`.

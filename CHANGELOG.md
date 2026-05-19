@@ -1,6 +1,10 @@
 # Changelog
 
-## v5.40.0 — (2026-05-19) — `fix-repo` auto-backup + `gitmap undo` restore
+## v5.41.0 — (2026-05-19) — Routine version bump
+
+- Synchronized version pins across `gitmap/constants/constants.go`, `src/constants/index.ts`, and README.md version matrix.
+- Pinned: README pinned-version block + version matrix moved to **v5.41.0**. Synced `gitmap/constants/constants.go` (`Version = "5.41.0"`) and `src/constants/index.ts` (`VERSION = "v5.41.0"`).
+
 
 - **Auto-backup.** Every `gitmap fix-repo` write (non-dry-run) now snapshots the pre-rewrite copy of each modified file to `<repoRoot>/.gitmap/backup/<repo>/v<current>/fix-repo/<UTC-timestamp>/files/<rel/path>` alongside a `manifest.json` index. Untouched files are never copied; dry-run never creates a snapshot directory. One snapshot per invocation, lexically-sortable UTC stamp == chronological order.
 - **New command: `gitmap undo` (alias `ud`).** Restores the latest snapshot for the **current repo + current version** back onto the working tree. Subcommands: `--list` (snapshots newest-first with file counts, latest marked `*`), `--snapshot <ts>` (pick a specific stamp), `--dry-run` (preview without writing). Snapshots are scoped to `<repo>/v<current>` so an undo inside `gitmap-v4` can never touch a `gitmap-v3` snapshot.

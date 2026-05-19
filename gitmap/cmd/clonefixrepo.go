@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/alimtvnetwork/gitmap-v20/gitmap/clonenext"
 	"github.com/alimtvnetwork/gitmap-v20/gitmap/constants"
@@ -43,11 +44,13 @@ func runCloneFixRepoPub(args []string) {
 // runCloneFixRepoPipeline is the shared core. `makePublic` controls
 // whether the optional 3rd step (visibility flip) runs.
 func runCloneFixRepoPipeline(args []string, makePublic bool) {
-	url, folderName, noVSCodeSync, requireVersion := parseCloneFixRepoArgs(args)
+	url, folderName, noVSCodeSync, requireVersion, useSSH, useHTTPS := parseCloneFixRepoArgs(args)
 	if len(url) == 0 {
 		fmt.Fprint(os.Stderr, constants.ErrCloneFixRepoUsage)
 		os.Exit(constants.ExitCloneFixRepoBadFlag)
 	}
+
+	url = applyCloneFixRepoScheme(url, useSSH, useHTTPS)
 
 	absPath := resolveCloneTargetFolder(url, folderName)
 	requireOnline()
@@ -63,6 +66,36 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 		runChainedGitmapStep([]string{constants.CmdMakePublic, "--" + constants.FlagVisYes})
 	}
 	fmt.Printf(constants.MsgCloneFixRepoDone, absPath)
+}
+
+// applyCloneFixRepoScheme honours --ssh / --https (and short aliases
+// --sh / --ht) by rewriting the URL before the in-process clone runs.
+// Mirrors `gitmap clone --ssh` semantics: when both flags are set,
+// --ssh wins and a one-line stderr warning is printed. Unrecognised
+// URL shapes are returned unchanged so non-URL positionals still flow
+// through.
+func applyCloneFixRepoScheme(url string, useSSH, useHTTPS bool) string {
+	if useSSH && useHTTPS {
+		fmt.Fprintln(os.Stderr, "warning: --ssh and --https both set; --ssh wins")
+		useHTTPS = false
+	}
+	if useSSH {
+		if converted, ok := ConvertURLToSSH(url); ok {
+			if converted != url {
+				fmt.Printf("↪ --ssh rewrite: %s → %s\n", url, converted)
+			}
+			return converted
+		}
+	}
+	if useHTTPS {
+		if converted, ok := ConvertURLToHTTPS(url); ok {
+			if converted != url {
+				fmt.Printf("↪ --https rewrite: %s → %s\n", url, converted)
+			}
+			return converted
+		}
+	}
+	return url
 }
 
 // maybeRunFixRepoStep runs `fix-repo --all` only when the cloned repo
@@ -101,24 +134,34 @@ func resolveCloneFixRepoName(absPath string) string {
 	return filepath.Base(absPath)
 }
 
-// parseCloneFixRepoArgs returns (url, folderName, noVSCodeSync, requireVersion).
-// First non-flag arg is the URL; second non-flag is the destination folder.
-// Recognized flags: --no-vscode-sync, --require-version.
-func parseCloneFixRepoArgs(args []string) (string, string, bool, bool) {
+// parseCloneFixRepoArgs returns (url, folderName, noVSCodeSync,
+// requireVersion, useSSH, useHTTPS). First non-flag arg is the URL;
+// second non-flag is the destination folder. Recognized flags:
+// --no-vscode-sync, --require-version, --ssh/-ssh/--sh,
+// --https/-https/--ht. Single-dash forms are accepted to match Go's
+// stdlib `flag` package behaviour the user expects from `-ssh`.
+func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, bool) {
 	positional := make([]string, 0, len(args))
 	noVSCodeSync := false
 	requireVersion := false
-	syncFlag := "--" + constants.FlagNoVSCodeSync
-	reqFlag := "--" + constants.FlagRequireVersion
+	useSSH := false
+	useHTTPS := false
+	syncFlag := constants.FlagNoVSCodeSync
+	reqFlag := constants.FlagRequireVersion
 	for _, a := range args {
-		if a == syncFlag {
+		name := strings.TrimLeft(a, "-")
+		switch name {
+		case syncFlag:
 			noVSCodeSync = true
-
 			continue
-		}
-		if a == reqFlag {
+		case reqFlag:
 			requireVersion = true
-
+			continue
+		case "ssh", "sh":
+			useSSH = true
+			continue
+		case "https", "ht":
+			useHTTPS = true
 			continue
 		}
 		if len(a) > 0 && a[0] != '-' {
@@ -134,7 +177,7 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool) {
 		folder = positional[1]
 	}
 
-	return url, folder, noVSCodeSync, requireVersion
+	return url, folder, noVSCodeSync, requireVersion, useSSH, useHTTPS
 }
 
 // resolveCloneTargetFolder mirrors the folder-naming logic in

@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.27.0 — (2026-05-19) — `gitmap cfrp` / `cfr` honour `--ssh` / `--https`
+
+### Fixed
+- `gitmap clone-fix-repo-pub <url> --ssh` (alias `cfrp`) and `gitmap clone-fix-repo <url> --ssh` (alias `cfr`) were ignoring the transport flag — the chained `clone` step ran the raw HTTPS URL because `parseCloneFixRepoArgs` only recognised `--no-vscode-sync` and `--require-version`. The URL is now rewritten via `ConvertURLToSSH` / `ConvertURLToHTTPS` before the in-process clone runs, mirroring `gitmap clone --ssh` exactly.
+- Accepts `--ssh`, `-ssh`, `--sh`, `-sh`, `--https`, `-https`, `--ht`, `-ht` (single- and double-dash, plus the same short aliases as `gitmap clone`). When both `--ssh` and `--https` are set, `--ssh` wins with a stderr warning.
+- Prints a `↪ --ssh rewrite: <before> → <after>` breadcrumb so the substitution is visible before `git clone` runs.
+
+### Pinned
+- README pinned-version block + version matrix moved to **v5.27.0**.
+- Synced `gitmap/constants/constants.go` (`Version = "5.27.0"`) and `src/constants/index.ts` (`VERSION = "v5.27.0"`).
+
 ## v5.26.0 — (2026-05-18) — Pin bump rolling up the `clone --ssh` flag-position fix
 
 ### Pinned

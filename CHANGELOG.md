@@ -1,5 +1,14 @@
 # Changelog
 
+## v5.32.0 — (2026-05-19) — `gitm` shell alias + post-install setup auto-run reminder
+
+### Notes
+- Rolls up `gitm` shell-function alias (wired in v5.28.0 wrapper templates for Bash/Zsh/PowerShell) and the `gitmap setup` auto-run at the end of `install.sh` / `install.ps1` (v5.18.0+). After upgrading, run `gitmap setup` and reload your shell (`. $PROFILE` on PowerShell, `source ~/.bashrc` on Bash) to pick up the `gitm` function.
+
+### Pinned
+- README pinned-version block + version matrix moved to **v5.32.0**.
+- Synced `gitmap/constants/constants.go` (`Version = "5.32.0"`) and `src/constants/index.ts` (`VERSION = "v5.32.0"`).
+
 ## v5.31.0 — (2026-05-19) — `gitmap pull-release-cd` / `prc` (multi-repo one-shot release)
 
 ### Added

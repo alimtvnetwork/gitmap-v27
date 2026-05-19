@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.36.0",
+    date: "2026-05-19",
+    subtitle: "PowerShell `gitmap cd` wrapper: bulletproof `[string]` cast against `Set-Location` Object[] binding",
+    items: [
+      "Fix: stale-profile users hit `Set-Location : Cannot convert 'System.Object[]' to the type 'System.String' required by parameter 'LiteralPath'` when running `gitmap cd <slug>` — even after the v5.17.0 `Out-String | Trim` fix — because PowerShell could still bind `$dest` as `Object[]` in some pipelines.",
+      "Hardened all four PowerShell wrapper sites: `gitmap/constants/constants_cd.go` (gcd + gitmap fns), `constants_pathsnippet.go` (setup-written profile snippet), `constants_cd_shim.go` (template), and `gitmap/scripts/install.ps1` (both the one-liner profile wrapper and the multi-line shim template).",
+      "Pattern: `$dest = [string](& $real ... | Out-String); $dest = $dest.Trim()` followed by `Set-Location -LiteralPath ([string]$dest)` — the explicit `[string]` cast at the binding site makes Object[] binding impossible regardless of upstream pipeline quirks. Same treatment applied to the `$target` (handoff file) path.",
+      "Action required for existing users: re-run `gitmap setup` (or reinstall) and reload the shell — the marker block `# gitmap shell wrapper v2` / `# gitmap command wrapper v1` is rewritten in-place by setup.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.36.0**. Synced `gitmap/constants/constants.go` (`Version = \"5.36.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.36.0\"`).",
+    ],
+  },
+  {
     version: "v5.35.0",
     date: "2026-05-19",
     subtitle: "Root README: full command surface for `push`, `pull`, `prc`, `ssh`, `cfr`/`cfrp`, `install gitmap-oneliner`",

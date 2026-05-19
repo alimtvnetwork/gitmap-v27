@@ -784,7 +784,7 @@ function Get-GitmapCommandWrapperBlock([string]$dir) {
     $template = @'
 # gitmap command wrapper v1
 function global:Get-GitmapCommand { $candidate = Join-Path -Path '__GITMAP_DIR__' -ChildPath 'gitmap.exe'; if (Test-Path -LiteralPath $candidate) { return $candidate }; return (Get-Command gitmap.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1).Source }
-function global:Invoke-GitmapAndSetLocation { param([string[]]$GitMapArgs); $real = Get-GitmapCommand; if (-not $real) { Write-Error "gitmap executable not found"; return }; if ($GitMapArgs.Count -gt 0 -and ($GitMapArgs[0] -eq 'cd' -or $GitMapArgs[0] -eq 'go')) { $env:GITMAP_WRAPPER = "1"; $env:GITMAP_COMMAND_WRAPPER = "1"; $dest = (& $real @GitMapArgs | Out-String).Trim(); if ($LASTEXITCODE -ne 0) { return }; if ($dest -and (Test-Path -LiteralPath $dest)) { Set-Location -LiteralPath $dest }; return }; $handoff = [IO.Path]::Combine([IO.Path]::GetTempPath(), "gitmap-handoff-$([Guid]::NewGuid().ToString('N')).txt"); try { $env:GITMAP_HANDOFF_FILE = $handoff; $env:GITMAP_WRAPPER = "1"; $env:GITMAP_COMMAND_WRAPPER = "1"; & $real @GitMapArgs; if ((Test-Path -LiteralPath $handoff) -and ((Get-Item -LiteralPath $handoff).Length -gt 0)) { $target = (Get-Content -LiteralPath $handoff -Raw).Trim(); if ($target -and (Test-Path -LiteralPath $target)) { Set-Location -LiteralPath $target } } } finally { Remove-Item -LiteralPath $handoff -ErrorAction SilentlyContinue; Remove-Item Env:\GITMAP_HANDOFF_FILE -ErrorAction SilentlyContinue } }
+function global:Invoke-GitmapAndSetLocation { param([string[]]$GitMapArgs); $real = Get-GitmapCommand; if (-not $real) { Write-Error "gitmap executable not found"; return }; if ($GitMapArgs.Count -gt 0 -and ($GitMapArgs[0] -eq 'cd' -or $GitMapArgs[0] -eq 'go')) { $env:GITMAP_WRAPPER = "1"; $env:GITMAP_COMMAND_WRAPPER = "1"; $dest = [string](& $real @GitMapArgs | Out-String); if ($LASTEXITCODE -ne 0) { return }; $dest = $dest.Trim(); if ($dest -and (Test-Path -LiteralPath ([string]$dest))) { Set-Location -LiteralPath ([string]$dest) }; return }; $handoff = [IO.Path]::Combine([IO.Path]::GetTempPath(), "gitmap-handoff-$([Guid]::NewGuid().ToString('N')).txt"); try { $env:GITMAP_HANDOFF_FILE = $handoff; $env:GITMAP_WRAPPER = "1"; $env:GITMAP_COMMAND_WRAPPER = "1"; & $real @GitMapArgs; if ((Test-Path -LiteralPath $handoff) -and ((Get-Item -LiteralPath $handoff).Length -gt 0)) { $target = [string](Get-Content -LiteralPath $handoff -Raw); $target = $target.Trim(); if ($target -and (Test-Path -LiteralPath ([string]$target))) { Set-Location -LiteralPath ([string]$target) } } } finally { Remove-Item -LiteralPath $handoff -ErrorAction SilentlyContinue; Remove-Item Env:\GITMAP_HANDOFF_FILE -ErrorAction SilentlyContinue } }
 function global:gcd { Invoke-GitmapAndSetLocation -GitMapArgs (@('cd') + $args) }
 function global:gitmap { Invoke-GitmapAndSetLocation $args }
 # gitmap command wrapper v1 end
@@ -799,9 +799,10 @@ $real = Join-Path -Path '__GITMAP_DIR__' -ChildPath 'gitmap.exe'
 if (-not (Test-Path -LiteralPath $real)) { Write-Error "gitmap executable not found: $real"; return }
 if ($args.Count -gt 0 -and ($args[0] -eq 'cd' -or $args[0] -eq 'go')) {
   $env:GITMAP_WRAPPER = "1"; $env:GITMAP_COMMAND_WRAPPER = "1"
-  $dest = (& $real @args | Out-String).Trim()
+  $dest = [string](& $real @args | Out-String)
   if ($LASTEXITCODE -ne 0) { $global:LASTEXITCODE = $LASTEXITCODE; return }
-  if ($dest -and (Test-Path -LiteralPath $dest)) { Set-Location -LiteralPath $dest }
+  $dest = $dest.Trim()
+  if ($dest -and (Test-Path -LiteralPath ([string]$dest))) { Set-Location -LiteralPath ([string]$dest) }
   return
 }
 $handoff = [IO.Path]::Combine([IO.Path]::GetTempPath(), "gitmap-handoff-$([Guid]::NewGuid().ToString('N')).txt")
@@ -810,8 +811,8 @@ try {
   & $real @args
   $exitCode = $LASTEXITCODE
   if ((Test-Path -LiteralPath $handoff) -and ((Get-Item -LiteralPath $handoff).Length -gt 0)) {
-    $target = (Get-Content -LiteralPath $handoff -Raw).Trim()
-    if ($target -and (Test-Path -LiteralPath $target)) { Set-Location -LiteralPath $target }
+    $target = [string](Get-Content -LiteralPath $handoff -Raw); $target = $target.Trim()
+    if ($target -and (Test-Path -LiteralPath ([string]$target))) { Set-Location -LiteralPath ([string]$target) }
   }
   $global:LASTEXITCODE = $exitCode
   return

@@ -1,6 +1,19 @@
 # Changelog
 
-## v5.30.0 — (2026-05-19) — `gitmap push` auto `pull --rebase` + retry on rejection
+## v5.31.0 — (2026-05-19) — `gitmap pull-release-cd` / `prc` (multi-repo one-shot release)
+
+### Added
+- **`gitmap pull-release-cd`** (alias **`prc`**) — multi-repo, one-shot pull-release runner. Accepts a comma-separated list of `<name-or-url> <version>` pairs (e.g. `gitm prc gitmap v5.31.0, marco v2.5.0, https://github.com/me/url-git v3.1.0`) and, for each entry, chdirs into the target repo and spawns `gitmap pull-release <version> -y` as an isolated subprocess.
+- URL tokens (containing `://` or starting with `git@`) are cloned first via a `gitmap clone <url>` subprocess; the derived slug (URL's last path segment minus `.git`) is then resolved against the gitmap DB for the subsequent pull-release.
+- `-y` is implicit and non-negotiable — `.gitmap/release/latest.json` and any other modified files are auto-committed per repo without prompts.
+- Per-entry failures never abort the batch: results are collected, streamed live, and rolled up into a stderr summary table at the end. Exit `0` if all entries succeeded, `1` if any failed, `2` on argument parse errors.
+
+### Spec
+- New: `spec/01-app/112-pull-release-cd.md`.
+
+### Pinned
+- README pinned-version block + version matrix moved to **v5.31.0**.
+- Synced `gitmap/constants/constants.go` (`Version = "5.31.0"`) and `src/constants/index.ts` (`VERSION = "v5.31.0"`).
 
 ### Added
 - `gitmap push` now detects git's non-fast-forward rejection, auto-runs `git pull --rebase`, and retries the push once. Stderr is tee'd so the original git rejection is still shown live.

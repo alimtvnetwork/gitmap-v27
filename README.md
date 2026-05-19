@@ -1568,6 +1568,11 @@ gitmap fr -5 --dry-run --verbose
 gitmap fix-repo -2 --restrict no-version
 gitmap fr       -2 -r nv
 
+# Undo the most recent fix-repo write (v5.40.0+)
+gitmap undo --list                # show snapshots, newest first
+gitmap undo                       # restore the latest snapshot
+gitmap undo --snapshot 20260519T134210Z --dry-run
+
 # Clone + fix in one shot (versioned URLs auto-flatten)
 gitmap clone-fix-repo https://github.com/acme/myrepo-v13.git
 gitmap cfr            git@github.com:acme/myrepo-v13.git myrepo-fresh

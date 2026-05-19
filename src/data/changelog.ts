@@ -8,6 +8,21 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.29.0",
+    date: "2026-05-19",
+    subtitle: "`gitmap push` + `--ssh` / `--https` transport flags on push & pull",
+    items: [
+      "Added: `gitmap push` (alias `ph`) — runs `git push` in the current repo with full stdin/stdout/stderr forwarding and exit-code propagation, mirroring the v5.28.0 `gitmap pull` cwd short-circuit.",
+      "Added: `--ssh` / `-ssh` / `--sh` and `--https` / `-https` / `--ht` transport flags on both `gitmap push` and `gitmap pull` — rewrites `remote.origin.url` to the requested transport and **persists** the change via `git remote set-url origin`, so subsequent plain `git push` / `git pull` invocations keep the new transport.",
+      "Added: when both flags are set, `--ssh` wins with a one-line stderr warning (mirrors `gitmap clone` semantics from spec 110). Unrecognised origin URLs fail-open — a warning is printed but git push/pull still runs.",
+      "Added: extra positional args after the flags forward verbatim, so `gitmap push --ssh origin main` runs `git push origin main` against the freshly-rewritten SSH origin.",
+      "Added: end-to-end tests in `gitmap/cmd/pushpull_transport_e2e_test.go` cover HTTPS↔SSH conversion + persistence, idempotent no-op, `--ssh` winning conflict, and unrecognised-URL fail-open — using a real `git` binary against a temp bare repo (skipped when git is missing).",
+      "Spec: `spec/01-app/111-push-pull-transport-flags.md`.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.29.0**.",
+      "Synced: `gitmap/constants/constants.go` (`Version = \"5.29.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.29.0\"`).",
+    ],
+  },
+  {
     version: "v5.28.0",
     date: "2026-05-19",
     subtitle: "`gitmap pull` works like `git pull` in a repo + new `gitm` short alias",

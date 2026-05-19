@@ -23,6 +23,11 @@ const (
 	CmdPullAlias          = "p"
 	CmdPullAll            = "pull-all"
 	CmdPullAllAlias       = "pa"
+	// CmdPush is the cwd-scoped `git push` wrapper added in v5.29.0.
+	// Alias is `ph` (NOT `p` — collides with CmdPullAlias). Supports
+	// shared `--ssh` / `--https` transport flags.
+	CmdPush      = "push"
+	CmdPushAlias = "ph"
 	CmdRescan             = "rescan"
 	CmdRescanAlias        = "rsc"
 	// CmdRescanSubtree narrowly re-runs `gitmap scan` against the

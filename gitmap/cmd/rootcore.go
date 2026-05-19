@@ -15,6 +15,7 @@ func coreDispatchEntries() []dispatchEntry {
 		{[]string{constants.CmdScan, constants.CmdScanAlias}, func() { runScan(argsTail()) }},
 		{[]string{constants.CmdClone, constants.CmdCloneAlias}, func() { runClone(argsTail()) }},
 		{[]string{constants.CmdPull, constants.CmdPullAlias}, func() { runPull(argsTail()) }},
+		{[]string{constants.CmdPush, constants.CmdPushAlias}, func() { runPush(argsTail()) }},
 		{[]string{constants.CmdPullAll, constants.CmdPullAllAlias}, func() { runPullAll(argsTail()) }},
 		{[]string{constants.CmdStatus, constants.CmdStatusAlias}, func() { runStatus(argsTail()) }},
 		{[]string{constants.CmdExec, constants.CmdExecAlias}, func() { runExec(argsTail()) }},

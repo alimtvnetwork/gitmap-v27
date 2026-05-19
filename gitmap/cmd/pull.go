@@ -32,6 +32,14 @@ type pullOptions struct {
 func runPull(args []string) {
 	checkHelp("pull", args)
 	requireOnline()
+	// Transport flags (--ssh/--sh/--https/--ht) are only meaningful
+	// for the cwd short-circuit; when present we MUST take the cwd
+	// path regardless of other flags so the rewrite actually applies.
+	useSSH, useHTTPS, rest := extractTransportFlags(args)
+	if useSSH || useHTTPS {
+		runPullCWDWithTransport(useSSH, useHTTPS, rest)
+		return
+	}
 	opts := parsePullFlags(args)
 	if opts.verbose {
 		initVerboseLog()
@@ -93,9 +101,28 @@ func isGitRepoCWD() bool {
 // runPullCWD streams `git pull` in the current directory, forwarding
 // stdout/stderr/stdin and propagating the underlying exit code.
 func runPullCWD() {
+	runPullCWDWithTransport(false, false, nil)
+}
+
+// runPullCWDWithTransport is the shared cwd runner. Applies the
+// optional transport rewrite (persisting via `git remote set-url`)
+// before invoking `git pull`. Extra positional args after the
+// transport flags are forwarded verbatim.
+func runPullCWDWithTransport(useSSH, useHTTPS bool, extraArgs []string) {
 	cwd, _ := os.Getwd()
-	fmt.Printf("→ Running: git pull (cwd: %s)\n", cwd)
-	cmd := exec.Command("git", "pull")
+	if !isGitRepoCWD() {
+		fmt.Fprintln(os.Stderr, "✗ not a git repository (run `gitmap pull` inside a repo)")
+		exitWith(1)
+		return
+	}
+	if _, _, _, err := ApplyTransportFlag(cwd, useSSH, useHTTPS); err != nil {
+		fmt.Fprintf(os.Stderr, "✗ %v\n", err)
+		exitWith(1)
+		return
+	}
+	gitArgs := append([]string{"pull"}, extraArgs...)
+	fmt.Printf("→ Running: git %s (cwd: %s)\n", joinForLog(gitArgs), cwd)
+	cmd := exec.Command("git", gitArgs...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -107,6 +134,26 @@ func runPullCWD() {
 		fmt.Fprintf(os.Stderr, "git pull failed: %v\n", err)
 		exitWith(1)
 	}
+}
+
+// extractTransportFlags scans args for --ssh/-ssh/--sh/--https/-https/--ht
+// and returns (useSSH, useHTTPS, remaining-args-with-those-removed).
+// Used to detect the cwd-transport intent BEFORE handing args to the
+// existing parsePullFlags (which doesn't know about transport flags).
+func extractTransportFlags(args []string) (bool, bool, []string) {
+	var useSSH, useHTTPS bool
+	rest := make([]string, 0, len(args))
+	for _, a := range args {
+		switch a {
+		case "--ssh", "-ssh", "--sh", "-sh":
+			useSSH = true
+		case "--https", "-https", "--ht", "-ht":
+			useHTTPS = true
+		default:
+			rest = append(rest, a)
+		}
+	}
+	return useSSH, useHTTPS, rest
 }
 
 // beginPullTask records the pending task entry for this pull batch.

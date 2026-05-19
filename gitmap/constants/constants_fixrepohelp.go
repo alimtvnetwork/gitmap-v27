@@ -13,5 +13,8 @@ const (
 	HelpFRVerbose        = "  --verbose           Print every modified file with replacement count (alias: -Verbose)"
 	HelpFRConfig         = "  --config <path>     Override fix-repo.config.json location (alias: -Config <path>)"
 	HelpFRStrict         = "  --strict            After rewrite + gofmt, run `go test` on every touched Go package; exit 9 on test failure (alias: -Strict)"
+	HelpFRRestrict       = "  --restrict <mode>   Narrow rewrite scope. Values: no-version | nv. Suppresses the v1→v2 bare-base sweep so ONLY {base}-vN tokens are rewritten (alias: -r <mode>)"
+	HelpFRExample1       = "      example:        gitmap fix-repo -2 --restrict no-version   # only gitmap-v1 -> gitmap-v2 (skip bare `gitmap`)"
+	HelpFRExample2       = "      example:        gitmap fr -2 -r nv                          # short form, same behavior"
 	HelpFixRepoExitCodes = "  exit codes:         0 ok | 2 not-a-repo | 3 no-remote | 4 no-vN-suffix | 5 bad-version | 6 bad-flag | 7 write-failed | 8 bad-config | 9 tests-failed"
 )

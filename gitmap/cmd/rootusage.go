@@ -90,7 +90,7 @@ func printGroupNavigation() {
 	fmt.Println()
 	fmt.Println(colorGroupHeader(constants.HelpGroupNavigation))
 	fmt.Println(constants.HelpCD)
-	fmt.Println(colorGroupHeader(constants.HelpGroup))
+	fmt.Println(constants.HelpGroup)
 	fmt.Println(constants.HelpMultiGroup)
 	fmt.Println(constants.HelpSf)
 	fmt.Println(constants.HelpAlias)

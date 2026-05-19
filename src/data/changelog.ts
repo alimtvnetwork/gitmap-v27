@@ -8,6 +8,15 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.41.0",
+    date: "2026-05-19",
+    subtitle: "Routine version bump",
+    items: [
+      "Synchronized version pins across `gitmap/constants/constants.go`, `src/constants/index.ts`, and README.md version matrix.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.41.0**. Synced `gitmap/constants/constants.go` (`Version = \"5.41.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.41.0\"`).",
+    ],
+  },
+  {
     version: "v5.40.0",
     date: "2026-05-19",
     subtitle: "fix-repo auto-backup + new `gitmap-v22 undo` (alias `ud`) restore command",

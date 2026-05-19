@@ -32,6 +32,13 @@ func printUsage() {
 	printGroupUtilities()
 	fmt.Println()
 	printUsageFlagSections()
+	printUsageFooter()
+}
+
+// colorGroupHeader wraps a group header line in bold cyan so each
+// section stands out from the muted command rows beneath it.
+func colorGroupHeader(header string) string {
+	return constants.ColorCyan + header + constants.ColorReset
 }
 
 // printUsageQuickStart prints examples and the help hint.

@@ -8,6 +8,19 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.38.0",
+    date: "2026-05-19",
+    subtitle: "fix-repo bare-base rewrite restricted to v1→v2 (no more corrupting bare `gitmap` at v3+)",
+    items: [
+      "**Critical fix.** Running `gitmap fix-repo` inside a `-v3` (or higher) repo no longer rewrites bare `{base}` tokens. Before v5.38.0, `fix-repo` inside `gitmap-v4` would rewrite every standalone mention of `gitmap` (binary names, package identifiers, brand strings, unrelated `https://github.com/owner/gitmap` URLs) to `gitmap-v4` — silently corrupting the working tree.",
+      "**New scope rule:** the bare-base sweep runs if and only if `n == 1 && current == 2`. At v3+ the bare token is overwhelmingly NOT the pre-versioned origin and must be preserved. Only `{base}-vN` tokens (with the digit-boundary guard) are rewritten.",
+      "Spec updated: `spec/04-generic-cli/27-fix-repo-command.md` now has a dedicated **Bare-base scope rule (v5.38.0+)** section documenting the v1→v2 restriction with a worked `gitmap-v4` example.",
+      "Regression tests: `TestApplyAllTargets_BareBase_SkippedAtV3Plus` and `TestApplyAllTargets_BareBase_SkippedAtV4WithV1InTargets` in `gitmap/cmd/fixrepo_rewrite_barebase_test.go` lock in the new behavior. The existing v1→v2 test (`TestApplyAllTargets_BareBase_V1To2`) is unchanged.",
+      "Single-line change in `gitmap/cmd/fixrepo_rewrite.go` (`applyAllTargets`): `if n == 1` → `if n == 1 && current == 2`.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.38.0**. Synced `gitmap/constants/constants.go` (`Version = \"5.38.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.38.0\"`).",
+    ],
+  },
+  {
     version: "v5.37.0",
     date: "2026-05-19",
     subtitle: "Colorful root help banner + build-info footer (version · repo · last commit)",

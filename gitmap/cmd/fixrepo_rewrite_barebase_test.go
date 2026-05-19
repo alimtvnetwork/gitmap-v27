@@ -48,3 +48,24 @@ func TestApplyBareBase_SkippedWhenV1NotInTargets(t *testing.T) {
 		t.Fatalf("bare-base ran without v1 target.\n got:  %q\n want: %q", got, want)
 	}
 }
+
+// v5.38.0: bare-base sweep is now restricted to the v1→v2 transition.
+// At v3+ the bare token (e.g. `gitmap`) is almost always an unrelated
+// identifier (binary name, package, brand) and must be left alone.
+func TestApplyAllTargets_BareBase_SkippedAtV3Plus(t *testing.T) {
+	body := "url=https://github.com/x/gitmap and gitmap-v1 plus gitmap-v2"
+	got, _ := applyAllTargets(body, "gitmap", 3, []int{1, 2})
+	want := "url=https://github.com/x/gitmap and gitmap-v3 plus gitmap-v3"
+	if got != want {
+		t.Fatalf("bare-base ran at v3 (must only run at v1→v2).\n got:  %q\n want: %q", got, want)
+	}
+}
+
+func TestApplyAllTargets_BareBase_SkippedAtV4WithV1InTargets(t *testing.T) {
+	body := "gitmap and gitmap-v1 and gitmap-v3"
+	got, _ := applyAllTargets(body, "gitmap", 4, []int{1, 2, 3})
+	want := "gitmap and gitmap-v4 and gitmap-v4"
+	if got != want {
+		t.Fatalf("bare-base must be skipped when current>2 even if v1 targeted.\n got:  %q\n want: %q", got, want)
+	}
+}

@@ -25,7 +25,12 @@ PowerShell-style flags (`-DryRun`, `-Verbose`, `-Strict`, `-Config <p>`,
    a NUL byte in the first 8 KiB.
 4. Replace `{base}-vN` with `{base}-v<current>` (negative-lookahead
    guard so `-v1` never matches inside `-v10`).
-5. Print a summary; in `--dry-run` no file is written.
+5. Print a summary; in `--dry-run` no file is written and each
+   would-be-modified file gets a `[dry-run]` preview line listing the
+   total replacements plus a per-rule breakdown (e.g.
+   `v1×3, v2×1, bare×2`). The breakdown surfaces every numbered
+   `{base}-vN` target plus the v1→v2 `bare` sweep distinctly so you
+   can vet the plan without `--verbose`.
 6. **Strict mode (`--strict`)**: after the rewrite + `gofmt -w` step,
    derive the unique set of touched Go packages from the modified
    `.go` files and run `go test ./pkgA ./pkgB …`. Catches semantic

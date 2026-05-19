@@ -10,7 +10,7 @@
 - Memory updated: `.lovable/memory/features/fix-repo-bare-base-rewrite.md` reflects the new scope.
 - Pinned: README pinned-version block + version matrix moved to **v5.38.0**. Synced `gitmap/constants/constants.go` (`Version = "5.38.0"`) and `src/constants/index.ts` (`VERSION = "v5.38.0"`).
 
-
+## v5.37.0 — (2026-05-19) — Colorful root help banner + build-info footer (version · repo · last commit)
 
 - Bare `gitmap` and `gitmap help` now open with a magenta/cyan banner (`🗺  gitmap vX.Y.Z — Git repo discovery, cloning & release toolkit`) and close with a build-info footer showing the installed version, source repo origin URL, current branch, and the last commit (`shortSHA · subject · relative-date`).
 - Group headers ("Scanning & Discovery:", "Cloning & Sync:", etc.) are now wrapped in bold cyan so each section is visually distinct from the muted command rows.

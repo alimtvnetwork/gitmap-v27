@@ -8,6 +8,20 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.40.0",
+    date: "2026-05-19",
+    subtitle: "fix-repo auto-backup + new `gitmap undo` (alias `ud`) restore command",
+    items: [
+      "**Auto-backup.** Every `gitmap fix-repo` write (non-dry-run) now snapshots the pre-rewrite copy of each modified file to `.gitmap/backup/<repo>/v<current>/fix-repo/<UTC-ts>/files/<rel>` alongside a `manifest.json` index. Untouched files are never copied; dry-run never creates a snapshot.",
+      "**New command:** `gitmap undo` (alias `ud`) restores the latest snapshot for the current repo + current version. Subcommands: `--list` (snapshots newest-first, latest marked `*`), `--snapshot <ts>` (pick a specific stamp), `--dry-run` (preview).",
+      "**Scoping:** snapshots live under `<repo>/v<current>` so an undo inside `gitmap-v4` can never touch a `gitmap-v3` snapshot. Manifest carries `schemaVersion`, `repo`, `currentVersion`, `timestamp`, `gitmapVersion`, `files[]`.",
+      "**Code:** new `gitmap/cmd/fixrepo_backup.go` (`fixRepoBackupSession`, lazy mkdir, idempotent per rel — first observation wins), new `gitmap/cmd/undo.go`, new `gitmap/constants/constants_undo.go`. `rewriteOneFile` split into pure-compute + `persistRewrittenFile` so backup runs strictly BEFORE the disk write. `CmdUndo` / `CmdUndoAlias` wired in `roottooling.go` and registered in `cmd_constants_test.go`. Help text: `gitmap/helptext/undo.md`.",
+      "**Exit codes (`undo`):** `0` ok / `6` bad-flag / `7` write-failed / `8` bad-config (manifest missing/malformed).",
+      "Spec updated: `spec/04-generic-cli/27-fix-repo-command.md` adds a **Backup & undo (v5.40.0+)** section.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.40.0**. Synced `gitmap/constants/constants.go` (`Version = \"5.40.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.40.0\"`).",
+    ],
+  },
+  {
     version: "v5.39.0",
     date: "2026-05-19",
     subtitle: "fix-repo --restrict no-version (alias -r nv): skip the v1→v2 bare-base sweep on demand",

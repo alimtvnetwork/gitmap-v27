@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.30.0",
+    date: "2026-05-19",
+    subtitle: "`gitmap push` auto `pull --rebase` + retry on non-fast-forward rejection",
+    items: [
+      "Added: `gitmap push` now detects git's non-fast-forward rejection (`[rejected] ... (fetch first)` / `failed to push some refs`), automatically runs `git pull --rebase`, and retries the push once — no more manual `git pull` → `git push` cycle after `gitmap push -ssh`.",
+      "Behavior: stderr is tee'd so users still see git's original rejection message live; the auto-retry path prints `↻ push rejected (non-fast-forward) — auto-running 'git pull --rebase' and retrying`. If rebase hits conflicts, the original git exit code is propagated and a hint to resolve + re-run `gitmap push` is printed.",
+      "Test fix: registered `CmdPush` / `CmdPushAlias` in `topLevelCmds()` parity registry and added `gitmap/helptext/push.md` to satisfy `TestEveryCmdIDHasHelpFile` (both surfaced after the v5.29.0 push command landed).",
+      "Pinned: README pinned-version block + version matrix moved to **v5.30.0**.",
+      "Synced: `gitmap/constants/constants.go` (`Version = \"5.30.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.30.0\"`).",
+    ],
+  },
+  {
     version: "v5.29.0",
     date: "2026-05-19",
     subtitle: "`gitmap push` + `--ssh` / `--https` transport flags on push & pull",

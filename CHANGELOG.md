@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.37.0 — (2026-05-19) — Colorful root help banner + build-info footer (version · repo · last commit)
+
+- Bare `gitmap` and `gitmap help` now open with a magenta/cyan banner (`🗺  gitmap vX.Y.Z — Git repo discovery, cloning & release toolkit`) and close with a build-info footer showing the installed version, source repo origin URL, current branch, and the last commit (`shortSHA · subject · relative-date`).
+- Group headers ("Scanning & Discovery:", "Cloning & Sync:", etc.) are now wrapped in bold cyan so each section is visually distinct from the muted command rows.
+- Footer is best-effort: when the binary's source repo is unreachable, only the version line renders — never errors out.
+- New file `gitmap/cmd/rootusagefooter.go` (helper `printUsageFooter`) wired into `printUsage`. Header constant `UsageHeaderFmt` rewritten in `gitmap/constants/constants_cli.go` (no fixed-width box — ANSI + dynamic version length makes box alignment unreliable across terminals).
+- Reminder for the `gitm` alias: it ships in the shell wrapper installed by `gitmap setup`. The installer auto-runs setup (v5.18+), but stale installs require a one-time `gitmap setup` + shell reload to pick up the new function.
+- Pinned: README pinned-version block + version matrix moved to **v5.37.0**. Synced `gitmap/constants/constants.go` (`Version = "5.37.0"`) and `src/constants/index.ts` (`VERSION = "v5.37.0"`).
+
+
+
 ## v5.36.0 — (2026-05-19) — PowerShell `gitmap cd` wrapper: bulletproof `[string]` cast against `Set-Location` Object[] binding
 
 - Fix: stale-profile users hit `Set-Location : Cannot convert 'System.Object[]' to the type 'System.String' required by parameter 'LiteralPath'` when running `gitmap cd <slug>` — even after the v5.17.0 `Out-String | Trim` fix — because PowerShell could still bind `$dest` as `Object[]` in some pipelines.

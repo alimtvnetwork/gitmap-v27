@@ -35,12 +35,19 @@ type fixRepoSweepResult struct {
 	replacements int
 	failed       bool
 	goFiles      []string // absolute paths of modified .go files (for gofmt)
+	// backup is the snapshot session opened lazily on first rewrite
+	// (v5.40.0+). Finalized by runFixRepo after the sweep returns so
+	// `gitmap undo` can restore pre-rewrite copies.
+	backup *fixRepoBackupSession
 }
 
 // runFixRepoSweep enumerates tracked files and rewrites each.
 func runFixRepoSweep(identity fixRepoIdentity, targets []int, opts fixRepoOptions) fixRepoSweepResult {
 	files := listTrackedFiles(identity.root)
 	result := fixRepoSweepResult{}
+	if !opts.isDryRun {
+		result.backup = newFixRepoBackupSession(identity)
+	}
 	for _, rel := range files {
 		processFixRepoFile(rel, identity, targets, opts, &result)
 	}
@@ -68,18 +75,40 @@ func processFixRepoFile(rel string, identity fixRepoIdentity, targets []int,
 }
 
 // rewriteOneFile is the write-path branch. Mutates disk and records
-// the modified .go path for the gofmt + strict post-steps.
+// the modified .go path for the gofmt + strict post-steps. Pre-write
+// backup (v5.40.0+) is taken only when reps > 0 so untouched files
+// never appear in the snapshot.
 func rewriteOneFile(full, rel string, identity fixRepoIdentity, targets []int,
 	opts fixRepoOptions, result *fixRepoSweepResult,
 ) {
-	reps, err := rewriteFixRepoFileR(full, identity.base, identity.current, targets, false, opts.restrictNoVersion)
+	raw, err := os.ReadFile(full)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.FixRepoErrWriteFmt, rel, err)
 		result.failed = true
 
 		return
 	}
+	updated, reps := applyAllTargetsR(string(raw), identity.base,
+		identity.current, targets, opts.restrictNoVersion)
 	if reps == 0 {
+		return
+	}
+	persistRewrittenFile(full, rel, updated, reps, opts, result)
+}
+
+// persistRewrittenFile backs up the original, writes the new bytes,
+// and records gofmt + verbose bookkeeping. Split out so rewriteOneFile
+// stays under the 15-line cap.
+func persistRewrittenFile(full, rel, updated string, reps int,
+	opts fixRepoOptions, result *fixRepoSweepResult,
+) {
+	if result.backup != nil {
+		result.backup.BackupFile(rel)
+	}
+	if err := os.WriteFile(full, []byte(updated), 0o644); err != nil {
+		fmt.Fprintf(os.Stderr, constants.FixRepoErrWriteFmt, rel, err)
+		result.failed = true
+
 		return
 	}
 	result.changed++

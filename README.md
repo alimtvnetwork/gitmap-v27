@@ -1534,7 +1534,8 @@ bypass; combine with `--prefer-left` / `--prefer-right` /
 | Command | Alias | Description |
 |---------|-------|-------------|
 | `replace` | `rpl` | Repo-wide find/replace across every text file. Literal swap or version-suffix bump driven by the `-vK` git remote URL. `--audit` reports without writing. |
-| `fix-repo` | `fr` | Rewrite prior `{base}-vN` versioned-repo-name tokens to the current version. Also rewrites bare `{base}` tokens (no `-vN` suffix) when v1 is in the target span, for repos that shipped pre-versioned. Negative-lookahead guards `-v1` from matching `-v18`; bare-base sweep is word-boundary guarded so `{base}.js`, `{base}_alt`, `{base}-v2`, and `myimg-pdf` are left untouched. `--strict` runs `go test` on touched packages. |
+| `fix-repo` | `fr` | Rewrite prior `{base}-vN` versioned-repo-name tokens to the current version. Also rewrites bare `{base}` tokens (no `-vN` suffix) when v1 is in the target span, for repos that shipped pre-versioned. Negative-lookahead guards `-v1` from matching `-v18`; bare-base sweep is word-boundary guarded so `{base}.js`, `{base}_alt`, `{base}-v2`, and `myimg-pdf` are left untouched. `--strict` runs `go test` on touched packages. **v5.40.0+:** every write is backed up to `.gitmap/backup/<repo>/v<current>/fix-repo/<UTC-ts>/` and is restorable with `gitmap undo`. |
+| `undo` | `ud` | Restore the latest `gitmap fix-repo` snapshot for the current repo + version. `--list` lists snapshots, `--snapshot <ts>` selects one, `--dry-run` previews. |
 | `clone-fix-repo` | `cfr` | One-shot: `clone <url>` then `fix-repo --all` inside the new folder. Versioned URLs auto-flatten. |
 | `clone-fix-repo-pub` | `cfrp` | Same as `cfr`, plus `make-public --yes` at the end. |
 | `make-public` | — | Make the current repo **public** on GitHub or GitLab via the matching CLI (`gh` / `glab`). Verifies visibility post-edit. |

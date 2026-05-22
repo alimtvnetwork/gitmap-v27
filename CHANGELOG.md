@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.48.0 — (2026-05-22) — Minor version bump
+
+- Pinned: README pinned-version block + version matrix moved to **v5.48.0**. Synced `gitmap/constants/constants.go` (`Version = "5.48.0"`) and `src/constants/index.ts` (`VERSION = "v5.48.0"`).
+
 ## v5.47.0 — (2026-05-22) — Windows CI: file-based subprocess capture + re-enable all skipped tests
 
 - **Fix:** replaced `bytes.Buffer` pipe capture in `runGitmap` (`gitmap/cmd/cliexit_helpers_test.go`) with temp-file stdout/stderr redirection. On the GitHub Actions `windows-latest` runner under `pwsh -command ". '{0}'"`, Go's `os/exec` pipe goroutine inherits pwsh's already-redirected console handles and reads EOF immediately — even though the child binary writes correctly. Writing to real files avoids the pipe-goroutine entirely, and the same code path now runs on every OS.

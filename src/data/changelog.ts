@@ -8,6 +8,14 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.48.0",
+    date: "2026-05-22",
+    subtitle: "Minor version bump",
+    items: [
+      "Pinned: README pinned-version block + version matrix moved to **v5.48.0**. Synced `gitmap/constants/constants.go` (`Version = \"5.48.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.48.0\"`).",
+    ],
+  },
+  {
     version: "v5.47.0",
     date: "2026-05-22",
     subtitle: "Windows CI: file-based subprocess capture + re-enable all skipped tests",

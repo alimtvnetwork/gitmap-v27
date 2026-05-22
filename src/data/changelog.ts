@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.42.0",
+    date: "2026-05-22",
+    subtitle: "Help UX overhaul: glyph filter, intent groups, search",
+    items: [
+      "**Universal glyph layer.** New `gitmap/glyphs` package + `--glyphs <auto|rich|safe>` flag and `GITMAP_GLYPHS` env var. Legacy PowerShell 5.1 hosts auto-fall-back to ASCII so emojis no longer render as mojibake.",
+      "**Redesigned `gitmap help` root.** Commands are bucketed into 5 intent super-categories (GET STARTED · WORK WITH REPOS · RELEASE & HISTORY · PROJECTS & DATA · ADVANCED), each rendered with a bold magenta banner rule above the existing sub-groups.",
+      "**New:** `gitmap help --filter <query>` (alias `-f`) — case-insensitive substring search across every help row with yellow ANSI highlighting on matches. Zero-hit queries return up to 5 subsequence-ranked fuzzy suggestions.",
+      "**Help-file coverage audit.** Verified every primary `Cmd*` constant in `constants_cli.go` has a matching `helptext/<id>.md` (0 gaps); `TestEveryCmdIDHasHelpFile` continues to enforce drift.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.42.0**. Synced `gitmap/constants/constants.go` (`Version = \"5.42.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.42.0\"`).",
+    ],
+  },
+  {
     version: "v5.41.0",
     date: "2026-05-19",
     subtitle: "Routine version bump",

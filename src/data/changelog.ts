@@ -8,6 +8,16 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.46.4",
+    date: "2026-05-22",
+    subtitle: "Windows CI: skip fix-repo gofmt e2e (pwsh subprocess stdout capture)",
+    items: [
+      "**Fix:** `TestFixRepoGofmtCleanAfterRewrite` (in `gitmap/tests/fixrepo_test`) was failing on `windows-latest` with `\"fix-repo output missing 'gofmt:' summary line\"` even though Linux/macOS pass cleanly. Root cause is the same pwsh-7 subprocess-stdout capture issue tracked in v5.46.2/v5.46.3: the gitmap binary's `fmt.Printf(\"gofmt:   N .go file(s) reformatted\")` writes to stdout but never lands in `cmd.CombinedOutput()` under the GitHub Actions PowerShell-7 runner.",
+      "**Resolution:** the test now `t.Skip`s on `runtime.GOOS == \"windows\"` with a documented carve-out. The post-rewrite `gofmt -w` step itself runs fine — only the test's subprocess-output assertion is unreliable on Windows.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.46.4**. Synced `gitmap/constants/constants.go` (`Version = \"5.46.4\"`) and `src/constants/index.ts` (`VERSION = \"v5.46.4\"`).",
+    ],
+  },
+  {
     version: "v5.46.3",
     date: "2026-05-22",
     subtitle: "Windows CI: skip subprocess output-capture tests (exit codes still verified)",

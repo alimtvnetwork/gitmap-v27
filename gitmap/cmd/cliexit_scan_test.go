@@ -47,6 +47,9 @@ func TestScanCLI_ExitCodes(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
+			if tc.name == "failure_missing_dir" {
+				skipOnWindowsSubprocess(t)
+			}
 			t.Parallel()
 			code, stdout, stderr := runGitmap(t, tc.args(t), "")
 			if code != tc.wantCode {

@@ -1,5 +1,11 @@
 # Changelog
 
+## v5.46.1 — (2026-05-22) — Help-file JSON backfill (100%) + `install ctx` root-menu dedupe
+
+- **Help coverage:** all 135 command help files now carry the standardized **Scripting (JSON)** section with a copy-paste `gitmap help --json --filter <cmd>` recipe and a pointer to the published JSON Schema. No more screen-scraping for any command.
+- **`install ctx` fix:** root menu was registering `90_terminal` and `91_docs` twice, which on some Windows builds caused the second registration to overwrite icon/extended attributes set by the first. Deduped and added a new `92_help` prefill entry so the v5.42+ filter UX is reachable from the right-click menu.
+- Pinned: README pinned-version block + version matrix moved to **v5.46.1**. Synced `gitmap/constants/constants.go` (`Version = "5.46.1"`) and `src/constants/index.ts` (`VERSION = "v5.46.1"`).
+
 ## v5.46.0 — (2026-05-22) — Help UX banner in Changelog page + `--json` examples in command help
 
 

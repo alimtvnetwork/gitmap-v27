@@ -25,24 +25,42 @@ import (
 // byte-level rewriter widened one key by 2 chars without re-padding
 // the surrounding rows.
 func TestFixRepoGofmtCleanAfterRewrite(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		// Subprocess stdout capture for the gitmap binary is unreliable
-		// under pwsh-hosted runners (see v5.46.3 cliexit fix). The same
-		// fix-repo command produces the expected "gofmt:" summary on
-		// Linux/macOS; skip here to keep CI green.
-		t.Skip("skipped on windows: pwsh subprocess stdout capture is unreliable")
-	}
 	requireToolsOrSkip(t, "go", "gofmt", "git")
 
 	bin := buildGitmapBinary(t)
 	repo := setupFixtureRepo(t, "repo-v9", 12)
 
+	stdoutPath := filepath.Join(t.TempDir(), "stdout")
+	stderrPath := filepath.Join(t.TempDir(), "stderr")
+
+	stdoutF, err := os.Create(stdoutPath)
+	if err != nil {
+		t.Fatalf("create stdout capture file: %v", err)
+	}
+	stderrF, err := os.Create(stderrPath)
+	if err != nil {
+		t.Fatalf("create stderr capture file: %v", err)
+	}
+
 	cmd := exec.Command(bin, "fix-repo", "--all", "--verbose")
 	cmd.Dir = repo
-	out, err := cmd.CombinedOutput()
+	cmd.Stdout = stdoutF
+	cmd.Stderr = stderrF
+	err = cmd.Run()
+	stdoutF.Close()
+	stderrF.Close()
+
 	if err != nil {
-		t.Fatalf("fix-repo failed: %v\n%s", err, out)
+		// Read whatever we captured for the failure log.
+		out, _ := os.ReadFile(stdoutPath)
+		errOut, _ := os.ReadFile(stderrPath)
+		t.Fatalf("fix-repo failed: %v\nstdout=%s\nstderr=%s", err, out, errOut)
 	}
+
+	stdoutBytes, _ := os.ReadFile(stdoutPath)
+	stderrBytes, _ := os.ReadFile(stderrPath)
+	out := append(stdoutBytes, stderrBytes...)
+
 	t.Logf("fix-repo output:\n%s", out)
 
 	if !strings.Contains(string(out), "gofmt:") {

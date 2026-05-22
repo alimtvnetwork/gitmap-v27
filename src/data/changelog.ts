@@ -8,6 +8,21 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.52.0",
+    date: "2026-05-22",
+    subtitle: "Native sibling-repo probe for `gitmap update`",
+    items: [
+      "Added: `gitmap update` now performs a native 20-parallel HEAD probe of sibling `gitmap-vN` repositories before downloading the installer. The probe finds the highest-offset live repo, then falls back to GitHub Releases API, then to main HEAD. This makes `gitmap update` work correctly even when the current repo is archived or renamed.",
+      "Added: `--probe-only` flag prints the resolved target repo slug without running the installer.",
+      "Added: `--no-probe` flag skips the sibling probe entirely, using the current repo slug directly.",
+      "Added: `gitmap/cmd/updateprobe.go` with `resolveLatestRepoSlug`, `probeSiblings`, `pickMaxHit`, and per-source fallback chain.",
+      "Added: `gitmap/cmd/updateprobe_test.go` with httptest coverage for slug parsing, max-hit resolution, and fallback chains.",
+      "Added: `gitmap/constants/constants_update.go` messages and constants for the probe subsystem.",
+      "Spec: `spec/01-app/111-update-remote-probe.md` documents the probe algorithm, fallback order, and CLI flags.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.52.0**. Synced `gitmap/constants/constants.go` and `src/constants/index.ts`.",
+    ],
+  },
+  {
     version: "v5.51.0",
     date: "2026-05-22",
     subtitle: "Help filter shortcut, footer SHA, remote-installer update",

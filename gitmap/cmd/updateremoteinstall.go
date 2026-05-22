@@ -9,25 +9,33 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
-	"time"
 
 	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
-// runUpdateRemoteInstall replaces the legacy source-rebuild update path
-// (v5.50.x and earlier) with a remote-installer flow:
+// runUpdateRemoteInstall is the v5.52.0+ remote-installer flow:
 //
-//  1. Pick the platform installer URL from the *current* gitmap repo
-//     (gitmap-v23) — `install.ps1` on Windows, `install.sh` elsewhere.
-//  2. Download it to a temp file.
-//  3. Execute it. The downloaded installer itself runs the parallel
-//     `-v<N+i>` sibling probe (see spec/07-generic-release/09) so the
-//     latest gitmap-vN repo wins automatically — we don't probe here.
+//  1. Resolve the latest gitmap-vN repo slug natively in Go via the
+//     20-parallel sibling probe (spec/01-app/111-update-remote-probe.md).
+//  2. Download THAT repo's install.{ps1,sh} from raw.githubusercontent.com.
+//  3. Exec it with inherited stdio.
 //
 // Returns true if the install completed (exit 0) so the caller can
 // short-circuit any legacy source-rebuild fallback.
+//
+// Flags: --probe-only prints the resolution and exits; --no-probe skips
+// the probe and installs from the current repo only.
 func runUpdateRemoteInstall() bool {
-	url := remoteInstallerURL()
+	slug, source, err := resolveTargetSlug()
+	if err != nil {
+		return false
+	}
+	if hasFlag(constants.FlagProbeOnly) {
+		fmt.Printf(constants.MsgUpdateProbeOnly, slug, source)
+		return true
+	}
+
+	url := installerURLFor(slug)
 	fmt.Printf(constants.MsgUpdateRemoteFetch, url)
 
 	scriptPath, err := downloadRemoteInstaller(url)
@@ -51,22 +59,30 @@ func runUpdateRemoteInstall() bool {
 	return true
 }
 
-// remoteInstallerURL returns the canonical install-script URL for the
-// current platform. Hosted at the repo root so the URL matches the
-// install snippet pinned in README.md.
-func remoteInstallerURL() string {
-	if runtime.GOOS == "windows" {
-		return constants.UpdateRemoteInstallerPwsh
+// resolveTargetSlug returns the repo slug to install from, honoring
+// --no-probe (skip probe, use current slug).
+func resolveTargetSlug() (string, string, error) {
+	if hasFlag(constants.FlagNoProbe) {
+		fmt.Printf(constants.MsgUpdateProbeSkipped, constants.UpdateCurrentRepoSlug)
+		return constants.UpdateCurrentRepoSlug, constants.UpdateProbeSourceMain, nil
 	}
-	return constants.UpdateRemoteInstallerBash
+	return resolveLatestRepoSlug(newProbeClient())
+}
+
+// installerURLFor builds the raw.githubusercontent installer URL for slug.
+func installerURLFor(slug string) string {
+	name := constants.UpdateInstallerNameBash
+	if runtime.GOOS == "windows" {
+		name = constants.UpdateInstallerNamePwsh
+	}
+	return fmt.Sprintf(constants.UpdateRawInstallerTmpl,
+		constants.UpdateRepoOwner, slug, name)
 }
 
 // downloadRemoteInstaller fetches url into a platform-appropriate temp
-// file (.ps1 on Windows, .sh elsewhere) and returns the path. The
-// caller is responsible for removing the file when finished.
+// file (.ps1 on Windows, .sh elsewhere) and returns the path.
 func downloadRemoteInstaller(url string) (string, error) {
-	client := &http.Client{Timeout: 30 * time.Second}
-	resp, err := client.Get(url)
+	resp, err := http.Get(url) //nolint:gosec // URL built from constants
 	if err != nil {
 		return "", err
 	}
@@ -85,7 +101,6 @@ func downloadRemoteInstaller(url string) (string, error) {
 		return "", err
 	}
 	if runtime.GOOS == "windows" {
-		// UTF-8 BOM so older PowerShell hosts parse the script correctly.
 		_, _ = tmp.Write([]byte{0xEF, 0xBB, 0xBF})
 	}
 	if _, err := io.Copy(tmp, resp.Body); err != nil {

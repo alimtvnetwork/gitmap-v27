@@ -1,85 +1,92 @@
-# Plan: Inject Idempotency, `gitmap open`, fix-repo skip, auto shell wrapper
+## Goal
 
-Five user-facing changes to the Go CLI plus migration, spec, and memory updates. Version bump: **v4.43.0**.
+Make `gitmap` / `gitmap help` look professional in every terminal (Windows PowerShell, Windows Terminal, macOS Terminal, iTerm2, Linux gnome-terminal), fix the broken/gibberish emoji rendering on PowerShell, and make it easy for users to discover and drill into commands. Each step below is a self-contained unit of work that will be executed one at a time. After each step I will list what is done and what remains. The final step bumps the minor version, writes the changelog, and pins the new version to the root README.
 
-## 1. `cfrp` / `cfr` skip fix-repo on no-vN suffix
+---
 
-**Behavior:** If repo name has no `-vN` suffix, print `fix-repo: skipped (repo has no -vN suffix, nothing to rewrite)` and continue to make-public. New flag `--require-version` (cfr/cfrp only) restores the strict E_NO_VERSION_SUFFIX exit.
+### Step 1 — Universal-safe glyph system (fix PowerShell "gibberish" emojis)
 
-**Files:**
-- `gitmap/cmd/clonefixrepo.go` — pre-check repo name; skip with notice unless `--require-version`.
-- `gitmap/cmd/fixrepo*.go` — add a `SkipIfNoVersion(path) (skipped bool, err error)` helper that returns the "no version" condition without printing the error banner.
-- `gitmap/constants/constants_clonefixrepo.go` — add `FlagRequireVersion`, `MsgFixRepoSkippedNoVersion`.
+**Problem:** Emojis like 📋 ✅ 🎉 render as `≡ƒôï` / `Γ£à` on default PowerShell (cp1252) and on terminals that lack an emoji font, even though `initConsole` switches to UTF-8 and enables VT processing. Two failure modes:
+1. Old `powershell.exe` (5.1) where the input/output encoding is reset by the host before we can intercept.
+2. Fonts without color-emoji glyphs (Consolas, Lucida Console) — rendered as tofu/boxes even when UTF-8 is correct.
 
-## 2. Idempotent inject with `--force` / `-f`
+**Plan:**
+- Introduce a glyph layer in `gitmap/constants/constants_glyphs.go` with two sets:
+  - **Rich set** — current emoji (📋 ✅ ⚠ 🎉 🔑 📁 🏷 ✓ →).
+  - **Safe set** — universally-rendered ASCII + BMP fallbacks (`[OK]`, `[!]`, `[i]`, `->`, `*`, `+`, `x`, `v`).
+- Add a `--glyphs <auto|rich|safe>` global flag + `GITMAP_GLYPHS` env var (mirrors the existing `--theme` pattern).
+- Auto-detection: on Windows, treat `safe` as default when `$env:WT_SESSION` is empty AND host is `ConsoleHost` (legacy powershell.exe); use `rich` in Windows Terminal, VS Code, iTerm2, all *nix TTYs.
+- Replace every literal emoji in Msg* constants and runtime `fmt.Print` calls with `glyph.OK`, `glyph.Warn`, `glyph.Info`, `glyph.Arrow`, etc. resolved at print time.
+- Harden `initConsole` to also set `Console.InputEncoding`/`OutputEncoding` analog via `_setmode` for stdout where applicable, and document that PowerShell 5.1 users should run `gitmap` from Windows Terminal for rich glyphs.
 
-**DB schema (migration 014):**
-```
-ALTER TABLE Repo ADD COLUMN LastInjectedDesktopAt TEXT;
-ALTER TABLE Repo ADD COLUMN LastInjectedVSCodeAt TEXT;
-```
+**Deliverable:** No more mojibake anywhere. Users on legacy PowerShell see clean ASCII; users on modern terminals keep the polished look.
 
-**Behavior:**
-- Every clone variant + `inject` checks the two timestamps before invoking Desktop / VS Code.
-- If the side has a non-null timestamp AND the path still exists in projects.json (VS Code) / matches stored path (Desktop), **skip** with: `Desktop: already injected (use --force to re-add)`.
-- `--force` / `-f` bypasses both checks and re-runs both side-effects.
-- On success, stamp `time.Now().UTC().Format(time.RFC3339)` into the corresponding column.
+---
 
-**Files:**
-- `gitmap/store/migrate*.go` — new migration 014.
-- `gitmap/model/repo.go` — add the two `*string` fields.
-- `gitmap/store/repo.go` — add `MarkDesktopInjected(repoID)` / `MarkVSCodeInjected(repoID)` / `IsDesktopInjected(repoID)` / `IsVSCodeInjected(repoID)`.
-- `gitmap/desktop/desktop.go` + `gitmap/vscode/*.go` — accept a `force bool` param; gate on store helpers.
-- `gitmap/cmd/inject.go`, `gitmap/cmd/clone*.go`, `gitmap/cmd/clonefixrepo.go` — parse `--force` / `-f` and thread through.
-- `gitmap/constants/constants_inject.go` — `FlagForce`, `FlagForceShort`, skip messages.
+### Step 2 — Redesign `gitmap` / `gitmap help` root output
 
-## 3. New `gitmap open` command
+**Problem:** The current compact root listing is a wall of group headers + dense one-liners. Hard to scan, no visual hierarchy, no clear "what should I run first?" path.
 
-**Spec:** Detects current repo from cwd via `git remote get-url origin`, ensures it's in DB (auto-inject minimal record if missing), then launches **both** GitHub Desktop AND VS Code on that path. Honors `--force` to re-inject. Aliases: `op`.
+**Plan:**
+- Rebuild `printCompactAll` in `gitmap/cmd/rootusagecompact.go` into a structured, columnar layout:
+  - Top banner: name, version, tagline, source repo, install dir (already partially in `rootusagefooter.go` — promote to header).
+  - **Quick Start** strip (4 most common commands: `scan`, `clone`, `pull-release`, `setup`) with one-line purpose each.
+  - Two-column **group → commands** grid, fixed width, aligned, grouped by user intent (Get started / Daily / Release / Power tools / Diagnostics) instead of the current 17 flat groups.
+  - Each command line: `name (alias)` padded to col 22, then one-sentence purpose, dim-colored.
+  - Footer: `gitmap help <cmd>` hint, `gitmap help --filter <word>` hint, build info.
+- Adapt width to terminal columns (read via `golang.org/x/term`) with a sane 80-col fallback.
+- Apply theme palette already in place (`--theme`) so colors degrade in `standard` / `mono`.
 
-**Files:**
-- `gitmap/cmd/open.go` — new (≤200 lines).
-- `gitmap/constants/constants_open.go` — new.
-- `gitmap/main.go` — register `CmdOpen` route + `// gitmap:cmd top-level` marker.
-- `gitmap/helptext/open.md` — new.
-- `gitmap/completion/*` — auto-regenerated by marker scan.
-- `spec/04-generic-cli/31-open-command.md` — new spec.
+**Deliverable:** A root help screen that looks like a polished CLI (think `gh`, `cargo`, `rg --help`).
 
-## 4. Auto-install shell wrapper
+---
 
-**Two changes:**
+### Step 3 — Add a filter / search option
 
-a) **Installer integration:** `gitmap self-install` (cmd/selfinstall.go) and `init.ps1` / `init.sh` call `gitmap setup` as a final non-fatal step. Setup is already idempotent (marker `# gitmap shell wrapper v2`), so re-runs are safe.
+**Problem:** No way to search commands by keyword. With 80+ subcommands users can't find what they need.
 
-b) **Better failure UX:** When `gitmap cd` detects `GITMAP_WRAPPER` is unset, current message becomes:
-```
-! Shell wrapper not active.
-  Auto-fix: . $PROFILE   (PowerShell)
-            source ~/.bashrc / ~/.zshrc   (Bash/Zsh)
-  Or restart your terminal. The wrapper is already installed in your profile.
-```
-We cannot re-source the parent shell from a child — explicit reminder only.
+**Plan:**
+- Add `gitmap help --filter <query>` (alias `-f`) and bare-positional `gitmap help <query>`.
+- Match against: command name, aliases, group key, and the one-line description (already present per command).
+- Output: same column layout as Step 2 but filtered to matches, with the matched substring highlighted via the theme accent color.
+- If exactly one match → print that command's full help (delegates to existing `helptext.Print`).
+- If zero matches → suggest the 3 closest via Levenshtein distance.
+- Document in `gitmap/helptext/help.md` (new file) and link from root footer.
 
-**Files:**
-- `gitmap/cmd/selfinstall.go` — append `runSetup()` step.
-- `init.ps1`, `init.sh` — append `gitmap setup` call (best-effort, swallow errors).
-- `gitmap/constants/constants_cd.go` — updated wrapper-warning text.
+**Deliverable:** `gitmap help release`, `gitmap help -f ssh`, `gitmap help clone` all do the right thing instantly.
 
-## 5. Memory + spec + version bump
+---
 
-- `mem://features/inject-idempotency` — new.
-- `mem://features/open-command` — new.
-- `mem://features/fix-repo-skip-no-version` — new.
-- `mem://index.md` — add three references; update Core "Current version: v4.43.0".
-- `spec/02-app-issues/25-cd-shell-wrapper-not-active.md` — new (auto-install resolution).
-- `spec/02-app-issues/26-cfrp-no-version-suffix-hard-error.md` — new (skip-with-notice resolution).
-- Version bump: edit `gitmap/constants/version.go` (or wherever `constants.Version` lives) → `v4.43.0`. README badge unchanged.
+### Step 4 — Per-command detailed help: audit + fill gaps
 
-## Technical notes
+**Problem:** User wants every command to have a richer "if I go into that, that would have an explanation of how that command works". Many help files exist but several are stubs or missing (e.g. recently added `push`, `pull`, `prc`, `undo`, `ssh copy/view/create`, `install gitmap-oneliner`, `reinstall`).
 
-- **Migration safety:** Both new columns are nullable TEXT, defaulting to NULL. Existing rows are treated as "never injected" — first `inject`/`open` after upgrade will run both side-effects once, then mark.
-- **Desktop "already added" check:** GitHub Desktop has no public CLI to query installed repos. We rely solely on the DB timestamp + path-existence check; `--force` is the escape hatch.
-- **VS Code check:** Cross-validate against `projects.json` rootPath presence before trusting the DB timestamp (handles the case where the user removed the entry from VS Code Project Manager UI).
-- **`gitmap open` cwd detection:** Reuses `git remote get-url origin` parser already in `inject.go`. If no origin, error: `open: not inside a git repo with origin remote`.
-- **Wrapper auto-install ordering:** `self-install` runs setup AFTER PATH is wired, so the `gitmap` binary inside `setup`'s generated wrapper resolves correctly.
-- **No breaking changes:** All existing flags + exit codes preserved. `--require-version` is opt-in.
+**Plan:**
+- Audit `gitmap/helptext/*.md` against the canonical command list in `constants_cli.go` and the registry tests; produce a coverage matrix.
+- For every missing or thin file, author one following the spec in `spec/04-generic-cli/09-help-system.md` (≤120 lines, 2–3 examples with realistic output, Prerequisites, See Also).
+- Standardize section order across all files (Usage → Aliases → Flags table → Prerequisites → Examples → Common pitfalls → See Also) so the pretty renderer produces a uniform look.
+- Add a CI check (or unit test) that fails when a registered command lacks a help file.
+
+**Deliverable:** Every `gitmap <cmd> --help` returns a complete, well-formatted page.
+
+---
+
+### Step 5 — Version bump, changelog, README pin
+
+**Plan (executed only after Steps 1–4 are verified):**
+- Bump minor: `v5.41.0 → v5.42.0` in `gitmap/constants/constants.go`, `src/constants/index.ts`.
+- Add `CHANGELOG.md` and `src/data/changelog.ts` entry summarizing: universal glyphs, redesigned root help, `help --filter`, full per-command help coverage.
+- Update all 15+ version pins in `README.md` (the version matrix + install URL examples).
+- Run `src/test/version-sync.test.ts` and the Go test suite to confirm sync.
+- Suggest publish.
+
+---
+
+### Open questions (please confirm or I'll proceed with the defaults shown)
+
+1. **Glyph default on legacy PowerShell 5.1:** default to `safe` (ASCII) unless user opts into `--glyphs rich`? *(Default: yes)*
+2. **Grouping in the new root help:** collapse the 17 current groups into ~5 intent-based buckets? *(Default: yes — keep old keys as aliases for `--filter`)*
+3. **`help` as a first-class subcommand vs. flag:** keep both `gitmap help` and `gitmap --help`, with `help` getting the new filter/search powers? *(Default: yes)*
+4. **Final version target:** `v5.42.0`? *(Default: yes)*
+
+Reply "go" (or with any tweaks) and I'll execute Step 1 next, then report status + remaining steps.

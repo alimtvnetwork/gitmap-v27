@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v22/gitmap/glyphs"
 	"github.com/alimtvnetwork/gitmap-v22/gitmap/theme"
 )
 
@@ -25,6 +26,12 @@ func Run() {
 	// any subcommand writes colored output.
 	os.Args = append(os.Args[:1], stripThemeFlag(os.Args[1:])...)
 	theme.Install()
+
+	// Strip the global `--glyphs` switch (rich | safe | auto) and
+	// install the glyph filter. Runs AFTER theme so the safe-mode
+	// ASCII rewrites apply to bytes already past theme's SGR rewrite.
+	os.Args = append(os.Args[:1], stripGlyphsFlag(os.Args[1:])...)
+	glyphs.Install()
 
 	// Strip the global `--vscode-sync-disabled` kill switch from argv
 	// (and flip the env var) before any subcommand sees its flagset.

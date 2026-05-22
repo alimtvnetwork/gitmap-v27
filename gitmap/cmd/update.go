@@ -14,9 +14,23 @@ import (
 )
 
 // runUpdate handles the "update" subcommand.
-// It creates a handoff copy and runs a hidden worker command from that copy.
+//
+// As of v5.51.0 the default path downloads + runs the canonical remote
+// installer (install.ps1 on Windows, install.sh elsewhere) so updates
+// no longer require a source checkout. The installer itself performs
+// the parallel `-v<N+i>` sibling-repo probe, so the latest published
+// gitmap-vN release always wins.
+//
+// The legacy source-rebuild handoff is preserved behind --source-rebuild
+// for users who maintain a local clone and want to ship in-tree changes.
 func runUpdate() {
 	requireOnline()
+	if !hasFlag(constants.FlagSourceRebuild) {
+		if runUpdateRemoteInstall() {
+			return
+		}
+		fmt.Fprintln(os.Stderr, constants.MsgUpdateRemoteFallback)
+	}
 	repoPath := resolveRepoPath()
 	report := resolveReportErrors()
 	report.announce()

@@ -171,6 +171,32 @@ const (
 	ErrUpdateCloneFailed = "  ✗ Clone failed: %v\n"
 )
 
+// Remote-installer update path (v5.51.0+).
+//
+// `gitmap update` downloads + runs the canonical install script straight
+// from the gitmap repo. The installer itself handles the parallel
+// `-v<N+i>` sibling-repo probe to find the latest published gitmap-vN
+// release, so we don't reimplement that logic here.
+//
+// Pass `--source-rebuild` to fall back to the legacy in-tree rebuild
+// flow (requires a local source checkout + Go toolchain).
+const (
+	UpdateRemoteInstallerPwsh = "https://raw.githubusercontent.com/" +
+		"alimtvnetwork/gitmap-v23/main/install.ps1"
+	UpdateRemoteInstallerBash = "https://raw.githubusercontent.com/" +
+		"alimtvnetwork/gitmap-v23/main/install.sh"
+
+	FlagSourceRebuild = "--source-rebuild"
+
+	MsgUpdateRemoteFetch    = "\n  ■ Fetching remote installer: %s\n"
+	MsgUpdateRemoteRun      = "  ■ Running installer: %s\n"
+	MsgUpdateRemoteDone     = "\n  ✓ Update complete (via remote installer).\n\n"
+	MsgUpdateRemoteFallback = "  ⚠ Remote installer failed — falling back to source rebuild...\n"
+
+	ErrUpdateRemoteDownload = "  ✗ Failed to download installer: %v\n"
+	ErrUpdateRemoteRun      = "  ✗ Installer failed: %v\n"
+)
+
 // Update PowerShell script template sections.
 const (
 	UpdatePSHeader = `# gitmap self-update script (auto-generated)

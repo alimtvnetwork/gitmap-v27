@@ -54,8 +54,16 @@ func utilityDispatchEntries() []dispatchEntry {
 // help, --groups, --compact, and the default usage screen.
 func runHelpDispatch() {
 	if len(os.Args) >= 3 && !isFlagToken(os.Args[2]) {
-		_, mode := ParsePrettyFlag(os.Args[3:])
-		helptext.PrintWithMode(os.Args[2], mode)
+		topic := os.Args[2]
+		if _, err := helptext.ReadRaw(topic); err == nil {
+			_, mode := ParsePrettyFlag(os.Args[3:])
+			helptext.PrintWithMode(topic, mode)
+
+			return
+		}
+		// Unknown topic — treat as a filter query so users can type
+		// `gitmap help ssh` and get the same hits as `gitmap help -f ssh`.
+		printUsageFiltered(topic)
 
 		return
 	}

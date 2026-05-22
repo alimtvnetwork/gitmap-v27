@@ -50,6 +50,12 @@ func printUsageFooter() {
 			constants.ColorYellow, commit, constants.ColorReset)
 	}
 
+	if sha := captureGit(repoDir, "rev-parse", "HEAD"); len(sha) > 0 {
+		fmt.Printf("  %s● Commit SHA:%s  %s%s%s\n",
+			constants.ColorCyan, constants.ColorReset,
+			constants.ColorYellow, sha, constants.ColorReset)
+	}
+
 	fmt.Println()
 }
 

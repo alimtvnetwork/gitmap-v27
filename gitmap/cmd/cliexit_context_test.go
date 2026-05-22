@@ -82,6 +82,7 @@ func TestCLI_FailureContext_CloneFromMissingManifest(t *testing.T) {
 // counterpart. Distinct from clone-from: clone-now uses a different
 // parser path and we want both surfaces validated.
 func TestCLI_FailureContext_CloneNowMissingManifest(t *testing.T) {
+	skipOnWindowsSubprocess(t)
 	t.Parallel()
 	missing := filepath.Join(t.TempDir(), "no-such-manifest.json")
 	code, stdout, stderr := runGitmap(t,

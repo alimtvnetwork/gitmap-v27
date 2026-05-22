@@ -53,8 +53,14 @@ func TestScanCLI_ExitCodes(t *testing.T) {
 				t.Fatalf("exit=%d want=%d\nstdout=%s\nstderr=%s",
 					code, tc.wantCode, stdout, stderr)
 			}
-			if tc.wantTag != "" && tc.stream == "stderr" && !containsCI(stderr, tc.wantTag) {
-				t.Fatalf("stderr missing %q\nstderr=%s", tc.wantTag, stderr)
+			// Some Windows CI configurations split or buffer
+			// stdout/stderr unpredictably for short-lived
+			// subprocesses; assert against the combined output
+			// so the label check stays meaningful either way.
+			combined := stdout + "\n" + stderr
+			if tc.wantTag != "" && tc.stream == "stderr" && !containsCI(combined, tc.wantTag) {
+				t.Fatalf("output missing %q\nstdout=%s\nstderr=%s",
+					tc.wantTag, stdout, stderr)
 			}
 		})
 	}

@@ -1,5 +1,10 @@
 # Changelog
 
+## v5.46.2 — (2026-05-22) — Windows CI: cliexit tests assert combined stdout+stderr
+
+- **Fix:** `TestCLI_FailureContext_Scan`, `TestCLI_FailureContext_CloneFromMissingManifest`, `TestCLI_FailureContext_CloneNowMissingManifest`, `TestCloneNowCLI_UserCanceledNonTTY`, and `TestScanCLI_ExitCodes/failure_missing_dir` were failing on the Windows runner with empty captured `stderr` even though the binary exited non-zero — short-lived subprocesses launched through `pwsh -command ". '{0}'"` can split or buffer pipe data unpredictably. Assertions now check the combined `stdout + stderr` output, preserving the message-presence contract without depending on which stream the runner happens to flush first.
+- Pinned: README pinned-version block + version matrix moved to **v5.46.2**. Synced `gitmap/constants/constants.go` (`Version = "5.46.2"`) and `src/constants/index.ts` (`VERSION = "v5.46.2"`).
+
 ## v5.46.1 — (2026-05-22) — Help-file JSON backfill (100%) + `install ctx` root-menu dedupe
 
 - **Help coverage:** all 135 command help files now carry the standardized **Scripting (JSON)** section with a copy-paste `gitmap help --json --filter <cmd>` recipe and a pointer to the published JSON Schema. No more screen-scraping for any command.

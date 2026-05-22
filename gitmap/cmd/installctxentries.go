@@ -9,7 +9,11 @@ type ctxEntry struct {
 	MUIVerb  string // visible label
 	Args     []string
 	Mode     constants.CtxMode
-	Exe      string     // override executable; empty => use the gitmap binary
+	Exe      string // override executable; empty => use the gitmap binary
+	Icon     string // Windows: per-entry Icon registry value. Empty => no Icon written.
+	//                  Supports the constants.CtxIconExeToken ("{exe}") placeholder,
+	//                  which is substituted with the resolved gitmap binary path at
+	//                  registry-write time (see leafCommands / categoryCommands).
 	Extended bool       // Windows: Shift+right-click only (HKCU "Extended" REG_SZ); macOS/Linux: prepend confirm prompt
 	Children []ctxEntry // non-nil => this is a submenu
 }

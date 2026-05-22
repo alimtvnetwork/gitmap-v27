@@ -197,6 +197,43 @@ const (
 	ErrUpdateRemoteRun      = "  ✗ Installer failed: %v\n"
 )
 
+// Native sibling-repo probe (v5.52.0+). Spec: spec/01-app/111-update-remote-probe.md.
+//
+// `gitmap update` resolves the winning gitmap-vN repo slug in Go using a
+// 20-parallel HEAD probe, then downloads THAT repo's installer. The
+// downloaded installer no longer needs to probe — Go is the single
+// source of truth.
+const (
+	UpdateProbeMaxSiblings = 20
+	UpdateProbeTimeoutSec  = 5
+	UpdateProbeRepoBase    = "gitmap"
+	UpdateRepoOwner        = "alimtvnetwork"
+	UpdateCurrentRepoSlug  = "gitmap-v23"
+
+	UpdateRepoHEADTmpl     = "https://github.com/%s/%s"
+	UpdateRawInstallerTmpl = "https://raw.githubusercontent.com/%s/%s/main/%s"
+	UpdateReleasesAPITmpl  = "https://api.github.com/repos/%s/%s/releases/latest"
+
+	UpdateInstallerNamePwsh = "install.ps1"
+	UpdateInstallerNameBash = "install.sh"
+
+	FlagProbeOnly = "--probe-only"
+	FlagNoProbe   = "--no-probe"
+
+	UpdateProbeSourceSibling = "sibling-probe"
+	UpdateProbeSourceRelease = "current-release"
+	UpdateProbeSourceMain    = "current-main"
+
+	MsgUpdateProbeStart   = "\n  ■ Probing sibling repos (%s-v%d..%s-v%d)...\n"
+	MsgUpdateProbeHit     = "    hit: %s (HTTP %d)\n"
+	MsgUpdateProbeResolve = "  ✓ Resolved: %s (source: %s)\n"
+	MsgUpdateProbeSkipped = "  → Probe skipped (--no-probe); using current repo: %s\n"
+	MsgUpdateProbeOnly    = "  → --probe-only: %s (source: %s)\n"
+
+	ErrUpdateProbeParseSlug = "could not parse current repo slug %q: %w"
+	ErrUpdateProbeNoResolve = "  ✗ Could not resolve any gitmap-vN repo (probe, release, main all failed)\n"
+)
+
 // Update PowerShell script template sections.
 const (
 	UpdatePSHeader = `# gitmap self-update script (auto-generated)

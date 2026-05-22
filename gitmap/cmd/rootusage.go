@@ -54,7 +54,7 @@ func printSuperCategory(title string, body func()) {
 	fmt.Println()
 	rule := repeatRule(58 - len(title))
 	fmt.Println("  " + constants.ColorMagenta + "━━ " +
-		constants.ColorBoldWhite + title + constants.ColorReset +
+		constants.ColorWhite + title + constants.ColorReset +
 		" " + constants.ColorMagenta + rule + constants.ColorReset)
 	body()
 }

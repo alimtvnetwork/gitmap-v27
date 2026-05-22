@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.45.0",
+    date: "2026-05-22",
+    subtitle: "`fix-repo` accepts bare digits + flag-list error + post-run tips",
+    items: [
+      "**Fix:** `gitmap fix-repo 4` no longer errors with `E_BAD_FLAG`. Any bare positive integer (`4`, `7`, …) or dash-prefixed integer (`-4`, `-7`, …) is now accepted as a span override, generalizing the canonical `-2 / -3 / -5` modes.",
+      "**Better bad-flag error.** Unknown-flag errors now append the full accepted-flag reference (spans, `--all`, `--dry-run`, `--verbose`, `--strict`, `--restrict no-version | -r nv`, `--config <path>`) with example invocations.",
+      "**Post-run tips block.** After every successful sweep, `fix-repo` prints a `next steps:` reminder including `gitmap undo` (restore the snapshot just written), `gitmap undo --list`, `--dry-run`, `--restrict no-version | -r nv`, and the bare-digit span shortcut. Dry-run prints an equivalent `tips (dry-run):` block.",
+      "**Bare-base scope rule re-verified.** Bare `{base}` → `{base}-v{current}` sweep is gated on `current == 2 && !restrictNoVersion`. At v3+ (including v23) bare `gitmap` is NEVER rewritten — `fixrepo_rewrite_versionscope_test.go` locks the v1/v2/v3/v4 matrix.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.45.0**. Synced `gitmap/constants/constants.go` (`Version = \"5.45.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.45.0\"`).",
+    ],
+  },
+  {
     version: "v5.44.0",
     date: "2026-05-22",
     subtitle: "TypeScript types for `help --json` + installer probing confirmed",

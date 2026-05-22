@@ -1,5 +1,15 @@
 # Changelog
 
+## v5.45.0 — (2026-05-22) — `fix-repo` accepts bare digits + flag-list error + post-run tips
+
+- **Fix: `gitmap fix-repo 4` no longer errors with `E_BAD_FLAG`.** Any bare positive integer (`4`, `7`, …) or dash-prefixed integer (`-4`, `-7`, …) is now accepted as a span override, generalizing the canonical `-2 / -3 / -5` modes. Default remains `-2` when no span is given.
+- **Better bad-flag error.** When an unknown flag is passed, the error now appends the full accepted-flag reference (spans, `--all`, `--dry-run`, `--verbose`, `--strict`, `--restrict no-version | -r nv`, `--config <path>`) with example invocations.
+- **Post-run tips block.** After every successful sweep, `fix-repo` prints a `next steps:` block to stderr reminding the user of `gitmap undo` (restore the snapshot just written), `gitmap undo --list`, `--dry-run`, `--restrict no-version | -r nv`, and the bare-digit span shortcut. Dry-run prints an equivalent `tips (dry-run):` block.
+- **Bare-base scope rule re-verified.** `applyAllTargetsR` continues to gate the bare `{base}` → `{base}-v{current}` sweep on `current == 2 && !restrictNoVersion`. At v3+ (including v23) bare `gitmap` tokens are NEVER rewritten. Regression matrix in `fixrepo_rewrite_versionscope_test.go` covers v1/v2/v3/v4.
+- Pinned: README pinned-version block + version matrix moved to **v5.45.0**. Synced `gitmap/constants/constants.go` (`Version = "5.45.0"`) and `src/constants/index.ts` (`VERSION = "v5.45.0"`).
+
+
+
 ## v5.44.0 — (2026-05-22) — TypeScript types for `help --json` + installer probing confirmed
 
 - **New:** `src/types/helpJson.ts` ships TypeScript types + `isHelpJsonPayload` runtime guard generated from `spec/08-json-schemas/help-json.schema.json`. Vitest suite locks the shape (4 tests).

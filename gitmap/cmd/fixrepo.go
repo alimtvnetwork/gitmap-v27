@@ -8,6 +8,8 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
@@ -44,6 +46,7 @@ func runFixRepo(args []string) {
 	if len(targets) == 0 {
 		emitFixRepoSummary(0, 0, 0, opts.isDryRun)
 		fmt.Print(constants.FixRepoMsgNothing)
+		emitFixRepoTips(opts, 0)
 		os.Exit(constants.FixRepoExitOk)
 	}
 	result := runFixRepoSweep(identity, targets, opts)
@@ -59,8 +62,10 @@ func runFixRepo(args []string) {
 		// branch on "rewrite produced semantically broken code" vs
 		// other write/IO failures. Reported even if gofmt also failed
 		// — strict failure is the more actionable diagnosis.
+		emitFixRepoTips(opts, result.changed)
 		os.Exit(constants.FixRepoExitTestsFailed)
 	}
+	emitFixRepoTips(opts, result.changed)
 	if result.failed {
 		os.Exit(constants.FixRepoExitWriteFailed)
 	}
@@ -68,7 +73,9 @@ func runFixRepo(args []string) {
 }
 
 // computeFixRepoSpan maps the mode flag to an integer span. `--all`
-// expands to current-1 so every prior version is rewritten.
+// expands to current-1 so every prior version is rewritten. Any
+// `-N` mode (v5.45.0+) is parsed as the integer N so users can pass
+// `gitmap fix-repo 4` / `-7` etc. without hitting E_BAD_FLAG.
 func computeFixRepoSpan(mode string, current int) int {
 	switch mode {
 	case constants.FixRepoModeFlag2:
@@ -79,6 +86,11 @@ func computeFixRepoSpan(mode string, current int) int {
 		return 5
 	case "--" + constants.FixRepoFlagAll:
 		return current - 1
+	}
+	if strings.HasPrefix(mode, "-") {
+		if n, err := strconv.Atoi(mode[1:]); err == nil && n > 0 {
+			return n
+		}
 	}
 
 	return constants.FixRepoDefaultSpan

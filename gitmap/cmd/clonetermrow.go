@@ -53,6 +53,12 @@ func printCloneNowTermBlockRow(index, total int, row clonenow.Row,
 		TargetURL:    url,
 		Dest:         dest,
 		CmdBranch:    row.Branch, // executor uses row.Branch, NOT detected
+		// Non-nil empty Pre opts into pickCmdBranch's explicit
+		// "no -b" sentinel when row.Branch is empty. Without this,
+		// pickCmdBranch's legacy fallback renders `-b <detected>` in
+		// the cmd: line even though clonenow.BuildGitArgs emits no
+		// -b flag — the documented v5.x verify-cmd-faithful drift.
+		CmdExtraArgsPre: cmdExtraArgsPreForRowBranch(row.Branch),
 	}
 	maybePrintCloneTermBlock(constants.OutputTerminal, in)
 	// Cross-check the printed cmd: against the executor's real argv
@@ -60,6 +66,20 @@ func printCloneNowTermBlockRow(index, total int, row clonenow.Row,
 	// truth: clonenow.BuildGitArgs is the same builder Execute calls.
 	runCmdFaithfulCheck(in, clonenow.BuildGitArgs(row, url, dest))
 	runCmdPrintArgv(clonenow.BuildGitArgs(row, url, dest))
+}
+
+// cmdExtraArgsPreForRowBranch returns the explicit "no -b" sentinel
+// (non-nil empty slice) when rowBranch is empty so pickCmdBranch
+// does NOT fall back to in.Branch — keeping the displayed cmd:
+// faithful to the executor argv, which itself emits -b only when
+// rowBranch is non-empty. When rowBranch is set we return nil so
+// downstream Post-flag appenders keep working unchanged.
+func cmdExtraArgsPreForRowBranch(rowBranch string) []string {
+	if len(rowBranch) == 0 {
+		return []string{}
+	}
+
+	return nil
 }
 
 // printCloneFromTermBlockRow emits one RepoTermBlock for one

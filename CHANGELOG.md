@@ -1,5 +1,14 @@
 # Changelog
 
+## v5.51.0 — (2026-05-22) — Help filter shortcut, footer SHA, remote-installer update
+
+- Added: `gitmap help <name>` now falls back to the filter engine when `<name>` is not a known help topic — typing `gitmap help ssh` is equivalent to `gitmap help --filter ssh`, with the same group context, highlighting, and fuzzy suggestions as `-f`.
+- Added: help footer now prints the full commit SHA in addition to the short SHA / subject / age line, so users can copy the exact revision the binary was built from.
+- Changed: `gitmap update` now downloads the canonical install script (`install.ps1` on Windows, `install.sh` elsewhere) straight from the repo root and executes it, instead of rebuilding the source tree. The installer's own parallel `-v<N+i>` sibling-repo probe finds the latest published `gitmap-vN` release. The legacy in-tree rebuild flow stays available behind `--source-rebuild`.
+- Added: spec `spec/01-app/110-update-remote-installer.md` documenting the new update contract and fallback rules.
+- Pinned: README pinned-version block + version matrix moved to **v5.51.0**. Synced `gitmap/constants/constants.go` and `src/constants/index.ts`.
+
+
 ## v5.50.0 — (2026-05-22) — Minor version bump
 
 - Fixed: skip `TestCloneNowCLI_UserCanceledNonTTY` on Windows CI via `skipOnWindowsSubprocess` — same bash-on-windows subprocess stream-capture limitation as the other 4 guarded tests; subprocess stdout/stderr came through empty on the GitHub `windows-latest` runner.

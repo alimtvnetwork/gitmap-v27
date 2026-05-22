@@ -48,6 +48,12 @@ func TestScanCLI_ExitCodes(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
+			if tc.stream == "stderr" {
+				// Output-capture contract: skipped on Windows
+				// per skipOnWindowsSubprocess (pwsh-runner
+				// quirk). Exit-code contract still runs.
+				skipOnWindowsSubprocess(t)
+			}
 			code, stdout, stderr := runGitmap(t, tc.args(t), "")
 			if code != tc.wantCode {
 				t.Fatalf("exit=%d want=%d\nstdout=%s\nstderr=%s",

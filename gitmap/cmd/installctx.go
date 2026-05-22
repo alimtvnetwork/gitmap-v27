@@ -126,6 +126,9 @@ func categoryCommands(key string, e ctxEntry, exe string) [][]string {
 		{"reg", "add", key, "/v", "MUIVerb", "/d", e.MUIVerb, "/f"},
 		{"reg", "add", key, "/v", "SubCommands", "/d", "", "/f"},
 	}
+	if e.Icon != "" {
+		out = append(out, []string{"reg", "add", key, "/v", "Icon", "/d", e.Icon, "/f"})
+	}
 	for _, child := range e.Children {
 		out = append(out, leafCommands(key+`\shell\`+child.KeyName, child, exe)...)
 	}
@@ -136,11 +139,16 @@ func categoryCommands(key string, e ctxEntry, exe string) [][]string {
 // leafCommands wires one terminal/silent/prefill action key. When
 // e.Extended is true an empty "Extended" REG_SZ value is written; the
 // Windows shell hides those entries unless Shift is held during the
-// right-click (the standard mechanism for power-user actions).
+// right-click (the standard mechanism for power-user actions). When
+// e.Icon is set (v5.47.0+) an "Icon" REG_SZ value is written so the
+// menu item renders with that glyph instead of the host app's default.
 func leafCommands(key string, e ctxEntry, exe string) [][]string {
 	out := [][]string{
 		{"reg", "add", key, "/ve", "/d", e.MUIVerb, "/f"},
 		{"reg", "add", key + `\command`, "/ve", "/d", commandTemplate(e, exe), "/f"},
+	}
+	if e.Icon != "" {
+		out = append(out, []string{"reg", "add", key, "/v", "Icon", "/d", e.Icon, "/f"})
 	}
 	if e.Extended {
 		out = append(out, []string{"reg", "add", key, "/v", "Extended", "/d", "", "/f"})

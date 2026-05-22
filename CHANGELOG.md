@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.49.0 — (2026-05-22) — Minor version bump
+
+- Pinned: README pinned-version block + version matrix moved to **v5.49.0**. Synced `gitmap/constants/constants.go` (`Version = "5.49.0"`) and `src/constants/index.ts` (`VERSION = "v5.49.0"`).
+
 ## v5.48.0 — (2026-05-22) — Minor version bump
 
 - Pinned: README pinned-version block + version matrix moved to **v5.48.0**. Synced `gitmap/constants/constants.go` (`Version = "5.48.0"`) and `src/constants/index.ts` (`VERSION = "v5.48.0"`).

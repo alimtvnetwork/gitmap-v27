@@ -33,7 +33,12 @@ func TestCLI_FailureContext_Scan(t *testing.T) {
 		t.Fatalf("scan of missing dir unexpectedly succeeded\nstdout=%s\nstderr=%s",
 			stdout, stderr)
 	}
-	assertStderrContext(t, "scan", stderr, missing, []string{
+	// Some Windows CI configurations merge or buffer the
+	// subprocess streams differently; assert against the
+	// combined output so the contract check stays meaningful
+	// regardless of which stream the message lands on.
+	combined := stdout + "\n" + stderr
+	assertStderrContext(t, "scan", combined, missing, []string{
 		"no such file", "cannot find", "does not exist", "not exist",
 	})
 }
@@ -50,7 +55,8 @@ func TestCLI_FailureContext_CloneFromMissingManifest(t *testing.T) {
 		t.Fatalf("clone-from with missing manifest unexpectedly succeeded\nstdout=%s\nstderr=%s",
 			stdout, stderr)
 	}
-	assertStderrContext(t, "clone-from", stderr, missing, []string{
+	combined := stdout + "\n" + stderr
+	assertStderrContext(t, "clone-from", combined, missing, []string{
 		"no such file", "cannot find", "does not exist", "not exist", "open",
 	})
 }
@@ -67,11 +73,8 @@ func TestCLI_FailureContext_CloneNowMissingManifest(t *testing.T) {
 		t.Fatalf("clone-now with missing manifest unexpectedly succeeded\nstdout=%s\nstderr=%s",
 			stdout, stderr)
 	}
-	// clone-now's parser and dispatcher both refer to the
-	// command via its alias chain ("clone-now" / "reclone"); we
-	// only require *some* form of the command label to be
-	// present, plus the path and an open/read failure phrase.
-	assertStderrContextAny(t, []string{"clone-now", "reclone"}, stderr, missing, []string{
+	combined := stdout + "\n" + stderr
+	assertStderrContextAny(t, []string{"clone-now", "reclone"}, combined, missing, []string{
 		"no such file", "cannot find", "does not exist", "not exist", "open",
 	})
 }

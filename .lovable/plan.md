@@ -1,92 +1,54 @@
-## Goal
 
-Make `gitmap` / `gitmap help` look professional in every terminal (Windows PowerShell, Windows Terminal, macOS Terminal, iTerm2, Linux gnome-terminal), fix the broken/gibberish emoji rendering on PowerShell, and make it easy for users to discover and drill into commands. Each step below is a self-contained unit of work that will be executed one at a time. After each step I will list what is done and what remains. The final step bumps the minor version, writes the changelog, and pins the new version to the root README.
+# Remote Installer + Sibling Probing in Go — 5-Step Rollout
 
----
+Move the `-v<N+i>` sibling-repo probe out of the downloaded `install.{ps1,sh}` and into Go (`gitmap update`), so the update flow no longer depends on shelling out to a shell script for the discovery phase. The remote installer is still used, but only as the final "install the resolved version" step — not as the probe engine.
 
-### Step 1 — Universal-safe glyph system (fix PowerShell "gibberish" emojis)
+## Step 1 — Spec
 
-**Problem:** Emojis like 📋 ✅ 🎉 render as `≡ƒôï` / `Γ£à` on default PowerShell (cp1252) and on terminals that lack an emoji font, even though `initConsole` switches to UTF-8 and enables VT processing. Two failure modes:
-1. Old `powershell.exe` (5.1) where the input/output encoding is reset by the host before we can intercept.
-2. Fonts without color-emoji glyphs (Consolas, Lucida Console) — rendered as tofu/boxes even when UTF-8 is correct.
+Create `spec/01-app/111-update-remote-probe.md` describing:
+- Goal: native Go probe + remote install, single source of truth in Go.
+- Probe contract: parse current repo slug (`gitmap-v23`) → derive base (`gitmap`) + `N=23` → fire 20 parallel `HEAD` requests against `https://github.com/alimtvnetwork/gitmap-v<N+1..N+20>` → max-hit index wins → fall back to latest release of current repo → fall back to `main` HEAD of current repo.
+- Install contract: once winning repo slug is resolved, download that repo's `install.ps1` / `install.sh` from `raw.githubusercontent.com/.../main/install.{ps1,sh}` and exec with inherited stdio.
+- Flags: `--probe-only` (print resolution + exit), `--no-probe` (skip probe, install from current repo only), `--source-rebuild` (unchanged, legacy path).
+- Exit codes, timeouts (5s per HEAD, 30s download), and logging format.
 
-**Plan:**
-- Introduce a glyph layer in `gitmap/constants/constants_glyphs.go` with two sets:
-  - **Rich set** — current emoji (📋 ✅ ⚠ 🎉 🔑 📁 🏷 ✓ →).
-  - **Safe set** — universally-rendered ASCII + BMP fallbacks (`[OK]`, `[!]`, `[i]`, `->`, `*`, `+`, `x`, `v`).
-- Add a `--glyphs <auto|rich|safe>` global flag + `GITMAP_GLYPHS` env var (mirrors the existing `--theme` pattern).
-- Auto-detection: on Windows, treat `safe` as default when `$env:WT_SESSION` is empty AND host is `ConsoleHost` (legacy powershell.exe); use `rich` in Windows Terminal, VS Code, iTerm2, all *nix TTYs.
-- Replace every literal emoji in Msg* constants and runtime `fmt.Print` calls with `glyph.OK`, `glyph.Warn`, `glyph.Info`, `glyph.Arrow`, etc. resolved at print time.
-- Harden `initConsole` to also set `Console.InputEncoding`/`OutputEncoding` analog via `_setmode` for stdout where applicable, and document that PowerShell 5.1 users should run `gitmap` from Windows Terminal for rich glyphs.
+## Step 2 — Constants + Probe Package
 
-**Deliverable:** No more mojibake anywhere. Users on legacy PowerShell see clean ASCII; users on modern terminals keep the polished look.
+- Extend `gitmap/constants/constants_update.go` with: `UpdateProbeMaxSiblings=20`, `UpdateProbeTimeoutSec=5`, `UpdateProbeRepoBase="gitmap"`, `UpdateRepoOwner="alimtvnetwork"`, `UpdateRepoHEADTmpl`, `UpdateRawInstallerTmpl`, plus `Msg*` / `Err*` strings for probe lifecycle.
+- New file `gitmap/cmd/updateprobe.go` with `resolveLatestRepoSlug() (slug string, source string, err error)`:
+  - `parseCurrentRepoSlug()` from the embedded `RepoSlug` constant.
+  - `probeSiblings(base, n, max)` — `sync.WaitGroup` + buffered channel of results, `http.Client{Timeout: 5s}`, `HEAD` requests, return highest-N 2xx.
+  - `fallbackLatestRelease(slug)` — hit `api.github.com/.../releases/latest`.
+  - Final `fallbackMain(slug)`.
 
----
+## Step 3 — Wire Probe Into Update Flow
 
-### Step 2 — Redesign `gitmap` / `gitmap help` root output
+- Refactor `gitmap/cmd/updateremoteinstall.go`:
+  - Call `resolveLatestRepoSlug()` first, log winning slug + source.
+  - Build installer URL from the winning slug (not hardcoded to `gitmap-v23`).
+  - Honor `--no-probe` (skip step 1, use current slug) and `--probe-only` (print + return).
+- Update `gitmap/cmd/update.go` dispatcher to parse the two new flags via existing flag-reorder helper.
 
-**Problem:** The current compact root listing is a wall of group headers + dense one-liners. Hard to scan, no visual hierarchy, no clear "what should I run first?" path.
+## Step 4 — Tests
 
-**Plan:**
-- Rebuild `printCompactAll` in `gitmap/cmd/rootusagecompact.go` into a structured, columnar layout:
-  - Top banner: name, version, tagline, source repo, install dir (already partially in `rootusagefooter.go` — promote to header).
-  - **Quick Start** strip (4 most common commands: `scan`, `clone`, `pull-release`, `setup`) with one-line purpose each.
-  - Two-column **group → commands** grid, fixed width, aligned, grouped by user intent (Get started / Daily / Release / Power tools / Diagnostics) instead of the current 17 flat groups.
-  - Each command line: `name (alias)` padded to col 22, then one-sentence purpose, dim-colored.
-  - Footer: `gitmap help <cmd>` hint, `gitmap help --filter <word>` hint, build info.
-- Adapt width to terminal columns (read via `golang.org/x/term`) with a sane 80-col fallback.
-- Apply theme palette already in place (`--theme`) so colors degrade in `standard` / `mono`.
+- `gitmap/cmd/updateprobe_test.go`:
+  - Table-driven `parseCurrentRepoSlug` for `gitmap-v23`, `gitmap-v100`, malformed.
+  - `probeSiblings` against a local `httptest.Server` returning 200 for a configured subset, asserting max-hit wins and timeout doesn't deadlock.
+  - Fallback chain: all-404 siblings → release fallback called; release 404 → main fallback called.
+- Skip live network in CI; everything httptest-based.
 
-**Deliverable:** A root help screen that looks like a polished CLI (think `gh`, `cargo`, `rg --help`).
+## Step 5 — Version Bump + Docs
 
----
+- Bump to **v5.52.0** in `gitmap/constants/constants.go`, `README.md` pinned block + matrix, `src/constants/index.ts`.
+- Append changelog entry to `CHANGELOG.md` and `src/data/changelog.ts`.
+- Create `.gitmap/release/v5.52.0.json` and update `.gitmap/release/latest.json`.
+- Link new spec from README "Update" section.
 
-### Step 3 — Add a filter / search option
+## Technical notes
 
-**Problem:** No way to search commands by keyword. With 80+ subcommands users can't find what they need.
+- Probe is read-only `HEAD`; no auth needed for public repos.
+- Use `context.WithTimeout` per request; collect results in a fixed-size slice indexed by offset to avoid mutex.
+- Embedded `RepoSlug` already exists in `gitmap-updater/cmd/constants.go`; mirror that constant into `gitmap/constants` rather than reaching across module boundaries.
+- No behavior change for `--source-rebuild`; legacy handoff path stays intact for power users.
 
-**Plan:**
-- Add `gitmap help --filter <query>` (alias `-f`) and bare-positional `gitmap help <query>`.
-- Match against: command name, aliases, group key, and the one-line description (already present per command).
-- Output: same column layout as Step 2 but filtered to matches, with the matched substring highlighted via the theme accent color.
-- If exactly one match → print that command's full help (delegates to existing `helptext.Print`).
-- If zero matches → suggest the 3 closest via Levenshtein distance.
-- Document in `gitmap/helptext/help.md` (new file) and link from root footer.
-
-**Deliverable:** `gitmap help release`, `gitmap help -f ssh`, `gitmap help clone` all do the right thing instantly.
-
----
-
-### Step 4 — Per-command detailed help: audit + fill gaps
-
-**Problem:** User wants every command to have a richer "if I go into that, that would have an explanation of how that command works". Many help files exist but several are stubs or missing (e.g. recently added `push`, `pull`, `prc`, `undo`, `ssh copy/view/create`, `install gitmap-oneliner`, `reinstall`).
-
-**Plan:**
-- Audit `gitmap/helptext/*.md` against the canonical command list in `constants_cli.go` and the registry tests; produce a coverage matrix.
-- For every missing or thin file, author one following the spec in `spec/04-generic-cli/09-help-system.md` (≤120 lines, 2–3 examples with realistic output, Prerequisites, See Also).
-- Standardize section order across all files (Usage → Aliases → Flags table → Prerequisites → Examples → Common pitfalls → See Also) so the pretty renderer produces a uniform look.
-- Add a CI check (or unit test) that fails when a registered command lacks a help file.
-
-**Deliverable:** Every `gitmap <cmd> --help` returns a complete, well-formatted page.
-
----
-
-### Step 5 — Version bump, changelog, README pin
-
-**Plan (executed only after Steps 1–4 are verified):**
-- Bump minor: `v5.41.0 → v5.42.0` in `gitmap/constants/constants.go`, `src/constants/index.ts`.
-- Add `CHANGELOG.md` and `src/data/changelog.ts` entry summarizing: universal glyphs, redesigned root help, `help --filter`, full per-command help coverage.
-- Update all 15+ version pins in `README.md` (the version matrix + install URL examples).
-- Run `src/test/version-sync.test.ts` and the Go test suite to confirm sync.
-- Suggest publish.
-
----
-
-### Open questions (please confirm or I'll proceed with the defaults shown)
-
-1. **Glyph default on legacy PowerShell 5.1:** default to `safe` (ASCII) unless user opts into `--glyphs rich`? *(Default: yes)*
-2. **Grouping in the new root help:** collapse the 17 current groups into ~5 intent-based buckets? *(Default: yes — keep old keys as aliases for `--filter`)*
-3. **`help` as a first-class subcommand vs. flag:** keep both `gitmap help` and `gitmap --help`, with `help` getting the new filter/search powers? *(Default: yes)*
-4. **Final version target:** `v5.42.0`? *(Default: yes)*
-
-Reply "go" (or with any tweaks) and I'll execute Step 1 next, then report status + remaining steps.
+Say **next** to execute Step 1.

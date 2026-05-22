@@ -29,7 +29,7 @@ func runUpdate() {
 		if runUpdateRemoteInstall() {
 			return
 		}
-		fmt.Fprintln(os.Stderr, constants.MsgUpdateRemoteFallback)
+		fmt.Fprint(os.Stderr, constants.MsgUpdateRemoteFallback)
 	}
 	repoPath := resolveRepoPath()
 	report := resolveReportErrors()

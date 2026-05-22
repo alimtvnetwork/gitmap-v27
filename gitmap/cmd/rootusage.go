@@ -12,30 +12,65 @@ func printUsage() {
 	fmt.Println(constants.HelpUsage)
 	fmt.Println()
 	printUsageQuickStart()
-	fmt.Println()
-	printGroupScanning()
-	printGroupCloning()
-	printGroupGitOps()
-	printGroupNavigation()
-	printGroupRelease()
-	printGroupReleaseInfo()
-	printGroupData()
-	printGroupHistory()
-	printGroupAmend()
-	printGroupProject()
-	printGroupSSH()
-	printGroupZip()
-	printGroupEnvTools()
-	printGroupTasks()
-	printGroupVisualize()
-	printGroupCommitXfer()
-	printGroupUtilities()
+
+	printSuperCategory("GET STARTED", func() {
+		printGroupScanning()
+		printGroupNavigation()
+		printGroupEnvTools()
+	})
+	printSuperCategory("WORK WITH REPOS", func() {
+		printGroupCloning()
+		printGroupGitOps()
+		printGroupSSH()
+	})
+	printSuperCategory("RELEASE & HISTORY", func() {
+		printGroupRelease()
+		printGroupReleaseInfo()
+		printGroupHistory()
+		printGroupAmend()
+		printGroupCommitXfer()
+	})
+	printSuperCategory("PROJECTS & DATA", func() {
+		printGroupProject()
+		printGroupData()
+		printGroupZip()
+		printGroupTasks()
+		printGroupVisualize()
+	})
+	printSuperCategory("ADVANCED", func() {
+		printGroupUtilities()
+	})
+
 	fmt.Println()
 	printUsageFlagSections()
 	printUsageFooter()
 }
 
-// colorGroupHeader wraps a group header line in bold cyan so each
+// printSuperCategory renders a bold intent-banner above a set of
+// related sub-groups, so users can pinpoint the right area without
+// scanning 17 sub-headers. The banner uses box-drawing rules that the
+// glyph filter downgrades to "==" on legacy PowerShell hosts.
+func printSuperCategory(title string, body func()) {
+	fmt.Println()
+	rule := repeatRule(58 - len(title))
+	fmt.Println("  " + constants.ColorMagenta + "━━ " +
+		constants.ColorBoldWhite + title + constants.ColorReset +
+		" " + constants.ColorMagenta + rule + constants.ColorReset)
+	body()
+}
+
+func repeatRule(n int) string {
+	if n < 4 {
+		n = 4
+	}
+	out := ""
+	for i := 0; i < n; i++ {
+		out += "━"
+	}
+	return out
+}
+
+// colorGroupHeader wraps a sub-group header line in bold cyan so each
 // section stands out from the muted command rows beneath it.
 func colorGroupHeader(header string) string {
 	return constants.ColorCyan + header + constants.ColorReset

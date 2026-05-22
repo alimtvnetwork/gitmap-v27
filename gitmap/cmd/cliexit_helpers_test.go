@@ -25,8 +25,8 @@ package cmd
 // environment that *can* build the binary.
 
 import (
-	"bytes"
 	"errors"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"

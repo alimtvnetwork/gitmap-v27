@@ -28,7 +28,25 @@ func runReleasePull(args []string) {
 	dir := requireReleasePullCwd()
 
 	pullCurrentRepo(dir, mode, dryRun, verbose)
-	runRelease(rest)
+	runRelease(ensureYesForward(rest))
+}
+
+// ensureYesForward guarantees `-y` is present in the args forwarded to
+// `runRelease` when invoked via `pull-release` / `pr`. Rationale: the
+// user already performed an explicit pull as part of this single
+// command, so the post-release auto-commit prompt is just a stutter in
+// the pipeline — we treat the whole `pr <version>` invocation as an
+// implicit consent to commit + push any release-adjacent changes. If
+// the caller already passed `-y` or `--yes` we leave args untouched so
+// downstream flag parsing stays idempotent.
+func ensureYesForward(args []string) []string {
+	for _, a := range args {
+		if a == "-y" || a == "--yes" || strings.HasPrefix(a, "--yes=") {
+			return args
+		}
+	}
+
+	return append(args, "-y")
 }
 
 // requireReleasePullCwd validates we are inside a repo and returns cwd.

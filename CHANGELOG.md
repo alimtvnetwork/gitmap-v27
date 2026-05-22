@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.54.0 — (2026-05-22) — verify-cmd-faithful: displayed branch matches argv
+
+- Fixed: `gitmap clone-now` / `clone-from` rows with an empty `row.Branch` rendered a phantom `-b <detected>` (e.g. `-b main`, `-b develop`) on the displayed `cmd:` line while the executor's argv emitted no `-b` flag at all — `--verify-cmd-faithful` correctly flagged the drift but the underlying bug remained. Root cause: `pickCmdBranch` falls back to `in.Branch` (the ls-remote-detected default) when both `CmdBranch` is empty AND `CmdExtraArgsPre` is nil, but the row callers left `CmdExtraArgsPre` nil, triggering the legacy fallback.
+- Changed: `printCloneNowTermBlockRow` and `printCloneFromTermBlockRow` now pass a non-nil empty `CmdExtraArgsPre` whenever `row.Branch` is empty (via the new `cmdExtraArgsPreForRowBranch` helper). This opts into `pickCmdBranch`'s explicit "no -b" sentinel so the displayed `cmd:` line matches the executor argv byte-for-byte. The `branch:` info line still shows the detected fallback for user context — only the rendered command is corrected.
+- Pinned: README pinned-version block + version matrix moved to **v5.54.0**. Synced `gitmap/constants/constants.go` (`Version = "5.54.0"`) and `src/constants/index.ts` (`VERSION = "v5.54.0"`).
+
+
 ## v5.53.0 — (2026-05-22) — Deterministic pipe drain on exit (Windows CI fix)
 
 - Fixed: bytes written to `os.Stdout` / `os.Stderr` just before `os.Exit` could be silently dropped on Windows when `glyphs` or `theme` had wrapped the fds with a pipe-backed forwarder goroutine. Root cause: `os.Exit` terminates the process before the forwarder is scheduled to copy the pipe buffer to the inherited fd. This was the source of the long-running cliexit subprocess-test flakiness on the `windows-latest` GHA runner.

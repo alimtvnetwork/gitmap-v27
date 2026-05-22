@@ -1,3 +1,5 @@
+# Changelog
+
 ## v5.46.0 — (2026-05-22) — Help UX banner in Changelog page + `--json` examples in command help
 # Changelog
 

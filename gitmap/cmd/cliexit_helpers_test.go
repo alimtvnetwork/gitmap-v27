@@ -173,15 +173,28 @@ func runGitmap(t *testing.T, args []string, stdin string) (int, string, string) 
 // hermeticEnv strips variables that could change behavior between
 // developer machines and CI (NO_COLOR honored so terminal renderers
 // produce stable output if the test ever asserts on stdout).
+//
+// GITMAP_GLYPHS=rich and GITMAP_THEME=bright are pinned so neither
+// glyphs.Install nor theme.Install replaces os.Stdout / os.Stderr
+// with pipe-backed writers. On the Windows GHA runner the pipe
+// forwarder goroutine is racy against os.Exit and can drop the
+// final stderr line, which previously forced these tests to skip
+// on Windows. Belt-and-suspenders with cliexit.RegisterFlusher
+// drainers wired in cmd/root.go — pinning the env removes the
+// race entirely for subprocess tests.
 func hermeticEnv() []string {
 	keep := []string{"PATH", "HOME", "USERPROFILE", "SystemRoot", "TEMP", "TMP", "TMPDIR"}
-	out := make([]string, 0, len(keep)+2)
+	out := make([]string, 0, len(keep)+4)
 	for _, k := range keep {
 		if v := os.Getenv(k); v != "" {
 			out = append(out, k+"="+v)
 		}
 	}
-	out = append(out, "NO_COLOR=1")
+	out = append(out,
+		"NO_COLOR=1",
+		"GITMAP_GLYPHS=rich",
+		"GITMAP_THEME=bright",
+	)
 
 	return out
 }

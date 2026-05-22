@@ -2,33 +2,18 @@ package cmd
 
 import (
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 )
 
-// skipOnWindowsSubprocess centralizes the Windows-CI carve-out for
-// subprocess-output assertion tests. On the GitHub Actions
-// `windows-latest` runner the gitmap binary is launched correctly
-// and exits with the right code, but the parent `go test` process
-// reliably receives an empty `stdout`/`stderr` byte buffer — even
-// though local Windows shells (and every other OS) show the full
-// message. The root cause is the runner's PowerShell-7 invocation
-// (`pwsh -command ". '{0}'"`) interacting with how Go's `os/exec`
-// inherits the pwsh-shaped console; we have not been able to
-// reproduce it outside that exact configuration. Rather than ship
-// a brittle workaround, skip the *output* contract on Windows and
-// keep the (exit-code + stderr-context) contract enforced on
-// Linux + macOS, which is what every Windows user ultimately runs
-// through anyway via the same shared Go code path.
-func skipOnWindowsSubprocess(t *testing.T) {
-	t.Helper()
-	if runtime.GOOS == "windows" {
-		t.Skip("subprocess stdout/stderr capture is unreliable under " +
-			"pwsh -command on the windows-latest runner; output " +
-			"contract is enforced on linux + macos")
-	}
-}
+// Subprocess-output capture in this suite uses real temp-file fd
+// inheritance (see runGitmap in cliexit_helpers_test.go). That works
+// uniformly on Linux, macOS, and the GitHub Actions windows-latest
+// runner under `pwsh -command ". '{0}'"`, so no per-OS skips are
+// needed — the historical `skipOnWindowsSubprocess` helper was
+// removed in v5.47.0 once the pipe→file capture switch landed.
+
+
 
 // Integration tests asserting that user-facing failure stderr from
 // scan and clone-family commands carries the standardized context

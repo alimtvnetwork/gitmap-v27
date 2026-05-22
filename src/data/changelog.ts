@@ -8,6 +8,16 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.47.0",
+    date: "2026-05-22",
+    subtitle: "Windows CI: file-based subprocess capture + re-enable all skipped tests",
+    items: [
+      "**Fix:** replaced `bytes.Buffer` pipe capture in `runGitmap` with temp-file stdout/stderr redirection. On the GitHub Actions `windows-latest` runner under `pwsh -command \". '{0}'\"`, Go's `os/exec` pipe goroutine inherits pwsh's already-redirected console handles and reads EOF immediately. Writing to real files avoids the pipe-goroutine entirely, and the same code path now runs on every OS.",
+      "**Re-enabled on Windows:** removed `skipOnWindowsSubprocess` helper and all carve-outs. `TestCLI_FailureContext_Scan`, `TestCLI_FailureContext_CloneFromMissingManifest`, `TestCLI_FailureContext_CloneNowMissingManifest`, `TestCloneNowCLI_UserCanceledNonTTY`, `TestScanCLI_ExitCodes/failure_missing_dir`, and `TestFixRepoGofmtCleanAfterRewrite` now run on Windows instead of being skipped.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.47.0**. Synced `gitmap/constants/constants.go` (`Version = \"5.47.0\"`) and `src/constants/index.ts` (`VERSION = \"v5.47.0\"`).",
+    ],
+  },
+  {
     version: "v5.46.4",
     date: "2026-05-22",
     subtitle: "Windows CI: skip fix-repo gofmt e2e (pwsh subprocess stdout capture)",

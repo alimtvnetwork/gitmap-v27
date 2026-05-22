@@ -59,6 +59,11 @@ func runHelpDispatch() {
 
 		return
 	}
+	if hasFlag(constants.FlagJSON) {
+		printUsageJSON(resolveFilterQuery())
+
+		return
+	}
 	if q := resolveFilterQuery(); len(q) > 0 || hasFlag(constants.FlagFilter) || hasFlag(constants.FlagFilterShort) {
 		printUsageFiltered(q)
 

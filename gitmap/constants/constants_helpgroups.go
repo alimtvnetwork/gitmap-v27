@@ -26,7 +26,7 @@ const (
 	HelpExampleList  = "    $ gitmap ls"
 	HelpExamplePull  = "    $ gitmap pull my-api"
 	HelpExampleCD    = "    $ gitmap cd my-api"
-	HelpCompactHint  = "  Use --compact for a minimal list, --groups for group names, or --filter <q> (-f) to search (v5.42.0+)."
+	HelpCompactHint  = "  Use --compact, --groups, --filter <q> (-f), or --json for scripting (v5.42.0+)."
 
 	HelpAlias    = "  alias (a) <sub>     Assign short names to repos (set, remove, list, show, suggest)"
 	HelpSSH      = "  ssh <sub>           Generate, list, and manage SSH keys for Git authentication"

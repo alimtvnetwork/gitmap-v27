@@ -550,7 +550,25 @@ All files are written to `.gitmap/output/` at the root of the scanned directory.
 
 ---
 
+## Help UX — discover commands fast
+
+`gitmap help` is bucketed into 5 intent super-categories with search, compact mode, and machine-readable JSON for IDE/script integrations.
+
+```bash
+gitmap help                       # full grouped help
+gitmap help --compact             # one-line-per-command dense layout
+gitmap help --groups              # only the group banners
+gitmap help --filter clone        # substring search (alias: -f)
+gitmap help --json                # machine-readable JSON (ANSI stripped)
+gitmap help --json --filter ssh   # compose: scope JSON to matching rows
+```
+
+> **JSON Schema:** the `--json` payload conforms to [`spec/08-json-schemas/help-json.schema.json`](spec/08-json-schemas/help-json.schema.json) (JSON Schema draft 2020-12). A contract test validates runtime output against the schema on every build to prevent drift. Glyph rendering follows `--glyphs auto|rich|safe` (auto-falls-back to ASCII on legacy PowerShell 5.1).
+
+---
+
 ## Command Reference
+
 
 <div align="center">
 

@@ -50,31 +50,31 @@ irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.ps1 
 curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.sh | sh
 ```
 
-### 📌 Pinned version (`v5.49.0`)
+### 📌 Pinned version (`v5.50.0`)
 
 ```powershell
 # Windows · PowerShell
-irm https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/release-version-v5.49.0.ps1 | iex
+irm https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/release-version-v5.50.0.ps1 | iex
 ```
 
 ```bash
 # macOS · Linux · Bash
-curl -fsSL https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/release-version-v5.49.0.sh | bash
+curl -fsSL https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/release-version-v5.50.0.sh | bash
 ```
 
-#### 🧭 Version matrix — `v5.49.0` install-script URLs
+#### 🧭 Version matrix — `v5.50.0` install-script URLs
 
-One-line installers and release assets for the pinned **v5.49.0** build across every supported platform. All URLs resolve to the exact release tag — no fallback, no discovery.
+One-line installers and release assets for the pinned **v5.50.0** build across every supported platform. All URLs resolve to the exact release tag — no fallback, no discovery.
 
 | Platform | Shell | Install-script URL | Release binary asset |
 | --- | --- | --- | --- |
-| **Windows** (amd64) | PowerShell | [`release-version-v5.49.0.ps1`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/release-version-v5.49.0.ps1) | [`gitmap-v23.47.0-windows-amd64.zip`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/gitmap-v23.47.0-windows-amd64.zip) |
-| **macOS** (arm64) | Bash | [`release-version-v5.49.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/release-version-v5.49.0.sh) | [`gitmap-v23.47.0-darwin-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/gitmap-v23.47.0-darwin-arm64.tar.gz) |
-| **macOS** (amd64) | Bash | [`release-version-v5.49.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/release-version-v5.49.0.sh) | [`gitmap-v23.47.0-darwin-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/gitmap-v23.47.0-darwin-amd64.tar.gz) |
-| **Linux** (amd64) | Bash | [`release-version-v5.49.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/release-version-v5.49.0.sh) | [`gitmap-v23.47.0-linux-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/gitmap-v23.47.0-linux-amd64.tar.gz) |
-| **Linux** (arm64) | Bash | [`release-version-v5.49.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/release-version-v5.49.0.sh) | [`gitmap-v23.47.0-linux-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.49.0/gitmap-v23.47.0-linux-arm64.tar.gz) |
+| **Windows** (amd64) | PowerShell | [`release-version-v5.50.0.ps1`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/release-version-v5.50.0.ps1) | [`gitmap-v23.47.0-windows-amd64.zip`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/gitmap-v23.47.0-windows-amd64.zip) |
+| **macOS** (arm64) | Bash | [`release-version-v5.50.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/release-version-v5.50.0.sh) | [`gitmap-v23.47.0-darwin-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/gitmap-v23.47.0-darwin-arm64.tar.gz) |
+| **macOS** (amd64) | Bash | [`release-version-v5.50.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/release-version-v5.50.0.sh) | [`gitmap-v23.47.0-darwin-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/gitmap-v23.47.0-darwin-amd64.tar.gz) |
+| **Linux** (amd64) | Bash | [`release-version-v5.50.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/release-version-v5.50.0.sh) | [`gitmap-v23.47.0-linux-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/gitmap-v23.47.0-linux-amd64.tar.gz) |
+| **Linux** (arm64) | Bash | [`release-version-v5.50.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/release-version-v5.50.0.sh) | [`gitmap-v23.47.0-linux-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.50.0/gitmap-v23.47.0-linux-arm64.tar.gz) |
 
-> **Release page:** [github.com/alimtvnetwork/gitmap-v23/releases/tag/v5.49.0](https://github.com/alimtvnetwork/gitmap-v23/releases/tag/v5.49.0) · **Asset naming contract:** `gitmap-<version>-<os>-<arch>.<ext>` (`.zip` on Windows, `.tar.gz` elsewhere) — verified by the installer pre-flight HEAD probe.
+> **Release page:** [github.com/alimtvnetwork/gitmap-v23/releases/tag/v5.50.0](https://github.com/alimtvnetwork/gitmap-v23/releases/tag/v5.50.0) · **Asset naming contract:** `gitmap-<version>-<os>-<arch>.<ext>` (`.zip` on Windows, `.tar.gz` elsewhere) — verified by the installer pre-flight HEAD probe.
 
 ### 🎯 Install — Quick (pick your install drive)
 
@@ -104,7 +104,7 @@ Pass an explicit install path on the one-liner — no prompts, no auto-detection
 curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.sh | sh -s -- --dir /opt/gitmap
 ```
 
-> Add `-Version v5.49.0` (PowerShell) or `--version v5.49.0` (Bash) before the closing quote / end of line to pin a specific release into your custom directory.
+> Add `-Version v5.50.0` (PowerShell) or `--version v5.50.0` (Bash) before the closing quote / end of line to pin a specific release into your custom directory.
 
 ---
 
@@ -1293,7 +1293,7 @@ gitmap pull --https                             # rewrite origin to HTTPS, pull,
 gitmap push --ssh origin main                   # extra args forward verbatim
 
 # pull-release-cd (prc) — release N repos in one shot
-gitmap prc gitmap v5.49.0, marco v2.5.0, https://github.com/me/other v3.1.0
+gitmap prc gitmap v5.50.0, marco v2.5.0, https://github.com/me/other v3.1.0
 
 # ssh — inspect / copy / create the public key (auto-copies to clipboard)
 gitmap ssh view                                 # print + copy ~/.ssh/id_*.pub
@@ -1552,7 +1552,7 @@ bypass; combine with `--prefer-left` / `--prefer-right` /
 | Command | Alias | Description |
 |---------|-------|-------------|
 | `replace` | `rpl` | Repo-wide find/replace across every text file. Literal swap or version-suffix bump driven by the `-vK` git remote URL. `--audit` reports without writing. |
-| `fix-repo` | `fr` | Rewrite prior `{base}-vN` versioned-repo-name tokens to the current version. Also rewrites bare `{base}` tokens (no `-vN` suffix) when v1 is in the target span, for repos that shipped pre-versioned. Negative-lookahead guards `-v1` from matching `-v18`; bare-base sweep is word-boundary guarded so `{base}.js`, `{base}_alt`, `{base}-v2`, and `myimg-pdf` are left untouched. `--strict` runs `go test` on touched packages. **v5.49.0+:** every write is backed up to `.gitmap/backup/<repo>/v<current>/fix-repo/<UTC-ts>/` and is restorable with `gitmap undo`. |
+| `fix-repo` | `fr` | Rewrite prior `{base}-vN` versioned-repo-name tokens to the current version. Also rewrites bare `{base}` tokens (no `-vN` suffix) when v1 is in the target span, for repos that shipped pre-versioned. Negative-lookahead guards `-v1` from matching `-v18`; bare-base sweep is word-boundary guarded so `{base}.js`, `{base}_alt`, `{base}-v2`, and `myimg-pdf` are left untouched. `--strict` runs `go test` on touched packages. **v5.50.0+:** every write is backed up to `.gitmap/backup/<repo>/v<current>/fix-repo/<UTC-ts>/` and is restorable with `gitmap undo`. |
 | `undo` | `ud` | Restore the latest `gitmap fix-repo` snapshot for the current repo + version. `--list` lists snapshots, `--snapshot <ts>` selects one, `--dry-run` previews. |
 | `clone-fix-repo` | `cfr` | One-shot: `clone <url>` then `fix-repo --all` inside the new folder. Versioned URLs auto-flatten. |
 | `clone-fix-repo-pub` | `cfrp` | Same as `cfr`, plus `make-public --yes` at the end. |
@@ -1586,7 +1586,7 @@ gitmap fr -5 --dry-run --verbose
 gitmap fix-repo -2 --restrict no-version
 gitmap fr       -2 -r nv
 
-# Undo the most recent fix-repo write (v5.49.0+)
+# Undo the most recent fix-repo write (v5.50.0+)
 gitmap undo --list                # show snapshots, newest first
 gitmap undo                       # restore the latest snapshot
 gitmap undo --snapshot 20260519T134210Z --dry-run

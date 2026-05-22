@@ -56,6 +56,10 @@ func parse(lines []string) []block {
 			items, next := readList(lines, i)
 			out = append(out, block{kind: bkList, lines: items})
 			i = next
+		case isIndentedCode(line):
+			body, next := readIndentedCode(lines, i)
+			out = append(out, block{kind: bkFence, lines: body})
+			i = next
 		default:
 			para, next := readParagraph(lines, i)
 			out = append(out, block{kind: bkParagraph, text: para})

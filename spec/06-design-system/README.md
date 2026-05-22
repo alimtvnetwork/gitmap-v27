@@ -1,6 +1,6 @@
 # Design System Specifications
 
-Complete design system reference for the gitmap-v22 documentation site.
+Complete design system reference for the gitmap-v23 documentation site.
 All visual decisions are traceable to a single source of truth.
 
 ## File Index

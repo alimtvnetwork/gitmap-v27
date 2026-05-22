@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // runTempRelease handles the "temp-release" command and routes subcommands.

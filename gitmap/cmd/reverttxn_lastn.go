@@ -14,9 +14,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/txn"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/txn"
 )
 
 // runRevertLastN parses N, confirms with the user (unless --force), and

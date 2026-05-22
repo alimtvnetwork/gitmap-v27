@@ -11,7 +11,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // startupFolderDir returns %APPDATA%\Microsoft\Windows\Start Menu\

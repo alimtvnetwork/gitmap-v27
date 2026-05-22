@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // runReplaceAudit implements `gitmap replace --audit`. It scans every

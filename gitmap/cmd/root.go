@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/glyphs"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/theme"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/glyphs"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/theme"
 )
 
 // Run is the main entry point for the CLI.

@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // setEnvPersistent sets an environment variable on Windows via setx.

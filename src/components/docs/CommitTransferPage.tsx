@@ -33,10 +33,10 @@ const meta: Record<Direction, {
       </>
     ),
     example: `# Replay RIGHT's commits since divergence onto LEFT
-gitmap-v22 commit-left ./gitmap-v22 ./gitmap-v22-experimental
+gitmap-v23 commit-left ./gitmap-v23 ./gitmap-v23-experimental
 
 # Bypass the preview prompt
-gitmap-v22 cl ./mine ./theirs -y`,
+gitmap-v23 cl ./mine ./theirs -y`,
     output: [
       "[commit-left] replaying 4 commits from RIGHT onto LEFT:",
       "  [1/4] a3f2c1d  feat: add OAuth flow",
@@ -60,10 +60,10 @@ gitmap-v22 cl ./mine ./theirs -y`,
       </>
     ),
     example: `# Replay LEFT's commits onto a remote target
-gitmap-v22 commit-right ./local https://github.com/owner/repo
+gitmap-v23 commit-right ./local https://github.com/owner/repo
 
 # Re-run after adding a few new LEFT commits — only the genuinely-new commits replay
-gitmap-v22 cr ./local https://github.com/owner/repo`,
+gitmap-v23 cr ./local https://github.com/owner/repo`,
     output: [
       "[commit-right] replaying 7 commits from LEFT onto RIGHT:",
       "  [1/7] a3f2c1d  feat: add OAuth flow",
@@ -86,10 +86,10 @@ gitmap-v22 cr ./local https://github.com/owner/repo`,
       </>
     ),
     example: `# Interleave LEFT-only and RIGHT-only commits onto both sides
-gitmap-v22 commit-both ./repo-a ./repo-b
+gitmap-v23 commit-both ./repo-a ./repo-b
 
 # Same, with author-date-based interleave already implied
-gitmap-v22 cb ./fork-a ./fork-b -y`,
+gitmap-v23 cb ./fork-a ./fork-b -y`,
     output: [
       "[commit-both] LEFT-only: 3 commits, RIGHT-only: 2 commits",
       "[commit-both] interleave (by author date):",
@@ -192,8 +192,8 @@ const CommitTransferPage = ({ direction }: CommitTransferPageProps) => {
 
         <section>
           <h2 className="text-xl font-semibold mb-3">Usage (planned)</h2>
-          <CodeBlock code={`gitmap-v22 ${m.cmd} LEFT RIGHT [flags]
-gitmap-v22 ${m.alias}            LEFT RIGHT [flags]`} />
+          <CodeBlock code={`gitmap-v23 ${m.cmd} LEFT RIGHT [flags]
+gitmap-v23 ${m.alias}            LEFT RIGHT [flags]`} />
           <p className="text-sm text-muted-foreground mt-2">
             LEFT and RIGHT use the same endpoint syntax as the <code>merge-*</code> family — local folder
             paths or <code>https://</code> / <code>git@</code> URLs with optional <code>:branch</code>{" "}
@@ -211,7 +211,7 @@ gitmap-v22 ${m.alias}            LEFT RIGHT [flags]`} />
                 <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
                 <span className="w-3 h-3 rounded-full bg-green-500/80" />
               </div>
-              <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v22 {m.cmd} LEFT RIGHT</span>
+              <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v23 {m.cmd} LEFT RIGHT</span>
             </div>
             <div className="bg-terminal p-4 font-mono text-xs leading-relaxed overflow-x-auto">
               {m.output.map((line, i) => (

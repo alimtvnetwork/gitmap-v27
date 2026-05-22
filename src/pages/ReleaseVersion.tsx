@@ -63,7 +63,7 @@ const ReleaseVersionPage = () => {
             release {version}
           </div>
           <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">
-            Install gitmap-v22 {version}
+            Install gitmap-v23 {version}
           </h1>
           <p className="text-muted-foreground leading-relaxed">
             This page installs <strong className="text-foreground">exactly</strong>{" "}
@@ -172,7 +172,7 @@ const ReleaseVersionPage = () => {
             <li>
               <strong className="text-foreground">Self-install chained.</strong> The
               freshly-installed binary runs{" "}
-              <code className="font-mono text-primary">gitmap-v22 self-install</code> to
+              <code className="font-mono text-primary">gitmap-v23 self-install</code> to
               register completions and profiles.
             </li>
             <li>

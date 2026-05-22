@@ -16,8 +16,8 @@ package cmd
 import (
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/startup"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/startup"
 )
 
 // filterStartupList applies --backend and --name to the full

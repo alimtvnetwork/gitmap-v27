@@ -13,7 +13,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // TestRemoveWindows_BackendScopedRegistry creates entries in BOTH

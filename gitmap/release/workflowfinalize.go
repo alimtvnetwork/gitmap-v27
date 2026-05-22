@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/verbose"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/verbose"
 )
 
 // LastMeta holds the most recent release metadata after Execute completes.
@@ -45,7 +45,7 @@ func pushAndFinalize(v Version, branchName, tag, _ string, opts Options) error {
 	// Bundle docs-site for help-dashboard command, and bake per-version
 	// snapshots of the release-version installer scripts (spec 105).
 	// The release-version.{sh,ps1} snapshots hard-code REPO=alimtvnetwork/
-	// gitmap-v22 + BINARY_NAME=gitmap, so they're only valid for the
+	// gitmap-v23 + BINARY_NAME=gitmap, so they're only valid for the
 	// gitmap source repo. For any other repo, attaching them would mislead
 	// users into downloading gitmap binaries when they wanted the host
 	// project. Gate by the same ShouldPrintInstallHint check used for the

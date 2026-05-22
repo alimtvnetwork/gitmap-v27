@@ -14,7 +14,7 @@
 | Multiple backend mechanisms per OS, user-selectable | Different real-world constraints (no admin, headless server, GUI app, delayed start) need different mechanisms |
 | Every change logged in `StartupEntries` table | Audit trail + reliable `startup list` regardless of which backend created the entry |
 | Symmetric `add` / `remove` / `list` / `enable` / `disable` | Consistent verbs across backends |
-| User-scope by default; `--system` opt-in for machine-wide | Matches `gitmap-v22 self-install` philosophy — no admin required for the common case |
+| User-scope by default; `--system` opt-in for machine-wide | Matches `gitmap-v23 self-install` philosophy — no admin required for the common case |
 
 ## 2. CLI Surface
 
@@ -25,29 +25,29 @@ flat aliases keep parity with existing flat verbs (`self-install`,
 ### Umbrella
 
 ```
-gitmap-v22 startup add      <name> <command> [--method <m>] [--scope user|system] [--delay <duration>]
-gitmap-v22 startup add      --interactive
-gitmap-v22 startup list     [--json]
-gitmap-v22 startup remove   <name> [--method <m>]
-gitmap-v22 startup enable   <name>
-gitmap-v22 startup disable  <name>
-gitmap-v22 startup env-add  <KEY=VALUE> [--scope user|system]
-gitmap-v22 startup env-list [--json]
-gitmap-v22 startup env-rm   <KEY>      [--scope user|system]
+gitmap-v23 startup add      <name> <command> [--method <m>] [--scope user|system] [--delay <duration>]
+gitmap-v23 startup add      --interactive
+gitmap-v23 startup list     [--json]
+gitmap-v23 startup remove   <name> [--method <m>]
+gitmap-v23 startup enable   <name>
+gitmap-v23 startup disable  <name>
+gitmap-v23 startup env-add  <KEY=VALUE> [--scope user|system]
+gitmap-v23 startup env-list [--json]
+gitmap-v23 startup env-rm   <KEY>      [--scope user|system]
 ```
 
 ### Flat aliases
 
 ```
-gitmap-v22 startup-add        ⇄ gitmap-v22 startup add
-gitmap-v22 startup-add-i      ⇄ gitmap-v22 startup add --interactive
-gitmap-v22 startup-list       ⇄ gitmap-v22 startup list
-gitmap-v22 startup-remove     ⇄ gitmap-v22 startup remove
-gitmap-v22 startup-enable     ⇄ gitmap-v22 startup enable
-gitmap-v22 startup-disable    ⇄ gitmap-v22 startup disable
-gitmap-v22 env-add            ⇄ gitmap-v22 startup env-add
-gitmap-v22 env-list           ⇄ gitmap-v22 startup env-list
-gitmap-v22 env-rm             ⇄ gitmap-v22 startup env-rm
+gitmap-v23 startup-add        ⇄ gitmap-v23 startup add
+gitmap-v23 startup-add-i      ⇄ gitmap-v23 startup add --interactive
+gitmap-v23 startup-list       ⇄ gitmap-v23 startup list
+gitmap-v23 startup-remove     ⇄ gitmap-v23 startup remove
+gitmap-v23 startup-enable     ⇄ gitmap-v23 startup enable
+gitmap-v23 startup-disable    ⇄ gitmap-v23 startup disable
+gitmap-v23 env-add            ⇄ gitmap-v23 startup env-add
+gitmap-v23 env-list           ⇄ gitmap-v23 startup env-list
+gitmap-v23 env-rm             ⇄ gitmap-v23 startup env-rm
 ```
 
 ## 3. Backends
@@ -86,14 +86,14 @@ When `--method` is omitted:
 | Linux | `systemd-user` if `systemctl` on PATH, else `cron-reboot` |
 | macOS | `launchagent` |
 
-When `--interactive` is passed, `gitmap-v22 startup add` prompts the user
+When `--interactive` is passed, `gitmap-v23 startup add` prompts the user
 to pick from the list of methods supported on the current OS, then
 prompts for any method-specific options (delay, elevated, etc.).
 
 ## 5. The `StartupEntries` Table
 
 Every add/remove operation, regardless of backend, writes a row so
-`gitmap-v22 startup list` can report a unified view without scraping
+`gitmap-v23 startup list` can report a unified view without scraping
 each backend.
 
 ```sql
@@ -133,7 +133,7 @@ All errors follow the standard format documented in
 Error: [message] at [path]: [reason] (operation: [op], reason: [why])
 ```
 
-Constants live in `gitmap-v22/constants/constants_startup.go` and are
+Constants live in `gitmap-v23/constants/constants_startup.go` and are
 named `ErrStartup*` for return-wrapping (with `%w`) and
 `ErrStartupFmt*` for direct stderr formatting (with trailing `\n`).
 
@@ -141,5 +141,5 @@ named `ErrStartup*` for return-wrapping (with `%w`) and
 
 - `spec/04-generic-cli/07-error-handling.md` — error format
 - `spec/04-generic-cli/15-constants-reference.md` — `Err*` naming
-- `spec/04-generic-cli/22-self-update-gold-standard.md` — `gitmap-v22 self-install` precedent for OS-specific install logic
+- `spec/04-generic-cli/22-self-update-gold-standard.md` — `gitmap-v23 self-install` precedent for OS-specific install logic
 - `spec/04-generic-cli/21-post-install-shell-activation.md` — shell-rc append/remove pattern reused for `shell-rc` backend

@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/verbose"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/verbose"
 )
 
 // buildDocsSiteAsset bundles docs-site/dist/ into a zip archive for release.

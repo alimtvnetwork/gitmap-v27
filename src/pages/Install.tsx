@@ -5,7 +5,7 @@ import InstallHelpSection from "@/components/docs/InstallHelpSection";
 import { Download, Trash2, Database, Wrench, FolderDown, Monitor, Terminal, Shield, FileText, AlertTriangle } from "lucide-react";
 
 const terminalLines = [
-  { text: "gitmap-v22 install --list", type: "input" as const, delay: 800 },
+  { text: "gitmap-v23 install --list", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  Core Tools:", type: "header" as const },
   { text: "  vscode              Visual Studio Code editor", type: "output" as const },
@@ -19,7 +19,7 @@ const terminalLines = [
   { text: "  redis               Redis in-memory key-value store", type: "output" as const },
   { text: "  mongodb             MongoDB document database", type: "output" as const },
   { text: "", type: "output" as const },
-  { text: "gitmap-v22 install node", type: "input" as const, delay: 1000 },
+  { text: "gitmap-v23 install node", type: "input" as const, delay: 1000 },
   { text: "", type: "output" as const },
   { text: "  Checking if node is installed...", type: "output" as const },
   { text: "  node is not installed.", type: "output" as const },
@@ -84,7 +84,7 @@ const coreTools: [string, string][] = [
   ["powershell", "PowerShell shell"],
   ["chocolatey", "Chocolatey package manager"],
   ["winget", "Winget package manager"],
-  ["scripts", "Clone gitmap-v22 scripts to local folder"],
+  ["scripts", "Clone gitmap-v23 scripts to local folder"],
 ];
 
 const dbTools: [string, string][] = [
@@ -155,14 +155,14 @@ const InstallPage = () => {
 
         {/* Terminal Demo */}
         <div className="mb-10">
-          <TerminalDemo title="gitmap-v22 — install tools" lines={terminalLines} autoPlay />
+          <TerminalDemo title="gitmap-v23 — install tools" lines={terminalLines} autoPlay />
         </div>
 
         {/* Usage */}
         <section className="mb-10">
           <h2 className="text-xl font-heading font-semibold mb-3">Usage</h2>
-          <CodeBlock code={`gitmap-v22 install <tool> [flags]
-gitmap-v22 uninstall <tool> [flags]`} />
+          <CodeBlock code={`gitmap-v23 install <tool> [flags]
+gitmap-v23 uninstall <tool> [flags]`} />
         </section>
 
         <InstallHelpSection />
@@ -260,7 +260,7 @@ gitmap-v22 uninstall <tool> [flags]`} />
           </div>
 
           <h3 className="font-mono font-semibold text-sm mb-2">Error Log Format</h3>
-          <CodeBlock code={`gitmap-v22 install error log
+          <CodeBlock code={`gitmap-v23 install error log
 ========================
 
 Tool:            npp
@@ -321,7 +321,7 @@ Installing notepadplusplus...`} />
             <span className="flex items-center gap-2"><FolderDown className="h-5 w-5" /> Install Scripts</span>
           </h2>
           <p className="text-muted-foreground text-sm mb-4">
-            Clone all gitmap-v22 utility scripts to a local folder with <code className="text-primary">gitmap-v22 install scripts</code>.
+            Clone all gitmap-v23 utility scripts to a local folder with <code className="text-primary">gitmap-v23 install scripts</code>.
             The scripts are shallow-cloned from the repository and copied to a platform-specific directory.
           </p>
 
@@ -373,10 +373,10 @@ Installing notepadplusplus...`} />
               </thead>
               <tbody className="divide-y divide-border">
                 {[
-                  ["install.ps1", "gitmap-v22/scripts/", "PowerShell one-liner installer for Windows"],
-                  ["install.sh", "gitmap-v22/scripts/", "Bash one-liner installer for Linux/macOS"],
-                  ["uninstall.ps1", "gitmap-v22/scripts/", "PowerShell uninstaller"],
-                  ["Get-LastRelease.ps1", "gitmap-v22/scripts/", "Resolve latest release version (3-tier fallback)"],
+                  ["install.ps1", "gitmap-v23/scripts/", "PowerShell one-liner installer for Windows"],
+                  ["install.sh", "gitmap-v23/scripts/", "Bash one-liner installer for Linux/macOS"],
+                  ["uninstall.ps1", "gitmap-v23/scripts/", "PowerShell uninstaller"],
+                  ["Get-LastRelease.ps1", "gitmap-v23/scripts/", "Resolve latest release version (3-tier fallback)"],
                   ["run.ps1", "repo root", "PowerShell build, deploy, and self-update script"],
                   ["run.sh", "repo root", "Bash build, deploy, and self-update script"],
                 ].map(([file, source, desc], i) => (
@@ -392,9 +392,9 @@ Installing notepadplusplus...`} />
 
           {/* Example */}
           <div className="mt-4">
-            <CodeBlock code={`$ gitmap-v22 install scripts
+            <CodeBlock code={`$ gitmap-v23 install scripts
   → Scripts target: /home/alim/Desktop/gitmap-scripts
-  Cloning gitmap-v22 repo for scripts...
+  Cloning gitmap-v23 repo for scripts...
   ✓ Copied: install.ps1
   ✓ Copied: install.sh
   ✓ Copied: run.ps1
@@ -416,8 +416,8 @@ Installing notepadplusplus...`} />
               <h3 className="font-mono font-semibold text-sm mb-2">PowerShell / Windows</h3>
               <CodeBlock code={`Install summary
     Version: v2.65.0
-    Binary: C:\\Users\\me\\AppData\\Local\\gitmap-v22\\gitmap.exe
-    Install Dir: C:\\Users\\me\\AppData\\Local\\gitmap-v22
+    Binary: C:\\Users\\me\\AppData\\Local\\gitmap-v23\\gitmap.exe
+    Install Dir: C:\\Users\\me\\AppData\\Local\\gitmap-v23
     PATH Target: User PATH (added)
     Session PATH: refreshed for current PowerShell session`} />
             </div>
@@ -425,7 +425,7 @@ Installing notepadplusplus...`} />
               <h3 className="font-mono font-semibold text-sm mb-2">Unix / macOS</h3>
               <CodeBlock code={`Install summary
     Version: v2.65.0
-    Binary: /Users/me/.local/bin/gitmap-v22
+    Binary: /Users/me/.local/bin/gitmap-v23
     Install dir: /Users/me/.local/bin
     Shell: zsh
     PATH target: /Users/me/.zshrc (added)
@@ -438,7 +438,7 @@ Installing notepadplusplus...`} />
         <section className="mb-10">
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Package Managers</h2>
           <p className="text-muted-foreground text-sm mb-4">
-            gitmap-v22 auto-detects the best manager for your platform, or use <code className="text-primary">--manager</code> to override.
+            gitmap-v23 auto-detects the best manager for your platform, or use <code className="text-primary">--manager</code> to override.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm border border-border rounded-lg overflow-hidden">

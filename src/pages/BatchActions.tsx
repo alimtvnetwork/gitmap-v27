@@ -34,7 +34,7 @@ const ACTIONS = [
   {
     key: "g",
     name: "Add to Group",
-    description: "Add the currently selected repositories to an existing group or create a new one. Groups persist in the database and can be used for scoped operations across all gitmap-v22 commands.",
+    description: "Add the currently selected repositories to an existing group or create a new one. Groups persist in the database and can be used for scoped operations across all gitmap-v23 commands.",
     examples: [
       { title: "Add repos to an existing group", code: "# Select repos, press g, choose 'backend'\n# Equivalent CLI:\ngitmap group add backend repo-a repo-b" },
       { title: "Create a new group from selection", code: "# Select repos, press g, type new group name\n# Equivalent CLI:\ngitmap group create my-group\ngitmap group add my-group repo-a repo-b" },
@@ -64,11 +64,11 @@ const BatchActions = () => {
         {/* Terminal Demo */}
         <section className="mb-10 ">
           <TerminalDemo
-            title="gitmap-v22 interactive — batch pull"
+            title="gitmap-v23 interactive — batch pull"
             lines={[
-              { text: "gitmap-v22 interactive", type: "input" as const, delay: 800 },
+              { text: "gitmap-v23 interactive", type: "input" as const, delay: 800 },
               { text: "", delay: 200 },
-              { text: "gitmap-v22 TUI v2.17.0", type: "header" as const, delay: 150 },
+              { text: "gitmap-v23 TUI v2.17.0", type: "header" as const, delay: 150 },
               { text: "", delay: 100 },
               { text: "[ Repos ]  Actions  Status", type: "accent" as const, delay: 200 },
               { text: "", delay: 100 },
@@ -103,7 +103,7 @@ const BatchActions = () => {
         {/* Terminal Demo 2 — exec */}
         <section className="mb-10 ">
           <TerminalDemo
-            title="gitmap-v22 interactive — batch exec"
+            title="gitmap-v23 interactive — batch exec"
             lines={[
               { text: "# Select repos, Tab → Actions, press x", type: "accent" as const, delay: 600 },
               { text: "", delay: 200 },
@@ -126,7 +126,7 @@ const BatchActions = () => {
         {/* Terminal Demo 3 — status */}
         <section className="mb-10 ">
           <TerminalDemo
-            title="gitmap-v22 interactive — batch status"
+            title="gitmap-v23 interactive — batch status"
             lines={[
               { text: "# Select repos, Tab → Actions, press s", type: "accent" as const, delay: 600 },
               { text: "", delay: 200 },
@@ -233,22 +233,22 @@ const BatchActions = () => {
               <tbody>
                 <tr className="border-b border-border">
                   <td className="px-4 py-2"><kbd className="px-1.5 py-0.5 rounded bg-muted text-xs font-mono border border-border">p</kbd></td>
-                  <td className="px-4 py-2 font-mono text-primary">gitmap-v22 pull --group &lt;name&gt;</td>
+                  <td className="px-4 py-2 font-mono text-primary">gitmap-v23 pull --group &lt;name&gt;</td>
                   <td className="px-4 py-2 text-foreground">Pull repos in a group</td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="px-4 py-2"><kbd className="px-1.5 py-0.5 rounded bg-muted text-xs font-mono border border-border">x</kbd></td>
-                  <td className="px-4 py-2 font-mono text-primary">gitmap-v22 exec --group &lt;name&gt; &lt;cmd&gt;</td>
+                  <td className="px-4 py-2 font-mono text-primary">gitmap-v23 exec --group &lt;name&gt; &lt;cmd&gt;</td>
                   <td className="px-4 py-2 text-foreground">Execute command across group</td>
                 </tr>
                 <tr className="border-b border-border">
                   <td className="px-4 py-2"><kbd className="px-1.5 py-0.5 rounded bg-muted text-xs font-mono border border-border">s</kbd></td>
-                  <td className="px-4 py-2 font-mono text-primary">gitmap-v22 status --group &lt;name&gt;</td>
+                  <td className="px-4 py-2 font-mono text-primary">gitmap-v23 status --group &lt;name&gt;</td>
                   <td className="px-4 py-2 text-foreground">Show status for group</td>
                 </tr>
                 <tr className="border-b border-border last:border-0">
                   <td className="px-4 py-2"><kbd className="px-1.5 py-0.5 rounded bg-muted text-xs font-mono border border-border">g</kbd></td>
-                  <td className="px-4 py-2 font-mono text-primary">gitmap-v22 group add &lt;name&gt; &lt;slugs&gt;</td>
+                  <td className="px-4 py-2 font-mono text-primary">gitmap-v23 group add &lt;name&gt; &lt;slugs&gt;</td>
                   <td className="px-4 py-2 text-foreground">Add repos to group</td>
                 </tr>
               </tbody>
@@ -268,9 +268,9 @@ const BatchActions = () => {
             from command output.
           </p>
           <TerminalDemo
-            title="gitmap-v22 pull — progress tracking"
+            title="gitmap-v23 pull — progress tracking"
             lines={[
-              { text: "gitmap-v22 pull --group backend", type: "input" as const, delay: 800 },
+              { text: "gitmap-v23 pull --group backend", type: "input" as const, delay: 800 },
               { text: "", delay: 200 },
               { text: "  [1/4] api-server...", type: "output" as const, delay: 300 },
               { text: "  ✓ done (1.2s)", type: "accent" as const, delay: 400 },

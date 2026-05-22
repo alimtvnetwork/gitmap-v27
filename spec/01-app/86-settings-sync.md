@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `gitmap-v22 install <tool>-settings` command family synchronises bundled
+The `gitmap-v23 install <tool>-settings` command family synchronises bundled
 application settings from the repository's `settings/` directory to the
 correct platform-specific config location. This provides a one-command way
 to replicate a developer's editor, terminal, and streaming setup on a new
@@ -12,12 +12,12 @@ machine.
 
 | Command                        | Alias | Source directory              | Description                          |
 |--------------------------------|-------|------------------------------|--------------------------------------|
-| `gitmap-v22 install npp`           | `in`  | `settings/01 - notepad++`    | Install Notepad++ **and** sync settings |
-| `gitmap-v22 install npp-settings`  | `in`  | `settings/01 - notepad++`    | Sync Notepad++ settings only         |
-| `gitmap-v22 install install-npp`   | `in`  | --                           | Install Notepad++ only (no settings) |
-| `gitmap-v22 install vscode-settings` | `in` | `settings/02 - vscode`      | Sync VS Code settings and extensions |
-| `gitmap-v22 install obs-settings`  | `in`  | `settings/03 - obs`          | Sync OBS Studio profiles and scenes  |
-| `gitmap-v22 install wt-settings`   | `in`  | `settings/04 - windows-terminal` | Sync Windows Terminal settings.json |
+| `gitmap-v23 install npp`           | `in`  | `settings/01 - notepad++`    | Install Notepad++ **and** sync settings |
+| `gitmap-v23 install npp-settings`  | `in`  | `settings/01 - notepad++`    | Sync Notepad++ settings only         |
+| `gitmap-v23 install install-npp`   | `in`  | --                           | Install Notepad++ only (no settings) |
+| `gitmap-v23 install vscode-settings` | `in` | `settings/02 - vscode`      | Sync VS Code settings and extensions |
+| `gitmap-v23 install obs-settings`  | `in`  | `settings/03 - obs`          | Sync OBS Studio profiles and scenes  |
+| `gitmap-v23 install wt-settings`   | `in`  | `settings/04 - windows-terminal` | Sync Windows Terminal settings.json |
 
 ## Settings Directory Layout
 
@@ -112,7 +112,7 @@ My Stream Profile/
 My Scenes.json
 ```
 
-After `gitmap-v22 install obs-settings`:
+After `gitmap-v23 install obs-settings`:
 
 ```
 %APPDATA%\obs-studio\
@@ -146,7 +146,7 @@ source files. The search order is:
 2. **CWD-relative**: `settings/<subfolder>`
 3. **Legacy fallback**: `<binary-dir>/data/<legacy-name>` and `data/<legacy-name>`
 
-This ensures settings are found whether gitmap-v22 is run from the repo root,
+This ensures settings are found whether gitmap-v23 is run from the repo root,
 from a deployed binary directory, or from an arbitrary working directory.
 
 ## Behavior
@@ -184,13 +184,13 @@ are treated as the canonical source.
 
 | File                               | Purpose                                    |
 |------------------------------------|--------------------------------------------|
-| `gitmap-v22/cmd/installnpp.go`        | NPP settings sync + `resolveSettingsPath`  |
-| `gitmap-v22/cmd/installnppextract.go` | NPP zip extraction logic                   |
-| `gitmap-v22/cmd/installvscode.go`     | VS Code settings and extension sync        |
-| `gitmap-v22/cmd/installobs.go`        | OBS zip extraction + scene/profile routing |
-| `gitmap-v22/cmd/installwt.go`         | Windows Terminal settings sync             |
-| `gitmap-v22/cmd/install.go`           | Command routing (`executeInstall`)         |
-| `gitmap-v22/constants/constants_install.go` | Tool names and messages              |
+| `gitmap-v23/cmd/installnpp.go`        | NPP settings sync + `resolveSettingsPath`  |
+| `gitmap-v23/cmd/installnppextract.go` | NPP zip extraction logic                   |
+| `gitmap-v23/cmd/installvscode.go`     | VS Code settings and extension sync        |
+| `gitmap-v23/cmd/installobs.go`        | OBS zip extraction + scene/profile routing |
+| `gitmap-v23/cmd/installwt.go`         | Windows Terminal settings sync             |
+| `gitmap-v23/cmd/install.go`           | Command routing (`executeInstall`)         |
+| `gitmap-v23/constants/constants_install.go` | Tool names and messages              |
 
 ## Constraints
 
@@ -209,4 +209,4 @@ are treated as the canonical source.
 
 - `spec/01-app/94-install-script.md` -- installer specification
 - `spec/02-app-issues/22-installer-path-not-active-after-install.md` -- PATH fixes
-- `gitmap-v22/helptext/install.md` -- CLI help text
+- `gitmap-v23/helptext/install.md` -- CLI help text

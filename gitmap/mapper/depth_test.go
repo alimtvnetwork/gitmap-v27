@@ -9,7 +9,7 @@ package mapper
 import (
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/scanner"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/scanner"
 )
 
 // TestBuildRecords_PropagatesDepth confirms that depth values

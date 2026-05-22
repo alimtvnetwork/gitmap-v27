@@ -20,9 +20,9 @@ import (
 	"io"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/stablejson"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/startup"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/stablejson"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/startup"
 )
 
 // renderStartupList dispatches to the per-format encoder. The

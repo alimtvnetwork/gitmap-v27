@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/cmd/commitin/profile"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/cmd/commitin/profile"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // TestProfileTitlePrefixAppliedToReplayedSubjects writes a saved

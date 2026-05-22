@@ -1,6 +1,6 @@
 package runlog
 
-import "github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+import "github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 
 // ResolveReleaseBranchName returns the destination release-branch
 // name for a mirrored tag, or "" when no branch should be created.

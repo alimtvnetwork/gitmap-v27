@@ -2,7 +2,7 @@
 
 ## Rule
 
-Every file or folder deletion in gitmap-v22 must be recorded as a database
+Every file or folder deletion in gitmap-v23 must be recorded as a database
 task **before** the OS operation is attempted. This is a Code Red
 requirement — no silent loss of delete intent is acceptable.
 

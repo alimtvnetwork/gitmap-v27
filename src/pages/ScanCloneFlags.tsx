@@ -143,8 +143,8 @@ const ScanCloneFlagsPage = () => {
         scan &amp; clone — Flag Reference
       </h1>
       <p className="text-muted-foreground mb-6">
-        Every supported flag for <code className="font-mono text-primary">gitmap-v22 scan</code> and{" "}
-        <code className="font-mono text-primary">gitmap-v22 clone</code>, with defaults and valid values.
+        Every supported flag for <code className="font-mono text-primary">gitmap-v23 scan</code> and{" "}
+        <code className="font-mono text-primary">gitmap-v23 clone</code>, with defaults and valid values.
         {" "}
         <span className="text-xs">
           ({scanCount} scan flags · {cloneCount} clone flags)

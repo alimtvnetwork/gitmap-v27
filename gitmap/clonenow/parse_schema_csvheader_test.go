@@ -18,7 +18,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // TestParseFile_CSVHeader_BOMTolerated verifies the UTF-8 BOM that

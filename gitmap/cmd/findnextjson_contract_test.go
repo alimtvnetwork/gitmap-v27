@@ -26,7 +26,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/model"
 )
 
 // TestFindNextJSONContract_EmptyIsArrayNotNull is the jq-compat

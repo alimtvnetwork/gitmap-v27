@@ -10,7 +10,7 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v22 import --confirm</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v23 import --confirm</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed">
       <div className="text-muted-foreground">Importing from gitmap-export.json...</div>
@@ -48,7 +48,7 @@ const ImportPage = () => (
         <Upload className="h-8 w-8 text-primary" />
         <div>
           <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Import</h1>
-          <p className="text-muted-foreground font-mono text-sm">gitmap-v22 import (im)</p>
+          <p className="text-muted-foreground font-mono text-sm">gitmap-v23 import (im)</p>
         </div>
       </div>
       <p className="text-muted-foreground mb-8 text-lg">
@@ -76,7 +76,7 @@ const ImportPage = () => (
       {/* Usage */}
       <section className="mb-10">
         <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Usage</h2>
-        <CodeBlock code="gitmap-v22 import [file] --confirm" />
+        <CodeBlock code="gitmap-v23 import [file] --confirm" />
         <div className="mt-4 space-y-3">
           <div>
             <h3 className="font-mono font-semibold text-foreground mb-1">Arguments</h3>
@@ -129,15 +129,15 @@ const ImportPage = () => (
         <div className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-1">Import from default file:</p>
-            <CodeBlock code={`gitmap-v22 import --confirm\ngitmap im --confirm`} />
+            <CodeBlock code={`gitmap-v23 import --confirm\ngitmap im --confirm`} />
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Import from custom path:</p>
-            <CodeBlock code="gitmap-v22 import backup-2026-03.json --confirm" />
+            <CodeBlock code="gitmap-v23 import backup-2026-03.json --confirm" />
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Without --confirm (error):</p>
-            <CodeBlock code={`$ gitmap-v22 import\nimport requires --confirm flag (existing data will be merged)`} />
+            <CodeBlock code={`$ gitmap-v23 import\nimport requires --confirm flag (existing data will be merged)`} />
           </div>
         </div>
       </section>

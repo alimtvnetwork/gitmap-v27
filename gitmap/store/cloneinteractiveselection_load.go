@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/clonepick"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/clonepick"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // LoadClonePickByID resolves a SelectionId to a Plan + its id.

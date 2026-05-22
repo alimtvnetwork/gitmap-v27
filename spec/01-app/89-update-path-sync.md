@@ -1,12 +1,12 @@
 # 89 — Update PATH Sync
 
-> Spec for the automatic binary sync step during `gitmap-v22 update`.
+> Spec for the automatic binary sync step during `gitmap-v23 update`.
 
 ---
 
 ## Problem
 
-On Windows, the compiled binary is deployed to a subdirectory (e.g., `E:\bin-run\gitmap-v22\gitmap.exe`), but the system PATH may resolve to a different copy at the parent level (e.g., `E:\bin-run\gitmap.exe`). After a successful build-and-deploy, the active PATH binary remains stale, producing:
+On Windows, the compiled binary is deployed to a subdirectory (e.g., `E:\bin-run\gitmap-v23\gitmap.exe`), but the system PATH may resolve to a different copy at the parent level (e.g., `E:\bin-run\gitmap.exe`). After a successful build-and-deploy, the active PATH binary remains stale, producing:
 
 ```
 [FAIL] Active PATH version does not match deployed version.
@@ -26,10 +26,10 @@ The sync runs inside the auto-generated PowerShell update script (`UpdatePSSync`
 
 ### Step 1 — Detect Mismatch
 
-1. Resolve the **active binary** via `Get-Command gitmap-v22` (PATH lookup).
+1. Resolve the **active binary** via `Get-Command gitmap-v23` (PATH lookup).
 2. Resolve the **deployed binary** from the deploy target directory.
 3. Compare their absolute paths — if identical, no sync is needed.
-4. Run `gitmap-v22 version` on both — if versions match, no sync is needed.
+4. Run `gitmap-v23 version` on both — if versions match, no sync is needed.
 
 ### Step 2 — Copy-Item (Primary)
 
@@ -75,7 +75,7 @@ If all automated strategies fail:
 
 ```
 [WARN] Still could not sync: <error>
-[HINT] Run 'gitmap-v22 doctor --fix-path' manually.
+[HINT] Run 'gitmap-v23 doctor --fix-path' manually.
 ```
 
 ---
@@ -118,7 +118,7 @@ The update PowerShell script is assembled from template constants in this order:
 | Copy succeeds (Step 2)           | `[OK] Synced successfully.`                                  |
 | Copy fails, rename succeeds      | `[OK] Synced via rename fallback.`                           |
 | Rename fails, kill+copy succeeds | `[OK] Synced after killing stale processes.`                 |
-| All strategies fail              | `[WARN]` with hint to run `gitmap-v22 doctor --fix-path`         |
+| All strategies fail              | `[WARN]` with hint to run `gitmap-v23 doctor --fix-path`         |
 | Deployed binary not found        | Sync skipped (nothing to copy from)                          |
 | Active binary not in PATH        | Sync skipped (no target to copy to)                          |
 
@@ -128,4 +128,4 @@ The update PowerShell script is assembled from template constants in this order:
 
 - [spec/01-app/88-clone-direct-url.md](88-clone-direct-url.md) — Direct URL clone with auto-open
 - [spec/09-pipeline/06-version-and-help.md](../09-pipeline/06-version-and-help.md) — Version display and update verification
-- [gitmap-v22/helptext/update.md](../../gitmap-v22/helptext/update.md) — User-facing update documentation
+- [gitmap-v23/helptext/update.md](../../gitmap-v23/helptext/update.md) — User-facing update documentation

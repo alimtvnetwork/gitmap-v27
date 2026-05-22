@@ -64,8 +64,8 @@ const FixRepoPage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v22 fix-repo [-2 | -3 | -5 | --all] [--dry-run] [--verbose] [--strict] [--config <path>]
-gitmap-v22 fr                                                                      # short alias
+        <CodeBlock code={`gitmap-v23 fix-repo [-2 | -3 | -5 | --all] [--dry-run] [--verbose] [--strict] [--config <path>]
+gitmap-v23 fr                                                                      # short alias
 
 # PowerShell-style flags also accepted: -DryRun -Verbose -Strict -All -Config <p>`} />
       </section>
@@ -97,13 +97,13 @@ gitmap-v22 fr                                                                   
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Preview the default 2-version window
-gitmap-v22 fix-repo --dry-run --verbose
+gitmap-v23 fix-repo --dry-run --verbose
 
 # Rewrite every prior version, then run tests on touched Go packages
-gitmap-v22 fix-repo --all --strict
+gitmap-v23 fix-repo --all --strict
 
 # Wider window (last 5 prior versions)
-gitmap-v22 fr -5`} />
+gitmap-v23 fr -5`} />
       </section>
 
       <section>

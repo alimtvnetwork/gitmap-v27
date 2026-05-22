@@ -15,7 +15,7 @@ const ListPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v22 ssh list</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v23 ssh list</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto">
       <div className="text-primary font-bold text-xs mb-1">
@@ -49,7 +49,7 @@ const GenPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v22 ssh --name work</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v23 ssh --name work</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto text-xs">
       <div className="text-green-400">{"  "}✓ SSH key "work" generated</div>
@@ -84,7 +84,7 @@ const SSHPage = () => (
         <p className="text-muted-foreground mb-4">
           The <code className="text-primary">ssh</code> command provides one-command SSH key generation
           with automatic database storage, public key display, and <code>~/.ssh/config</code> management.
-          Keys are identified by name and integrate with <code>gitmap-v22 clone --ssh-key</code>.
+          Keys are identified by name and integrate with <code>gitmap-v23 clone --ssh-key</code>.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
@@ -138,7 +138,7 @@ const SSHPage = () => (
       <section>
         <h2 className="text-xl font-semibold mb-3">Generate a Named Key</h2>
         <GenPreview />
-        <CodeBlock code="gitmap-v22 ssh --name work --path ~/.ssh/id_rsa_work" />
+        <CodeBlock code="gitmap-v23 ssh --name work --path ~/.ssh/id_rsa_work" />
       </section>
 
       {/* List Preview */}
@@ -187,31 +187,31 @@ const SSHPage = () => (
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <div className="space-y-3">
           <CodeBlock code={`# Generate default SSH key
-gitmap-v22 ssh
+gitmap-v23 ssh
 
 # Generate named key for work
-gitmap-v22 ssh --name work --path ~/.ssh/id_rsa_work
+gitmap-v23 ssh --name work --path ~/.ssh/id_rsa_work
 
 # Generate key for GitLab with custom host
-gitmap-v22 ssh --name gitlab --host gitlab.com --email user@company.com
+gitmap-v23 ssh --name gitlab --host gitlab.com --email user@company.com
 
 # Non-interactive generation (CI/scripting)
-gitmap-v22 ssh --name deploy --confirm
+gitmap-v23 ssh --name deploy --confirm
 
 # Display public key for copying
-gitmap-v22 ssh cat --name work
+gitmap-v23 ssh cat --name work
 
 # List keys as JSON for scripting
-gitmap-v22 ssh list --json
+gitmap-v23 ssh list --json
 
 # Clone using a specific SSH key
-gitmap-v22 clone repos.json --ssh-key work
+gitmap-v23 clone repos.json --ssh-key work
 
 # Delete key and remove files from disk
-gitmap-v22 ssh delete --name work --files
+gitmap-v23 ssh delete --name work --files
 
 # Regenerate SSH config entries
-gitmap-v22 ssh config`} />
+gitmap-v23 ssh config`} />
         </div>
       </section>
 
@@ -219,10 +219,10 @@ gitmap-v22 ssh config`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">SSH Config Management</h2>
         <p className="text-muted-foreground mb-4">
-          When multiple keys exist, gitmap-v22 auto-manages a marked block in <code>~/.ssh/config</code>.
+          When multiple keys exist, gitmap-v23 auto-manages a marked block in <code>~/.ssh/config</code>.
           User entries outside the markers are preserved.
         </p>
-        <CodeBlock code={`# --- gitmap-v22 managed (do not edit) ---
+        <CodeBlock code={`# --- gitmap-v23 managed (do not edit) ---
 Host github.com-default
     HostName github.com
     User git
@@ -234,7 +234,7 @@ Host github.com-work
     User git
     IdentityFile ~/.ssh/id_rsa_work
     IdentitiesOnly yes
-# --- end gitmap-v22 managed ---`} />
+# --- end gitmap-v23 managed ---`} />
       </section>
     </div>
   </DocsLayout>

@@ -3,7 +3,7 @@ package tui
 import (
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 func (m rootModel) View() string {

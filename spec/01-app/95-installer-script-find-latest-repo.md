@@ -2,7 +2,7 @@
 
 **Status:** Draft
 **Audience:** Any AI or human implementing an installer / bootstrap script that downloads from a versioned GitHub repository.
-**Scope:** Generic. Applies to any project whose repo name ends in a `-v<N>` suffix (e.g. `gitmap-v22`, `myapp-v7`, `cli-tool-v12`).
+**Scope:** Generic. Applies to any project whose repo name ends in a `-v<N>` suffix (e.g. `gitmap-v23`, `myapp-v7`, `cli-tool-v12`).
 
 ---
 
@@ -16,7 +16,7 @@ When an installer is invoked against a versioned repo URL (e.g. `https://github.
 4. Delegate execution to **that** repo's installer script.
 5. Log every step (probe, hit, miss, choice, delegation) clearly.
 
-This guarantees a stale install URL (e.g. someone bookmarked `gitmap-v22` years ago) still pulls the user onto the latest major repo line without manual intervention.
+This guarantees a stale install URL (e.g. someone bookmarked `gitmap-v23` years ago) still pulls the user onto the latest major repo line without manual intervention.
 
 ---
 
@@ -28,7 +28,7 @@ This guarantees a stale install URL (e.g. someone bookmarked `gitmap-v22` years 
 | **Suffix**        | The trailing `-v<N>` segment. `N` MUST be a positive integer.        |
 | **Probe ceiling** | Maximum `N` to try. Default `30`. Configurable.                      |
 | **Effective repo**| Highest `-v<M>` repo (`M >= N`) that exists. Falls back to baseline. |
-| **Installer path**| Path inside the repo to the installer (e.g. `gitmap-v22/scripts/install.ps1` or `install.sh`). MUST be identical across versions. |
+| **Installer path**| Path inside the repo to the installer (e.g. `gitmap-v23/scripts/install.ps1` or `install.sh`). MUST be identical across versions. |
 
 ---
 
@@ -49,7 +49,7 @@ https://github.com/<owner>/<name>-v<N>
 
 | Input URL                                          | stem        | N  |
 |----------------------------------------------------|-------------|----|
-| `https://github.com/alimtvnetwork/gitmap-v22`       | `gitmap-v22`    | 3  |
+| `https://github.com/alimtvnetwork/gitmap-v23`       | `gitmap-v23`    | 3  |
 | `https://github.com/acme/widgets-v12`              | `widgets`   | 12 |
 | `https://github.com/foo/bar-baz-v1`                | `bar-baz`   | 1  |
 | `https://github.com/foo/no-suffix-here`            | (no match — skip discovery, install baseline as-is) |
@@ -265,8 +265,8 @@ An implementation conforms when:
 |---------------------------------|-----------|------------|----------------------------------|
 | `install-quick.ps1`             | ✅        | ✅         | `-NoDiscovery`, `-ProbeCeiling`  |
 | `install-quick.sh`              | ✅        | ✅         | `--no-discovery`, `--probe-ceiling` |
-| `gitmap-v22/scripts/install.ps1`    | ✅        | ✅         | `-NoDiscovery`, `-ProbeCeiling`  |
-| `gitmap-v22/scripts/install.sh`     | ✅        | ✅         | `--no-discovery`, `--probe-ceiling` |
+| `gitmap-v23/scripts/install.ps1`    | ✅        | ✅         | `-NoDiscovery`, `-ProbeCeiling`  |
+| `gitmap-v23/scripts/install.sh`     | ✅        | ✅         | `--no-discovery`, `--probe-ceiling` |
 
 **Outstanding:**
 
@@ -275,26 +275,26 @@ An implementation conforms when:
 
 ---
 
-## 13. Concrete Example (gitmap-v22)
+## 13. Concrete Example (gitmap-v23)
 
 User runs:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v22/main/install-quick.sh | bash
+curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install-quick.sh | bash
 ```
 
 Discovery flow:
 
 ```
-  [discovery] baseline: alimtvnetwork/gitmap-v22
+  [discovery] baseline: alimtvnetwork/gitmap-v23
   [discovery] probe ceiling: 30
-  [discovery] HEAD https://github.com/alimtvnetwork/gitmap-v22 ... HIT
-  [discovery] HEAD https://github.com/alimtvnetwork/gitmap-v22 ... MISS (fail-fast)
-  [discovery] effective: alimtvnetwork/gitmap-v22
-  [discovery] delegating to https://raw.githubusercontent.com/alimtvnetwork/gitmap-v22/main/install-quick.sh
+  [discovery] HEAD https://github.com/alimtvnetwork/gitmap-v23 ... HIT
+  [discovery] HEAD https://github.com/alimtvnetwork/gitmap-v23 ... MISS (fail-fast)
+  [discovery] effective: alimtvnetwork/gitmap-v23
+  [discovery] delegating to https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install-quick.sh
 ```
 
-The user transparently lands on `gitmap-v22` even though they invoked `gitmap-v22`.
+The user transparently lands on `gitmap-v23` even though they invoked `gitmap-v23`.
 
 ---
 

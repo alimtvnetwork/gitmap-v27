@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/model"
 )
 
 // TestNormalizeWorkers locks in the clamping rules so that the

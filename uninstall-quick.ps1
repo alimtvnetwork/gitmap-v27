@@ -1,28 +1,28 @@
 <#
 .SYNOPSIS
-    One-liner uninstaller for gitmap-v22 on Windows.
+    One-liner uninstaller for gitmap-v23 on Windows.
 
 .DESCRIPTION
-    Removes the gitmap-v22 binary, deploy folder, user PATH entry, and (optionally)
-    the per-user data folder. Works whether gitmap-v22 was installed via:
+    Removes the gitmap-v23 binary, deploy folder, user PATH entry, and (optionally)
+    the per-user data folder. Works whether gitmap-v23 was installed via:
 
       - install-quick.ps1 (one-liner)
-      - gitmap-v22/scripts/install.ps1 (canonical installer)
+      - gitmap-v23/scripts/install.ps1 (canonical installer)
       - manual `run.ps1` build-and-deploy
 
     Strategy:
-      1. If `gitmap-v22` is on PATH and reports its install dir, prefer that.
-         Delegate to `gitmap-v22 self-uninstall -y` (best path — uses the binary's
+      1. If `gitmap-v23` is on PATH and reports its install dir, prefer that.
+         Delegate to `gitmap-v23 self-uninstall -y` (best path — uses the binary's
          own knowledge of marker-block PATH cleanup, scheduled-task removal,
          etc.).
-      2. If `gitmap-v22` is NOT on PATH (already partially removed, broken install),
+      2. If `gitmap-v23` is NOT on PATH (already partially removed, broken install),
          fall back to a manual sweep:
-           - delete <root>/gitmap-cli/ AND legacy <root>/gitmap-v22/
+           - delete <root>/gitmap-cli/ AND legacy <root>/gitmap-v23/
            - strip the deploy root from User PATH
-           - prompt before deleting %APPDATA%/gitmap-v22
+           - prompt before deleting %APPDATA%/gitmap-v23
 
     Run via one-liner:
-      irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v22/main/uninstall-quick.ps1 | iex
+      irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/uninstall-quick.ps1 | iex
 
     Or locally:
       ./uninstall-quick.ps1
@@ -55,7 +55,7 @@ function Confirm-Or-Exit([string]$prompt) {
 }
 
 # ---------------------------------------------------------------------------
-# Step 1 — try the canonical `gitmap-v22 self-uninstall` (best path).
+# Step 1 — try the canonical `gitmap-v23 self-uninstall` (best path).
 # ---------------------------------------------------------------------------
 
 function Try-SelfUninstall {
@@ -65,12 +65,12 @@ function Try-SelfUninstall {
     # string would join the .Source paths with a space and PowerShell
     # would later treat that joined string as a command name —
     # producing the error:
-    #   The term 'E:\gitmap-v22\gitmap.exe E:\bin-run\gitmap-cli\gitmap.exe'
+    #   The term 'E:\gitmap-v23\gitmap.exe E:\bin-run\gitmap-cli\gitmap.exe'
     #   is not recognized as a name of a cmdlet ...
     # Always pick the first entry (the one PATH would actually invoke).
-    $cmd = Get-Command gitmap-v22 -ErrorAction SilentlyContinue | Select-Object -First 1
+    $cmd = Get-Command gitmap-v23 -ErrorAction SilentlyContinue | Select-Object -First 1
     if (-not $cmd) {
-        Write-Info "gitmap-v22 not found on PATH, skipping self-uninstall (will sweep manually)"
+        Write-Info "gitmap-v23 not found on PATH, skipping self-uninstall (will sweep manually)"
         return $false
     }
 
@@ -84,7 +84,7 @@ function Try-SelfUninstall {
     Write-Info "Delegating to: $activeBinary self-uninstall -y"
     Write-Host ""
     try {
-        # Invoke by absolute path (not by 'gitmap-v22') so PATH-resolution
+        # Invoke by absolute path (not by 'gitmap-v23') so PATH-resolution
         # quirks can't pick a different binary than the one we logged.
         & $activeBinary self-uninstall -y
         if ($LASTEXITCODE -eq 0) {
@@ -109,7 +109,7 @@ function Resolve-DeployRoot {
     # Check the active binary's grandparent (deployRoot/gitmap-cli/gitmap.exe).
     # Same multi-binary defense as Try-SelfUninstall: pick the FIRST
     # entry so a stale shim doesn't poison Split-Path.
-    $cmd = Get-Command gitmap-v22 -ErrorAction SilentlyContinue | Select-Object -First 1
+    $cmd = Get-Command gitmap-v23 -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($cmd -and (Test-Path $cmd.Source)) {
         $parent = Split-Path (Resolve-Path $cmd.Source).Path -Parent
         $grand  = Split-Path $parent -Parent
@@ -117,9 +117,9 @@ function Resolve-DeployRoot {
     }
 
     # Common defaults to probe.
-    foreach ($candidate in @("E:\bin-run", "D:\gitmap-v22", "$env:LOCALAPPDATA\gitmap-v22", "$env:USERPROFILE\gitmap-v22")) {
+    foreach ($candidate in @("E:\bin-run", "D:\gitmap-v23", "$env:LOCALAPPDATA\gitmap-v23", "$env:USERPROFILE\gitmap-v23")) {
         if (Test-Path (Join-Path $candidate "gitmap-cli\gitmap.exe")) { return $candidate }
-        if (Test-Path (Join-Path $candidate "gitmap-v22\gitmap.exe"))     { return $candidate }
+        if (Test-Path (Join-Path $candidate "gitmap-v23\gitmap.exe"))     { return $candidate }
         if (Test-Path (Join-Path $candidate "gitmap.exe"))            { return $candidate }
     }
     return ""
@@ -127,11 +127,11 @@ function Resolve-DeployRoot {
 
 function Remove-DeployFolders([string]$root) {
     if (-not $root) {
-        Write-Warn "could not locate a gitmap-v22 deploy root; skipping folder removal"
+        Write-Warn "could not locate a gitmap-v23 deploy root; skipping folder removal"
         return
     }
 
-    foreach ($sub in @("gitmap-cli", "gitmap-v22")) {
+    foreach ($sub in @("gitmap-cli", "gitmap-v23")) {
         $dir = Join-Path $root $sub
         if (Test-Path $dir) {
             try {
@@ -166,7 +166,7 @@ function Remove-FromUserPath([string]$root) {
     $toRemove = @(
         $root,
         (Join-Path $root "gitmap-cli"),
-        (Join-Path $root "gitmap-v22")
+        (Join-Path $root "gitmap-v23")
     )
 
     $kept = $entries | Where-Object {
@@ -181,14 +181,14 @@ function Remove-FromUserPath([string]$root) {
     $newPath = ($kept -join ';')
     if ($newPath -ne $userPath) {
         [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
-        Write-Ok "stripped gitmap-v22 entries from User PATH (restart shells to take effect)"
+        Write-Ok "stripped gitmap-v23 entries from User PATH (restart shells to take effect)"
     } else {
-        Write-Info "no gitmap-v22 entries found in User PATH"
+        Write-Info "no gitmap-v23 entries found in User PATH"
     }
 }
 
 function Remove-DataFolder {
-    $appdata = Join-Path $env:APPDATA "gitmap-v22"
+    $appdata = Join-Path $env:APPDATA "gitmap-v23"
     if (-not (Test-Path $appdata)) { return }
 
     if ($KeepData) {
@@ -220,7 +220,7 @@ function Get-AllGitmapOnPath {
     # Get-Command -All returns every match across PATH, not just the first.
     $found = @()
     try {
-        $cmds = Get-Command gitmap-v22 -All -ErrorAction SilentlyContinue
+        $cmds = Get-Command gitmap-v23 -All -ErrorAction SilentlyContinue
         foreach ($c in $cmds) {
             if ($c.Source -and (Test-Path $c.Source)) {
                 $found += (Resolve-Path $c.Source).Path
@@ -229,7 +229,7 @@ function Get-AllGitmapOnPath {
     } catch {}
 
     # Belt-and-suspenders: also scan every PATH entry directly for a
-    # gitmap.exe / gitmap-v22 file in case Get-Command missed something.
+    # gitmap.exe / gitmap-v23 file in case Get-Command missed something.
     $pathDirs = @()
     foreach ($scope in @("Machine", "User")) {
         $p = [Environment]::GetEnvironmentVariable("Path", $scope)
@@ -240,7 +240,7 @@ function Get-AllGitmapOnPath {
     foreach ($d in $pathDirs) {
         if (-not $d) { continue }
         $d = $d.TrimEnd('\')
-        foreach ($name in @("gitmap.exe", "gitmap-v22")) {
+        foreach ($name in @("gitmap.exe", "gitmap-v23")) {
             $candidate = Join-Path $d $name
             if (Test-Path $candidate) {
                 $resolved = (Resolve-Path $candidate).Path
@@ -255,11 +255,11 @@ function Get-AllGitmapOnPath {
 function Remove-StrayBinaries {
     $all = Get-AllGitmapOnPath
     if (-not $all -or $all.Count -eq 0) {
-        Write-Info "no stray gitmap-v22 binaries found on PATH"
+        Write-Info "no stray gitmap-v23 binaries found on PATH"
         return @()
     }
 
-    Write-Info "found $($all.Count) gitmap-v22 binary location(s):"
+    Write-Info "found $($all.Count) gitmap-v23 binary location(s):"
     foreach ($b in $all) { Write-Info "  - $b" }
 
     $cleanedDirs = @()
@@ -293,7 +293,7 @@ function Remove-DirsFromUserPath([string[]]$dirs) {
     $newPath = ($kept -join ';')
     if ($newPath -ne $userPath) {
         [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
-        Write-Ok "stripped stray gitmap-v22 dirs from User PATH"
+        Write-Ok "stripped stray gitmap-v23 dirs from User PATH"
     }
 }
 
@@ -313,7 +313,7 @@ function Remove-CompletionSourceLines {
 
         $cleaned = ($lines -split "`n" | Where-Object {
             $trimmed = $_.Trim()
-            -not ($trimmed -eq '# gitmap-v22 shell completion') -and
+            -not ($trimmed -eq '# gitmap-v23 shell completion') -and
             -not ($trimmed -match "^\.\s+'.*completions\.ps1'")
         }) -join "`n"
 
@@ -329,7 +329,7 @@ function Remove-CompletionSourceLines {
 # ---------------------------------------------------------------------------
 
 Write-Host ""
-Write-Host "  gitmap-v22 quick uninstaller" -ForegroundColor Cyan
+Write-Host "  gitmap-v23 quick uninstaller" -ForegroundColor Cyan
 Write-Host "  ------------------------" -ForegroundColor DarkGray
 Write-Host ""
 
@@ -356,7 +356,7 @@ Write-Step "Cleaning PowerShell profile completion lines"
 Remove-CompletionSourceLines
 
 Write-Host ""
-Write-Step "Exhaustive PATH sweep — removing any remaining gitmap-v22 binaries"
+Write-Step "Exhaustive PATH sweep — removing any remaining gitmap-v23 binaries"
 $strayDirs = Remove-StrayBinaries
 Remove-DirsFromUserPath $strayDirs
 

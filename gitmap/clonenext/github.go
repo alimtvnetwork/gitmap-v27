@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/ghtoken"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/ghtoken"
 )
 
 // RepoExists checks whether a GitHub repository exists via the API.

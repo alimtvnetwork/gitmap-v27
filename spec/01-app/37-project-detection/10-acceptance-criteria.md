@@ -54,11 +54,11 @@
 
 ## Commands
 
-1. `gitmap-v22 go-repos` returns Go projects from DB.
-2. `gitmap-v22 node-repos` returns Node.js projects from DB.
-3. `gitmap-v22 react-repos` returns React projects from DB.
-4. `gitmap-v22 cpp-repos` returns C++ projects from DB.
-5. `gitmap-v22 csharp-repos` returns C# projects from DB.
+1. `gitmap-v23 go-repos` returns Go projects from DB.
+2. `gitmap-v23 node-repos` returns Node.js projects from DB.
+3. `gitmap-v23 react-repos` returns React projects from DB.
+4. `gitmap-v23 cpp-repos` returns C++ projects from DB.
+5. `gitmap-v23 csharp-repos` returns C# projects from DB.
 6. `--json` flag outputs JSON format.
 7. `--count` flag outputs count only.
 
@@ -73,10 +73,10 @@
 
 ## Optional Enhancements (Future)
 
-1. `gitmap-v22 projects` — unified command listing all types grouped.
-2. `--type` flag for filtering: `gitmap-v22 projects --type go,react`.
+1. `gitmap-v23 projects` — unified command listing all types grouped.
+2. `--type` flag for filtering: `gitmap-v23 projects --type go,react`.
 3. Summary line after scan: `"Detected: 5 Go, 3 Node, 2 React"`.
 4. Confidence score per detection.
 5. Configurable detection rules via `config.json`.
 6. Monorepo workspace detection (npm/yarn/pnpm workspaces).
-7. Dry-run mode: `gitmap-v22 scan --detect-only`.
+7. Dry-run mode: `gitmap-v23 scan --detect-only`.

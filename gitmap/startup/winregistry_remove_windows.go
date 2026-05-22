@@ -24,7 +24,7 @@ import (
 
 	"golang.org/x/sys/windows/registry"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // removeWindowsRegistry is the HKCU adapter retained for the

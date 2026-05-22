@@ -18,7 +18,7 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v22 stats</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v23 stats</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto">
       <div className="text-muted-foreground text-xs mb-2">
@@ -56,7 +56,7 @@ const StatsPage = () => (
   <DocsLayout>
     <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Stats Command</h1>
     <p className="text-muted-foreground mb-6">
-      Aggregated usage statistics and performance metrics for all gitmap-v22 CLI commands.
+      Aggregated usage statistics and performance metrics for all gitmap-v23 CLI commands.
     </p>
 
     <h2 className="text-xl font-heading font-semibold mt-8 mb-2 docs-h2">Live Preview</h2>
@@ -77,9 +77,9 @@ const StatsPage = () => (
     </div>
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Usage</h2>
-    <CodeBlock code="gitmap-v22 stats" title="Show all command stats" />
-    <CodeBlock code="gitmap-v22 stats --command scan" title="Stats for a specific command" />
-    <CodeBlock code="gitmap-v22 stats --json" title="JSON output for scripting" />
+    <CodeBlock code="gitmap-v23 stats" title="Show all command stats" />
+    <CodeBlock code="gitmap-v23 stats --command scan" title="Stats for a specific command" />
+    <CodeBlock code="gitmap-v23 stats --json" title="JSON output for scripting" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Flags</h2>
     <div className="rounded-lg border border-border overflow-hidden">

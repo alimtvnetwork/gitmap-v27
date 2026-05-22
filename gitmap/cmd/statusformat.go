@@ -5,9 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/gitutil"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/gitutil"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/model"
 )
 
 // printOneStatus prints a single repo's status row or missing indicator.

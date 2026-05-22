@@ -1,6 +1,6 @@
 package commitin
 
-import "github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+import "github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 
 // RawArgs is the in-memory shape of a successful `commit-in` parse.
 // All resolved-but-unresolved-defaults values stay zero so the caller

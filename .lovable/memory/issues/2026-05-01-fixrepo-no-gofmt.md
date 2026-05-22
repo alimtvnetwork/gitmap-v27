@@ -25,8 +25,8 @@ The following .go files are not gofmt-clean:
 
 Go's `gofmt` aligns map-literal keys/values into columns based on the
 **widest key** in each contiguous block. When fix-repo changes the width of
-even a single key — e.g. `gitmap-v22` (10 chars) → `gitmap-v22` (10 chars,
-same width, fine) but `gitmap-v22` (9) → `gitmap-v22` (10, **wider**) — the
+even a single key — e.g. `gitmap-v23` (10 chars) → `gitmap-v23` (10 chars,
+same width, fine) but `gitmap-v23` (9) → `gitmap-v23` (10, **wider**) — the
 spacing of every other line in that block becomes one space short, and
 `gofmt -l` flags the whole file.
 

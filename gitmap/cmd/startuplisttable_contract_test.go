@@ -34,7 +34,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/startup"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/startup"
 )
 
 // TestStartupListTableContract_HeaderIncludesDir pins the first line

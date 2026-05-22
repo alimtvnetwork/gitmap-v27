@@ -27,18 +27,18 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v22 mv ./gitmap-v22 https://github.com/owner/gitmap-v22</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v23 mv ./gitmap-v23 https://github.com/owner/gitmap-v23</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-xs leading-relaxed overflow-x-auto">
-      <div className="text-terminal-foreground">[mv] resolving RIGHT : https://github.com/owner/gitmap-v22</div>
-      <div className="text-terminal-foreground">[mv]   -&gt; mapped to working folder: /work/gitmap-v22</div>
+      <div className="text-terminal-foreground">[mv] resolving RIGHT : https://github.com/owner/gitmap-v23</div>
+      <div className="text-terminal-foreground">[mv]   -&gt; mapped to working folder: /work/gitmap-v23</div>
       <div className="text-terminal-foreground">[mv]   -&gt; folder does not exist; cloning</div>
       <div className="text-green-400">[mv]   -&gt; clone OK</div>
       <div className="text-terminal-foreground">[mv] copying files LEFT -&gt; RIGHT (excluding .git/) ...</div>
       <div className="text-green-400">[mv]   copied 142 files</div>
-      <div className="text-terminal-foreground">[mv] committing in https://github.com/owner/gitmap-v22 ...</div>
-      <div className="text-terminal-foreground">[mv]   commit a1b2c3d "gitmap-v22 mv from ./gitmap-v22"</div>
-      <div className="text-terminal-foreground">[mv] pushing https://github.com/owner/gitmap-v22 ...</div>
+      <div className="text-terminal-foreground">[mv] committing in https://github.com/owner/gitmap-v23 ...</div>
+      <div className="text-terminal-foreground">[mv]   commit a1b2c3d "gitmap-v23 mv from ./gitmap-v23"</div>
+      <div className="text-terminal-foreground">[mv] pushing https://github.com/owner/gitmap-v23 ...</div>
       <div className="text-green-400">[mv]   push OK</div>
       <div className="text-blue-400 mt-1">[mv] done</div>
     </div>
@@ -82,8 +82,8 @@ const MvPage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v22 mv   LEFT RIGHT [flags]
-gitmap-v22 move LEFT RIGHT [flags]`} />
+        <CodeBlock code={`gitmap-v23 mv   LEFT RIGHT [flags]
+gitmap-v23 move LEFT RIGHT [flags]`} />
         <p className="text-sm text-muted-foreground mt-2">
           LEFT and RIGHT can each be a local folder path (relative or absolute) or a remote git URL with an optional <code>:branch</code> suffix
           (e.g. <code>https://github.com/owner/repo:develop</code>).
@@ -122,13 +122,13 @@ gitmap-v22 move LEFT RIGHT [flags]`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Move one local folder into another
-gitmap-v22 mv ./gitmap-v22 ./gitmap-v22
+gitmap-v23 mv ./gitmap-v23 ./gitmap-v23
 
 # Move a local folder into a remote repo (clone + push)
-gitmap-v22 mv ./gitmap-v22 https://github.com/owner/gitmap-v22
+gitmap-v23 mv ./gitmap-v23 https://github.com/owner/gitmap-v23
 
 # Preview without writing anything
-gitmap-v22 mv ./gitmap-v22 ./gitmap-v22 --dry-run`} />
+gitmap-v23 mv ./gitmap-v23 ./gitmap-v23 --dry-run`} />
       </section>
 
       <section>
@@ -158,7 +158,7 @@ gitmap-v22 mv ./gitmap-v22 ./gitmap-v22 --dry-run`} />
         <ul className="list-disc list-inside space-y-2 text-muted-foreground text-sm">
           <li>The <code>.git/</code> folder is never copied; LEFT's <code>.git/</code> is removed along with the rest of LEFT after the copy.</li>
           <li>LEFT and RIGHT must not resolve to the same folder, and one must not be nested inside the other — checked before any write.</li>
-          <li>On a URL endpoint, the commit message is <code>gitmap-v22 mv from &lt;LEFT&gt;</code>.</li>
+          <li>On a URL endpoint, the commit message is <code>gitmap-v23 mv from &lt;LEFT&gt;</code>.</li>
         </ul>
       </section>
 

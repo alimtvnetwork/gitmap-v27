@@ -17,9 +17,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/clonefrom"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/clonenow"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/clonefrom"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/clonenow"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // printCloneNowTermBlockRow emits one RepoTermBlock for one

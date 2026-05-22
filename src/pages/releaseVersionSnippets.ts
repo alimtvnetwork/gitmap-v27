@@ -1,7 +1,7 @@
 // Pure helpers for the /release/:version page. Extracted so they can be
 // unit-tested without mounting React. Spec: spec/01-app/105-release-version-script.md.
 
-export const RELEASE_REPO = "alimtvnetwork/gitmap-v22";
+export const RELEASE_REPO = "alimtvnetwork/gitmap-v23";
 export const RELEASE_DOCS_HOST = "https://gitmap.dev";
 export const SEMVER_TAG = /^v\d+\.\d+\.\d+(-[A-Za-z0-9.]+)?$/;
 
@@ -21,7 +21,7 @@ export const buildReleaseSnippets = (
   if (platform === "windows") {
     return {
       pinned: [
-        `# Pinned install — locks gitmap-v22 to ${version} (no auto-upgrade)`,
+        `# Pinned install — locks gitmap-v23 to ${version} (no auto-upgrade)`,
         `iwr ${releaseBase}/release-version-${version}.ps1 -OutFile $env:TEMP\\rv.ps1`,
         `& $env:TEMP\\rv.ps1`,
       ].join("\n"),
@@ -35,7 +35,7 @@ export const buildReleaseSnippets = (
 
   return {
     pinned: [
-      `# Pinned install — locks gitmap-v22 to ${version} (no auto-upgrade)`,
+      `# Pinned install — locks gitmap-v23 to ${version} (no auto-upgrade)`,
       `curl -fsSL ${releaseBase}/release-version-${version}.sh | bash`,
     ].join("\n"),
     generic: [

@@ -9,11 +9,11 @@ import { Download, RefreshCw, Trash2, Stethoscope, Apple, Terminal, MonitorSmart
 // Keep these snippets byte-identical with the spec table so users
 // landing on README, web docs, or `--help` see the same commands.
 
-const REPO_RAW = "https://raw.githubusercontent.com/alimtvnetwork/gitmap-v22/main";
+const REPO_RAW = "https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main";
 
 const installCmds = {
-  windows: `irm ${REPO_RAW}/gitmap-v22/scripts/install.ps1 | iex`,
-  unix: `curl -fsSL ${REPO_RAW}/gitmap-v22/scripts/install.sh | sh`,
+  windows: `irm ${REPO_RAW}/gitmap-v23/scripts/install.ps1 | iex`,
+  unix: `curl -fsSL ${REPO_RAW}/gitmap-v23/scripts/install.sh | sh`,
 };
 
 const installPromptCmds = {
@@ -23,9 +23,9 @@ const installPromptCmds = {
 
 const installPinnedCmds = {
   windows: `$ver = 'v3.99.0'
-$installer = irm ${REPO_RAW}/gitmap-v22/scripts/install.ps1
+$installer = irm ${REPO_RAW}/gitmap-v23/scripts/install.ps1
 & ([scriptblock]::Create($installer)) -Version $ver -NoDiscovery`,
-  unix: `curl -fsSL ${REPO_RAW}/gitmap-v22/scripts/install.sh \
+  unix: `curl -fsSL ${REPO_RAW}/gitmap-v23/scripts/install.sh \
   | bash -s -- --version v3.99.0 --no-discovery`,
 };
 
@@ -79,7 +79,7 @@ const InstallGitmapPage = () => {
       <div className="max-w-4xl">
         <div className="flex items-center gap-3 mb-2">
           <Download className="w-8 h-8 text-primary" />
-          <h1 className="text-3xl font-heading font-bold docs-h1">Install &amp; Update gitmap-v22</h1>
+          <h1 className="text-3xl font-heading font-bold docs-h1">Install &amp; Update gitmap-v23</h1>
         </div>
         <p className="text-muted-foreground mb-8 text-lg">
           Cross-platform install, update, and uninstall reference. Same one-liners as{" "}
@@ -131,11 +131,11 @@ const InstallGitmapPage = () => {
           />
           <Card className="p-4 mb-4">
             <h3 className="text-sm font-semibold mb-2 docs-h3">In-place update</h3>
-            <CodeBlock code={`gitmap-v22 update`} title="Any platform" language="bash" />
+            <CodeBlock code={`gitmap-v23 update`} title="Any platform" language="bash" />
           </Card>
           <Card className="p-4">
             <h3 className="text-sm font-semibold mb-2 docs-h3">Pin to a specific version</h3>
-            <CodeBlock code={`gitmap-v22 self-install --version v3.99.0 --yes`} title="Any platform" language="bash" />
+            <CodeBlock code={`gitmap-v23 self-install --version v3.99.0 --yes`} title="Any platform" language="bash" />
             <p className="text-xs text-muted-foreground mt-2">
               <code className="docs-inline-code">--yes</code> skips the install-folder prompt.{" "}
               <code className="docs-inline-code">--shell-mode &lt;mode&gt;</code> controls which profiles get the
@@ -153,9 +153,9 @@ const InstallGitmapPage = () => {
             kicker="Run these in order if anything looks off after install or update."
           />
           <CodeBlock
-            code={`gitmap-v22 version                   # confirms binary on PATH + build info
-gitmap-v22 doctor                    # PATH, profile snippets, deploy folder, DB
-gitmap-v22 setup print-path-snippet  # prints the exact bytes the installer wrote`}
+            code={`gitmap-v23 version                   # confirms binary on PATH + build info
+gitmap-v23 doctor                    # PATH, profile snippets, deploy folder, DB
+gitmap-v23 setup print-path-snippet  # prints the exact bytes the installer wrote`}
             title="Verification"
             language="bash"
           />
@@ -166,7 +166,7 @@ gitmap-v22 setup print-path-snippet  # prints the exact bytes the installer wrot
           <SectionHeader
             icon={Trash2}
             title="Uninstall"
-            kicker="First tries `gitmap-v22 self-uninstall`; falls back to a manual sweep if gitmap-v22 is no longer on PATH."
+            kicker="First tries `gitmap-v23 self-uninstall`; falls back to a manual sweep if gitmap-v23 is no longer on PATH."
           />
           <PlatformBlock commands={uninstallCmds} />
           <div className="mt-4 overflow-x-auto">
@@ -180,7 +180,7 @@ gitmap-v22 setup print-path-snippet  # prints the exact bytes the installer wrot
               <tbody className="divide-y divide-border">
                 {[
                   ["--yes / -Yes", "Skip the “delete user data?” prompt and assume yes"],
-                  ["--keep-data", "Always keep %APPDATA%\\gitmap-v22 (Windows) / ~/.config/gitmap-v22 (Unix)"],
+                  ["--keep-data", "Always keep %APPDATA%\\gitmap-v23 (Windows) / ~/.config/gitmap-v23 (Unix)"],
                   ["--dir <path>", "Override the auto-detected deploy root"],
                 ].map(([flag, desc]) => (
                   <tr key={flag} className="hover:bg-muted/30 transition-colors">
@@ -225,9 +225,9 @@ gitmap-v22 setup print-path-snippet  # prints the exact bytes the installer wrot
           </div>
           <p className="text-xs text-muted-foreground mt-3">
             Snippet templates live in{" "}
-            <code className="docs-inline-code">gitmap-v22/constants/constants_pathsnippet.go</code> so install.sh,
+            <code className="docs-inline-code">gitmap-v23/constants/constants_pathsnippet.go</code> so install.sh,
             install.ps1, and{" "}
-            <code className="docs-inline-code">gitmap-v22 setup print-path-snippet</code> emit byte-identical output.
+            <code className="docs-inline-code">gitmap-v23 setup print-path-snippet</code> emit byte-identical output.
           </p>
         </section>
       </div>

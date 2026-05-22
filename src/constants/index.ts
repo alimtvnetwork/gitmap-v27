@@ -38,7 +38,7 @@ export const ROOT_RELATIVE_LABEL = "(root)";
  * Application version — single source of truth FOR THE WEB APP.
  *
  * MUST be kept in sync with the Go binary version declared in
- * `gitmap-v22/constants/constants.go` (`const Version = "..."`). The
+ * `gitmap-v23/constants/constants.go` (`const Version = "..."`). The
  * regression test in `src/test/version-sync.test.ts` reads that file
  * and fails CI if the two drift, so a forgotten bump here will be
  * caught loudly instead of shipping a stale "Current version" badge.

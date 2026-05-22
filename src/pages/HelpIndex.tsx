@@ -154,7 +154,7 @@ const HelpIndexPage = () => {
           Curated entry point for the diff / move / merge / commit command
           families. Every page below is bundled into the docs-site archive
           and served by{" "}
-          <code className="docs-inline-code">gitmap-v22 help-dashboard</code> so
+          <code className="docs-inline-code">gitmap-v23 help-dashboard</code> so
           you can browse them offline from any installed binary.
         </p>
         <div className="flex flex-wrap gap-2 mt-4">
@@ -227,11 +227,11 @@ const HelpIndexPage = () => {
         <p className="text-sm text-muted-foreground leading-relaxed mb-3 max-w-3xl">
           Every route on this page is part of the React docs site that ships in{" "}
           <code className="docs-inline-code">docs-site.zip</code> alongside the
-          gitmap-v22 binary. Run the dashboard to browse them offline:
+          gitmap-v23 binary. Run the dashboard to browse them offline:
         </p>
         <pre className="rounded-md bg-code-bg border border-border p-3 text-sm font-mono overflow-x-auto">
-          <code>{`gitmap-v22 help-dashboard         # serves dist/ on http://localhost:5173
-gitmap-v22 hd --port 8080         # custom port
+          <code>{`gitmap-v23 help-dashboard         # serves dist/ on http://localhost:5173
+gitmap-v23 hd --port 8080         # custom port
 # then open http://localhost:5173/help-index in your browser`}</code>
         </pre>
         <p className="text-xs text-muted-foreground mt-3">

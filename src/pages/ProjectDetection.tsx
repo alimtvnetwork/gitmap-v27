@@ -372,11 +372,11 @@ const ProjectDetectionPage = () => (
 
       <h3 className="text-base font-heading font-semibold mt-6 mb-3">Usage Examples</h3>
       <div className="space-y-2 mb-8">
-        <CodeBlock code="gitmap-v22 go-repos" title="List all Go projects" />
-        <CodeBlock code="gitmap-v22 go-repos --json" title="Go projects as JSON" />
-        <CodeBlock code="gitmap-v22 go-repos --count" title="Count Go projects" />
-        <CodeBlock code="gitmap-v22 react-repos" title="List React projects" />
-        <CodeBlock code="gitmap-v22 csharp-repos --json" title="C# projects as JSON" />
+        <CodeBlock code="gitmap-v23 go-repos" title="List all Go projects" />
+        <CodeBlock code="gitmap-v23 go-repos --json" title="Go projects as JSON" />
+        <CodeBlock code="gitmap-v23 go-repos --count" title="Count Go projects" />
+        <CodeBlock code="gitmap-v23 react-repos" title="List React projects" />
+        <CodeBlock code="gitmap-v23 csharp-repos --json" title="C# projects as JSON" />
       </div>
     </motion.div>
 

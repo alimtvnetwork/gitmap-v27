@@ -6,25 +6,25 @@ const GettingStartedPage = () => {
     <DocsLayout>
       <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Getting Started</h1>
       <p className="text-muted-foreground mb-8">
-        Get up and running with gitmap-v22 in under 5 minutes.
+        Get up and running with gitmap-v23 in under 5 minutes.
       </p>
 
       <section className="space-y-8">
         <div>
-          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">1. Install gitmap-v22</h2>
+          <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">1. Install gitmap-v23</h2>
           <p className="text-muted-foreground mb-3">
             Build from source using Go 1.21+:
           </p>
           <CodeBlock
-            code={`go install github.com/alimtvnetwork/gitmap-v22/gitmap-v22@latest`}
+            code={`go install github.com/alimtvnetwork/gitmap-v23/gitmap-v23@latest`}
             title="Terminal"
           />
           <p className="text-sm text-muted-foreground mt-2">
             Or clone the repo and build with the platform-appropriate script:
           </p>
-          <CodeBlock code={`# Windows (PowerShell)\ngit clone https://github.com/alimtvnetwork/gitmap-v22/gitmap.git\ncd gitmap-v22\n./run.ps1`} title="PowerShell" language="powershell" />
-          <CodeBlock code={`# Linux / macOS (Bash)\ngit clone https://github.com/alimtvnetwork/gitmap-v22/gitmap.git\ncd gitmap-v22\nchmod +x run.sh\n./run.sh`} title="Bash" language="bash" />
-          <CodeBlock code={`# Or use Make (requires run.sh)\ncd gitmap-v22\nmake build`} title="Makefile" language="bash" />
+          <CodeBlock code={`# Windows (PowerShell)\ngit clone https://github.com/alimtvnetwork/gitmap-v23/gitmap.git\ncd gitmap-v23\n./run.ps1`} title="PowerShell" language="powershell" />
+          <CodeBlock code={`# Linux / macOS (Bash)\ngit clone https://github.com/alimtvnetwork/gitmap-v23/gitmap.git\ncd gitmap-v23\nchmod +x run.sh\n./run.sh`} title="Bash" language="bash" />
+          <CodeBlock code={`# Or use Make (requires run.sh)\ncd gitmap-v23\nmake build`} title="Makefile" language="bash" />
 
           <div className="mt-4 p-4 rounded-lg border border-border bg-muted/30">
             <h3 className="text-sm font-mono font-semibold mb-2 docs-h3">Build script flags</h3>
@@ -43,9 +43,9 @@ const GettingStartedPage = () => {
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">2. Run your first scan</h2>
           <p className="text-muted-foreground mb-3">
-            Point gitmap-v22 at a directory containing Git repositories:
+            Point gitmap-v23 at a directory containing Git repositories:
           </p>
-          <CodeBlock code={`gitmap-v22 scan ~/projects`} title="Terminal" />
+          <CodeBlock code={`gitmap-v23 scan ~/projects`} title="Terminal" />
           <p className="text-sm text-muted-foreground mt-2">
             This generates <code className="docs-inline-code">.gitmap/output/</code> containing CSV, JSON,
             folder structure, and clone scripts.
@@ -60,7 +60,7 @@ const GettingStartedPage = () => {
             Copy the output files and restore the exact folder structure:
           </p>
           <CodeBlock
-            code={`gitmap-v22 clone json --target-dir ./projects`}
+            code={`gitmap-v23 clone json --target-dir ./projects`}
             title="Terminal"
           />
           <p className="text-sm text-muted-foreground mt-2">
@@ -75,7 +75,7 @@ const GettingStartedPage = () => {
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">4. Set up shell navigation</h2>
           <p className="text-muted-foreground mb-3">
-            Run <code className="docs-inline-code">gitmap-v22 setup</code> to auto-install the <code className="docs-inline-code">gcd</code> wrapper function. After restarting your terminal:
+            Run <code className="docs-inline-code">gitmap-v23 setup</code> to auto-install the <code className="docs-inline-code">gcd</code> wrapper function. After restarting your terminal:
           </p>
           <CodeBlock
             code={`gcd myrepo          # jumps to repo directory\ngcd repos           # interactive picker\ngcd repos --group backend`}
@@ -93,7 +93,7 @@ const GettingStartedPage = () => {
           <p className="text-muted-foreground mb-3">
             Start a live dashboard to watch all tracked repos:
           </p>
-          <CodeBlock code={`gitmap-v22 watch --interval 15`} title="Terminal" />
+          <CodeBlock code={`gitmap-v23 watch --interval 15`} title="Terminal" />
           <p className="text-sm text-muted-foreground mt-2">
             The dashboard auto-refreshes, showing dirty/clean status, ahead/behind counts, and stash entries.
           </p>

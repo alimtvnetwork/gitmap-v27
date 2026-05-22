@@ -3,7 +3,7 @@ package movemerge
 import (
 	"fmt"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // finalizeURLSides commits + pushes any URL endpoint that should

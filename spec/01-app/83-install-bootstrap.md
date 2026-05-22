@@ -3,7 +3,7 @@
 ## Overview
 
 The project provides a Chocolatey-style one-liner that safely bootstraps the
-`gitmap-v22` installer on any Windows machine — including locked-down
+`gitmap-v23` installer on any Windows machine — including locked-down
 environments, older OS versions, and fresh installs.
 
 ---
@@ -33,16 +33,16 @@ This is the same pattern used by:
 
 ---
 
-## gitmap-v22 One-Liner
+## gitmap-v23 One-Liner
 
 ```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/gitmap-v22/main/gitmap-v22/scripts/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/gitmap-v23/scripts/install.ps1'))
 ```
 
 ### With Version Pinning
 
 ```powershell
-$env:GITMAP_VERSION = "v2.25.0"; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/gitmap-v22/main/gitmap-v22/scripts/install.ps1'))
+$env:GITMAP_VERSION = "v2.25.0"; Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/gitmap-v23/scripts/install.ps1'))
 ```
 
 ---

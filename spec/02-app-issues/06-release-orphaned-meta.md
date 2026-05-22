@@ -1,6 +1,6 @@
 # Release: Orphaned Metadata Recovery
 
-When `gitmap-v22 release` detects a `.gitmap/release/vX.Y.Z.json` file but neither
+When `gitmap-v23 release` detects a `.gitmap/release/vX.Y.Z.json` file but neither
 the Git tag nor the release branch exists, it now prompts the user:
 
 1. Warns that metadata exists without a matching tag/branch.

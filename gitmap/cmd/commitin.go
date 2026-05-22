@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/cmd/commitin"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/cmd/commitin/orchestrator"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/cmd/commitin"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/cmd/commitin/orchestrator"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // runCommitIn is the top-level entry point for `gitmap commit-in` /

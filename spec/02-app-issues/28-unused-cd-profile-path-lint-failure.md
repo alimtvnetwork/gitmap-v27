@@ -7,7 +7,7 @@ CI lint stage failed because `completion/cdfunction.go` exports an unused functi
 ## Error
 
 ```
-Error: gitmap-v22/completion/cdfunction.go:37:6: func `cdProfilePath` is unused (unused)
+Error: gitmap-v23/completion/cdfunction.go:37:6: func `cdProfilePath` is unused (unused)
 
 func cdProfilePath(shell string) string {
      ^

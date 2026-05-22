@@ -377,7 +377,7 @@ Output:
 | App Spec | Covers |
 |----------|--------|
 | [02-powershell-build-deploy.md](../03-general/02-powershell-build-deploy.md) | Deploy target resolution and nested deploy structure |
-| [09-build-deploy.md](../01-app/09-build-deploy.md) | gitmap-v22 deploy target on PATH, nested `gitmap-v22/` subfolder |
+| [09-build-deploy.md](../01-app/09-build-deploy.md) | gitmap-v23 deploy target on PATH, nested `gitmap-v23/` subfolder |
 
 ## Contributors
 

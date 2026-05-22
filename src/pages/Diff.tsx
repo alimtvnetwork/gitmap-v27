@@ -25,7 +25,7 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v22 diff ./gitmap-v22 ./gitmap-v22</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v23 diff ./gitmap-v23 ./gitmap-v23</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-xs leading-relaxed overflow-x-auto">
       <div className="text-primary font-bold">  Conflicts (different content on both sides):</div>
@@ -80,11 +80,11 @@ const DiffPage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v22 diff LEFT RIGHT [flags]
-gitmap-v22 df   LEFT RIGHT [flags]`} />
+        <CodeBlock code={`gitmap-v23 diff LEFT RIGHT [flags]
+gitmap-v23 df   LEFT RIGHT [flags]`} />
         <p className="text-sm text-muted-foreground mt-2">
           LEFT and RIGHT must both be local folder paths. URL endpoints are intentionally rejected — clone them first with{" "}
-          <code className="text-primary">gitmap-v22 clone</code> so <code className="text-primary">diff</code> stays strictly side-effect-free.
+          <code className="text-primary">gitmap-v23 clone</code> so <code className="text-primary">diff</code> stays strictly side-effect-free.
         </p>
       </section>
 
@@ -120,13 +120,13 @@ gitmap-v22 df   LEFT RIGHT [flags]`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Plain diff between two local folders
-gitmap-v22 diff ./gitmap-v22 ./gitmap-v22
+gitmap-v23 diff ./gitmap-v23 ./gitmap-v23
 
 # Conflicts only (preview before merge-both)
-gitmap-v22 diff ./gitmap-v22 ./gitmap-v22 --only-conflicts
+gitmap-v23 diff ./gitmap-v23 ./gitmap-v23 --only-conflicts
 
 # Machine-readable output
-gitmap-v22 df ./gitmap-v22 ./gitmap-v22 --json`} />
+gitmap-v23 df ./gitmap-v23 ./gitmap-v23 --json`} />
       </section>
 
       <section>
@@ -154,7 +154,7 @@ gitmap-v22 df ./gitmap-v22 ./gitmap-v22 --json`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">Notes</h2>
         <ul className="list-disc list-inside space-y-2 text-muted-foreground text-sm">
-          <li>The recommended dry-run preview before <code className="text-primary">gitmap-v22 merge-both</code> — every conflict listed here will trigger the <code>[L]eft / [R]ight / [S]kip / [A]ll-left / [B]all-right / [Q]uit</code> prompt during merge-both.</li>
+          <li>The recommended dry-run preview before <code className="text-primary">gitmap-v23 merge-both</code> — every conflict listed here will trigger the <code>[L]eft / [R]ight / [S]kip / [A]ll-left / [B]all-right / [Q]uit</code> prompt during merge-both.</li>
           <li>The same default ignore list as <code>merge-*</code> applies: <code>.git/</code>, <code>node_modules/</code>, and <code>.gitmap/release-assets/</code> are skipped unless the corresponding <code>--include-*</code> flag is set.</li>
           <li>Identical files are tallied in the summary but not listed by default (use <code>--include-identical</code> to dump them).</li>
         </ul>

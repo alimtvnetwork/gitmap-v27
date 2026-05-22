@@ -24,7 +24,7 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v22 history</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v23 history</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto">
       <div className="text-primary font-bold">
@@ -61,7 +61,7 @@ const HistoryPage = () => (
   <DocsLayout>
     <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Command History</h1>
     <p className="text-muted-foreground mb-6">
-      Automatic audit trail of every gitmap-v22 CLI execution with queryable history and usage tracking.
+      Automatic audit trail of every gitmap-v23 CLI execution with queryable history and usage tracking.
     </p>
 
     <h2 className="text-xl font-heading font-semibold mt-8 mb-2">Live Preview</h2>
@@ -82,11 +82,11 @@ const HistoryPage = () => (
     </div>
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Usage</h2>
-    <CodeBlock code="gitmap-v22 history" title="Show recent history (standard detail)" />
-    <CodeBlock code="gitmap-v22 history --detail basic" title="Basic view" />
-    <CodeBlock code="gitmap-v22 history --detail detailed --command scan" title="Detailed view filtered by command" />
-    <CodeBlock code="gitmap-v22 history --json --limit 10" title="Last 10 entries as JSON" />
-    <CodeBlock code="gitmap-v22 history-reset --confirm" title="Clear all history" />
+    <CodeBlock code="gitmap-v23 history" title="Show recent history (standard detail)" />
+    <CodeBlock code="gitmap-v23 history --detail basic" title="Basic view" />
+    <CodeBlock code="gitmap-v23 history --detail detailed --command scan" title="Detailed view filtered by command" />
+    <CodeBlock code="gitmap-v23 history --json --limit 10" title="Last 10 entries as JSON" />
+    <CodeBlock code="gitmap-v23 history-reset --confirm" title="Clear all history" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Flags — history</h2>
     <div className="rounded-lg border border-border overflow-hidden">

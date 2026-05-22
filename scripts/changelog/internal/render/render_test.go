@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v22/scripts/changelog/internal/group"
+	"github.com/alimtvnetwork/gitmap-v23/scripts/changelog/internal/group"
 )
 
 func sampleEntry() Entry {

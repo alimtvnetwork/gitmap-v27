@@ -5,7 +5,7 @@ import { Stethoscope, CheckCircle2, AlertTriangle, Terminal, Wrench } from "luci
 
 const CHECKS = [
   { name: "Repo Path", desc: "Verifies the configured repository root path exists and is accessible", severity: "error" },
-  { name: "Active Binary", desc: "Locates gitmap-v22 on PATH and prints the resolved absolute path + version", severity: "info" },
+  { name: "Active Binary", desc: "Locates gitmap-v23 on PATH and prints the resolved absolute path + version", severity: "info" },
   { name: "Deployed Binary", desc: "Reads powershell.json to verify the deployed binary matches expectations", severity: "error" },
   { name: "Version Mismatch", desc: "Compares the running binary version against the deployed version", severity: "warn" },
   { name: "Git", desc: "Checks that git is installed and prints its version", severity: "error" },
@@ -18,14 +18,14 @@ const CHECKS = [
 ];
 
 const terminalLines = [
-  { text: "gitmap-v22 doctor", type: "input" as const, delay: 800 },
+  { text: "gitmap-v23 doctor", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
-  { text: "  gitmap-v22 doctor v2.27.0", type: "header" as const },
+  { text: "  gitmap-v23 doctor v2.27.0", type: "header" as const },
   { text: "  ════════════════════════", type: "output" as const },
   { text: "", type: "output" as const },
   { text: "  ✓  Repo path          /home/user/repos", type: "accent" as const, delay: 200 },
-  { text: "  ✓  Active binary      /usr/local/bin/gitmap-v22 (v2.27.0)", type: "accent" as const, delay: 150 },
-  { text: "  ✓  Deployed binary    /opt/gitmap-v22/gitmap-v22", type: "accent" as const, delay: 150 },
+  { text: "  ✓  Active binary      /usr/local/bin/gitmap-v23 (v2.27.0)", type: "accent" as const, delay: 150 },
+  { text: "  ✓  Deployed binary    /opt/gitmap-v23/gitmap-v23", type: "accent" as const, delay: 150 },
   { text: "  ✓  Version match      running = deployed", type: "accent" as const, delay: 150 },
   { text: "  ✓  Git                git version 2.43.0", type: "accent" as const, delay: 150 },
   { text: "  ✓  Go                 go1.22.2", type: "accent" as const, delay: 150 },
@@ -39,9 +39,9 @@ const terminalLines = [
 ];
 
 const terminalFixLines = [
-  { text: "gitmap-v22 doctor --fix-path", type: "input" as const, delay: 800 },
+  { text: "gitmap-v23 doctor --fix-path", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
-  { text: "  Updating PATH to include gitmap-v22 binary location...", type: "output" as const, delay: 400 },
+  { text: "  Updating PATH to include gitmap-v23 binary location...", type: "output" as const, delay: 400 },
   { text: "  ✓  PATH updated successfully", type: "accent" as const },
 ];
 
@@ -55,13 +55,13 @@ const DoctorPage = () => (
           <h1 className="text-3xl font-bold tracking-tight">Doctor</h1>
         </div>
         <p className="text-lg text-muted-foreground">
-          Diagnose your gitmap-v22 installation with 11 automated health checks.
+          Diagnose your gitmap-v23 installation with 11 automated health checks.
         </p>
       </div>
 
       {/* Terminal Demo */}
       <section>
-        <TerminalDemo title="gitmap-v22 doctor — all checks passing" lines={terminalLines} autoPlay />
+        <TerminalDemo title="gitmap-v23 doctor — all checks passing" lines={terminalLines} autoPlay />
       </section>
 
       {/* Overview */}
@@ -140,7 +140,7 @@ const DoctorPage = () => (
               <tr className="border-t border-border">
                 <td className="px-4 py-2 font-mono text-primary">--fix-path</td>
                 <td className="px-4 py-2 font-mono text-muted-foreground">false</td>
-                <td className="px-4 py-2 text-muted-foreground">Auto-fix PATH to include the gitmap-v22 binary directory</td>
+                <td className="px-4 py-2 text-muted-foreground">Auto-fix PATH to include the gitmap-v23 binary directory</td>
               </tr>
             </tbody>
           </table>
@@ -150,17 +150,17 @@ const DoctorPage = () => (
       {/* Fix Path Demo */}
       <section>
         <h2 className="text-xl font-semibold mb-3">Auto-Fix PATH</h2>
-        <TerminalDemo title="gitmap-v22 doctor --fix-path" lines={terminalFixLines} autoPlay />
+        <TerminalDemo title="gitmap-v23 doctor --fix-path" lines={terminalFixLines} autoPlay />
       </section>
 
       {/* Examples */}
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Run all diagnostic checks
-gitmap-v22 doctor
+gitmap-v23 doctor
 
 # Auto-fix PATH issues
-gitmap-v22 doctor --fix-path`} />
+gitmap-v23 doctor --fix-path`} />
       </section>
 
       {/* See Also */}
@@ -168,8 +168,8 @@ gitmap-v22 doctor --fix-path`} />
         <h2 className="text-xl font-semibold mb-3">See Also</h2>
         <ul className="space-y-1 text-sm">
           {[
-            { label: "gitmap-v22 setup", href: "/getting-started" },
-            { label: "gitmap-v22 update", href: "/commands" },
+            { label: "gitmap-v23 setup", href: "/getting-started" },
+            { label: "gitmap-v23 update", href: "/commands" },
             { label: "Configuration", href: "/config" },
           ].map((link) => (
             <li key={link.label}>

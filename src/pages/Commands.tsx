@@ -61,7 +61,7 @@ const CommandsPage = () => {
   const [copied, setCopied] = useState(false);
 
   const generateMarkdown = useCallback(() => {
-    let md = `# gitmap-v22 Command Reference\n\n`;
+    let md = `# gitmap-v23 Command Reference\n\n`;
     md += `> ${commands.length} commands organized by category.\n\n`;
     Categories.forEach((cat) => {
       const cmds = commands.filter((c) => c.category === cat.key);
@@ -127,7 +127,7 @@ const CommandsPage = () => {
         </div>
       </div>
       <p className="text-muted-foreground mb-6">
-        All {commands.length} gitmap-v22 commands organized by category.
+        All {commands.length} gitmap-v23 commands organized by category.
       </p>
 
       {/* Category summary banner */}

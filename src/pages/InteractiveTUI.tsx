@@ -76,7 +76,7 @@ const InteractiveTUI = () => {
             <Settings2 className="h-5 w-5 text-primary" />
             Usage
           </h2>
-          <CodeBlock code={`gitmap-v22 interactive [--refresh <seconds>]\ngitmap i [--refresh <seconds>]`} language="bash" title="Command" />
+          <CodeBlock code={`gitmap-v23 interactive [--refresh <seconds>]\ngitmap i [--refresh <seconds>]`} language="bash" title="Command" />
         </section>
 
         {/* Flags */}
@@ -195,7 +195,7 @@ const InteractiveTUI = () => {
             </li>
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-              Run <code className="font-mono text-primary">gitmap-v22 scan</code> first to populate the repository database
+              Run <code className="font-mono text-primary">gitmap-v23 scan</code> first to populate the repository database
             </li>
           </ul>
         </section>

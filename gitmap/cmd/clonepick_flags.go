@@ -11,8 +11,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/clonepick"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/clonepick"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // clonePickParsed bundles every output of parseClonePickFlags so a

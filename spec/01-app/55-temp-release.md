@@ -19,8 +19,8 @@ The `temp-release` command (`tr`) creates lightweight, temporary release branche
 ### Syntax
 
 ```
-gitmap-v22 temp-release <count> <version-pattern> [-s <start>]
-gitmap-v22 tr <count> <version-pattern> [-s <start>]
+gitmap-v23 temp-release <count> <version-pattern> [-s <start>]
+gitmap-v23 tr <count> <version-pattern> [-s <start>]
 ```
 
 ### Parameters
@@ -44,15 +44,15 @@ The pattern **must** contain at least one `$` sequence.
 
 ```bash
 # Create 10 branches from last 10 commits, starting at sequence 5
-gitmap-v22 tr 10 v1.$$ -s 5
+gitmap-v23 tr 10 v1.$$ -s 5
 # Creates: temp-release/v1.05 (oldest) through temp-release/v1.14 (newest)
 
 # Create 1 branch, auto-increment from last temp-release
-gitmap-v22 tr 1 v1.$$
+gitmap-v23 tr 1 v1.$$
 # If last temp-release was v1.43, creates: temp-release/v1.44
 
 # Create 5 branches with 3-digit padding
-gitmap-v22 tr 5 v2.1.$$$ -s 1
+gitmap-v23 tr 5 v2.1.$$$ -s 1
 # Creates: temp-release/v2.1.001 through temp-release/v2.1.005
 ```
 
@@ -109,7 +109,7 @@ The resolved start number is printed before branch creation:
 ### Syntax
 
 ```
-gitmap-v22 tr list [--json]
+gitmap-v23 tr list [--json]
 ```
 
 ### Output (Terminal)
@@ -144,13 +144,13 @@ Shows: branch name, short SHA, commit message (truncated), and commit date.
 
 ```bash
 # Remove a single branch
-gitmap-v22 tr remove v1.05
+gitmap-v23 tr remove v1.05
 
 # Remove a range (inclusive)
-gitmap-v22 tr remove v1.05 to v1.10
+gitmap-v23 tr remove v1.05 to v1.10
 
 # Remove all temp-release branches
-gitmap-v22 tr remove all
+gitmap-v23 tr remove all
 ```
 
 ### Confirmation
@@ -252,7 +252,7 @@ Records are inserted on creation and deleted on removal.
 ## Dry Run
 
 ```bash
-gitmap-v22 tr 10 v1.$$ -s 5 --dry-run
+gitmap-v23 tr 10 v1.$$ -s 5 --dry-run
 ```
 
 ```
@@ -337,14 +337,14 @@ if command == constants.CmdTempRelease || command == constants.CmdTempReleaseSho
 
 ## Acceptance Criteria
 
-1. `gitmap-v22 tr 10 v1.$$ -s 5` creates 10 branches (`temp-release/v1.05`–`temp-release/v1.14`) from the last 10 commits, pushed to origin, without switching branches.
-2. `gitmap-v22 tr 1 v1.$$` auto-detects the next sequence number from DB/remote and creates one branch.
-3. `gitmap-v22 tr list` shows all temp-release branches with SHA, message, and date.
-4. `gitmap-v22 tr list --json` outputs structured JSON.
-5. `gitmap-v22 tr remove v1.05` prompts confirmation, then deletes local + remote branch.
-6. `gitmap-v22 tr remove v1.05 to v1.10` prompts with full list, then deletes all in range.
-7. `gitmap-v22 tr remove all` prompts with all branch names, then deletes everything.
-8. `gitmap-v22 tr 10 v1.$$ --dry-run` shows preview without creating branches.
+1. `gitmap-v23 tr 10 v1.$$ -s 5` creates 10 branches (`temp-release/v1.05`–`temp-release/v1.14`) from the last 10 commits, pushed to origin, without switching branches.
+2. `gitmap-v23 tr 1 v1.$$` auto-detects the next sequence number from DB/remote and creates one branch.
+3. `gitmap-v23 tr list` shows all temp-release branches with SHA, message, and date.
+4. `gitmap-v23 tr list --json` outputs structured JSON.
+5. `gitmap-v23 tr remove v1.05` prompts confirmation, then deletes local + remote branch.
+6. `gitmap-v23 tr remove v1.05 to v1.10` prompts with full list, then deletes all in range.
+7. `gitmap-v23 tr remove all` prompts with all branch names, then deletes everything.
+8. `gitmap-v23 tr 10 v1.$$ --dry-run` shows preview without creating branches.
 9. `$$$` produces 3-digit zero-padded numbers; `$$$$` produces 4-digit.
 10. Sequence overflow (e.g., 100 for `$$`) produces a clear error.
 11. Existing branches are skipped with a warning during creation.

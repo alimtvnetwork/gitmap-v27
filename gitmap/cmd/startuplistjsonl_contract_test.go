@@ -29,7 +29,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/startup"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/startup"
 )
 
 // TestStartupListJSONL_EmptyEmitsNothing asserts the empty-list

@@ -7,7 +7,7 @@ import (
 	"io/fs"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/model"
 )
 
 // LoadFromFile reads a JSON config file and returns a Config.

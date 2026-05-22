@@ -138,10 +138,10 @@ func TestRepoNameFromURL_TrailingSlash(t *testing.T) {
 		input string
 		want  string
 	}{
-		{"https://github.com/alimtvnetwork/gitmap-v22/", "gitmap-v22"},
-		{"https://github.com/alimtvnetwork/gitmap-v22.git/", "gitmap-v22"},
-		{"https://github.com/alimtvnetwork/gitmap-v22///", "gitmap-v22"},
-		{"https://github.com/alimtvnetwork/gitmap-v22\\", "gitmap-v22"},
+		{"https://github.com/alimtvnetwork/gitmap-v23/", "gitmap-v23"},
+		{"https://github.com/alimtvnetwork/gitmap-v23.git/", "gitmap-v23"},
+		{"https://github.com/alimtvnetwork/gitmap-v23///", "gitmap-v23"},
+		{"https://github.com/alimtvnetwork/gitmap-v23\\", "gitmap-v23"},
 		{"git@github.com:owner/repo.git/", "repo"},
 		{"git@github.com:owner/repo/", "repo"},
 		{"ssh://git@github.com/owner/repo/", "repo"},

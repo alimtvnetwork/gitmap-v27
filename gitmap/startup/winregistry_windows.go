@@ -42,7 +42,7 @@ import (
 
 	"golang.org/x/sys/windows/registry"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // hiveLabel is the user-visible registry-hive prefix written into

@@ -2,14 +2,14 @@
 
 ## Overview
 
-As of v2.75.0, `gitmap-v22 clone-next` (`cn`) **flattens by default** — it
+As of v2.75.0, `gitmap-v23 clone-next` (`cn`) **flattens by default** — it
 clones a versioned repository into a **consistent base-name folder** instead
 of the version-suffixed folder. No `--flatten` flag is required.
 
 This keeps a single, predictable local path across version iterations
 (e.g., always `macro-ahk/` instead of `macro-ahk-v15/`, `macro-ahk-v16/`).
 
-The behavior also enables **version tracking** in the gitmap-v22 database:
+The behavior also enables **version tracking** in the gitmap-v23 database:
 both the current active version and a full transition history.
 
 ---
@@ -17,7 +17,7 @@ both the current active version and a full transition history.
 ## Command Syntax
 
 ```
-gitmap-v22 cn <version-spec> [-f|--force] [--delete] [--keep] [--no-desktop] [--verbose]
+gitmap-v23 cn <version-spec> [-f|--force] [--delete] [--keep] [--no-desktop] [--verbose]
 ```
 
 | Flag | Description |
@@ -33,7 +33,7 @@ gitmap-v22 cn <version-spec> [-f|--force] [--delete] [--keep] [--no-desktop] [--
 | Flags Used | Behavior |
 |------------|----------|
 | (none) | Clone into `macro-ahk/`, replacing it if it exists. If cwd IS `macro-ahk/` (already flattened), Windows file lock prevents removal → falls back to `macro-ahk-vN/` with a warning. |
-| `-f` / `--force` | Same as default, but if cwd IS the target folder, gitmap-v22 chdirs to parent first, removes the cwd, and clones into the flattened name. **Never falls back to a versioned folder.** Aborts with a clear error if removal still fails. |
+| `-f` / `--force` | Same as default, but if cwd IS the target folder, gitmap-v23 chdirs to parent first, removes the cwd, and clones into the flattened name. **Never falls back to a versioned folder.** Aborts with a clear error if removal still fails. |
 | `--delete` | Clone into `macro-ahk/`, then delete the old versioned folder (if a different path) |
 
 ### `-f` Use Case (v3.50.0+)
@@ -41,7 +41,7 @@ gitmap-v22 cn <version-spec> [-f|--force] [--delete] [--keep] [--no-desktop] [--
 Working continuously from one flattened folder across version bumps:
 
 ```
-PS C:\repos\macro-ahk> gitmap-v22 cn v++ -f
+PS C:\repos\macro-ahk> gitmap-v23 cn v++ -f
   → Force-flatten: leaving D:\repos\macro-ahk to release lock...
   Removing existing macro-ahk for fresh clone...
   Cloning macro-ahk-v22 into macro-ahk (flattened)...
@@ -194,7 +194,7 @@ The `CREATE TABLE IF NOT EXISTS` handles the new table idempotently.
 ## Shell Handoff
 
 The flattened path is written to the sentinel file pointed to by
-`GITMAP_HANDOFF_FILE` (exported by the `gitmap-v22` shell wrapper function
+`GITMAP_HANDOFF_FILE` (exported by the `gitmap-v23` shell wrapper function
 before invocation). After the binary exits, the wrapper reads that file
 and `cd`s the parent shell to the flattened folder.
 
@@ -233,7 +233,7 @@ be logged to `os.Stderr` using the standardized format.
 
 ```bash
 # In /projects/macro-ahk-v15/
-gitmap-v22 cn v+1
+gitmap-v23 cn v+1
 
 # Result:
 #   Cloned macro-ahk-v16 into macro-ahk/
@@ -246,7 +246,7 @@ gitmap-v22 cn v+1
 
 ```bash
 # In /projects/macro-ahk-v15/
-gitmap-v22 cn v+1 --delete
+gitmap-v23 cn v+1 --delete
 
 # Result:
 #   Cloned macro-ahk-v16 into macro-ahk/
@@ -258,7 +258,7 @@ gitmap-v22 cn v+1 --delete
 
 ```bash
 # In /projects/macro-ahk/ (flattened from v16)
-gitmap-v22 cn v+1
+gitmap-v23 cn v+1
 
 # Result:
 #   Removes /projects/macro-ahk/
@@ -271,7 +271,7 @@ gitmap-v22 cn v+1
 
 ```bash
 # In /projects/some-tool/
-gitmap-v22 cn v+1
+gitmap-v23 cn v+1
 
 # Result:
 #   Removes /projects/some-tool/
@@ -284,10 +284,10 @@ gitmap-v22 cn v+1
 
 ## Viewing Version History
 
-Use `gitmap-v22 version-history` (`vh`) to see all recorded transitions:
+Use `gitmap-v23 version-history` (`vh`) to see all recorded transitions:
 
 ```bash
-gitmap-v22 vh
+gitmap-v23 vh
 
 # Output:
 # Version history for D:\wp-work\riseup-asia\macro-ahk:

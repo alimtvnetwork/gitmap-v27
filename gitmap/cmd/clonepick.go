@@ -20,9 +20,9 @@ package cmd
 import (
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/cliexit"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/clonepick"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/cliexit"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/clonepick"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // runClonePick is the dispatcher entry registered in rootcore.go.

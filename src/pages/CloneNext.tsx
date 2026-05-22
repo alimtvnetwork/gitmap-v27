@@ -92,7 +92,7 @@ const CloneNextPage = () => {
           <h2 className="text-xl font-heading font-semibold mb-3 flex items-center gap-2">
             Usage
           </h2>
-          <CodeBlock code="gitmap-v22 clone-next <v++|vN> [--delete] [--keep] [--no-desktop] [--create-remote] [--verbose]" />
+          <CodeBlock code="gitmap-v23 clone-next <v++|vN> [--delete] [--keep] [--no-desktop] [--create-remote] [--verbose]" />
         </section>
 
         {/* How it works */}
@@ -179,7 +179,7 @@ const CloneNextPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Increment version by one</h3>
           <TerminalPreview
-            title="gitmap-v22 cn v++"
+            title="gitmap-v23 cn v++"
             lines={[
               "Cloning macro-ahk-v12 into D:\\wp-work\\riseup-asia...",
               "✓ Cloned macro-ahk-v12",
@@ -190,7 +190,7 @@ const CloneNextPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Increment version (flattened)</h3>
           <TerminalPreview
-            title="gitmap-v22 cn v++"
+            title="gitmap-v23 cn v++"
             lines={[
               "Removing existing macro-ahk for fresh clone...",
               "Cloning macro-ahk-v12 into macro-ahk (flattened)...",
@@ -202,7 +202,7 @@ const CloneNextPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Jump to specific version</h3>
           <TerminalPreview
-            title="gitmap-v22 cn v15 --delete"
+            title="gitmap-v23 cn v15 --delete"
             lines={[
               "Cloning macro-ahk-v15 into macro-ahk (flattened)...",
               "✓ Cloned macro-ahk-v15 into macro-ahk",
@@ -214,7 +214,7 @@ const CloneNextPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Repo without version suffix</h3>
           <TerminalPreview
-            title="gitmap-v22 clone-next v++"
+            title="gitmap-v23 clone-next v++"
             lines={[
               "Cloning macro-ahk-v2 into macro-ahk (flattened)...",
               "✓ Cloned macro-ahk-v2 into macro-ahk",
@@ -225,7 +225,7 @@ const CloneNextPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Create remote repo before clone</h3>
           <TerminalPreview
-            title="gitmap-v22 cn v15 --create-remote --delete"
+            title="gitmap-v23 cn v15 --create-remote --delete"
             lines={[
               "Creating GitHub repo macro-ahk-v15...",
               "✓ Created GitHub repo macro-ahk-v15",
@@ -239,7 +239,7 @@ const CloneNextPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Lock detection when folder is in use</h3>
           <TerminalPreview
-            title="gitmap-v22 cn v++ --delete"
+            title="gitmap-v23 cn v++ --delete"
             lines={[
               "Removing existing macro-ahk for fresh clone...",
               "Cloning macro-ahk-v12 into macro-ahk (flattened)...",

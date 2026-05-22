@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/scripts/changelog/internal/runner"
+	"github.com/alimtvnetwork/gitmap-v23/scripts/changelog/internal/runner"
 )
 
 func main() {

@@ -27,11 +27,11 @@ const DocsLayout = ({ children }: DocsLayoutProps) => {
                 className="docs-focus-ring shrink-0 rounded-sm border border-sidebar-border bg-sidebar-accent/60 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               />
             </DocsTooltip>
-            <span className="shrink-0 text-sm font-mono text-foreground">gitmap-v22 docs</span>
-            <DocsTooltip label={`Current gitmap-v22 version (${VERSION})`}>
+            <span className="shrink-0 text-sm font-mono text-foreground">gitmap-v23 docs</span>
+            <DocsTooltip label={`Current gitmap-v23 version (${VERSION})`}>
               <span
                 tabIndex={0}
-                aria-label={`gitmap-v22 version ${VERSION}`}
+                aria-label={`gitmap-v23 version ${VERSION}`}
                 className="docs-focus-ring shrink-0 cursor-default rounded-sm border border-border bg-card px-2 py-0.5 text-[11px] font-mono text-muted-foreground shadow-sm"
               >
                 {VERSION}

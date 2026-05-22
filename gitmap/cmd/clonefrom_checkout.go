@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/clonefrom"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/clonefrom"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
 // applyCheckoutDefault stamps the global --checkout default onto

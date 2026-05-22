@@ -89,9 +89,9 @@ Error: Process completed with exit code 1.
 
 ### Root Cause
 
-`go-winres` embeds icons as Windows `.ico` resources inside the compiled `.exe`. The Windows `.ico` format has a **hard limit of 256x256 pixels** per image frame. The project's `gitmap-v22/assets/icon.png` was **512x512**, which exceeds this limit.
+`go-winres` embeds icons as Windows `.ico` resources inside the compiled `.exe`. The Windows `.ico` format has a **hard limit of 256x256 pixels** per image frame. The project's `gitmap-v23/assets/icon.png` was **512x512**, which exceeds this limit.
 
-The error originates from the `go-winres make` step in the release workflow (`.github/workflows/release.yml`), which reads `gitmap-v22/winres/winres.json` and converts the referenced PNG into an `.ico` resource.
+The error originates from the `go-winres make` step in the release workflow (`.github/workflows/release.yml`), which reads `gitmap-v23/winres/winres.json` and converts the referenced PNG into an `.ico` resource.
 
 ### Why It Wasn't Caught
 
@@ -101,8 +101,8 @@ The error originates from the `go-winres make` step in the release workflow (`.g
 
 ### Fix (v2.81.0)
 
-1. Created a 256x256 resized copy: `gitmap-v22/assets/icon-256.png`.
-2. Updated `gitmap-v22/winres/winres.json` to reference `icon-256.png` instead of `icon.png`.
+1. Created a 256x256 resized copy: `gitmap-v23/assets/icon-256.png`.
+2. Updated `gitmap-v23/winres/winres.json` to reference `icon-256.png` instead of `icon.png`.
 3. Kept the original 512x512 `icon.png` for web/docs use.
 
 ### Prevention Rules
@@ -111,17 +111,17 @@ The error originates from the `go-winres make` step in the release workflow (`.g
 2. **Maintain separate icon files** by purpose: `icon.png` (512x512+ for web/docs), `icon-256.png` (256x256 for `.exe` embedding).
 3. **Add a pre-check step** in CI before `go-winres make`:
    ```bash
-   python3 -c "from PIL import Image; img=Image.open('gitmap-v22/assets/icon-256.png'); assert max(img.size)<=256, f'Icon too large: {img.size}'"
+   python3 -c "from PIL import Image; img=Image.open('gitmap-v23/assets/icon-256.png'); assert max(img.size)<=256, f'Icon too large: {img.size}'"
    ```
-4. **Document the constraint** in `gitmap-v22/winres/README.md` so future contributors don't replace the icon with a higher-resolution version.
+4. **Document the constraint** in `gitmap-v23/winres/README.md` so future contributors don't replace the icon with a higher-resolution version.
 
 ### Related Files
 
 | File | Purpose |
 |------|---------|
-| `gitmap-v22/winres/winres.json` | Windows resource manifest for `go-winres` |
-| `gitmap-v22/assets/icon-256.png` | 256x256 icon for `.exe` embedding |
-| `gitmap-v22/assets/icon.png` | 512x512 original icon (web/docs) |
+| `gitmap-v23/winres/winres.json` | Windows resource manifest for `go-winres` |
+| `gitmap-v23/assets/icon-256.png` | 256x256 icon for `.exe` embedding |
+| `gitmap-v23/assets/icon.png` | 512x512 original icon (web/docs) |
 | `.github/workflows/release.yml` | CI pipeline that runs `go-winres make` |
 | `spec/08-generic-update/09-winres-icon-constraint.md` | Original post-mortem |
 
@@ -140,13 +140,13 @@ Failed in the compress/checksum step of `release.yml`.
 
 ### Root Cause
 
-The compress step ran inside `gitmap-updater/` (which has no `dist/` folder) instead of `gitmap-v22/dist/` where cross-compiled binaries are output. The script used `cd dist` which assumed the working directory was `gitmap-v22/`, but GitHub Actions defaults to the repository root for every `run:` step unless `working-directory` is explicitly set.
+The compress step ran inside `gitmap-updater/` (which has no `dist/` folder) instead of `gitmap-v23/dist/` where cross-compiled binaries are output. The script used `cd dist` which assumed the working directory was `gitmap-v23/`, but GitHub Actions defaults to the repository root for every `run:` step unless `working-directory` is explicitly set.
 
-In a monorepo with multiple Go modules (`gitmap-v22/`, `gitmap-updater/`), the previous step's working directory does **not** carry over to the next step.
+In a monorepo with multiple Go modules (`gitmap-v23/`, `gitmap-updater/`), the previous step's working directory does **not** carry over to the next step.
 
 ### Why It Wasn't Caught
 
-- Locally, `run.ps1` always executes from `gitmap-v22/`, so `cd dist` works.
+- Locally, `run.ps1` always executes from `gitmap-v23/`, so `cd dist` works.
 - Only the CI environment exhibits the root-relative behavior.
 - No `test -d dist` guard was present to fail fast with a useful message.
 
@@ -156,7 +156,7 @@ Replaced `cd dist` with an explicit `working-directory` directive:
 
 ```yaml
 - name: Compress and checksum
-  working-directory: gitmap-v22/dist
+  working-directory: gitmap-v23/dist
   run: |
     for f in gitmap-*; do
       ...

@@ -8,8 +8,8 @@ package cmd
 // exist.
 
 import (
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v22/gitmap/errreport"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/errreport"
 )
 
 // writeCNErrorReport converts every BatchStatusFailed row in

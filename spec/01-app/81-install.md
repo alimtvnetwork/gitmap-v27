@@ -15,15 +15,15 @@ pre-check, install, and post-install verification steps.
 
 ## Commands
 
-### `gitmap-v22 install` (alias: `in`)
+### `gitmap-v23 install` (alias: `in`)
 
 Install a developer tool by name.
 
 ```bash
-gitmap-v22 install vscode
-gitmap-v22 install node
-gitmap-v22 install go
-gitmap-v22 install git
+gitmap-v23 install vscode
+gitmap-v23 install node
+gitmap-v23 install go
+gitmap-v23 install git
 ```
 
 ---
@@ -123,7 +123,7 @@ Some tools require post-install configuration:
 | VS Code | Context menu fix (Windows registry), settings sync |
 | Git | `git config --global core.longpaths true` |
 | Git LFS | `git lfs install` |
-| Go | Set GOPATH via `gitmap-v22 env set` |
+| Go | Set GOPATH via `gitmap-v23 env set` |
 | Node.js | Verify npm accessible |
 | Notepad++ (npp) | Verify exe at expected path, sync settings to AppData |
 | npp-settings | Sync settings to AppData only (no binary install) |
@@ -189,7 +189,7 @@ Some tools require post-install configuration:
 ## Future Enhancements (Pending)
 
 - REST API integration for remote install manifests.
-- `gitmap-v22 install --from <url>` to fetch and execute an install plan.
+- `gitmap-v23 install --from <url>` to fetch and execute an install plan.
 - Version pinning and update tracking.
 
 ---
@@ -198,22 +198,22 @@ Some tools require post-install configuration:
 
 ```bash
 # Install VS Code
-gitmap-v22 install vscode
+gitmap-v23 install vscode
 
 # Install Node.js with verbose output
-gitmap-v22 install node --verbose
+gitmap-v23 install node --verbose
 
 # Check if Go is installed
-gitmap-v22 install go --check
+gitmap-v23 install go --check
 
 # Preview install command without running
-gitmap-v22 install python --dry-run
+gitmap-v23 install python --dry-run
 
 # Force Winget on Windows
-gitmap-v22 install git --manager winget
+gitmap-v23 install git --manager winget
 
 # List all supported tools
-gitmap-v22 install --list
+gitmap-v23 install --list
 ```
 
 ---

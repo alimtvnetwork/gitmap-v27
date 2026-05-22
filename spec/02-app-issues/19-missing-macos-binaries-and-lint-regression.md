@@ -2,14 +2,14 @@
 
 ## Ticket
 
-v2.64.0 release shipped without macOS (darwin) gitmap-v22 binaries and with
+v2.64.0 release shipped without macOS (darwin) gitmap-v23 binaries and with
 5 unresolved golangci-lint errors that block CI.
 
 ## Symptoms
 
 1. GitHub Release v2.64.0 shows only 8 assets instead of the expected ~14.
-   Missing: `gitmap-v22.64.0-darwin-amd64.tar.gz`,
-   `gitmap-v22.64.0-darwin-arm64.tar.gz`, and several other platform
+   Missing: `gitmap-v23.64.0-darwin-amd64.tar.gz`,
+   `gitmap-v23.64.0-darwin-arm64.tar.gz`, and several other platform
    binaries. The `gitmap-updater-v2.64.0-darwin-amd64.tar.gz` IS present.
 2. CI fails with 5 lint errors:
    - `paramTypeCombine` on `autocommit.go` (gocritic)
@@ -67,7 +67,7 @@ job, a build failure in any target would prevent ALL subsequent steps
 After merging the fix, re-run the release pipeline for the next version
 tag and confirm:
 - CI lint step passes green
-- All 6 gitmap-v22 + 6 updater binaries appear in the release assets
+- All 6 gitmap-v23 + 6 updater binaries appear in the release assets
 - macOS binaries are downloadable and executable
 
 ## Related

@@ -63,7 +63,7 @@ const navItems = [
   { title: "clone-next (cmd)", url: "/clone-next-command", icon: GitBranch },
   { title: "scan/clone flags", url: "/scan-clone-flags", icon: Flag },
   { title: "Getting Started", url: "/getting-started", icon: Rocket },
-  { title: "Install / Update gitmap-v22", url: "/install-gitmap", icon: Download },
+  { title: "Install / Update gitmap-v23", url: "/install-gitmap", icon: Download },
   { title: "Configuration", url: "/config", icon: Settings },
   { title: "Architecture", url: "/architecture", icon: Boxes },
   { title: "Watch", url: "/watch", icon: Monitor },
@@ -142,7 +142,7 @@ export function DocsSidebar() {
                 Workspace
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-lg font-bold text-sidebar-primary">gitmap-v22</span>
+                <span className="font-mono text-lg font-bold text-sidebar-primary">gitmap-v23</span>
                 <span className="text-xs font-mono text-sidebar-foreground/70">docs</span>
               </div>
             </div>

@@ -129,3 +129,13 @@ falling back to a versioned folder name.
 - [clone](clone.md) — Clone repos from output files
 - [desktop-sync](desktop-sync.md) — Sync repos to GitHub Desktop
 - [ssh](ssh.md) — Manage named SSH keys
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter clone-next
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

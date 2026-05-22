@@ -35,3 +35,13 @@ footer's `gitmap-replay-source:` line records `./repo-B` (the source).
 - [commit-both](commit-both.md) — bidirectional (sequential)
 - [merge-left](merge-left.md) — file-state mirror (no commit replay)
 - spec/01-app/106-commit-left-right-both.md — full design
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter commit-left
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

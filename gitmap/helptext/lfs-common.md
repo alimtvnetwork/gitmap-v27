@@ -53,3 +53,13 @@ Commit the updated `.gitattributes` so collaborators pick up the LFS rules:
 
 - [setup](setup.md) — Configure Git diff/merge tool, aliases & core settings
 - [doctor](doctor.md) — Diagnose PATH, deploy, and version issues
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter lfs-common
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

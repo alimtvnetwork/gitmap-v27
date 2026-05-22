@@ -94,3 +94,13 @@ All flags after the path go straight to `gitmap scan`.
   column and `--max-depth`" section that defines at-cap rows.
 - [rescan](rescan.md) -- replay the **last** scan with its cached
   flags (no path argument).
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter rescan-subtree
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

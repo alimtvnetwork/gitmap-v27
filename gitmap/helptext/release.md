@@ -291,3 +291,13 @@ the recommended path for production releases.
 - [list-releases](list-releases.md) — List stored release metadata
 - [revert](revert.md) — Revert to a previous release
 - [zip-group](zip-group.md) — Manage zip group definitions
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter release
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

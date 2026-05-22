@@ -61,3 +61,13 @@ rs
 - [scan](scan.md) — Initial directory scan
 - [status](status.md) — View repo statuses
 - [clone](clone.md) — Clone from scan output
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter rescan
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

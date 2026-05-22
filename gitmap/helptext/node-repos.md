@@ -62,3 +62,13 @@ nr
 - [react-repos](react-repos.md) — List React projects
 - [go-repos](go-repos.md) — List Go projects
 - [cpp-repos](cpp-repos.md) — List C++ projects
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter node-repos
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

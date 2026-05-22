@@ -270,3 +270,13 @@ says HTTPS. The config file is **not** mutated.
 - [status](status.md) — View repo statuses after scanning
 - [desktop-sync](desktop-sync.md) — Sync scanned repos to GitHub Desktop
 - [export](export.md) — Export scanned data
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter scan
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

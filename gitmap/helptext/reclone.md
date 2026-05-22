@@ -182,3 +182,13 @@ no opt-out flag: a malformed manifest is a usage error, and silently
 proceeding would either crash inside `git` or write to a path you
 did not intend. Fix the manifest and re-run.
 
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter reclone
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

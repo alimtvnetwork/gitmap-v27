@@ -61,3 +61,13 @@ gitmap tr remove all
 - [release](release.md) — Full release with tags and metadata
 - [release-branch](release-branch.md) — Complete release from existing branch
 - [prune](prune.md) — Clean up stale branches
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter temp-release
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

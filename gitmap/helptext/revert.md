@@ -100,3 +100,13 @@ None
 - [release](release.md) — Create a new release
 - [changelog](changelog.md) — View release notes before reverting
 - [update](update.md) — Update to the latest version instead
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter revert
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

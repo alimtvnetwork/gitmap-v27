@@ -61,3 +61,13 @@ csr
 - [cpp-repos](cpp-repos.md) — List C++ projects
 - [go-repos](go-repos.md) — List Go projects
 - [node-repos](node-repos.md) — List Node.js projects
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter csharp-repos
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

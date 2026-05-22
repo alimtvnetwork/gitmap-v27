@@ -48,3 +48,13 @@ hc
 
 - [status](status.md) — Full per-repo status dashboard
 - [has-any-updates](has-any-updates.md) — Check current repo for remote updates
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter has-change
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

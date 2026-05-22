@@ -90,3 +90,13 @@ lb
 - [status](status.md) — View repo branch and status info
 - [release-branch](release-branch.md) — Create a release branch
 - [watch](watch.md) — Live-refresh status dashboard
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter latest-branch
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

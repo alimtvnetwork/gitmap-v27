@@ -70,3 +70,13 @@ $ gitmap prune --confirm --remote
 - `release` — Create release branches and tags
 - `clear-release-json` — Remove release metadata files
 - `list-releases` — Show stored releases from database
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter prune
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

@@ -111,3 +111,13 @@ For every conflicting file:
 - [mv](mv.md) — Move LEFT into RIGHT and delete LEFT
 - [merge-left](merge-left.md) — Write into LEFT only
 - [merge-right](merge-right.md) — Write into RIGHT only
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter merge-both
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

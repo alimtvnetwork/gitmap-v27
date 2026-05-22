@@ -48,3 +48,13 @@ repository.
 - `gitmap alias list` — show every registered alias.
 - `gitmap release-alias` — release a repo by its alias from anywhere.
 - `gitmap release-alias-pull` — pull-then-release shortcut.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter as
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

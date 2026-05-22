@@ -92,3 +92,13 @@ irm https://gitmap.dev/scripts/release-version.ps1 | iex; Install-Gitmap -Versio
 - `self-install` — Re-install the current binary
 - `update` — Pull the latest build from the source repo
 - [Spec 105: Release-Version Script](../spec/01-app/105-release-version-script.md) — Full specification
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter release-version
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

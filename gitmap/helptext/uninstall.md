@@ -57,3 +57,13 @@ gitmap uninstall git --force --purge
 - `gitmap self-uninstall` — the underlying binary remover
 - `gitmap install <tool>` — install third-party tools
 - `gitmap reinstall` — uninstall + reinstall the binary in one step
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter uninstall
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

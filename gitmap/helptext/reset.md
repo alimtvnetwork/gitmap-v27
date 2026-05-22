@@ -69,3 +69,13 @@ None
 - [db-reset](db-reset.md) — Drop & recreate tables without deleting the file
 - [scan](scan.md) — Re-scan to repopulate repos after reset
 - [profile](profile.md) — Manage profiles (reset only affects active profile)
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter reset
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

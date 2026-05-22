@@ -131,3 +131,13 @@ Use `templates init --lfs` for greenfield scaffolding, then run
 - [add lfs-install](add-lfs-install.md) — Install LFS hooks + merge `lfs/common`
 - [lfs-common](lfs-common.md) — Per-pattern `git lfs track` (no template)
 - [setup](setup.md) — Configure Git global settings
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter templates-init
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

@@ -75,3 +75,13 @@ w
 - [status](status.md) — One-time status snapshot
 - [scan](scan.md) — Scan directories to populate the database
 - [group](group.md) — Manage repo groups for filtered watching
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter watch
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

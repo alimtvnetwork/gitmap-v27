@@ -65,3 +65,13 @@ db
 - [stats](stats.md) — Show commit statistics for scanned repositories
 - [history](history.md) — View command execution history
 - [changelog](changelog.md) — Generate a changelog from Git tags
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter dashboard
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

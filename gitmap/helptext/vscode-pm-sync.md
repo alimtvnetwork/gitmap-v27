@@ -101,3 +101,13 @@ gitmap vpm --mode intersection   # prune stale tags, keep brand
 - `gitmap code` — register a single repo with the extension and open it.
 - `gitmap vscode-pm-path` / `vpath` — print the resolved projects.json path.
 - `gitmap vscode-workspace` / `vsws` — emit a multi-root `.code-workspace` file.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter vscode-pm-sync
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

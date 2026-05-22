@@ -85,3 +85,13 @@ lr, releases
 - [changelog](changelog.md) — View release notes
 - [release](release.md) — Create a release
 - [scan](scan.md) — Scan to import release data
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter list-releases
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

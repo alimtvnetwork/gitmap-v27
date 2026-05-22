@@ -84,3 +84,13 @@ The generated LLM.md contains:
 - [docs](docs.md) — Open documentation website in browser
 - [help-dashboard](help-dashboard.md) — Serve docs site locally
 - [version](version.md) — Show version number
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter llm-docs
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

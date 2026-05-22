@@ -115,3 +115,13 @@ No file on disk is touched and `git lfs install` is **not** run.
 - [templates list](commands.md) — Discover available templates
 - [templates show](commands.md) — Print a template to stdout
 - [setup](setup.md) — Configure Git diff/merge tools and aliases
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter add-lfs-install
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

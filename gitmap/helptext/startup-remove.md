@@ -149,3 +149,13 @@ value / `.lnk` and the tracking subkey), see *Windows backends*
 in [startup-add](startup-add.md). `--force` is intentionally NOT
 accepted here — `startup-remove` will never delete a non-tracked
 entry, regardless of any flag.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter startup-remove
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

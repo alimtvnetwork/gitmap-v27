@@ -277,3 +277,13 @@ regedit before re-running.
 
 - [startup-list](startup-list.md) — List entries gitmap created
 - [startup-remove](startup-remove.md) — Delete a gitmap-managed entry
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter startup-add
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

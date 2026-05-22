@@ -84,3 +84,13 @@ All other arguments are passed directly to git.
 - [pull](pull.md) — Pull repos (built-in alternative to exec fetch)
 - [status](status.md) — View repo statuses
 - [alias](alias.md) — Manage repo aliases
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter exec
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

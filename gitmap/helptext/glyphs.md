@@ -44,3 +44,13 @@ Resolution order (first wins):
 ## See also
 
 - **`gitmap --theme`** — controls ANSI color palette. Orthogonal to glyphs.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter glyphs
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

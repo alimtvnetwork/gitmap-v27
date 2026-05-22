@@ -53,3 +53,13 @@ automatically and is idempotent (passing it again is a no-op).
 - `pull` — single-repo / group-scoped pull (this is its `--all` form)
 - Right-click context menu — Clone ▸ Pull all (Shift+right-click on
   Windows; confirm-gated dialog on macOS/Linux)
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter pull-all
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

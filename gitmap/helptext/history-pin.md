@@ -58,3 +58,12 @@ Same as `history-purge`.
 
 - `history-purge` (`hp`) — Remove file(s) from all history
 - `fix-repo` (`fr`) — Rewrite versioned-token strings, no history rewrite
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter history-pin
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

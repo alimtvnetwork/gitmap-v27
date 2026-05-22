@@ -82,3 +82,13 @@ gitmap relp --merge v2.0.0
 - **`gitmap release`** — the underlying release pipeline.
 - **`gitmap release-alias-pull`** — pull-then-release for a registered alias from any directory.
 - **`gitmap fix-repo`** — rewrite `{base}-vN` tokens after bumping versions.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter pull-release
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

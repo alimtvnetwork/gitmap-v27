@@ -179,3 +179,13 @@ $ gitmap clone-from repos.csv --execute --output terminal
 
 - `gitmap clone <url>` — clone a single URL with shell handoff.
 - `gitmap cn --csv <path>` — version-bump existing local repos in batch (different semantics: bumps `vN+1` instead of cloning new URLs).
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter clone-from
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

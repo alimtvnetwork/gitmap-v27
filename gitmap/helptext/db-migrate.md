@@ -61,3 +61,13 @@ columns, indexes, and seed rows.
 - `gitmap update` — pulls the latest binary and runs `db-migrate`
   automatically afterwards.
 - `gitmap doctor` — broader environment + schema health check.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter db-migrate
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

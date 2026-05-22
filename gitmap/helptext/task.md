@@ -77,3 +77,13 @@ tk
 
 - [watch](watch.md) — Live-refresh dashboard of repo status
 - [exec](exec.md) — Run git commands across repos
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter task
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

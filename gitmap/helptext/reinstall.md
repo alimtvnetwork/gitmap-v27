@@ -78,3 +78,13 @@ Output:
 - `gitmap self-uninstall` — remove the binary
 - `gitmap install <tool>` — install third-party tools (vscode, npp, …)
 - `gitmap update` — update without reinstalling
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter reinstall
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

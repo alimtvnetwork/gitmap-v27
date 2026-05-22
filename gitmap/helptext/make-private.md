@@ -62,3 +62,13 @@ gitmap make-private --verbose
 
 - `gitmap make-public` — the opposite direction (with confirmation).
 - `gh auth login` / `glab auth login` — authenticate the provider CLI.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter make-private
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

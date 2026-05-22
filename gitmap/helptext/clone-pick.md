@@ -97,3 +97,13 @@ EvalSymlinks soft-fail" for the full rule set.
 - [clone](clone.md) -- full repo clone
 - [clone-from](clone-from.md) -- clone many repos from a manifest
 - [clone-now](clone-now.md) -- re-clone from `gitmap scan` output
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter clone-pick
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

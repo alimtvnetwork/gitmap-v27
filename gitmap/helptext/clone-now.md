@@ -31,3 +31,13 @@ The CLI now has two clearly-distinct verbs:
 ambiguity between "clone now" (sounds like immediate-mode `clone`)
 and "re-clone from artifact". `clone-now` stays available so nothing
 that already shipped breaks.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter clone-now
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

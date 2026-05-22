@@ -101,3 +101,13 @@ rp
 - [release](release.md) — Create a release
 - [release-branch](release-branch.md) — Complete from existing branch
 - [changelog](changelog.md) — View release notes
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter release-pending
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

@@ -72,3 +72,13 @@ None.
 - [update](update.md) — Self-update gitmap to the latest version
 - [version](version.md) — Check current installed version
 - [doctor](doctor.md) — Diagnose installation issues
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter update-cleanup
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

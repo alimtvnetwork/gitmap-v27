@@ -62,3 +62,13 @@ None
 - [scan](scan.md) — Re-scan to rebuild the database
 - [history-reset](history-reset.md) — Clear command history only
 - [profile](profile.md) — Manage profiles (reset affects current profile)
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter db-reset
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

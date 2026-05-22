@@ -39,3 +39,13 @@ Identical to `gitmap release-alias` with `--pull` always enabled:
 - `gitmap release-alias` — same command without forced `--pull`.
 - `gitmap as` — register an alias for the current repo.
 - `gitmap release` — the underlying release workflow.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter release-alias-pull
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

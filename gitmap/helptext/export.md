@@ -66,3 +66,13 @@ ex
 - [import](import.md) — Import repos from an export file
 - [scan](scan.md) — Scan directories to populate the database
 - [profile](profile.md) — Manage database profiles
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter export
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

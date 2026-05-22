@@ -109,3 +109,13 @@ in place and URLs are cloned into a folder named after the repo.
 - [merge-left](merge-left.md) — Merge into LEFT only
 - [merge-right](merge-right.md) — Merge into RIGHT only
 - [clone](clone.md) — Clone repositories from URL or scan output
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter mv
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

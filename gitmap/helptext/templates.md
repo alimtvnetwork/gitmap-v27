@@ -190,3 +190,13 @@ unmodified bytes.
 - [lfs-common](lfs-common.md) — Per-pattern `git lfs track` flow (no template)
 - [setup](setup.md) — Configure Git global settings
 - [doctor](doctor.md) — Diagnose binary, PATH, and config issues
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter templates
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

@@ -140,3 +140,13 @@ see *Windows backends* in [startup-add](startup-add.md). The same
 classifier drives every line `startup-list` prints — entries
 without a tracking subkey are filtered out, so a row in this
 listing always means gitmap can safely manage that entry.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter startup-list
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

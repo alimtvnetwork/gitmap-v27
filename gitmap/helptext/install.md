@@ -154,3 +154,13 @@ Requires PowerShell on PATH (Windows: `powershell` ships by default; Linux/macOS
 - [env](env.md) — Manage environment variables and PATH
 - [doctor](doctor.md) — Diagnose PATH and version issues
 - [setup](setup.md) — Configure Git global settings
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter install
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

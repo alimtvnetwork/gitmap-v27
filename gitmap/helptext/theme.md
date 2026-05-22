@@ -61,3 +61,13 @@ falsely demote the renderer.
 
 - **`gitmap help`** — most subcommands honor `--pretty` / `--no-pretty`
   for markdown rendering, which is orthogonal to `--theme`.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter theme
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

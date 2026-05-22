@@ -89,3 +89,13 @@ cmp
 - [setup](setup.md) — Auto-installs completions during setup
 - [cd](cd.md) — Navigate to repos using tab-completed slugs
 - [group](group.md) — Group names are also tab-completed
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter completion
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

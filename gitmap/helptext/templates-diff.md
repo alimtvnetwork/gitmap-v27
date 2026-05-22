@@ -73,3 +73,13 @@ kind:
 - [add ignore](add-ignore.md)
 - [add attributes](add-attributes.md)
 - [templates init](templates.md)
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter templates-diff
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

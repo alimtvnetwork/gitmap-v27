@@ -54,3 +54,13 @@ hr
 - [history](history.md) — View command history
 - [db-reset](db-reset.md) — Reset the entire database
 - [stats](stats.md) — View usage metrics (also cleared)
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter history-reset
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

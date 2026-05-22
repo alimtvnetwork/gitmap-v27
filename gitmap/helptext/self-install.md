@@ -85,3 +85,13 @@ gitmap self-install --show-path                    # audit which profiles got wr
 
 - `gitmap self-uninstall` — remove gitmap from this machine
 - `gitmap update` — pull a newer build from the source repo
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter self-install
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

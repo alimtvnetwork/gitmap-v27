@@ -96,3 +96,13 @@ If you prefer to install it manually, add this to your shell profile:
 - [group](group.md) — Manage repo groups for filtered navigation
 - [scan](scan.md) — Scan directories to populate the database
 - [alias](alias.md) — Manage repo aliases
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter cd
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

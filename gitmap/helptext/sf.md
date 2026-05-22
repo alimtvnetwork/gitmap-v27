@@ -78,3 +78,13 @@ unrelated repos. It also makes future bulk operations (Phase 2.6:
 - `gitmap scan` — auto-registers scan folders as a side effect
 - `gitmap find-next --scan-folder <id>` — filter updates by folder
 - `gitmap probe` — populate the `VersionProbe` data that find-next reads
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter sf
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

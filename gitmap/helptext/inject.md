@@ -127,3 +127,13 @@ effects run.
   step that requires `origin`, and it fails open.
 - For a fresh clone instead of injecting an existing folder, use
   `gitmap clone <url>`.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter inject
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

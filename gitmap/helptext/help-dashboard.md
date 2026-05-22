@@ -78,3 +78,13 @@ The same pages render in the CLI via `gitmap help <command>`
 - diff — Read-only preview before merge-both
 - as / release-alias / release-alias-pull — Register-and-release-anywhere workflow
 
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter help-dashboard
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

@@ -66,3 +66,13 @@ hau, hac (has-any-changes)
 - [status](status.md) — Show dirty/clean status for tracked repos
 - [watch](watch.md) — Live-refresh dashboard
 - [pull](pull.md) — Pull a specific repo
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter has-any-updates
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

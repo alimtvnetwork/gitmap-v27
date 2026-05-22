@@ -66,3 +66,13 @@ rb
 - [release](release.md) — Create a full release with tag and push
 - [release-pending](release-pending.md) — Show unreleased commits
 - [latest-branch](latest-branch.md) — Find most recently updated branch
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter release-branch
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

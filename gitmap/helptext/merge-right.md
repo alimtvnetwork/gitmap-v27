@@ -99,3 +99,13 @@ None.
 - [merge-left](merge-left.md) — Mirror operation: write into LEFT only
 - [merge-both](merge-both.md) — Two-way merge
 - [mv](mv.md) — Move LEFT into RIGHT and delete LEFT
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter merge-right
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

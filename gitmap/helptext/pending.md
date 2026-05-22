@@ -41,3 +41,13 @@ last known failure reason (if any).
 - [do-pending](do-pending.md) — Retry pending tasks
 - [clone-next](clone-next.md) — Clone next versioned iteration
 - [task](task.md) — Manage file-sync watch tasks
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter pending
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

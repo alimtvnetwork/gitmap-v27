@@ -50,3 +50,13 @@ validates runtime output against the schema on every build to prevent drift.
 - Per-command help (e.g. `gitmap help clone`) accepts a `--pretty` flag
   to toggle the styled vs plain renderer.
 - Glyph rendering follows `--glyphs auto|rich|safe` (see `gitmap help glyphs`).
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter help
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

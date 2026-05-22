@@ -66,3 +66,13 @@ None.
 - [history](history.md) — View command execution history
 - [scan](scan.md) — Scan directories (common bookmark target)
 - [pull](pull.md) — Pull repos (common bookmark target)
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter bookmark
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

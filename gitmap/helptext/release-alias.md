@@ -63,3 +63,13 @@ need to `cd` first.
 - `gitmap as` — register an alias for the current repo.
 - `gitmap release` — the underlying release workflow.
 - `gitmap alias list` — show every registered alias.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter release-alias
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

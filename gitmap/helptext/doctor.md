@@ -82,3 +82,13 @@ cleanup succeeded.
 - [setup](setup.md) — Run first-time configuration
 - [update](update.md) — Update gitmap to the latest version
 - [version](version.md) — Check current version
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter doctor
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

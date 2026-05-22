@@ -95,3 +95,13 @@ g
 - [multi-group](multi-group.md) — Select multiple groups
 - [pull](pull.md) — Pull repos by group
 - [status](status.md) — View status by group
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter group
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

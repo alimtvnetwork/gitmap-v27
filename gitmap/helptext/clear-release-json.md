@@ -82,3 +82,13 @@ crj
 - [list-versions](list-versions.md) — List version tags in a repository
 - [revert](revert.md) — Roll back a release
 - [db-reset](db-reset.md) — Clear the entire database
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter clear-release-json
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

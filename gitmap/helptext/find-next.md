@@ -70,3 +70,13 @@ $ gitmap fn --scan-folder 2 --json
 - `gitmap probe` — run the hybrid HEAD-then-clone version probe
 - `gitmap sf list` — list scan-folder ids for the `--scan-folder` flag
 - `gitmap pull` / `gitmap cn next all` — apply the available upgrades
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter find-next
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

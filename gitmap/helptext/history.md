@@ -67,3 +67,13 @@ hi
 - [history-reset](history-reset.md) — Clear command history
 - [stats](stats.md) — View aggregated usage metrics
 - [bookmark](bookmark.md) — Save commands for re-execution
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter history
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

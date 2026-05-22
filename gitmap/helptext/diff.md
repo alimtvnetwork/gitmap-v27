@@ -113,3 +113,13 @@ None. Both endpoints are folders that already exist on disk.
 - [merge-left](merge-left.md) — Apply RIGHT's changes into LEFT
 - [merge-right](merge-right.md) — Apply LEFT's changes into RIGHT
 - [mv](mv.md) — Move LEFT into RIGHT and delete LEFT
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter diff
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

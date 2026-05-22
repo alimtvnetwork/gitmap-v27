@@ -53,3 +53,13 @@ so Git's DWIM rules create a local tracking branch when needed.
 - [latest-branch](latest-branch.md) — `gitmap lb -s` jumps to the
   freshest branch instead of the default one.
 - [status](status.md) — View repo branch and status info
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter branch
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

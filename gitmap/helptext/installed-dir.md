@@ -61,3 +61,13 @@ install path.
 - [version](version.md) — Show version number
 - [doctor](doctor.md) — Diagnose PATH and version issues
 - [install](install.md) — Install developer tools (use `gitmap install scripts` to clone utility scripts)
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter installed-dir
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

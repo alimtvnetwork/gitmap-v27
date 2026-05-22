@@ -65,3 +65,12 @@ Type 'yes' to force-push to git@github.com:acme/repo.git (anything else aborts):
 
 - `history-pin` (`hpin`) — Pin file content across all history
 - `fix-repo` (`fr`) — Rewrite versioned-token strings, no history rewrite
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter history-purge
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

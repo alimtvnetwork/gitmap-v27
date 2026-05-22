@@ -72,3 +72,13 @@ gr
 - [react-repos](react-repos.md) — List React projects
 - [csharp-repos](csharp-repos.md) — List C# projects
 - [gomod](gomod.md) — Rename Go module paths
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter go-repos
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

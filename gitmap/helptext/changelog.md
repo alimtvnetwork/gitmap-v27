@@ -98,3 +98,13 @@ or `--no-pretty` to strip every ANSI escape (e.g. for redirects/grep).
 - [list-versions](list-versions.md) — List release tags
 - [list-releases](list-releases.md) — List stored release metadata
 - [release-pending](release-pending.md) — Show unreleased commits
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter changelog
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

@@ -72,3 +72,13 @@ vh
 
 - [clone-next](clone-next.md) — Clone next version of a repo (auto-flattened)
 - [history](history.md) — Show command execution audit log
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter version-history
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

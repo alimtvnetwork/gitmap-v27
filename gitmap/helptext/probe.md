@@ -132,3 +132,13 @@ sqlite> SELECT RepoId, NextVersionTag, Method, ProbedAt
 - `gitmap find-next` (alias `fn`) — read the latest probe results
 - `gitmap sf list` — show scan folders / repo membership
 - `gitmap pull` / `gitmap cn next all` — apply the upgrades
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter probe
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

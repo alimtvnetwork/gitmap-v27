@@ -62,3 +62,13 @@ fast (non-zero exit) when the file cannot be located.
 - [code](code.md) — Register a path with VS Code Project Manager and open it
 - [scan](scan.md) — Bulk-syncs every discovered repo into `projects.json`
 - [doctor](doctor.md) — Includes a `VS Code Project Manager` health check
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter vscode-pm-path
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

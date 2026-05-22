@@ -133,3 +133,13 @@ Zip groups are persisted in two locations:
 
 - [release](release.md) — Create a release with zip group assets
 - [group](group.md) — Manage repository groups
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter zip-group
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

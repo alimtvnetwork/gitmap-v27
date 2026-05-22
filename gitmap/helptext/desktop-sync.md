@@ -68,3 +68,13 @@ ds (also: gd, github-desktop)
 - [github-desktop](github-desktop.md) — same command, different name
 - [scan](scan.md) — populate the database first if you want bulk mode
 - [clone](clone.md) — `--github-desktop` registers as it clones
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter desktop-sync
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

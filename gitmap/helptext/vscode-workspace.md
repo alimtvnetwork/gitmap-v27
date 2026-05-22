@@ -88,3 +88,12 @@ reported on stderr.
 - [scan](scan.md) — Populates the Repo table that this command reads.
 - [code](code.md) — Open a single repo in VS Code with the Project Manager registered.
 - [vscode-pm-path](vscode-pm-path.md) — Print where `projects.json` lives.
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter vscode-workspace
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

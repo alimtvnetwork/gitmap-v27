@@ -49,3 +49,13 @@ gitmap zip git@github.com:foo/bar.git --out bar.zip
 Every invocation writes one row to the `ArchiveHistory` SQLite table
 including the original sources (not the resolved temp paths), output
 path, format, compression mode, status, and timestamps.
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter zip
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

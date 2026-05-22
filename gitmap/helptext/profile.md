@@ -73,3 +73,13 @@ None.
 - [export](export.md) — Export current profile data
 - [import](import.md) — Import data into a profile
 - [db-reset](db-reset.md) — Reset the current profile database
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter profile
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

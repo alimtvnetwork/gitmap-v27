@@ -71,3 +71,13 @@ cg
 - [changelog](changelog.md) — View existing changelog entries
 - [release](release.md) — Create a release
 - [list-versions](list-versions.md) — List release tags
+
+## Scripting (JSON)
+
+Discover this command from a script using the machine-readable help payload:
+
+```bash
+gitmap help --json --filter changelog-generate
+```
+
+The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

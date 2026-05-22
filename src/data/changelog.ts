@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.51.0",
+    date: "2026-05-22",
+    subtitle: "Help filter shortcut, footer SHA, remote-installer update",
+    items: [
+      "Added: `gitmap help <name>` falls back to the filter engine when `<name>` is not a known help topic — typing `gitmap help ssh` is equivalent to `gitmap help --filter ssh`, with the same group context, highlighting, and fuzzy suggestions.",
+      "Added: help footer prints the full commit SHA in addition to the short SHA / subject / age line, so users can copy the exact revision the binary was built from.",
+      "Changed: `gitmap update` now downloads the canonical install script (`install.ps1` on Windows, `install.sh` elsewhere) straight from the repo root and executes it, instead of rebuilding the source tree. The installer's own parallel `-v<N+i>` sibling-repo probe finds the latest published `gitmap-vN` release. The legacy in-tree rebuild flow stays available behind `--source-rebuild`.",
+      "Added: spec `spec/01-app/110-update-remote-installer.md` documenting the new update contract and fallback rules.",
+      "Pinned: README pinned-version block + version matrix moved to **v5.51.0**. Synced `gitmap/constants/constants.go` and `src/constants/index.ts`.",
+    ],
+  },
+  {
     version: "v5.50.0",
     date: "2026-05-22",
     subtitle: "Minor version bump",

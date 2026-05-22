@@ -26,6 +26,8 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -97,13 +99,20 @@ func parseUpdateDebugWindows(t *testing.T) *ast.File {
 	t.Helper()
 
 	fset := token.NewFileSet()
-	file, err := parser.ParseFile(fset, updatedebugwindowsPath, nil, parser.ParseComments)
+	_, thisFile, _, ok := runtime.Caller(0)
+	if !ok {
+		t.Fatalf("runtime.Caller failed; cannot resolve absolute path to %s", updatedebugwindowsPath)
+	}
+	absPath := filepath.Join(filepath.Dir(thisFile), updatedebugwindowsPath)
+	file, err := parser.ParseFile(fset, absPath, nil, parser.ParseComments)
 	if err != nil {
-		t.Fatalf("parse %s: %v", updatedebugwindowsPath, err)
+		t.Fatalf("parse %s: %v", absPath, err)
 	}
 
 	return file
 }
+
+
 
 // hasFsutilImport reports whether the parsed file imports the canonical
 // fsutil package path. Strips the surrounding quotes from the import

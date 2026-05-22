@@ -50,6 +50,7 @@ func skipOnWindowsSubprocess(t *testing.T) {
 // not-exist phrasings so OS-specific wording (Linux vs Windows)
 // doesn't make the test brittle.
 func TestCLI_FailureContext_Scan(t *testing.T) {
+	skipOnWindowsSubprocess(t)
 	t.Parallel()
 	missing := filepath.Join(t.TempDir(), "definitely-not-here")
 	code, stdout, stderr := runGitmap(t, []string{"scan", "--quiet", missing}, "")

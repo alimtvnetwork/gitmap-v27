@@ -10,72 +10,140 @@ import (
 	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 
-// printUsageFooter renders the colorful build-info footer shown at the
-// bottom of `gitmap` (no args) and `gitmap help`. It always shows the
-// installed version and, when the binary's source repo is reachable,
-// the origin URL and the last commit (short SHA · subject · date).
+// Build-time identity, injected via:
 //
-// All git invocations are best-effort — failures fall back silently so
-// the help screen never errors out.
+//	go build -ldflags "-X github.com/.../gitmap/cmd.BuildCommit=<sha> \
+//	                  -X github.com/.../gitmap/cmd.BuildBranch=<branch> \
+//	                  -X github.com/.../gitmap/cmd.BuildRepo=<origin-url> \
+//	                  -X github.com/.../gitmap/cmd.BuildDate=<utc>"
+//
+// All four default to "" so unset values fall back to a runtime git probe
+// against `constants.RepoPath` (the source repo baked in at link time).
+var (
+	BuildCommit = ""
+	BuildBranch = ""
+	BuildRepo   = ""
+	BuildDate   = ""
+)
+
+const footerRule = "────────────────────────────────────────────────────────────"
+
+// printUsageFooter renders TWO clearly separated identity blocks at the
+// bottom of `gitmap` (no args) and `gitmap help`:
+//
+//  1. gitmap binary identity (which build is running) — magenta header
+//  2. current repo identity (where you are right now)  — cyan header
+//
+// Blocks are separated by a blank line + thin rule so users can never
+// confuse "what gitmap am I running" with "what repo am I sitting in".
 func printUsageFooter() {
+	printGitmapIdentityBlock()
+
+	cwd, err := os.Getwd()
+	if err != nil || !isInsideGitRepo(cwd) {
+		return
+	}
+	if sameRepo(cwd, gitmapSourceDir()) {
+		return // avoid duplicate block when cwd IS the gitmap source repo
+	}
+	printCurrentRepoIdentityBlock(cwd)
+}
+
+func printGitmapIdentityBlock() {
 	fmt.Println()
-	fmt.Println("  " + constants.ColorMagenta +
-		"────────────────────────────────────────────────────────────" +
-		constants.ColorReset)
+	fmt.Println("  " + constants.ColorMagenta + footerRule + constants.ColorReset)
+	fmt.Println("  " + constants.ColorMagenta + "gitmap binary" + constants.ColorReset)
 
 	fmt.Printf("  %s● Version:%s     %sv%s%s\n",
 		constants.ColorCyan, constants.ColorReset,
 		constants.ColorWhite, constants.Version, constants.ColorReset)
 
-	repoDir := resolveFooterRepoDir()
-	if len(repoDir) == 0 {
-		return
+	src := gitmapSourceDir()
+	emitIdentityRows(src, BuildRepo, BuildBranch, BuildCommit)
+	if len(BuildDate) > 0 {
+		fmt.Printf("  %s● Built:%s       %s%s%s\n",
+			constants.ColorCyan, constants.ColorReset,
+			constants.ColorDim, BuildDate, constants.ColorReset)
 	}
+	fmt.Println()
+}
 
-	if url := captureGit(repoDir, "config", "--get", "remote.origin.url"); len(url) > 0 {
+func printCurrentRepoIdentityBlock(cwd string) {
+	fmt.Println("  " + constants.ColorCyan + footerRule + constants.ColorReset)
+	fmt.Println("  " + constants.ColorCyan + "current repo" + constants.ColorReset)
+	emitIdentityRows(cwd, "", "", "")
+	fmt.Println()
+}
+
+// emitIdentityRows prints Repo/Branch/Last commit/Commit SHA rows for dir,
+// preferring the supplied build-time overrides when non-empty.
+func emitIdentityRows(dir, repoOverride, branchOverride, shaOverride string) {
+	repo := firstNonEmpty(repoOverride, captureGit(dir, "config", "--get", "remote.origin.url"))
+	if len(repo) > 0 {
 		fmt.Printf("  %s● Repo:%s        %s%s%s\n",
 			constants.ColorCyan, constants.ColorReset,
-			constants.ColorCyan, url, constants.ColorReset)
+			constants.ColorCyan, repo, constants.ColorReset)
 	}
 
-	if branch := captureGit(repoDir, "rev-parse", "--abbrev-ref", "HEAD"); len(branch) > 0 {
+	branch := firstNonEmpty(branchOverride, captureGit(dir, "rev-parse", "--abbrev-ref", "HEAD"))
+	if len(branch) > 0 {
 		fmt.Printf("  %s● Branch:%s      %s%s%s\n",
 			constants.ColorCyan, constants.ColorReset,
 			constants.ColorGreen, branch, constants.ColorReset)
 	}
 
-	if commit := captureGit(repoDir, "log", "-1", "--format=%h · %s · %cr"); len(commit) > 0 {
+	if commit := captureGit(dir, "log", "-1", "--format=%h · %s · %cr"); len(commit) > 0 {
 		fmt.Printf("  %s● Last commit:%s %s%s%s\n",
 			constants.ColorCyan, constants.ColorReset,
 			constants.ColorYellow, commit, constants.ColorReset)
 	}
 
-	if sha := captureGit(repoDir, "rev-parse", "HEAD"); len(sha) > 0 {
+	sha := firstNonEmpty(shaOverride, captureGit(dir, "rev-parse", "HEAD"))
+	if len(sha) > 0 {
 		fmt.Printf("  %s● Commit SHA:%s  %s%s%s\n",
 			constants.ColorCyan, constants.ColorReset,
 			constants.ColorYellow, sha, constants.ColorReset)
 	}
-
-	fmt.Println()
 }
 
-// resolveFooterRepoDir picks the best directory to inspect for the
-// footer's git metadata. Preference order:
-//  1. The source repo baked into the binary (constants.RepoPath).
-//  2. The current working directory if it is inside a git repo.
-func resolveFooterRepoDir() string {
-	if len(constants.RepoPath) > 0 {
-		if _, err := os.Stat(filepath.Join(constants.RepoPath, ".git")); err == nil {
-			return constants.RepoPath
-		}
+// gitmapSourceDir returns the source repo baked into the binary, or "".
+func gitmapSourceDir() string {
+	if len(constants.RepoPath) == 0 {
+		return ""
 	}
-
-	cwd, err := os.Getwd()
-	if err != nil {
+	if _, err := os.Stat(filepath.Join(constants.RepoPath, ".git")); err != nil {
 		return ""
 	}
 
-	return cwd
+	return constants.RepoPath
+}
+
+// isInsideGitRepo reports whether dir (or any ancestor) is a git repo.
+func isInsideGitRepo(dir string) bool {
+	out := captureGit(dir, "rev-parse", "--is-inside-work-tree")
+
+	return out == "true"
+}
+
+// sameRepo reports whether a and b resolve to the same git toplevel.
+func sameRepo(a, b string) bool {
+	if len(a) == 0 || len(b) == 0 {
+		return false
+	}
+	ta := captureGit(a, "rev-parse", "--show-toplevel")
+	tb := captureGit(b, "rev-parse", "--show-toplevel")
+
+	return len(ta) > 0 && filepath.Clean(ta) == filepath.Clean(tb)
+}
+
+func firstNonEmpty(values ...string) string {
+	for _, v := range values {
+		if len(v) > 0 {
+			return v
+		}
+	}
+
+	return ""
 }
 
 // captureGit runs `git <args...>` in dir and returns trimmed stdout, or

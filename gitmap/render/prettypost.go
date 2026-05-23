@@ -47,8 +47,69 @@ func transformLine(line string) string {
 	line = renderInlineCode(line)
 	line = renderInlineBold(line)
 	line = renderInlineLinks(line)
+	line = renderCommandAliasRow(line)
+	line = renderBareFlagTokens(line)
+	line = renderAnglePlaceholders(line)
+	line = renderDefaultParen(line)
 
 	return line
+}
+
+// commandAliasRowRe matches bulleted command-list rows shaped like:
+//
+//	"  - clone (cl, cln)  Clone repos from gitmap.json"
+//
+// Captures: leading bullet, command name, alias list, trailing tail.
+// Command → green/bold, aliases → yellow/bold. Tail keeps its colour
+// (may already carry inline-code magenta from earlier passes).
+var commandAliasRowRe = regexp.MustCompile(`^(\s*[-*]\s+)([a-z][a-z0-9-]*)\s+\(([^)]+)\)(\s+.*)?$`)
+
+func renderCommandAliasRow(line string) string {
+	m := commandAliasRowRe.FindStringSubmatch(line)
+	if m == nil {
+		return line
+	}
+	tail := ""
+	if len(m) >= 5 {
+		tail = m[4]
+	}
+
+	return m[1] +
+		constants.ColorGreen + m[2] + constants.ColorReset +
+		" (" + constants.ColorYellow + m[3] + constants.ColorReset + ")" +
+		tail
+}
+
+// bareFlagRe matches `--long-flag` or `-x` tokens NOT already wrapped
+// in an ANSI escape (guarded by negative-lookbehind via prefix check).
+// Word-boundary on both sides so URLs like `https://x?--a=b` won't
+// trigger. We avoid an outright lookbehind (Go RE2 has none) by
+// excluding ESC and word chars before the dash via a non-capturing
+// prefix that is preserved verbatim.
+var bareFlagRe = regexp.MustCompile(`(^|[\s(\[,/])(-{1,2}[A-Za-z][A-Za-z0-9-]*)`)
+
+func renderBareFlagTokens(line string) string {
+	return bareFlagRe.ReplaceAllString(line,
+		"$1"+constants.ColorCyan+"$2"+constants.ColorReset)
+}
+
+// anglePlaceholderRe matches `<value>` placeholders used in usage
+// strings (e.g. `--filter <query>`). Green so the eye pairs them with
+// the cyan flag immediately to their left.
+var anglePlaceholderRe = regexp.MustCompile(`<([a-zA-Z][a-zA-Z0-9_-]*)>`)
+
+func renderAnglePlaceholders(line string) string {
+	return anglePlaceholderRe.ReplaceAllString(line,
+		constants.ColorGreen+"<$1>"+constants.ColorReset)
+}
+
+// defaultParenRe matches "(default: …)" and "(default …)" trailers.
+// Dim so they sit visually behind the flag description.
+var defaultParenRe = regexp.MustCompile(`\((default:?\s+[^)]+)\)`)
+
+func renderDefaultParen(line string) string {
+	return defaultParenRe.ReplaceAllString(line,
+		constants.ColorDim+"($1)"+constants.ColorReset)
 }
 
 // headingRe matches a leading '#' run at column 0. Help bodies are

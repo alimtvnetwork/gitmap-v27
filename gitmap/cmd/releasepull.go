@@ -28,6 +28,7 @@ func runReleasePull(args []string) {
 	dir := requireReleasePullCwd()
 
 	pullCurrentRepo(dir, mode, dryRun, verbose)
+	forceYesOverride = true
 	runRelease(ensureYesForward(rest))
 }
 

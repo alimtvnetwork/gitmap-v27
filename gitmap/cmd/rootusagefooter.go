@@ -118,8 +118,8 @@ func gitmapSourceDir() string {
 	return constants.RepoPath
 }
 
-// isInsideGitRepo reports whether dir (or any ancestor) is a git repo.
-func isInsideGitRepo(dir string) bool {
+// isFooterGitRepo reports whether dir (or any ancestor) is a git repo.
+func isFooterGitRepo(dir string) bool {
 	out := captureGit(dir, "rev-parse", "--is-inside-work-tree")
 
 	return out == "true"
@@ -136,7 +136,7 @@ func sameRepo(a, b string) bool {
 	return len(ta) > 0 && filepath.Clean(ta) == filepath.Clean(tb)
 }
 
-func firstNonEmpty(values ...string) string {
+func firstNonEmptyVar(values ...string) string {
 	for _, v := range values {
 		if len(v) > 0 {
 			return v

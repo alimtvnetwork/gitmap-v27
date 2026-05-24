@@ -40,7 +40,7 @@ func printUsageFooter() {
 	printGitmapIdentityBlock()
 
 	cwd, err := os.Getwd()
-	if err != nil || !isInsideGitRepo(cwd) {
+	if err != nil || !isFooterGitRepo(cwd) {
 		return
 	}
 	if sameRepo(cwd, gitmapSourceDir()) {

@@ -59,8 +59,8 @@ func TestLatestBranchJSONContract_NoTopOmitsKey(t *testing.T) {
 
 // TestLatestBranchJSONContract_WithTopIncludesKey verifies the
 // `top` key is present and the nested object's key order matches
-// the latestBranchTopItem declaration. Structural-only (no
-// byte-exact golden) because buildTopItems calls
+// the lbTopKey* constants in latestbranchrender.go. Structural-only
+// (no byte-exact golden) because buildTopItems calls
 // gitutil.FormatDisplayDate which uses the LOCAL timezone — bytes
 // would drift across CI machines.
 func TestLatestBranchJSONContract_WithTopIncludesKey(t *testing.T) {

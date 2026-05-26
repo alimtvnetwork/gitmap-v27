@@ -1,5 +1,14 @@
 # Changelog
 
+## v5.60.0 — (2026-05-26) — `gitmap binary` footer never falls back to current repo
+
+- Fixed: the `gitmap binary` identity block at the bottom of `gitmap` / `gitmap help` no longer shows the **current repo's** Repo/Branch/Last commit/SHA when the source-repo bake-in is missing. Root cause: `captureGit("", ...)` inherited the process CWD because `exec.Cmd.Dir = ""` defaults to it, so probing an unknown gitmap source dir silently fell through to the user's working repo — making the two footer blocks identical (see uploaded screenshot showing `macro-ahk-v39` repeated in both blocks).
+- Hardened: `captureGit` now rejects empty `dir` up front in `gitmap/cmd/rootusagefooter.go`, so the binary block prints only the rows it can prove.
+- Added: build-time identity injection (`BuildCommit` / `BuildBranch` / `BuildRepo` / `BuildDate`) is now stamped via `-ldflags` in **all three** build paths — `run.sh`, `run.ps1`, and `Makefile`. The release binary now embeds its source repo URL, branch, commit SHA, and UTC build timestamp, so the footer shows the correct gitmap provenance even when running from a completely unrelated CWD.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.60.0**.
+
+
+
 ## v5.59.0 — (2026-05-24) — `gitmap pr` never stalls on auto-commit prompt
 
 - Fixed: `gitmap pr` / `pull-release` now sets a process-level `forceYesOverride` in addition to injecting `-y` into the forwarded args, so the post-release auto-commit `[y/N]` prompt is skipped unconditionally. Defense-in-depth against any future flag-parsing regression that could drop the appended `-y`.

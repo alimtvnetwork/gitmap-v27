@@ -149,7 +149,16 @@ func firstNonEmptyVar(values ...string) string {
 // captureGit runs `git <args...>` in dir and returns trimmed stdout, or
 // "" on any error. Stderr is discarded so the footer stays quiet when
 // the directory is not a git repo.
+//
+// IMPORTANT: an empty dir is rejected up front. Without this guard, exec
+// inherits the process CWD, which caused the "gitmap binary" footer to
+// silently print the CURRENT repo's git identity whenever the source
+// repo bake-in (constants.RepoPath) was missing — making the binary
+// block indistinguishable from the "current repo" block (see v5.60.0).
 func captureGit(dir string, args ...string) string {
+	if len(dir) == 0 {
+		return ""
+	}
 	cmd := exec.Command("git", args...)
 	cmd.Dir = dir
 	out, err := cmd.Output()

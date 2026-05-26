@@ -5,7 +5,18 @@ LINT     := golangci-lint
 MODULE   := gitmap
 BINARY   := gitmap
 VERSION  ?= dev
-LDFLAGS  := -s -w -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/constants.Version=$(VERSION)'
+# Build-time identity (v5.60.0+) — stamps source repo metadata into the
+# `gitmap binary` footer block so it cannot fall back to the user's CWD.
+BUILD_COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null)
+BUILD_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
+BUILD_REPO   ?= $(shell git config --get remote.origin.url 2>/dev/null)
+BUILD_DATE   ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
+LDFLAGS  := -s -w \
+  -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/constants.Version=$(VERSION)' \
+  -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildCommit=$(BUILD_COMMIT)' \
+  -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildBranch=$(BUILD_BRANCH)' \
+  -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildRepo=$(BUILD_REPO)' \
+  -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildDate=$(BUILD_DATE)'
 
 # Force bash for recipes — fixtures-bump targets rely on $${PIPESTATUS[0]}
 # which is a bash builtin (dash and POSIX sh do not provide it).

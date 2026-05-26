@@ -8,6 +8,17 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.60.0",
+    date: "2026-05-26",
+    subtitle: "`gitmap binary` footer never falls back to current repo",
+    items: [
+      "Fixed: `gitmap binary` identity block no longer shows the current repo's git info when the source-repo bake-in is missing — `captureGit(\"\", ...)` inherited the process CWD via `exec.Cmd.Dir`.",
+      "Hardened: `captureGit` rejects empty `dir` up front in `gitmap/cmd/rootusagefooter.go`.",
+      "Added: build-time identity injection (`BuildCommit` / `BuildBranch` / `BuildRepo` / `BuildDate`) is now stamped via `-ldflags` in `run.sh`, `run.ps1`, and `Makefile`.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.60.0.",
+    ],
+  },
+  {
     version: "v5.59.0",
     date: "2026-05-24",
     subtitle: "`gitmap pr` never stalls on auto-commit prompt",

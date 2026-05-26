@@ -481,7 +481,21 @@ build_binary() {
     cd "$GITMAP_DIR"
     local abs_repo_root
     abs_repo_root=$(cd "$REPO_ROOT" && pwd)
+
+    # Build-time identity injection — stamps the *source* repo metadata
+    # into the binary so the `gitmap binary` footer block never falls
+    # back to probing the user's CWD (fixed in v5.60.0).
+    local build_commit build_branch build_repo build_date
+    build_commit=$(cd "$abs_repo_root" && git rev-parse HEAD 2>/dev/null || echo "")
+    build_branch=$(cd "$abs_repo_root" && git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+    build_repo=$(cd "$abs_repo_root" && git config --get remote.origin.url 2>/dev/null || echo "")
+    build_date=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
     local ldflags="-X 'github.com/alimtvnetwork/gitmap-v23/gitmap/constants.RepoPath=$abs_repo_root'"
+    ldflags="$ldflags -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildCommit=$build_commit'"
+    ldflags="$ldflags -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildBranch=$build_branch'"
+    ldflags="$ldflags -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildRepo=$build_repo'"
+    ldflags="$ldflags -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildDate=$build_date'"
 
     # Pre-build provenance stamp — prints commit SHA, branch, declared
     # version, and a fingerprint of the historically-problematic cmd/

@@ -715,7 +715,26 @@ function Build-Binary {
     Push-Location $GitMapDir
     try {
         $absRepoRoot = (Resolve-Path $RepoRoot).Path
-        $ldflags = "-X 'github.com/alimtvnetwork/gitmap-v23/gitmap/constants.RepoPath=$absRepoRoot'"
+
+        # Build-time identity injection — stamps the *source* repo metadata
+        # into the binary so the `gitmap binary` footer block never falls
+        # back to probing the user's CWD (fixed in v5.60.0).
+        Push-Location $absRepoRoot
+        try {
+            $buildCommit = (& git rev-parse HEAD 2>$null) -as [string]
+            $buildBranch = (& git rev-parse --abbrev-ref HEAD 2>$null) -as [string]
+            $buildRepo   = (& git config --get remote.origin.url 2>$null) -as [string]
+        } finally { Pop-Location }
+        if ($null -eq $buildCommit) { $buildCommit = "" }
+        if ($null -eq $buildBranch) { $buildBranch = "" }
+        if ($null -eq $buildRepo)   { $buildRepo   = "" }
+        $buildDate = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+
+        $ldflags = "-X 'github.com/alimtvnetwork/gitmap-v23/gitmap/constants.RepoPath=$absRepoRoot'" +
+                   " -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildCommit=$buildCommit'" +
+                   " -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildBranch=$buildBranch'" +
+                   " -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildRepo=$buildRepo'" +
+                   " -X 'github.com/alimtvnetwork/gitmap-v23/gitmap/cmd.BuildDate=$buildDate'"
 
         # Pre-build provenance stamp — prints commit SHA, branch, declared
         # version, and a fingerprint of the historically-problematic cmd/

@@ -65,6 +65,35 @@ func TestAlreadyReplayedDetection(t *testing.T) {
 	}
 }
 
+func TestBuildReplayedSet(t *testing.T) {
+	log := "feat: foo\n\ngitmap-replay: from repo-A a3f2c1d\ngitmap-replay: from repo-B b4e5g6h\n---commit-sep---\n"
+	set := BuildReplayedSet(log)
+	if len(set) != 2 {
+		t.Fatalf("expected 2 entries, got %d: %+v", len(set), set)
+	}
+	if _, ok := set["repo-A a3f2c1d"]; !ok {
+		t.Fatal("missing repo-A a3f2c1d")
+	}
+	if _, ok := set["repo-B b4e5g6h"]; !ok {
+		t.Fatal("missing repo-B b4e5g6h")
+	}
+}
+
+func TestSetHasReplayed(t *testing.T) {
+	set := map[string]struct{}{
+		"repo-A a3f2c1d": {},
+	}
+	if !SetHasReplayed(set, "repo-A", "a3f2c1d") {
+		t.Fatal("expected match")
+	}
+	if SetHasReplayed(set, "repo-A", "deadbee") {
+		t.Fatal("false positive on different sha")
+	}
+	if SetHasReplayed(set, "repo-B", "a3f2c1d") {
+		t.Fatal("false positive on different repo")
+	}
+}
+
 func TestCleanMessageEmptyAfterStrip(t *testing.T) {
 	policy := MessagePolicy{StripPatterns: []string{`.*`}}
 	res := CleanMessage("anything", "", policy, "abc", time.Now())

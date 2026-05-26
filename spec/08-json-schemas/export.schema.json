@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://gitmap.dev/schemas/export.schema.json",
+  "title": "gitmap export",
+  "description": "Machine-readable shape emitted by `gitmap export <out.json>`. Top-level is a single object whose key order is contractual: version, exportedAt, repos, groups, releases, history, bookmarks. The five nested arrays are always present (`[]` when empty, never `null`) so consumers can rely on `jq '.repos | length'` style probes. Per-record key order within each nested array is NOT pinned by this schema — it follows Go struct field declaration order (deterministic in practice but not part of the v1 contract).",
+  "type": "object",
+  "required": ["version", "exportedAt", "repos", "groups", "releases", "history", "bookmarks"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {"type": "string", "description": "Schema/export version string."},
+    "exportedAt": {"type": "string", "description": "ISO-8601 timestamp when the export was produced."},
+    "repos": {"type": "array", "description": "Scanned repository records."},
+    "groups": {"type": "array", "description": "Group records with member repo slugs."},
+    "releases": {"type": "array", "description": "Release records."},
+    "history": {"type": "array", "description": "Command history records."},
+    "bookmarks": {"type": "array", "description": "Bookmark records."}
+  }
+}

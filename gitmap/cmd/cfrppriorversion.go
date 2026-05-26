@@ -84,7 +84,7 @@ func resolvePriorScanProvider(absPath string) (visibilityContext, bool) {
 		return visibilityContext{}, false
 	}
 
-	if _, lookErr := lookupProviderCLI(provider); lookErr != nil {
+	if _, lookErr := exec.LookPath(providerCLI(provider)); lookErr != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrVisCLIMissingFmt, providerCLI(provider))
 
 		return visibilityContext{}, false

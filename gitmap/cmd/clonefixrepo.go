@@ -44,7 +44,7 @@ func runCloneFixRepoPub(args []string) {
 // runCloneFixRepoPipeline is the shared core. `makePublic` controls
 // whether the optional 3rd step (visibility flip) runs.
 func runCloneFixRepoPipeline(args []string, makePublic bool) {
-	url, folderName, noVSCodeSync, requireVersion, useSSH, useHTTPS := parseCloneFixRepoArgs(args)
+	url, folderName, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes := parseCloneFixRepoArgs(args)
 	if len(url) == 0 {
 		fmt.Fprint(os.Stderr, constants.ErrCloneFixRepoUsage)
 		os.Exit(constants.ExitCloneFixRepoBadFlag)
@@ -64,6 +64,8 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 	maybeRunFixRepoStep(absPath, requireVersion)
 	if makePublic {
 		runChainedGitmapStep([]string{constants.CmdMakePublic, "--" + constants.FlagVisYes})
+		// Spec 113 §2.3 — offer to privatize prior public versions.
+		runCFRPPriorVersionPrivatize(absPath, autoYes)
 	}
 	fmt.Printf(constants.MsgCloneFixRepoDone, absPath)
 }
@@ -140,12 +142,13 @@ func resolveCloneFixRepoName(absPath string) string {
 // --no-vscode-sync, --require-version, --ssh/-ssh/--sh,
 // --https/-https/--ht. Single-dash forms are accepted to match Go's
 // stdlib `flag` package behaviour the user expects from `-ssh`.
-func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, bool) {
+func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, bool, bool) {
 	positional := make([]string, 0, len(args))
 	noVSCodeSync := false
 	requireVersion := false
 	useSSH := false
 	useHTTPS := false
+	autoYes := false
 	syncFlag := constants.FlagNoVSCodeSync
 	reqFlag := constants.FlagRequireVersion
 	for _, a := range args {
@@ -163,6 +166,9 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, boo
 		case "https", "ht":
 			useHTTPS = true
 			continue
+		case "y", "yes":
+			autoYes = true
+			continue
 		}
 		if len(a) > 0 && a[0] != '-' {
 			positional = append(positional, a)
@@ -177,7 +183,7 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, boo
 		folder = positional[1]
 	}
 
-	return url, folder, noVSCodeSync, requireVersion, useSSH, useHTTPS
+	return url, folder, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes
 }
 
 // resolveCloneTargetFolder mirrors the folder-naming logic in

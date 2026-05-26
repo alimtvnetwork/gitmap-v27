@@ -97,3 +97,25 @@ const (
 	ExitVisConfirmReq   = 7
 	ExitVisVerifyFailed = 8
 )
+
+// Spec 113 — bulk visibility + cfrp prior-version privatize messages.
+const (
+	MsgVisBulkHeaderFmt    = "visibility: %s × %d versions of %s on %s\n"
+	MsgVisBulkItemFmt      = "  [%d/%d] %s … "
+	MsgVisBulkSkipFmt      = "already %s\n"
+	MsgVisBulkOKFmt        = "%s → %s\n"
+	MsgVisBulkFailFmt      = "FAILED (%v)\n"
+	MsgVisBulkDryFmt       = "[dry-run] %s → %s (slug=%s)\n"
+	MsgCFRPPriorHeaderFmt  = "\ncfrp: scanning prior versions of %s (≤%d back)…\n"
+	MsgCFRPPriorFoundFmt   = "cfrp: %d prior version(s) currently public: %s\n"
+	MsgCFRPPriorPromptFmt  = "Privatize all %d prior version(s)? [y/N]: "
+	MsgCFRPPriorNoneFound  = "cfrp: no prior public versions found.\n"
+	MsgCFRPPriorSkipped    = "cfrp: leaving prior versions unchanged.\n"
+	ErrVisBulkBadCountFmt  = "visibility: count must be a positive integer, got %q\n"
+	ErrVisBulkRepoParseFmt = "visibility: cannot parse repo identity from %q\n"
+)
+
+// CFRPPriorMaxLookback caps the prior-version probe at v(N-15)..v(N-1)
+// — far enough for realistic release histories without abusing the API.
+const CFRPPriorMaxLookback = 15
+

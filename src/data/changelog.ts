@@ -8,6 +8,19 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.69.0",
+    date: "2026-05-26",
+    subtitle: "`diff-profiles --json` migrated to `stablejson` + published JSON schema",
+    items: [
+      "Migrated: `gitmap diff-profiles --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/diffprofilesrender.go`). Key order (`profileA`, `profileB`, `onlyInA`, `onlyInB`, `different`, `same`) is now a compile-time decision via package-level wire-key constants. Nested arrays are pre-rendered in compact mode and embedded as `json.RawMessage` for full-document stability.",
+      "Added: `spec/08-json-schemas/diff-profiles.schema.json` — published JSON Schema for downstream consumers.",
+      "Added: `gitmap/cmd/diffprofiles_jsonschema_contract_test.go` + `diffprofilesjson_contract_test.go` — schema drift detection + golden fixture + key-order contract.",
+      "Added: `gitmap/cmd/testdata/schemas/diff-profiles.v1.json` — schema registry entry for key-order drift detection.",
+      "Updated: `spec/08-json-schemas/_TODO.md` — `diff-profiles` flipped from `med` to `done`.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.69.0.",
+    ],
+  },
+  {
     version: "v5.68.0",
     date: "2026-05-26",
     subtitle: "`amend audit` migrated to `stablejson` + published JSON schema",

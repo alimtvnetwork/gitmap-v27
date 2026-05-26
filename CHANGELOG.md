@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.69.0 — (2026-05-26) — `diff-profiles --json` migrated to `stablejson` + published JSON schema
+
+- Migrated: `gitmap diff-profiles --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/diffprofilesrender.go`). Key order (`profileA`, `profileB`, `onlyInA`, `onlyInB`, `different`, `same`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `map[string]any`. Nested `onlyInA`, `onlyInB`, and `different` arrays are pre-rendered in compact mode and embedded as `json.RawMessage` so key-order stability propagates through the entire document.
+- Added: `spec/08-json-schemas/diff-profiles.schema.json` — published JSON Schema for downstream consumers.
+- Added: `gitmap/cmd/diffprofiles_jsonschema_contract_test.go` — schema drift detection (top-level object shape, required key set, encoder-keys ⊂ schema.properties).
+- Added: `gitmap/cmd/diffprofilesjson_contract_test.go` — golden fixture + key-order contract for the stablejson output.
+- Added: `gitmap/cmd/testdata/schemas/diff-profiles.v1.json` — schema registry entry for key-order drift detection.
+- Updated: `spec/08-json-schemas/_TODO.md` — `diff-profiles` flipped from `med` to `done`.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.69.0**.
+
+
+
 ## v5.68.0 — (2026-05-26) — `amend audit` migrated to `stablejson` + published JSON schema
 
 - Migrated: `gitmap amend audit` file encoder onto `gitmap/stablejson` (new `gitmap/cmd/amendauditrender.go`). Key order (`id`, `timestamp`, `branch`, `fromCommit`, `toCommit`, `totalCommits`, `previousAuthor`, `newAuthor`, `mode`, `forcePushed`, `commits`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.AmendmentRecord`. Nested `previousAuthor` / `newAuthor` objects and the `commits` array are pre-rendered in compact mode and embedded as `json.RawMessage` so key-order stability propagates through the entire document.

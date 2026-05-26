@@ -3,8 +3,17 @@
 Make the current repository **private** on GitHub or GitLab.
 
 ```
-gitmap make-private [--dry-run] [--verbose]
+gitmap make-private [<repo-or-url>] [<count>] [--dry-run] [--verbose]
 ```
+
+## Bulk form (v5.61.0+)
+
+`gitmap make-private <count>` flips the **N most recent versions** of
+the *current* repo. `gitmap make-private <repo-or-url> <count>`
+targets a different base. See `gitmap make-public --help` for the
+full bulk semantics — they are identical except no confirmation
+prompt is ever shown (private is the safe direction).
+
 
 ## What it does
 

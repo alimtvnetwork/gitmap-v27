@@ -1,5 +1,18 @@
 # Changelog
 
+## v5.81.0 — (2026-05-26) — JSON schema contract: `gitmap export`
+
+- Added: `spec/08-json-schemas/export.schema.json` — draft-07 schema pinning the top-level object shape (7 required keys in contractual order: `version`, `exportedAt`, `repos`, `groups`, `releases`, `history`, `bookmarks`). Per-record key order within the five nested arrays is explicitly NOT pinned in v1 — that scope (one schema per nested record type) is deferred.
+- Added: `gitmap/cmd/exportrender.go` — `encodeDatabaseExportJSON` builds the top-level object via `gitmap/stablejson` so the key order is a compile-time decision rather than struct-field-tag-defined. Nested arrays are pre-rendered with `json.MarshalIndent` (deterministic via Go struct field declaration order). Empty arrays emit `[]` (never `null`) so `jq '.repos | length'` style probes work on fresh databases.
+- Changed: `gitmap/cmd/export.go` — `writeExportFile` switched from `json.MarshalIndent(model.DatabaseExport)` to the new stablejson-backed encoder. Behavior is byte-equivalent for the top-level layout; the contractual difference is that re-ordering the struct tags can no longer silently re-order the wire output.
+- Added: `gitmap/cmd/testdata/schemas/export.v1.json` — schema-registry entry locking the 7-key top-level order so `assertSchemaKeysFirstObject` enforces drift on every CI run.
+- Added: `gitmap/cmd/testdata/export_empty.json` — golden fixture for an empty-database export (`version="1"`, `exportedAt="2026-05-26T12:00:00Z"`, all five arrays `[]`).
+- Added: `gitmap/cmd/exportjson_contract_test.go` — two contract tests: empty-arrays-not-null guarantee and top-level key-order against the schema registry.
+- Added: `gitmap/cmd/export_jsonschema_contract_test.go` — schema-shape pin: verifies the JSON Schema declares `type=object`, lists all 7 required keys, and that every key the live encoder emits is declared in the schema's `properties` map.
+- Updated: `spec/08-json-schemas/_TODO.md` — `export` marked ✅ done with the per-record-not-pinned caveat called out explicitly.
+
+
+
 ## v5.80.0 — (2026-05-26) — JSON schema contract: `llm-docs --format=json`
 
 - Added: `spec/08-json-schemas/llm-docs.schema.json` — draft-07 schema pinning the top-level object shape (8 optional sections in contractual order: `commands`, `architecture`, `flags`, `conventions`, `structure`, `database`, `installation`, `patterns`) plus the nested command-group (`title`, `commands`) and per-command (`name`, `alias`, `description`, optional `example`) structures.

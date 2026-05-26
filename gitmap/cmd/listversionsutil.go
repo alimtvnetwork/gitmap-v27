@@ -83,25 +83,12 @@ func printVersionEntriesTerminal(entries []versionEntry) {
 	}
 }
 
-// lvJSONEntry is the JSON output shape for list-versions.
-type lvJSONEntry struct {
-	Version   string   `json:"version"`
-	Source    string   `json:"source,omitempty"`
-	Changelog []string `json:"changelog,omitempty"`
-}
-
-// printVersionEntriesJSON prints versions with source and changelog as JSON.
+// printVersionEntriesJSON prints versions as stable JSON via the
+// stablejson encoder in listversionsrender.go. Key order is a
+// compile-time decision (version, source, changelog) rather than a
+// reflection accident; source/changelog remain effectively omitempty.
 func printVersionEntriesJSON(entries []versionEntry) {
-	out := make([]lvJSONEntry, len(entries))
-	for i, e := range entries {
-		out[i] = lvJSONEntry{Version: e.Version.String(), Source: e.Source, Changelog: e.Notes}
-	}
-
-	data, err := json.MarshalIndent(out, "", constants.JSONIndent)
-	if err != nil {
+	if err := encodeListVersionsJSON(os.Stdout, entries); err != nil {
 		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal versions to JSON: %v\n", err)
-
-		return
 	}
-	fmt.Println(string(data))
 }

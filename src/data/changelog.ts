@@ -8,6 +8,19 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.62.0",
+    date: "2026-05-26",
+    subtitle: "commit-transfer idempotence beyond 200 commits (spec 114 Gap A)",
+    items: [
+      "Fixed: `gitmap/committransfer/plan.go` now scans the entire target history for the idempotence check, not just the last 200 commits. Source commits cherry-picked into long-history targets are no longer mis-classified as fresh and re-applied.",
+      "Added: regression test `TestPlanIdempotenceBeyond200Commits` buries an already-replayed commit under 250 unrelated target commits and asserts `SkipCause == \"already-replayed\"`.",
+      "Noted: spec 114 Gap B v5.62.0 surface is already shipped — `--include-merges` flag is wired in `committransfer.go`, and `PrintPlan` emits a stderr notice whenever merges were stripped. Default flip to `IncludeMerges=true` deferred to v6.0.0.",
+      "Added: `pullreleasecd_test.go` and `updateremoteinstall_test.go` close two zero-test gaps inherited from earlier specs.",
+      "Drafted: `spec/01-app/114-committransfer-idempotence-and-merge-default.md`.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.62.0.",
+    ],
+  },
+  {
     version: "v5.61.0",
     date: "2026-05-26",
     subtitle: "Auto parent-escape for clone family + bulk visibility + `cfrp` prior-version privatize",

@@ -116,78 +116,14 @@ func buildLLMOutput(format string, sections map[string]bool) string {
 }
 
 // buildLLMJSON assembles a JSON representation of the LLM reference.
+// Routed through stablejson for compile-time key-order guarantees.
 func buildLLMJSON(sections map[string]bool) string {
-	type jsonCmd struct {
-		Name    string `json:"name"`
-		Alias   string `json:"alias"`
-		Desc    string `json:"description"`
-		Example string `json:"example,omitempty"`
+	var buf bytes.Buffer
+	if err := encodeLLMDocsJSON(&buf, sections); err != nil {
+		return "{}\n"
 	}
 
-	type jsonGroup struct {
-		Title    string    `json:"title"`
-		Commands []jsonCmd `json:"commands"`
-	}
-
-	type jsonDoc struct {
-		Commands     []jsonGroup `json:"commands,omitempty"`
-		Architecture *string     `json:"architecture,omitempty"`
-		Flags        *string     `json:"flags,omitempty"`
-		Conventions  *string     `json:"conventions,omitempty"`
-		Structure    *string     `json:"structure,omitempty"`
-		Database     *string     `json:"database,omitempty"`
-		Installation *string     `json:"installation,omitempty"`
-		Patterns     *string     `json:"patterns,omitempty"`
-	}
-
-	var doc jsonDoc
-
-	if wantSection(sections, "commands") {
-		groups := buildCommandGroups()
-		doc.Commands = make([]jsonGroup, 0, len(groups))
-
-		for _, g := range groups {
-			jg := jsonGroup{Title: g.title}
-
-			for _, c := range g.commands {
-				jg.Commands = append(jg.Commands, jsonCmd{
-					Name:    c.name,
-					Alias:   c.alias,
-					Desc:    c.desc,
-					Example: c.example,
-				})
-			}
-
-			doc.Commands = append(doc.Commands, jg)
-		}
-	}
-
-	sectionWriters := []struct {
-		key   string
-		write func(*strings.Builder)
-		field **string
-	}{
-		{"architecture", writeLLMArchitecture, &doc.Architecture},
-		{"flags", writeLLMGlobalFlags, &doc.Flags},
-		{"conventions", writeLLMCodingConventions, &doc.Conventions},
-		{"structure", writeLLMProjectStructure, &doc.Structure},
-		{"database", writeLLMDatabase, &doc.Database},
-		{"installation", writeLLMInstallation, &doc.Installation},
-		{"patterns", writeLLMPatterns, &doc.Patterns},
-	}
-
-	for _, sw := range sectionWriters {
-		if wantSection(sections, sw.key) {
-			var sb strings.Builder
-			sw.write(&sb)
-			s := sb.String()
-			*sw.field = &s
-		}
-	}
-
-	data, _ := json.MarshalIndent(doc, "", "  ")
-
-	return string(data) + "\n"
+	return buf.String()
 }
 
 // buildLLMDocument assembles the complete LLM.md content dynamically.

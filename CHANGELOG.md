@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.61.0 — (2026-05-26) — Auto parent-escape for clone family + bulk visibility + `cfrp` prior-version privatize
+
+- Added: `gitmap/cmd/escapecwd.go` — `escapeCwdIfInside(target)` chdirs to the parent of a target folder before `os.RemoveAll`, releasing the Windows directory handle. Wired into `cloneReplacing` (`clone` / `cfr` / `cfrp`) and `clonenext.go` (`cn v++`) so the user can run these commands from *inside* the folder they're about to replace.
+- Changed: `cn v++` always flattens into the base-name folder. The previous versioned-folder fallback was removed; any post-escape removal failure now aborts with a clear error instead of silently writing to `repo-vN+1/`.
+- Added: `cfrp` post-publish step scans up to 15 prior versions (`CFRPPriorMaxLookback`) and prompts to privatize any that are still public. `-y` / `--yes` propagates through `parseCloneFixRepoArgs` so the privatize step skips prompts in scripted runs.
+- Added: bulk visibility — `make-public <count>`, `make-public <repo-or-url> <count>`, and matching `make-private` forms in `visibilitybulk.go` / `visibilitybulkhelpers.go`. `make-private` runs without per-repo confirmation; `make-public` honors `--yes` for a single batch confirmation.
+- Updated: help text for `make-public`, `make-private`, `clone-fix-repo` (parent-chdir note), and `clone-fix-repo-pub` (`-y` + prior-version behavior). README examples added.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.61.0**.
+
+
+
 ## v5.60.0 — (2026-05-26) — `gitmap binary` footer never falls back to current repo
 
 - Fixed: the `gitmap binary` identity block at the bottom of `gitmap` / `gitmap help` no longer shows the **current repo's** Repo/Branch/Last commit/SHA when the source-repo bake-in is missing. Root cause: `captureGit("", ...)` inherited the process CWD because `exec.Cmd.Dir = ""` defaults to it, so probing an unknown gitmap source dir silently fell through to the user's working repo — making the two footer blocks identical (see uploaded screenshot showing `macro-ahk-v39` repeated in both blocks).

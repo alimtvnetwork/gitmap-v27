@@ -44,6 +44,10 @@ soft-fail" for the full rule set.
 2. 📂 **cd** — chdirs into the resolved folder.
 3. 🔧 **fix-repo** — re-execs the same gitmap binary with `fix-repo --all` so every prior `{base}-vN` token in tracked text files is rewritten to the current version. Skipped (with a notice) when the repo identity has no `-vN` suffix, unless `--require-version` is set.
 
+> **v5.61.0+** — if your shell cwd is already inside the target
+> folder, `cfr` chdir's to the parent before re-cloning so the
+> Windows file-handle lock never blocks the remove step.
+
 ## Examples
 
 ```

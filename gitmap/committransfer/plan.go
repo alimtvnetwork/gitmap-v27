@@ -24,7 +24,10 @@ func BuildPlan(sourceDir, targetDir string, opts Options) (ReplayPlan, error) {
 	if opts.Limit > 0 && len(shas) > opts.Limit {
 		shas = shas[:opts.Limit]
 	}
-	recentTargetLog, _ := recentLogSubjectsAndBodies(targetDir, 200)
+	// Unbounded: 0 = scan full target history (spec 114 Gap A — prevents
+	// false-fresh classification on targets with >200 commits since the
+	// already-applied source commit).
+	recentTargetLog, _ := recentLogSubjectsAndBodies(targetDir, 0)
 
 	plan, err := assemblePlan(sourceDir, targetDir, sourceHead, base, shas, recentTargetLog, opts)
 	if err == nil {

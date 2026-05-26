@@ -133,7 +133,10 @@ func registerCommitTransferBools(fs *flag.FlagSet, opts *committransfer.Options)
 	fs.BoolVar(&opts.DryRun, constants.FlagCTDryRun, false, constants.FlagDescCTDryRun)
 	fs.BoolVar(&opts.NoPush, constants.FlagCTNoPush, false, constants.FlagDescCTNoPush)
 	fs.BoolVar(&opts.NoCommit, constants.FlagCTNoCommit, false, constants.FlagDescCTNoCommit)
-	fs.BoolVar(&opts.IncludeMerges, constants.FlagCTIncludeMerges, false, constants.FlagDescCTIncludeMerges)
+	fs.BoolFunc(constants.FlagCTIncludeMerges, constants.FlagDescCTIncludeMerges,
+		func(string) error { opts.IncludeMerges = true; return nil })
+	fs.BoolFunc(constants.FlagCTNoIncludeMerges, constants.FlagDescCTNoIncludeMerges,
+		func(string) error { opts.IncludeMerges = false; return nil })
 	fs.BoolVar(&opts.Mirror, constants.FlagCTMirror, false, constants.FlagDescCTMirror)
 	fs.BoolVar(&opts.ForceReplay, constants.FlagCTForceReplay, false, constants.FlagDescCTForceReplay)
 	fs.BoolVar(&opts.Interleave, constants.FlagCTInterleave, false, constants.FlagDescCTInterleave)

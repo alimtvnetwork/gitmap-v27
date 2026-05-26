@@ -104,14 +104,10 @@ func printStatsTerminal(overall model.OverallStats, commands []model.CommandStat
 	}
 }
 
-// printStatsJSON outputs stats as JSON.
+// printStatsJSON outputs stats as stable JSON (see statsrender.go).
 func printStatsJSON(overall model.OverallStats, commands []model.CommandStats) {
 	overall.Commands = commands
-	data, err := json.MarshalIndent(overall, "", "  ")
-	if err != nil {
+	if err := encodeStatsJSON(os.Stdout, overall, commands); err != nil {
 		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal stats to JSON: %v\n", err)
-
-		return
 	}
-	fmt.Println(string(data))
 }

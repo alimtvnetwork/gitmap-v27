@@ -86,6 +86,7 @@ type Options struct {
 	Interleave     bool          // commit-both only: author-date interleave
 	Limit          int           // 0 = no limit; replay at most N (oldest first)
 	Since          string        // override divergence base (sha or date)
+	MaxHistoryScan int           // 0 = unbounded target log scan (spec 114 Gap A); >0 caps the idempotence-check log query at N commits
 	Prefer         PreferPolicy  // file-conflict policy
 	Message        MessagePolicy // §6 pipeline knobs
 	CommandName    string        // "commit-right" etc.

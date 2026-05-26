@@ -158,6 +158,7 @@ func registerMessagePolicyToggles(fs *flag.FlagSet, opts *committransfer.Options
 func registerCommitTransferStrings(fs *flag.FlagSet, opts *committransfer.Options) {
 	fs.IntVar(&opts.Limit, constants.FlagCTLimit, 0, constants.FlagDescCTLimit)
 	fs.StringVar(&opts.Since, constants.FlagCTSince, "", constants.FlagDescCTSince)
+	fs.IntVar(&opts.MaxHistoryScan, constants.FlagCTMaxHistoryScan, 0, constants.FlagDescCTMaxHistoryScan)
 	fs.Func(constants.FlagCTStrip, constants.FlagDescCTStrip, func(v string) error {
 		opts.Message.StripPatterns = append(opts.Message.StripPatterns, v)
 

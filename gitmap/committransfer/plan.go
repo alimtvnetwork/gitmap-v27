@@ -24,10 +24,11 @@ func BuildPlan(sourceDir, targetDir string, opts Options) (ReplayPlan, error) {
 	if opts.Limit > 0 && len(shas) > opts.Limit {
 		shas = shas[:opts.Limit]
 	}
-	// Unbounded: 0 = scan full target history (spec 114 Gap A — prevents
-	// false-fresh classification on targets with >200 commits since the
-	// already-applied source commit).
-	recentTargetLog, _ := recentLogSubjectsAndBodies(targetDir, 0)
+	// Unbounded by default (spec 114 Gap A — prevents false-fresh
+	// classification on targets with >200 commits since the
+	// already-applied source commit). opts.MaxHistoryScan > 0 lets
+	// callers cap the scan on very large targets.
+	recentTargetLog, _ := recentLogSubjectsAndBodies(targetDir, opts.MaxHistoryScan)
 	replayedSet := BuildReplayedSet(recentTargetLog)
 
 	plan, err := assemblePlan(sourceDir, targetDir, sourceHead, base, shas, replayedSet, opts)

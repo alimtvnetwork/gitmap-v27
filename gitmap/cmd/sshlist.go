@@ -1,12 +1,13 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 
 	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v23/gitmap/model"
 )
+
 
 // runSSHList displays all stored SSH keys as an aligned table or JSON.
 func runSSHList(args ...string) {
@@ -54,15 +55,10 @@ func runSSHList(args ...string) {
 }
 
 // printSSHListJSON outputs SSH keys as JSON.
-func printSSHListJSON(keys interface{}) {
-	data, err := json.MarshalIndent(keys, "", "  ")
-	if err != nil {
+func printSSHListJSON(keys []model.SSHKey) {
+	if err := encodeSSHListJSON(os.Stdout, keys); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrSSHQuery, err)
-
-		return
 	}
-
-	fmt.Println(string(data))
 }
 
 // hasFlagInArgs checks if a flag is present in the given args slice.

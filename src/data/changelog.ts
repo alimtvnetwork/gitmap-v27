@@ -8,6 +8,20 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.74.0",
+    date: "2026-05-26",
+    subtitle: "`ssh list --json` migrated to `stablejson` + published JSON schema",
+    items: [
+      "Migrated: `gitmap ssh list --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/sshlistrender.go`). Key order (`id`, `name`, `privatePath`, `publicKey`, `fingerprint`, `email`, `createdAt`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.SSHKey`.",
+      "Removed: legacy `json.MarshalIndent` path in `sshlist.go`; routed through the new stable encoder.",
+      "Added: `spec/08-json-schemas/ssh-list.schema.json` — published JSON Schema for downstream consumers.",
+      "Added: `gitmap/cmd/sshlist_jsonschema_contract_test.go` + `sshlistjson_contract_test.go` — schema drift detection + golden fixture (empty array) + key-order contract.",
+      "Added: `gitmap/cmd/testdata/schemas/ssh-list.v1.json` — schema registry entry for key-order drift detection.",
+      "Updated: `spec/08-json-schemas/_TODO.md` — `ssh list` marked done; clarified `env-registry` has no actual `--json` stdout flag.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.74.0.",
+    ],
+  },
+  {
     version: "v5.73.0",
     date: "2026-05-26",
     subtitle: "`list-versions --json` migrated to `stablejson` + published JSON schema",

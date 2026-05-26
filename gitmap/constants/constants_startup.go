@@ -102,9 +102,6 @@ const (
 	ErrStartupUnsupportedOS = "startup commands are not supported on this OS " +
 		"(Linux/Unix XDG autostart and macOS LaunchAgents are supported; " +
 		"on Windows use the Windows startup commands)"
-	ErrStartupAddDarwinTODO = "startup-add is not yet implemented for macOS " +
-		"(use list/remove for existing LaunchAgents; add support is tracked " +
-		"in the OS-agnostic startup roadmap)"
 )
 
 // startup-add CLI flag descriptions. Kept here (not in

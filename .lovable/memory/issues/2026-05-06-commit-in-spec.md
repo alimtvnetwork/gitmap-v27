@@ -1,6 +1,6 @@
 # 2026-05-06 — commit-in spec authored
 
-**Status:** Spec complete; awaiting `next` to start Phase 1.
+**Status:** All phases complete (v4.18.0). End-to-end orchestration, pipeline polish, and CLI integration all landed.
 
 ## Produced
 - `spec/03-commit-in/` — README + 7 iteration files (overview / CLI / pipeline / DB+ERD / profiles+JSON / message+fn-intel / acceptance).

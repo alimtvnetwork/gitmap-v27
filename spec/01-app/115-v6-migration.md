@@ -1,6 +1,6 @@
 # Spec 115 — v6.0.0 Migration Guide
 
-Status: DRAFT
+Status: PUBLISHED (implemented v6.0.0)
 Version target: v6.0.0
 Owners: committransfer package, release management
 

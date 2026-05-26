@@ -1,7 +1,7 @@
 # Spec 114 — Commit-Transfer Idempotence + Merge-Default Hardening
 
-Status: DRAFT (carried forward from commit-transfer post-mortem 2026-05-09)
-Version target: v5.62.0
+Status: PUBLISHED (Gap A resolved v5.78.0/v5.83.0; Gap B flag v5.62.0, default flip v6.0.0)
+Version target: v5.62.0 – v6.0.0
 Owners: committransfer package
 
 ## Problem

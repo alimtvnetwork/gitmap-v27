@@ -38,9 +38,10 @@ roughly by perceived consumer impact — high-traffic / scripting-friendly first
 | med | `gitmap-v23 llm-docs` (`llmdocs.go`) | LLM-consumed; ordering helps determinism |
 | ✅ done | ~~`gitmap-v23 list-versions --json` (`listversionsutil.go`)~~ | Migrated to stablejson via `listversionsrender.go` (v5.73.0). Optional `source`/`changelog` are conditionally appended to preserve legacy omitempty shape. Schema: [`list-versions.schema.json`](list-versions.schema.json). Pinned by `gitmap/cmd/listversions_jsonschema_contract_test.go` + `listversionsjson_contract_test.go`. |
 | ✅ done | ~~`gitmap-v23 version-history --json` (`versionhistory.go`)~~ | Migrated to stablejson via `versionhistoryrender.go` (v5.76.0). Schema: [`version-history.schema.json`](version-history.schema.json). Pinned by `gitmap/cmd/versionhistory_jsonschema_contract_test.go` + `versionhistoryjson_contract_test.go`. |
+| med | `gitmap-v23 seo write` (`seowritecreate.go`) | Sample/template output |
 | low | `gitmap-v23 scan-project` (`scanprojectoutput.go`) | File output, not piped |
 | ✅ done | ~~`gitmap-v23 stats --json` (`stats.go`)~~ | Migrated to stablejson via `statsrender.go` (v5.75.0). Top-level object + nested compact `commands` array (`json.RawMessage`). Schema: [`stats.schema.json`](stats.schema.json). Pinned by `gitmap/cmd/stats_jsonschema_contract_test.go` + `statsjson_contract_test.go`. |
-| ✅ done | ~~`gitmap-v23 stats --json` (`stats.go`)~~ | Migrated to stablejson via `statsrender.go` (v5.75.0). Top-level object + nested compact `commands` array (`json.RawMessage`). Schema: [`stats.schema.json`](stats.schema.json). Pinned by `gitmap/cmd/stats_jsonschema_contract_test.go` + `statsjson_contract_test.go`. |
+| ✅ done | ~~`gitmap-v23 temp-releaselist --json` (`tempreleaselist.go`)~~ | Migrated to stablejson via `tempreleaselistrender.go` (v5.77.0). Schema: [`temp-release-list.schema.json`](temp-release-list.schema.json). Pinned by `gitmap/cmd/tempreleaselist_jsonschema_contract_test.go` + `tempreleaselistjson_contract_test.go`. |
 
 ## Estimated effort
 

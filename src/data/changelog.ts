@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.64.0",
+    date: "2026-05-26",
+    subtitle: "`history --json` migrated to `stablejson` + published JSON schema",
+    items: [
+      "Migrated: `gitmap history --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/historyrender.go`). Key order is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.CommandHistoryRecord`.",
+      "Added: `spec/08-json-schemas/history.schema.json` — published JSON Schema for downstream consumers.",
+      "Added: `gitmap/cmd/history_jsonschema_contract_test.go` + `historyjson_contract_test.go` — pairs the runtime encoder with the published schema so drift in either side fails the build.",
+      "Updated: `spec/08-json-schemas/_TODO.md` — `history` flipped from `high` to `done`.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.64.0.",
+    ],
+  },
+  {
     version: "v5.63.0",
     date: "2026-05-26",
     subtitle: "`find-next --json` migrated to `stablejson` + published JSON schema",

@@ -76,14 +76,14 @@ func resolveBase(sourceDir, targetDir, since string) (string, error) {
 // assemblePlan turns raw SHAs into hydrated SourceCommit entries with
 // the message pipeline + idempotence check applied.
 func assemblePlan(sourceDir, targetDir, sourceHead, base string,
-	shas []string, recentTargetLog string, opts Options,
+	shas []string, replayedSet map[string]struct{}, opts Options,
 ) (ReplayPlan, error) {
 	plan := ReplayPlan{
 		SourceDir: sourceDir, TargetDir: targetDir,
 		SourceHEAD: sourceHead, BaseSHA: base,
 	}
 	for _, sha := range shas {
-		entry, err := hydrateCommit(sourceDir, sha, recentTargetLog, opts)
+		entry, err := hydrateCommit(sourceDir, sha, replayedSet, opts)
 		if err != nil {
 			return plan, err
 		}

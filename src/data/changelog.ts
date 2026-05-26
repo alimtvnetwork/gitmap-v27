@@ -8,6 +8,20 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.73.0",
+    date: "2026-05-26",
+    subtitle: "`list-versions --json` migrated to `stablejson` + published JSON schema",
+    items: [
+      "Migrated: `gitmap list-versions --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/listversionsrender.go`). Key order (`version`, `source`, `changelog`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `lvJSONEntry`. Optional `source` and `changelog` are conditionally appended so the legacy omitempty wire shape is preserved.",
+      "Removed: legacy `lvJSONEntry` struct + `json.MarshalIndent` path in `listversionsutil.go`; routed through the new stable encoder.",
+      "Added: `spec/08-json-schemas/list-versions.schema.json` — published JSON Schema for downstream consumers.",
+      "Added: `gitmap/cmd/listversions_jsonschema_contract_test.go` + `listversionsjson_contract_test.go` — schema drift detection + golden fixtures (empty + canonical two-row) + key-order contract.",
+      "Added: `gitmap/cmd/testdata/schemas/list-versions.v1.json` — schema registry entry for key-order drift detection.",
+      "Updated: `spec/08-json-schemas/_TODO.md` — `list-versions` flipped from `med` to `done`.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.73.0.",
+    ],
+  },
+  {
     version: "v5.72.0",
     date: "2026-05-26",
     subtitle: "`latest-branch --json` migrated to `stablejson` + published JSON schema",

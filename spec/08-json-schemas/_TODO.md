@@ -35,7 +35,7 @@ roughly by perceived consumer impact — high-traffic / scripting-friendly first
 | med | `gitmap-v23 rescan --json` (`rescan.go`) | |
 | ✅ done | ~~`gitmap-v23 latest-branch --json` (`latestbranchoutput.go`)~~ | Migrated to stablejson via `latestbranchrender.go` (v5.72.0). Nested top-N array pre-rendered in compact mode. Schema: [`latest-branch.schema.json`](latest-branch.schema.json). Pinned by `gitmap/cmd/latestbranch_jsonschema_contract_test.go` + `latestbranchjson_contract_test.go`. |
 | med | `gitmap-v23 llm-docs` (`llmdocs.go`) | LLM-consumed; ordering helps determinism |
-| med | `gitmap-v23 list-versions --json` (`listversionsutil.go`) | |
+| ✅ done | ~~`gitmap-v23 list-versions --json` (`listversionsutil.go`)~~ | Migrated to stablejson via `listversionsrender.go` (v5.73.0). Optional `source`/`changelog` are conditionally appended to preserve legacy omitempty shape. Schema: [`list-versions.schema.json`](list-versions.schema.json). Pinned by `gitmap/cmd/listversions_jsonschema_contract_test.go` + `listversionsjson_contract_test.go`. |
 | med | `gitmap-v23 task list --json` (`taskops.go`) | |
 | med | `gitmap-v23 seo write` (`seowritecreate.go`) | Sample/template output |
 | low | `gitmap-v23 scan-project` (`scanprojectoutput.go`) | File output, not piped |

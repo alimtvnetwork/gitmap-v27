@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.73.0 — (2026-05-26) — `list-versions --json` migrated to `stablejson` + published JSON schema
+
+- Migrated: `gitmap list-versions --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/listversionsrender.go`). Key order (`version`, `source`, `changelog`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `lvJSONEntry`. Optional `source` and `changelog` are conditionally appended so the legacy omitempty wire shape is preserved (absent rather than null/empty).
+- Removed: legacy `lvJSONEntry` struct + `json.MarshalIndent` path in `listversionsutil.go`; routed through the new stable encoder.
+- Added: `spec/08-json-schemas/list-versions.schema.json` — published JSON Schema for downstream consumers.
+- Added: `gitmap/cmd/listversions_jsonschema_contract_test.go` + `listversionsjson_contract_test.go` — schema drift detection + golden fixtures (empty + canonical two-row) + key-order contract.
+- Added: `gitmap/cmd/testdata/schemas/list-versions.v1.json` — schema registry entry for key-order drift detection.
+- Updated: `spec/08-json-schemas/_TODO.md` — `list-versions` flipped from `med` to `done`.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.73.0**.
+
+
+
 ## v5.72.0 — (2026-05-26) — `latest-branch --json` migrated to `stablejson` + published JSON schema
 
 - Migrated: `gitmap latest-branch --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/latestbranchrender.go`). Key order (`branch`, `remote`, `sha`, `commitDate`, `subject`, `ref`, `top`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `latestBranchJSON`. The nested `top` array is pre-rendered in compact mode and embedded as `json.RawMessage`.

@@ -50,7 +50,7 @@ irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.ps1 
 curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.sh | sh
 ```
 
-### 📌 Pinned version (`v5.64.0`)
+### 📌 Pinned version (`v5.65.0`)
 
 ```powershell
 # Windows · PowerShell
@@ -62,9 +62,9 @@ irm https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/releas
 curl -fsSL https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/release-version-v5.63.0.sh | bash
 ```
 
-#### 🧭 Version matrix — `v5.64.0` install-script URLs
+#### 🧭 Version matrix — `v5.65.0` install-script URLs
 
-One-line installers and release assets for the pinned **v5.64.0** build across every supported platform. All URLs resolve to the exact release tag — no fallback, no discovery.
+One-line installers and release assets for the pinned **v5.65.0** build across every supported platform. All URLs resolve to the exact release tag — no fallback, no discovery.
 
 | Platform | Shell | Install-script URL | Release binary asset |
 | --- | --- | --- | --- |

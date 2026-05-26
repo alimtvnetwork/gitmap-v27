@@ -1,6 +1,15 @@
 # Changelog
 
-## v5.73.0 — (2026-05-26) — `list-versions --json` migrated to `stablejson` + published JSON schema
+## v5.74.0 — (2026-05-26) — `ssh list --json` migrated to `stablejson` + published JSON schema
+
+- Migrated: `gitmap ssh list --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/sshlistrender.go`). Key order (`id`, `name`, `privatePath`, `publicKey`, `fingerprint`, `email`, `createdAt`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.SSHKey`.
+- Removed: legacy `json.MarshalIndent` path in `sshlist.go`; routed through the new stable encoder.
+- Added: `spec/08-json-schemas/ssh-list.schema.json` — published JSON Schema for downstream consumers.
+- Added: `gitmap/cmd/sshlist_jsonschema_contract_test.go` + `sshlistjson_contract_test.go` — schema drift detection + golden fixture (empty array) + key-order contract.
+- Added: `gitmap/cmd/testdata/schemas/ssh-list.v1.json` — schema registry entry for key-order drift detection.
+- Updated: `spec/08-json-schemas/_TODO.md` — `ssh list` marked done; clarified `env-registry` has no actual `--json` stdout flag.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.74.0**.
+
 
 - Migrated: `gitmap list-versions --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/listversionsrender.go`). Key order (`version`, `source`, `changelog`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `lvJSONEntry`. Optional `source` and `changelog` are conditionally appended so the legacy omitempty wire shape is preserved (absent rather than null/empty).
 - Removed: legacy `lvJSONEntry` struct + `json.MarshalIndent` path in `listversionsutil.go`; routed through the new stable encoder.

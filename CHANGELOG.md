@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.72.0 — (2026-05-26) — `latest-branch --json` migrated to `stablejson` + published JSON schema
+
+- Migrated: `gitmap latest-branch --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/latestbranchrender.go`). Key order (`branch`, `remote`, `sha`, `commitDate`, `subject`, `ref`, `top`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `latestBranchJSON`. The nested `top` array is pre-rendered in compact mode and embedded as `json.RawMessage`.
+- Added: `spec/08-json-schemas/latest-branch.schema.json` — published JSON Schema for downstream consumers.
+- Added: `gitmap/cmd/latestbranch_jsonschema_contract_test.go` — schema drift detection (top-level object shape, required key set, encoder-keys ⊂ schema.properties).
+- Updated: `gitmap/cmd/latestbranchjson_contract_test.go` — refreshed comments to reference `latestbranchrender.go` wire-key constants.
+- Updated: `gitmap/cmd/testdata/latest_branch_no_top.json` — regenerated golden fixture to match stablejson output.
+- Updated: `spec/08-json-schemas/_TODO.md` — `latest-branch` flipped from `med` to `done`.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.72.0**.
+
+
+
 ## v5.71.0 — (2026-05-26) — `project-repos --json` migrated to `stablejson` + published JSON schema
 
 - Migrated: `gitmap <type>-repos --json` (go/node/react/cpp/csharp) encoder onto `gitmap/stablejson` (new `gitmap/cmd/projectreposrender.go`). Key order (`id`, `repoId`, `repoName`, `projectTypeId`, `projectType`, `projectName`, `absolutePath`, `repoPath`, `relativePath`, `primaryIndicator`, `detectedAt`) is now a compile-time decision via package-level wire-key constants.

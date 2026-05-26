@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.80.0 — (2026-05-26) — JSON schema contract: `llm-docs --format=json`
+
+- Added: `spec/08-json-schemas/llm-docs.schema.json` — draft-07 schema pinning the top-level object shape (8 optional sections in contractual order: `commands`, `architecture`, `flags`, `conventions`, `structure`, `database`, `installation`, `patterns`) plus the nested command-group (`title`, `commands`) and per-command (`name`, `alias`, `description`, optional `example`) structures.
+- Added: `gitmap/cmd/testdata/schemas/llm-docs.v1.json` — schema-registry entry locking the 8-key top-level order so `assertSchemaKeysFirstObject` enforces drift on every CI run.
+- Added: `gitmap/cmd/testdata/llm_docs_empty.json` — golden fixture asserting an empty-sections filter emits `{}\n` (not `null`).
+- Added: `gitmap/cmd/llmdocsjson_contract_test.go` — three contract tests: empty-object guarantee, top-level key-order against the schema registry, and nested command-group/per-command key-order assertion (with optional `example` only appearing as the 4th key when non-empty).
+- Added: `gitmap/cmd/llmdocs_jsonschema_contract_test.go` — schema-shape pin: verifies the JSON Schema declares all 8 top-level properties + the nested `commands.items` group + per-command properties (`name`, `alias`, `description`, `example`), and that every key the live encoder emits is declared in the schema.
+- Updated: `spec/08-json-schemas/_TODO.md` — `llm-docs` confirmed migrated (renderer landed earlier; this release closes the missing schema + contract test gap).
+
+
+
 ## v5.79.0 — (2026-05-26) — Spec 114 Gap A: hash-set idempotence for unbounded target log
 
 - Fixed: `AlreadyReplayed` previously performed an O(N×M) `strings.Contains` substring scan across the entire concatenated target log for every source commit. On targets with long histories (the unbounded scan enabled by the v5.78.0 fix), this became a hidden performance bottleneck.

@@ -1,5 +1,13 @@
 # Changelog
 
+## v5.82.0 — (2026-05-26) — `gitmap export` schema v2: per-record property pinning
+
+- Extended: `spec/08-json-schemas/export.schema.json` (now v2) — adds full `items.properties` + `items.required` declarations for all five nested arrays. Pinned record shapes: `repos` (`model.ScanRecord`, 15 keys), `groups` (`model.GroupExport` = `Group` + `repoSlugs`, 6 keys), `releases` (`model.ReleaseRecord`, 14 keys), `history` (`model.CommandHistoryRecord`, 12 keys with `alias`/`args`/`flags`/`finishedAt`/`summary`/`createdAt` flagged optional per `omitempty`), `bookmarks` (`model.BookmarkRecord`, 6 keys with `args`/`flags`/`createdAt` flagged optional per `omitempty`).
+- Added: `gitmap/cmd/export_nested_jsonschema_contract_test.go` — `TestExportJSONSchema_NestedRecordKeysSubsetOfProperties` builds a deterministic non-empty export (one record per nested array), runs the live `encodeDatabaseExportJSON`, and asserts every key emitted on each per-record object is declared in that array's `items.properties` map. Catches struct-tag drift in either the model or the schema on every CI run.
+- Updated: `spec/08-json-schemas/_TODO.md` — `export` row updated to reflect schema v2 closure of the per-record property-set gap left open in v5.81.0.
+
+
+
 ## v5.81.0 — (2026-05-26) — JSON schema contract: `gitmap export`
 
 - Added: `spec/08-json-schemas/export.schema.json` — draft-07 schema pinning the top-level object shape (7 required keys in contractual order: `version`, `exportedAt`, `repos`, `groups`, `releases`, `history`, `bookmarks`). Per-record key order within the five nested arrays is explicitly NOT pinned in v1 — that scope (one schema per nested record type) is deferred.

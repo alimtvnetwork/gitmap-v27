@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.71.0 — (2026-05-26) — `project-repos --json` migrated to `stablejson` + published JSON schema
+
+- Migrated: `gitmap <type>-repos --json` (go/node/react/cpp/csharp) encoder onto `gitmap/stablejson` (new `gitmap/cmd/projectreposrender.go`). Key order (`id`, `repoId`, `repoName`, `projectTypeId`, `projectType`, `projectName`, `absolutePath`, `repoPath`, `relativePath`, `primaryIndicator`, `detectedAt`) is now a compile-time decision via package-level wire-key constants.
+- Added: `spec/08-json-schemas/project-repos.schema.json` — published JSON Schema for downstream consumers.
+- Added: `gitmap/cmd/projectrepos_jsonschema_contract_test.go` + `projectreposjson_contract_test.go` — schema drift detection + golden fixture + key-order contract.
+- Added: `gitmap/cmd/testdata/schemas/project-repos.v1.json` — schema registry entry for key-order drift detection.
+- Updated: `spec/08-json-schemas/_TODO.md` — `project repos` flipped from `med` to `done`.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.71.0**.
+
+
+
 ## v5.70.0 — (2026-05-26) — `bookmark list --json` migrated to `stablejson` + published JSON schema
 
 - Migrated: `gitmap bookmark list --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/bookmarklistrender.go`). Key order (`id`, `name`, `command`, `args`, `flags`, `createdAt`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.BookmarkRecord`.

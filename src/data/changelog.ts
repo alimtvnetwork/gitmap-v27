@@ -8,6 +8,19 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.71.0",
+    date: "2026-05-26",
+    subtitle: "`project-repos --json` migrated to `stablejson` + published JSON schema",
+    items: [
+      "Migrated: `gitmap <type>-repos --json` (go/node/react/cpp/csharp) encoder onto `gitmap/stablejson` (new `gitmap/cmd/projectreposrender.go`). Key order (`id`, `repoId`, `repoName`, `projectTypeId`, `projectType`, `projectName`, `absolutePath`, `repoPath`, `relativePath`, `primaryIndicator`, `detectedAt`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.DetectedProject`.",
+      "Added: `spec/08-json-schemas/project-repos.schema.json` — published JSON Schema for downstream consumers.",
+      "Added: `gitmap/cmd/projectrepos_jsonschema_contract_test.go` + `projectreposjson_contract_test.go` — schema drift detection + golden fixture + key-order contract.",
+      "Added: `gitmap/cmd/testdata/schemas/project-repos.v1.json` — schema registry entry for key-order drift detection.",
+      "Updated: `spec/08-json-schemas/_TODO.md` — `project repos` flipped from `med` to `done`.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.71.0.",
+    ],
+  },
+  {
     version: "v5.70.0",
     date: "2026-05-26",
     subtitle: "`bookmark list --json` migrated to `stablejson` + published JSON schema",

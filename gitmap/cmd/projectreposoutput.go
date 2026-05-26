@@ -2,7 +2,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -39,11 +38,9 @@ func printProjectsSummary(projects []model.DetectedProject) {
 	fmt.Fprintf(os.Stderr, constants.MsgProjectListCount, len(projects))
 }
 
-// printProjectsJSON prints projects as formatted JSON.
+// printProjectsJSON prints projects as formatted JSON via stablejson.
 func printProjectsJSON(projects []model.DetectedProject) {
-	encoder := json.NewEncoder(os.Stdout)
-	encoder.SetIndent("", "  ")
-	if err := encoder.Encode(projects); err != nil {
+	if err := encodeProjectReposJSON(os.Stdout, projects); err != nil {
 		fmt.Fprintf(os.Stderr, "  ✗ Failed to encode projects JSON: %v\n", err)
 	}
 }

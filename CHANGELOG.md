@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.75.0 — (2026-05-26) — `stats --json` migrated to `stablejson` + published JSON schema
+
+- Migrated: `gitmap stats --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/statsrender.go`). Top-level object key order (`totalCommands`, `uniqueCommands`, `totalSuccess`, `totalFail`, `overallFailRate`, `avgDurationMs`, `commands`) AND nested per-command row key order (`command`, `totalRuns`, `successCount`, `failCount`, `failRate`, `avgDurationMs`, `minDurationMs`, `maxDurationMs`, `lastUsed`) are now compile-time decisions via package-level wire-key constants instead of reflection accidents on `model.OverallStats` / `model.CommandStats`. The nested array is pre-rendered in compact mode and embedded as `json.RawMessage`.
+- Removed: legacy `json.MarshalIndent(overall, ...)` path in `stats.go`; routed through the new stable encoder.
+- Added: `spec/08-json-schemas/stats.schema.json` — published JSON Schema (top-level object + nested items contract).
+- Added: `gitmap/cmd/stats_jsonschema_contract_test.go` + `statsjson_contract_test.go` — schema drift detection + golden fixture (empty commands array) + key-order contract.
+- Added: `gitmap/cmd/testdata/schemas/stats.v1.json` — schema registry entry for top-level key-order drift detection.
+- Updated: `spec/08-json-schemas/_TODO.md` — `stats` marked done.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.75.0**.
+
+
 ## v5.74.0 — (2026-05-26) — `ssh list --json` migrated to `stablejson` + published JSON schema
 
 - Migrated: `gitmap ssh list --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/sshlistrender.go`). Key order (`id`, `name`, `privatePath`, `publicKey`, `fingerprint`, `email`, `createdAt`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.SSHKey`.

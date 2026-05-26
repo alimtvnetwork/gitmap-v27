@@ -8,6 +8,16 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.78.0",
+    date: "2026-05-26",
+    subtitle: "Fix Windows CI: restore CWD in `escapecwd` tests",
+    items: [
+      "Fixed: `TestEscapeCwdIfInside_NotInside` and `TestEscapeCwdIfInside_EscapesWhenInside` previously called `os.Chdir(t.TempDir())` without restoring the original working directory. On Windows, when the temp dir was later removed by `t.TempDir`'s cleanup, the process CWD became invalid (Windows reports it as `C:\\`), cascading into ~40 unrelated failures in the same `cmd` package: every schema/golden test that walks up from CWD looking for `spec/08-json-schemas/*.json` or `testdata/*.json` aborted with `walking up from C:\\` or `The system cannot find the path specified`.",
+      "Added: `restoreCwd(t)` helper in `gitmap/cmd/escapecwd_test.go` — snapshots `os.Getwd()` and registers a `t.Cleanup` that chdir's back. Registered BEFORE the test's chdir so it runs AFTER the chdir-out but BEFORE `t.TempDir`'s RemoveAll (Cleanup runs LIFO), eliminating both the cascade AND the Windows 'file in use' RemoveAll warning seen in the same job.",
+      "Why this only blew up now: linux/macOS tolerate a deleted CWD by reporting the stale path string; Windows `GetCurrentDirectoryW` returns the volume root the moment the directory handle goes away. The leak existed for many releases but only became fatal once enough cmd-package tests started walking up from CWD (recent JSON-schema migration sprint).",
+    ],
+  },
+  {
     version: "v5.77.0",
     date: "2026-05-26",
     subtitle: "`temp-releaselist --json` migrated to `stablejson` + published JSON schema",

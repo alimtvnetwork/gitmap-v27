@@ -112,11 +112,7 @@ func printVersionHistoryJSON(records []model.RepoVersionHistoryRecord) {
 		return
 	}
 
-	data, err := json.MarshalIndent(records, "", "  ")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "  Error: failed to marshal version history to JSON: %v\n", err)
-
-		return
+	if err := encodeVersionHistoryJSON(os.Stdout, records); err != nil {
+		fmt.Fprintf(os.Stderr, "  Error: failed to encode version history to JSON: %v\n", err)
 	}
-	fmt.Println(string(data))
 }

@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.63.0",
+    date: "2026-05-26",
+    subtitle: "`find-next --json` migrated to `stablejson` + published JSON schema",
+    items: [
+      "Migrated: `gitmap find-next --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/findnextrender.go`). Top-level key order is now a compile-time decision via package-level wire-key constants. Byte output is unchanged thanks to the stablejson byte-compat contract with `json.Encoder.SetIndent`.",
+      "Added: `spec/08-json-schemas/find-next.schema.json` — published JSON Schema for downstream consumers. Nested `repo` allows passthrough so future `model.ScanRecord` column additions don't ripple-break every find-next consumer.",
+      "Added: `gitmap/cmd/findnext_jsonschema_contract_test.go` — pairs the runtime encoder with the published schema so drift in either side fails the build.",
+      "Updated: `spec/08-json-schemas/_TODO.md` — `find-next` flipped from `med` to `done`.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.63.0.",
+    ],
+  },
+  {
     version: "v5.62.0",
     date: "2026-05-26",
     subtitle: "commit-transfer idempotence beyond 200 commits (spec 114 Gap A)",

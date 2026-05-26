@@ -27,7 +27,7 @@ roughly by perceived consumer impact — high-traffic / scripting-friendly first
 | med | `gitmap-v23 amend list --json` (`amendlist.go`) | Migrated to stablejson via `amendlistrender.go` (v5.67.0). Schema: [`amend-list.schema.json`](amend-list.schema.json). Pinned by `gitmap/cmd/amendlist_jsonschema_contract_test.go` + `amendlistjson_contract_test.go`. |
 | ✅ done | ~~`gitmap-v23 amend audit` (`amendaudit.go`)~~ | Migrated to stablejson via `amendauditrender.go` (v5.68.0). Schema: [`amend-audit.schema.json`](amend-audit.schema.json). Pinned by `gitmap/cmd/amendaudit_jsonschema_contract_test.go` + `amendauditjson_contract_test.go`. |
 | ✅ done | ~~`gitmap-v23 diff-profiles --json` (`diffprofiles.go`)~~ | Migrated to stablejson via `diffprofilesrender.go` (v5.69.0). Nested arrays pre-rendered in compact mode. Schema: [`diff-profiles.schema.json`](diff-profiles.schema.json). Pinned by `gitmap/cmd/diffprofiles_jsonschema_contract_test.go` + `diffprofilesjson_contract_test.go`. |
-| med | `gitmap-v23 bookmark list --json` (`bookmarklist.go`) | |
+| ✅ done | ~~`gitmap-v23 bookmark list --json` (`bookmarklist.go`)~~ | Migrated to stablejson via `bookmarklistrender.go` (v5.70.0). Schema: [`bookmark-list.schema.json`](bookmark-list.schema.json). Pinned by `gitmap/cmd/bookmarklist_jsonschema_contract_test.go` + `bookmarklistjson_contract_test.go`. |
 | med | `gitmap-v23 project repos --json` (`projectreposoutput.go`) | |
 | med | `gitmap-v23 env-registry --json` (`envregistry.go`) | |
 | med | `gitmap-v23 export` (`export.go`) | Backup/restore round-trip — strict ordering may matter |

@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 
@@ -61,13 +60,9 @@ func printBookmarkTerminal(records []model.BookmarkRecord) {
 
 // printBookmarkJSON outputs bookmarks as JSON.
 func printBookmarkJSON(records []model.BookmarkRecord) {
-	data, err := json.MarshalIndent(records, "", "  ")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal bookmarks to JSON: %v\n", err)
-
-		return
+	if err := encodeBookmarkListJSON(os.Stdout, records); err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to encode bookmarks to JSON: %v\n", err)
 	}
-	fmt.Println(string(data))
 }
 
 // runBookmarkDelete removes a saved bookmark by name.

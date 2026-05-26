@@ -33,7 +33,7 @@ roughly by perceived consumer impact — high-traffic / scripting-friendly first
 | med | `gitmap-v23 export` (`export.go`) | Backup/restore round-trip — strict ordering may matter |
 | ✅ done | ~~`gitmap-v23 find-next --json` (`findnext.go`)~~ | Migrated to `gitmap-v23/stablejson` via `findnextrender.go` (v5.63.0). Schema: [`find-next.schema.json`](find-next.schema.json) — nested `repo` allows passthrough. Pinned by `gitmap-v23/cmd/findnext_jsonschema_contract_test.go` (top-level shape + encoder-keys ⊂ schema.properties) on top of the pre-existing tag-order golden in `findnextjson_contract_test.go`. |
 | med | `gitmap-v23 rescan --json` (`rescan.go`) | |
-| med | `gitmap-v23 latest-branch --json` (`latestbranchoutput.go`) | |
+| ✅ done | ~~`gitmap-v23 latest-branch --json` (`latestbranchoutput.go`)~~ | Migrated to stablejson via `latestbranchrender.go` (v5.72.0). Nested top-N array pre-rendered in compact mode. Schema: [`latest-branch.schema.json`](latest-branch.schema.json). Pinned by `gitmap/cmd/latestbranch_jsonschema_contract_test.go` + `latestbranchjson_contract_test.go`. |
 | med | `gitmap-v23 llm-docs` (`llmdocs.go`) | LLM-consumed; ordering helps determinism |
 | med | `gitmap-v23 list-versions --json` (`listversionsutil.go`) | |
 | med | `gitmap-v23 task list --json` (`taskops.go`) | |

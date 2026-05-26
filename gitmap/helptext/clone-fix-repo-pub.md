@@ -51,6 +51,11 @@ soft-fail" for the full rule set.
 2. 📂 **cd** — chdirs into the resolved folder.
 3. 🔧 **fix-repo** — re-execs `fix-repo --all`. Skipped (with a notice) when the repo identity has no `-vN` suffix, unless `--require-version` is set.
 4. 🌍 **make-public** — re-execs `make-public --yes` (non-interactive — no confirmation prompt, since the intent is explicit in the command name).
+5. 🤐 **prior-version privatize** (v5.61.0+) — probes v(N-1), v(N-2), … on the same owner; if any are currently public, prompts `Privatize all N prior version(s)? [y/N]`. With `-y`, auto-confirms. Failures on individual slugs are non-fatal.
+
+Also (v5.61.0+) — if the user's shell cwd is already inside the
+target folder, `cfrp` chdir's to the parent before re-cloning so the
+Windows file-handle lock never blocks the remove step.
 
 Each step's exit code is propagated as-is; the pipeline halts on
 the first non-zero exit.

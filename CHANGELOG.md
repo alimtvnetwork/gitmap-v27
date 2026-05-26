@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.83.0 — (2026-05-26) — Spec 114 Gap A follow-up: `--max-history-scan` escape hatch
+
+- Added: `Options.MaxHistoryScan int` in `gitmap/committransfer/types.go` — opt-in cap on the target-history scan used by the idempotence check. Default `0` preserves the v5.78.0 unbounded behaviour; positive values cap the `git log` query at N commits for operators running against pathologically large targets (mirrored monorepos, tens of millions of commits) where the full log is prohibitive.
+- Wired: `gitmap/committransfer/plan.go` — `BuildPlan` now passes `opts.MaxHistoryScan` to `recentLogSubjectsAndBodies(targetDir, opts.MaxHistoryScan)` instead of the hard-coded `0`. The existing `<= 0` branch in `recentLogSubjectsAndBodies` keeps the unbounded default working with no other changes.
+- Added: `--max-history-scan N` CLI flag on all commit-transfer commands (`commit-in`, `commit-out`, `commit-left`, `commit-right`, `commit-both`). Constants: `FlagCTMaxHistoryScan` + `FlagDescCTMaxHistoryScan` in `gitmap/constants/constants_committransfer.go`. Wired in `registerCommitTransferStrings`.
+- Added: `gitmap/committransfer/maxhistoryscan_test.go` — pins the zero-value-means-unbounded contract and the struct-field round-trip so rename/removal triggers a compile failure here BEFORE it reaches CLI wiring or `plan.go`.
+- Updated: `spec/01-app/114-committransfer-idempotence-and-merge-default.md` — Gap A resolution gains an explicit step (4) documenting the v5.83.0 escape hatch.
+- Verified: `TestPlanIdempotenceBeyond200Commits` continues to pass because the default (`MaxHistoryScan=0`) preserves the unbounded scan behaviour added in v5.78.0.
+
+
+
 ## v5.82.0 — (2026-05-26) — `gitmap export` schema v2: per-record property pinning
 
 - Extended: `spec/08-json-schemas/export.schema.json` (now v2) — adds full `items.properties` + `items.required` declarations for all five nested arrays. Pinned record shapes: `repos` (`model.ScanRecord`, 15 keys), `groups` (`model.GroupExport` = `Group` + `repoSlugs`, 6 keys), `releases` (`model.ReleaseRecord`, 14 keys), `history` (`model.CommandHistoryRecord`, 12 keys with `alias`/`args`/`flags`/`finishedAt`/`summary`/`createdAt` flagged optional per `omitempty`), `bookmarks` (`model.BookmarkRecord`, 6 keys with `args`/`flags`/`createdAt` flagged optional per `omitempty`).

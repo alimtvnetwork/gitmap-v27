@@ -48,6 +48,13 @@ deprecation window.
 3. Add a regression test `TestPlanIdempotenceBeyond200Commits` that
    builds a target with 250+ commits, cherry-picks subject at index 5,
    and asserts the planner reports `AlreadyApplied`.
+4. v5.83.0 follow-up: add `--max-history-scan N` (Go field
+   `Options.MaxHistoryScan int`, default `0` = unbounded) as an escape
+   hatch for operators running against pathologically large targets
+   (e.g. mirrored monorepos in the tens of millions of commits) where
+   the unbounded `git log` of the v5.78.0 fix is prohibitive. Default
+   behaviour is unchanged; the knob is opt-in. Pinned by
+   `gitmap/committransfer/maxhistoryscan_test.go`.
 
 ### Gap B — Default flip with deprecation
 

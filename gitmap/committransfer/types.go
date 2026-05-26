@@ -73,12 +73,17 @@ const (
 
 // Options bundles every CLI flag for the commit-transfer family.
 // Mirrors movemerge.Options field-for-field where the semantics overlap.
+//
+// v6.0.0 breaking change: IncludeMerges defaults to true in the CLI layer.
+// Direct API users who create Options{} get the zero value (false), which
+// preserves legacy strip behaviour; set IncludeMerges = true explicitly
+// for the new default.
 type Options struct {
 	Yes            bool          // skip the confirm prompt
 	DryRun         bool          // print the plan; no writes
 	NoPush         bool          // skip the final git push
 	NoCommit       bool          // copy + stage but do not commit
-	IncludeMerges  bool          // pass through `git rev-list --no-merges`
+	IncludeMerges  bool          // default true in CLI; zero value = legacy strip (v6.0.0)
 	IncludeVCS     bool          // copy .git/* during snapshot
 	IncludeNodeMod bool          // copy node_modules/* during snapshot
 	Mirror         bool          // delete target-only files (true mirror)
@@ -121,6 +126,10 @@ type ReplayPlan struct {
 	// in PrintPlan / PrintSummary so the user can reconcile the plan
 	// count against `git log` (which includes merges by default).
 	MergeExcluded int
+
+	// IncludeMerges mirrors the option that produced this plan so
+	// PrintPlan can emit the correct notice (v6.0.0+).
+	IncludeMerges bool
 }
 
 // ReplayResult is the outcome after the replay loop runs.

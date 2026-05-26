@@ -34,6 +34,7 @@ func BuildPlan(sourceDir, targetDir string, opts Options) (ReplayPlan, error) {
 	plan, err := assemblePlan(sourceDir, targetDir, sourceHead, base, shas, replayedSet, opts)
 	if err == nil {
 		plan.MergeExcluded = mergeExcluded
+		plan.IncludeMerges = opts.IncludeMerges
 	}
 
 	return plan, err

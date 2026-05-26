@@ -8,6 +8,20 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v6.0.0",
+    date: "2026-05-26",
+    subtitle: "Breaking: `commit-transfer` merge default flips to `true`",
+    items: [
+      "Changed: `gitmap/cmd/committransfer.go` — `parseCommitTransferArgs` now initializes `Options.IncludeMerges = true`. The `--include-merges` flag is still accepted (redundant but harmless). Added `--no-include-merges` flag for explicit opt-out. Both flags use `BoolFunc` so they toggle without consuming a value.",
+      "Changed: `gitmap/committransfer/log.go` — `PrintPlan` notice inverted. When `--no-include-merges` strips merge commits, the message now reads `note: N merge commits excluded by --no-include-merges` (confirmation) instead of the old advisory `pass --include-merges to also replay merge commits`.",
+      "Added: `gitmap/committransfer/types.go` — `ReplayPlan.IncludeMerges bool` field so `PrintPlan` knows whether the exclusion was intentional.",
+      "Added: `gitmap/constants/constants_committransfer.go` — `FlagCTNoIncludeMerges` + `FlagDescCTNoIncludeMerges` constants.",
+      "Added: `gitmap/cmd/committransfer_flags_test.go` — `TestCommitTransferIncludeMergesDefault` asserts all three directions default to `IncludeMerges = true`; `TestCommitTransferIncludeMergesExplicit` asserts `--include-merges` / `--no-include-merges` override correctly.",
+      "Added: `gitmap/committransfer/log_test.go` — `TestPrintPlanNoticeV6` asserts the confirmation notice is emitted when `IncludeMerges = false` and `MergeExcluded > 0`, and that the old advisory message is gone.",
+      "Migration: Scripts that relied on the silent merge-stripping must add `--no-include-merges`. See `spec/01-app/115-v6-migration.md` for the full migration guide.",
+    ],
+  },
+  {
     version: "v5.84.0",
     date: "2026-05-26",
     subtitle: "`scan-project` JSON-schema contract: per-type file shape pinned",

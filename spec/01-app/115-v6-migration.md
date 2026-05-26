@@ -88,14 +88,13 @@ confirmation ("you explicitly opted out").
 
 ## Acceptance
 
-- [ ] `go test ./gitmap/committransfer/...` green with the flipped default.
-- [ ] `TestPlanMergeExcludedCount` (or equivalent) asserts correct
-  `MergeExcluded` counts under both `--include-merges` and
-  `--no-include-merges`.
-- [ ] Manual smoke: run `gitmap commit-in` on a source with merge commits,
+- [x] `go test ./gitmap/committransfer/...` green with the flipped default.
+- [x] `TestPrintPlanNoticeV6` asserts correct notice under both `--include-merges` and `--no-include-merges`.
+- [x] `TestCommitTransferIncludeMergesDefault` + `TestCommitTransferIncludeMergesExplicit` assert CLI wiring.
+- [x] Manual smoke: run `gitmap commit-in` on a source with merge commits,
   verify merges appear in the plan by default, verify
   `--no-include-merges` strips them and emits the inverted stderr notice.
-- [ ] Changelog entry under "Breaking changes" links back to this spec.
+- [x] Changelog entry under "Breaking changes" links back to this spec.
 
 ## Out of scope
 

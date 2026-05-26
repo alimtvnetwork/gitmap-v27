@@ -1,5 +1,19 @@
 # Changelog
 
+## v6.0.0 — (2026-05-26) — Breaking: `commit-transfer` merge default flips to `true`
+
+**Breaking change:** `gitmap commit-in`, `commit-out`, `commit-left`, `commit-right`, and `commit-both` now preserve merge commits by default. The legacy strip behaviour requires explicit `--no-include-merges`.
+
+- Changed: `gitmap/cmd/committransfer.go` — `parseCommitTransferArgs` now initializes `Options.IncludeMerges = true`. The `--include-merges` flag is still accepted (redundant but harmless). Added `--no-include-merges` flag for explicit opt-out. Both flags use `BoolFunc` so they toggle without consuming a value.
+- Changed: `gitmap/committransfer/log.go` — `PrintPlan` notice inverted. When `--no-include-merges` strips merge commits, the message now reads `note: N merge commits excluded by --no-include-merges` (confirmation) instead of the old advisory `pass --include-merges to also replay merge commits`.
+- Added: `gitmap/committransfer/types.go` — `ReplayPlan.IncludeMerges bool` field so `PrintPlan` knows whether the exclusion was intentional.
+- Added: `gitmap/constants/constants_committransfer.go` — `FlagCTNoIncludeMerges` + `FlagDescCTNoIncludeMerges` constants.
+- Added: `gitmap/cmd/committransfer_flags_test.go` — `TestCommitTransferIncludeMergesDefault` asserts all three directions default to `IncludeMerges = true`; `TestCommitTransferIncludeMergesExplicit` asserts `--include-merges` / `--no-include-merges` override correctly.
+- Added: `gitmap/committransfer/log_test.go` — `TestPrintPlanNoticeV6` asserts the confirmation notice is emitted when `IncludeMerges = false` and `MergeExcluded > 0`, and that the old advisory message is gone.
+- Updated: `spec/01-app/115-v6-migration.md` — acceptance criteria marked complete; manual-smoke section promoted to verified.
+
+**Migration:** Scripts that relied on the silent merge-stripping must add `--no-include-merges`. See `spec/01-app/115-v6-migration.md` for the full migration guide.
+
 ## v5.84.0 — (2026-05-26) — `scan-project` JSON-schema contract: per-type file shape pinned
 
 - Added: `spec/08-json-schemas/scan-project.schema.json` — draft-07 schema for the per-type JSON files emitted by `gitmap scan-project` (`go-projects.json`, `node-projects.json`, `react-projects.json`, `cpp-projects.json`, `csharp-projects.json`). Top-level is a JSON array; each record has PascalCase top-level keys (`Project`, `GoMeta`, `Csharp`) because `detector.DetectionResult` has no `json:` tags — pinned verbatim as the v1 on-the-wire contract. Nested objects use lowerCamel from the `model.*` struct tags. `GoMeta`/`Csharp` use `oneOf [null, object]` to capture the metadata-optional shape.

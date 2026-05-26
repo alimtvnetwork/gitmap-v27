@@ -7,10 +7,11 @@ package cmd
 //
 // The watch output is a single top-level object containing an array
 // (`repos`) and a nested object (`summary`). Both nested shapes are
-// pre-rendered into json.RawMessage so their key orders are also
-// stable. Indentation of pre-rendered nested values reflects their
-// own buffer context, not the parent depth; this is an accepted
-// trade-off documented in stablejson.WriteObject.
+// pre-rendered into json.RawMessage using COMPACT mode (zero indent)
+// so they can be embedded without indentation-context mismatches.
+// The top-level object itself is pretty-printed with 2-space indent.
+// This yields valid, stable JSON where key order is the headline
+// guarantee.
 //
 // Schema: spec/08-json-schemas/watch.schema.json.
 
@@ -68,22 +69,22 @@ func encodeWatchJSON(w io.Writer, snapshots []watchSnapshot, summary watchSummar
 	})
 }
 
-// renderWatchReposRaw pre-renders the repos array into json.RawMessage
-// so the key order of each snapshot is stable.
+// renderWatchReposRaw pre-renders the repos array in compact mode
+// so it embeds cleanly as a top-level object value.
 func renderWatchReposRaw(snapshots []watchSnapshot) (json.RawMessage, error) {
 	var buf bytes.Buffer
-	if err := stablejson.WriteArray(&buf, buildWatchSnapshotItems(snapshots)); err != nil {
+	if err := stablejson.WriteArrayIndent(&buf, buildWatchSnapshotItems(snapshots), ""); err != nil {
 		return nil, err
 	}
 
 	return json.RawMessage(bytes.TrimSuffix(buf.Bytes(), []byte{'\n'})), nil
 }
 
-// renderWatchSummaryRaw pre-renders the summary object into
-// json.RawMessage so the summary key order is stable.
+// renderWatchSummaryRaw pre-renders the summary object in compact
+// mode so it embeds cleanly as a top-level object value.
 func renderWatchSummaryRaw(summary watchSummary) (json.RawMessage, error) {
 	var buf bytes.Buffer
-	if err := stablejson.WriteObject(&buf, buildWatchSummaryFields(summary)); err != nil {
+	if err := stablejson.WriteObjectIndent(&buf, buildWatchSummaryFields(summary), ""); err != nil {
 		return nil, err
 	}
 

@@ -20,6 +20,8 @@ package cmd
 
 import (
 	"encoding/json"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"

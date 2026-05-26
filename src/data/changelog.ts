@@ -8,6 +8,20 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.77.0",
+    date: "2026-05-26",
+    subtitle: "`temp-releaselist --json` migrated to `stablejson` + published JSON schema",
+    items: [
+      "Migrated: `gitmap temp-releaselist --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/tempreleaselistrender.go`). Key order (`id`, `branch`, `versionPrefix`, `sequenceNumber`, `commit`, `commitMessage`, `createdAt`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.TempRelease`.",
+      "Removed: legacy `json.MarshalIndent(releases, ...)` path in `tempreleaselist.go`; routed through the new stable encoder.",
+      "Added: `spec/08-json-schemas/temp-release-list.schema.json` — published JSON Schema for downstream consumers.",
+      "Added: `gitmap/cmd/tempreleaselist_jsonschema_contract_test.go` + `tempreleaselistjson_contract_test.go` — schema drift detection + golden fixtures (empty array + canonical two-row) + key-order contract.",
+      "Added: `gitmap/cmd/testdata/schemas/temp-release-list.v1.json` — schema registry entry for key-order drift detection.",
+      "Updated: `spec/08-json-schemas/_TODO.md` — `temp-releaselist` marked done.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.77.0.",
+    ],
+  },
+  {
     version: "v5.76.0",
     date: "2026-05-26",
     subtitle: "`version-history --json` migrated to `stablejson` + published JSON schema",

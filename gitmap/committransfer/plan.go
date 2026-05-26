@@ -28,8 +28,9 @@ func BuildPlan(sourceDir, targetDir string, opts Options) (ReplayPlan, error) {
 	// false-fresh classification on targets with >200 commits since the
 	// already-applied source commit).
 	recentTargetLog, _ := recentLogSubjectsAndBodies(targetDir, 0)
+	replayedSet := BuildReplayedSet(recentTargetLog)
 
-	plan, err := assemblePlan(sourceDir, targetDir, sourceHead, base, shas, recentTargetLog, opts)
+	plan, err := assemblePlan(sourceDir, targetDir, sourceHead, base, shas, replayedSet, opts)
 	if err == nil {
 		plan.MergeExcluded = mergeExcluded
 	}
@@ -75,14 +76,14 @@ func resolveBase(sourceDir, targetDir, since string) (string, error) {
 // assemblePlan turns raw SHAs into hydrated SourceCommit entries with
 // the message pipeline + idempotence check applied.
 func assemblePlan(sourceDir, targetDir, sourceHead, base string,
-	shas []string, recentTargetLog string, opts Options,
+	shas []string, replayedSet map[string]struct{}, opts Options,
 ) (ReplayPlan, error) {
 	plan := ReplayPlan{
 		SourceDir: sourceDir, TargetDir: targetDir,
 		SourceHEAD: sourceHead, BaseSHA: base,
 	}
 	for _, sha := range shas {
-		entry, err := hydrateCommit(sourceDir, sha, recentTargetLog, opts)
+		entry, err := hydrateCommit(sourceDir, sha, replayedSet, opts)
 		if err != nil {
 			return plan, err
 		}
@@ -98,7 +99,7 @@ func assemblePlan(sourceDir, targetDir, sourceHead, base string,
 // hydrateCommit reads one source commit, runs the message pipeline, and
 // flags it as skipped when the pipeline says so or when the target
 // already carries its provenance footer.
-func hydrateCommit(sourceDir, sha, recentTargetLog string, opts Options) (SourceCommit, error) {
+func hydrateCommit(sourceDir, sha string, replayedSet map[string]struct{}, opts Options) (SourceCommit, error) {
 	subject, body, author, shortSHA, when, err := readCommit(sourceDir, sha)
 	if err != nil {
 		return SourceCommit{}, fmt.Errorf("read commit %s: %w", sha, err)
@@ -108,7 +109,7 @@ func hydrateCommit(sourceDir, sha, recentTargetLog string, opts Options) (Source
 		Author: author, AuthorAt: when,
 	}
 	if !opts.ForceReplay && opts.Message.Provenance &&
-		AlreadyReplayed(recentTargetLog, opts.Message.SourceDisplayName, shortSHA) {
+		SetHasReplayed(replayedSet, opts.Message.SourceDisplayName, shortSHA) {
 		entry.SkipCause = "already-replayed"
 
 		return entry, nil

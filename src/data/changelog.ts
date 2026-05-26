@@ -8,6 +8,20 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.79.0",
+    date: "2026-05-26",
+    subtitle: "Spec 114 Gap A: hash-set idempotence for unbounded target log",
+    items: [
+      "Fixed: `AlreadyReplayed` previously performed an O(N×M) `strings.Contains` substring scan across the entire concatenated target log for every source commit. On targets with long histories (the unbounded scan enabled by the v5.78.0 fix), this became a hidden performance bottleneck.",
+      "Added: `BuildReplayedSet(recentLog string) map[string]struct{}` in `gitmap/committransfer/message.go` — parses all `gitmap-replay: from <source> <sha>` provenance footers once and stores them in a hash-set for O(1) lookups.",
+      "Added: `SetHasReplayed(set map[string]struct{}, sourceDisplay, shortSHA string) bool` — O(1) set membership test replacing the substring scan.",
+      "Changed: `BuildPlan` now builds the replayed set once (after the unbounded `recentLogSubjectsAndBodies(targetDir, 0)` call) and passes it through `assemblePlan` → `hydrateCommit`. `hydrateCommit` now calls `SetHasReplayed` directly.",
+      "Kept: `AlreadyReplayed` remains as a backward-compatible wrapper (now marked Deprecated) that internally builds the set and delegates to `SetHasReplayed`. Existing tests and external callers continue to work.",
+      "Added: `TestBuildReplayedSet` and `TestSetHasReplayed` in `gitmap/committransfer/message_test.go` — coverage for set construction, duplicate tolerance, and negative lookups.",
+      "Verified: `TestPlanIdempotenceBeyond200Commits` continues to pass (regression guard for the original 200-cap bug) because the set contains the same provenance data; only the lookup path changed.",
+    ],
+  },
+  {
     version: "v5.78.0",
     date: "2026-05-26",
     subtitle: "Fix Windows CI: restore CWD in `escapecwd` tests",

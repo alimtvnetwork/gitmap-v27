@@ -143,8 +143,41 @@ func appendProvenanceFooter(msg string, p MessagePolicy, shortSHA string, when t
 // AlreadyReplayed checks whether the recent target log contains a
 // provenance footer that points at (sourceDisplay, shortSHA). Used by
 // the planner when --force-replay is not set.
+//
+// Deprecated: this rebuilds the set on every call. Prefer BuildReplayedSet
+// once per plan, then SetHasReplayed for O(1) lookups.
 func AlreadyReplayed(recentLog, sourceDisplay, shortSHA string) bool {
-	needle := "gitmap-replay: from " + sourceDisplay + " " + shortSHA
+	set := BuildReplayedSet(recentLog)
 
-	return strings.Contains(recentLog, needle)
+	return SetHasReplayed(set, sourceDisplay, shortSHA)
+}
+
+// BuildReplayedSet parses the concatenated target-log output (from
+// recentLogSubjectsAndBodies) and returns a hash-set of all provenance
+// (sourceDisplay, shortSHA) pairs.  Building the set once and re-using
+// it avoids the O(N×M) substring scan when the target history is large
+// (spec 114 Gap A).
+func BuildReplayedSet(recentLog string) map[string]struct{} {
+	set := make(map[string]struct{})
+	prefix := "gitmap-replay: from "
+	for _, line := range strings.Split(recentLog, "\n") {
+		if !strings.HasPrefix(line, prefix) {
+			continue
+		}
+		rest := strings.TrimPrefix(line, prefix)
+		// rest = "<sourceDisplay> <shortSHA>"
+		if idx := strings.LastIndex(rest, " "); idx > 0 {
+			set[rest] = struct{}{}
+		}
+	}
+
+	return set
+}
+
+// SetHasReplayed reports whether the pre-built set contains a provenance
+// footer for (sourceDisplay, shortSHA).
+func SetHasReplayed(set map[string]struct{}, sourceDisplay, shortSHA string) bool {
+	_, ok := set[sourceDisplay+" "+shortSHA]
+
+	return ok
 }

@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.79.0 — (2026-05-26) — Spec 114 Gap A: hash-set idempotence for unbounded target log
+
+- Fixed: `AlreadyReplayed` previously performed an O(N×M) `strings.Contains` substring scan across the entire concatenated target log for every source commit. On targets with long histories (the unbounded scan enabled by the v5.78.0 fix), this became a hidden performance bottleneck.
+- Added: `BuildReplayedSet(recentLog string) map[string]struct{}` in `gitmap/committransfer/message.go` — parses all `gitmap-replay: from <source> <sha>` provenance footers once and stores them in a hash-set for O(1) lookups.
+- Added: `SetHasReplayed(set map[string]struct{}, sourceDisplay, shortSHA string) bool` — O(1) set membership test replacing the substring scan.
+- Changed: `BuildPlan` now builds the replayed set once (after the unbounded `recentLogSubjectsAndBodies(targetDir, 0)` call) and passes it through `assemblePlan` → `hydrateCommit`. `hydrateCommit` now calls `SetHasReplayed` directly.
+- Kept: `AlreadyReplayed` remains as a backward-compatible wrapper (now marked Deprecated) that internally builds the set and delegates to `SetHasReplayed`. Existing tests and external callers continue to work.
+- Added: `TestBuildReplayedSet` and `TestSetHasReplayed` in `gitmap/committransfer/message_test.go` — coverage for set construction, duplicate tolerance, and negative lookups.
+- Verified: `TestPlanIdempotenceBeyond200Commits` continues to pass (regression guard for the original 200-cap bug) because the set contains the same provenance data; only the lookup path changed.
+
+
 ## v5.78.0 — (2026-05-26) — Fix Windows CI: restore CWD in `escapecwd` tests
 
 - Fixed: `TestEscapeCwdIfInside_NotInside` and `TestEscapeCwdIfInside_EscapesWhenInside` previously called `os.Chdir(t.TempDir())` without restoring the original working directory. On Windows, when the temp dir was later removed by `t.TempDir`'s cleanup, the process CWD became invalid (Windows reports it as `C:\`), cascading into ~40 unrelated failures in the same `cmd` package: every schema/golden test that walks up from CWD looking for `spec/08-json-schemas/*.json` or `testdata/*.json` aborted with `walking up from C:\` or `The system cannot find the path specified`.

@@ -4,9 +4,8 @@ package cmd
 //
 // Same two-tier strictness as startuplistjson_contract_test.go:
 // byte-exact for canonical fixtures, structural for variable data.
-// Covers BOTH the top-level latestBranchJSON object AND the nested
-// latestBranchTopItem objects inside `top`, since `omitempty` makes
-// `top` a sometimes-present field — both states must be pinned.
+// Covers BOTH the top-level object without `top` AND the nested
+// top-N array inside `top`, since the key is conditionally emitted.
 //
 // Regenerate fixtures with:
 //

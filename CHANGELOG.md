@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.62.0 — (2026-05-26) — commit-transfer idempotence beyond 200 commits (spec 114 Gap A)
+
+- Fixed: `gitmap/committransfer/plan.go` now scans the **entire target history** for the idempotence check, not just the last 200 commits. Source commits cherry-picked into long-history targets are no longer mis-classified as fresh and re-applied. (Spec 114 Gap A — `recentLogSubjectsAndBodies(dir, 0)` sentinel.)
+- Added: regression test `TestPlanIdempotenceBeyond200Commits` buries an already-replayed commit under 250 unrelated target commits and asserts `SkipCause == "already-replayed"`.
+- Noted: spec 114 Gap B v5.62.0 surface is already shipped — `--include-merges` flag is wired in `committransfer.go`, and `PrintPlan` emits a stderr "pass --include-merges" notice whenever merges were stripped. Default flip to `IncludeMerges=true` deferred to v6.0.0 per spec.
+- Added: `pullreleasecd_test.go` (parser + URL detection + slug derivation) and `updateremoteinstall_test.go` (installer-URL composition) — close two zero-test gaps inherited from earlier specs.
+- Drafted: `spec/01-app/114-committransfer-idempotence-and-merge-default.md`.
+- Archived: stale `.lovable/plan.md` → `.lovable/archive/plan-spec111-shipped-v5.52.0.md`.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.62.0**.
+
+
+
 ## v5.61.0 — (2026-05-26) — Auto parent-escape for clone family + bulk visibility + `cfrp` prior-version privatize
 
 - Added: `gitmap/cmd/escapecwd.go` — `escapeCwdIfInside(target)` chdirs to the parent of a target folder before `os.RemoveAll`, releasing the Windows directory handle. Wired into `cloneReplacing` (`clone` / `cfr` / `cfrp`) and `clonenext.go` (`cn v++`) so the user can run these commands from *inside* the folder they're about to replace.

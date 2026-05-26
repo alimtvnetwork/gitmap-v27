@@ -50,7 +50,14 @@ type visibilityFlags struct {
 // runVisibility is the shared core for both commands. Steps mirror
 // the PowerShell reference verbatim so behavior parity is auditable.
 func runVisibility(args []string, target string) {
-	opts := parseVisibilityFlags(args, target)
+	opts, positional := parseVisibilityFlags(args, target)
+
+	// Spec 113 §2.2 — bulk form takes over when positional args
+	// describe a `<repo> <count>` or `<count>` request.
+	if maybeRunBulkVisibility(positional, target, opts) {
+		return
+	}
+
 	ctx := mustResolveVisibilityContext()
 	mustEnsureProviderCLI(ctx.Provider, opts.verbose)
 
@@ -74,10 +81,10 @@ func runVisibility(args []string, target string) {
 	fmt.Printf(constants.MsgVisChangedFmt, current, target, ctx.Slug, ctx.Provider)
 }
 
-// parseVisibilityFlags reads the three supported flags. The command
-// name is passed in only so the FlagSet error output names the right
-// command on misuse.
-func parseVisibilityFlags(args []string, target string) visibilityFlags {
+// parseVisibilityFlags reads the supported flags and returns the
+// leftover positional args (spec 113 §2.2 bulk form). cmdName is
+// passed in only so FlagSet error output names the right command.
+func parseVisibilityFlags(args []string, target string) (visibilityFlags, []string) {
 	cmdName := constants.CmdMakePublic
 	if target == constants.VisibilityPrivate {
 		cmdName = constants.CmdMakePrivate
@@ -93,5 +100,7 @@ func parseVisibilityFlags(args []string, target string) visibilityFlags {
 		os.Exit(constants.ExitVisBadFlag)
 	}
 
-	return visibilityFlags{yes: *yesLong || *yesShort, dryRun: *dry, verbose: *vrb}
+	out := visibilityFlags{yes: *yesLong || *yesShort, dryRun: *dry, verbose: *vrb}
+
+	return out, fs.Args()
 }

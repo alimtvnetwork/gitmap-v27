@@ -24,7 +24,7 @@ roughly by perceived consumer impact — high-traffic / scripting-friendly first
 | high | `gitmap-v23 history --json` (`history.go`) | Migrated to stablejson via `historyrender.go` (v5.64.0). Schema: [`history.schema.json`](history.schema.json). Pinned by `gitmap/cmd/history_jsonschema_contract_test.go` + `historyjson_contract_test.go`. |
 | high | `gitmap-v23 watch --json` (`watch.go`) | Migrated to stablejson via `watchrender.go` (v5.65.0). Nested repos + summary pre-rendered in compact mode. Schema: [`watch.schema.json`](watch.schema.json). Pinned by `gitmap/cmd/watch_jsonschema_contract_test.go` + `watchjson_contract_test.go`. |
 | high | `gitmap-v23 probe-report` (`probereport.go`) | Migrated to stablejson via `proberender.go` (v5.66.0). Schema: [`probe-report.schema.json`](probe-report.schema.json). Pinned by `gitmap/cmd/proberepor_jsonschema_contract_test.go` + `probereporjson_contract_test.go`. |
-| med | `gitmap-v23 amend list --json` (`amendlist.go`) | |
+| med | `gitmap-v23 amend list --json` (`amendlist.go`) | Migrated to stablejson via `amendlistrender.go` (v5.67.0). Schema: [`amend-list.schema.json`](amend-list.schema.json). Pinned by `gitmap/cmd/amendlist_jsonschema_contract_test.go` + `amendlistjson_contract_test.go`. |
 | med | `gitmap-v23 amend audit` (`amendaudit.go`) | Single record |
 | med | `gitmap-v23 diff-profiles --json` (`diffprofiles.go`) | |
 | med | `gitmap-v23 bookmark list --json` (`bookmarklist.go`) | |

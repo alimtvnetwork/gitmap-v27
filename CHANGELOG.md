@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.67.0 — (2026-05-26) — `amend list --json` migrated to `stablejson` + published JSON schema
+
+- Migrated: `gitmap amend list --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/amendlistrender.go`). Key order (`ID`, `Branch`, `FromCommit`, `ToCommit`, `TotalCommits`, `PreviousName`, `PreviousEmail`, `NewName`, `NewEmail`, `Mode`, `ForcePushed`, `CreatedAt`) is now a compile-time decision via package-level wire-key constants. PascalCase keys are preserved from the legacy `json.MarshalIndent` output for backward compatibility.
+- Added: `spec/08-json-schemas/amend-list.schema.json` — published JSON Schema for downstream consumers.
+- Added: `gitmap/cmd/amendlist_jsonschema_contract_test.go` — schema drift detection (top-level array shape, required key set, encoder-keys ⊂ schema.properties).
+- Added: `gitmap/cmd/amendlistjson_contract_test.go` — golden fixture + key-order contract for the stablejson output.
+- Added: `gitmap/cmd/testdata/schemas/amend-list.v1.json` — schema registry entry for key-order drift detection.
+- Updated: `spec/08-json-schemas/_TODO.md` — `amend list` flipped from `med` to `done`.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.67.0**.
+
+
+
 ## v5.66.0 — (2026-05-26) — `probe --json` migrated to `stablejson` + published JSON schema
 
 - Migrated: `gitmap probe --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/proberender.go`). Key order (`repoId`, `slug`, `absolutePath`, `nextVersionTag`, `nextVersionNum`, `method`, `isAvailable`, `error`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `probeJSONEntry`.

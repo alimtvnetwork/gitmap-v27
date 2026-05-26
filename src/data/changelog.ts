@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.67.0",
+    date: "2026-05-26",
+    subtitle: "`amend list --json` migrated to `stablejson` + published JSON schema",
+    items: [
+      "Migrated: `gitmap amend list --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/amendlistrender.go`). Key order is now a compile-time decision via wire-key constants. PascalCase keys preserved for backward compatibility.",
+      "Added: `spec/08-json-schemas/amend-list.schema.json` — published JSON Schema for downstream consumers.",
+      "Added: `gitmap/cmd/amendlist_jsonschema_contract_test.go` + `amendlistjson_contract_test.go` — schema drift detection + golden fixture + key-order contract.",
+      "Updated: `spec/08-json-schemas/_TODO.md` — `amend list` flipped from `med` to `done`.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.67.0.",
+    ],
+  },
+  {
     version: "v5.66.0",
     date: "2026-05-26",
     subtitle: "`probe --json` migrated to `stablejson` + published JSON schema",

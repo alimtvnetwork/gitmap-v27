@@ -2,7 +2,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -131,13 +130,9 @@ func printAmendmentRow(a store.AmendmentRow) {
 		forcePushed, a.CreatedAt)
 }
 
-// printAmendmentsJSON renders amendments as JSON to stdout.
+// printAmendmentsJSON renders amendments as stable JSON to stdout.
 func printAmendmentsJSON(amendments []store.AmendmentRow) {
-	data, err := json.MarshalIndent(amendments, "", constants.JSONIndent)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal amendments to JSON: %v\n", err)
-
-		return
+	if err := encodeAmendListJSON(os.Stdout, amendments); err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to encode amendments to JSON: %v\n", err)
 	}
-	fmt.Println(string(data))
 }

@@ -3,8 +3,28 @@
 Make the current repository **public** on GitHub or GitLab.
 
 ```
-gitmap make-public [--yes] [--dry-run] [--verbose]
+gitmap make-public [<repo-or-url>] [<count>] [--yes] [--dry-run] [--verbose]
 ```
+
+## Bulk form (v5.61.0+)
+
+`gitmap make-public <count>` flips the **N most recent versions** of
+the *current* repo (vN, vN-1, …, vN-count+1).
+
+`gitmap make-public <repo-or-url> <count>` does the same against a
+different base — `<repo-or-url>` accepts a full URL, an SSH
+shorthand, or a bare base name (`foo` or `foo-v40`). The provider
+and owner are inherited from the current repo's origin.
+
+```
+gitmap make-public 3                                   # flip current + 2 prior
+gitmap make-public macro-ahk-v40 5                     # flip v40..v36
+gitmap make-public https://github.com/me/foo-v9 2 --yes
+```
+
+A single `--yes` covers the whole batch. Individual failures are
+non-fatal; the command exits with the worst code observed.
+
 
 ## What it does
 

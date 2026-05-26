@@ -50,7 +50,7 @@ irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.ps1 
 curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.sh | sh
 ```
 
-### 📌 Pinned version (`v5.63.0`)
+### 📌 Pinned version (`v5.64.0`)
 
 ```powershell
 # Windows · PowerShell

@@ -79,13 +79,10 @@ shape but lower severity: the user already sees the row.
    - `Replayed + SkippedDrop + SkippedReplayed + SkippedEmpty ==
      len(plan.Commits)` — the replay-side accounting invariant.
 
-## What is *not* fixed
+## What was *not* fixed at the time (subsequently resolved)
 
-- The `recentLogSubjectsAndBodies` 200-commit cap. Bumping it is
-  cheap but changes performance characteristics on large repos;
-  tracked separately.
-- Defaulting `IncludeMerges=true`. That is a behaviour change with
-  semver implications and would require a spec amendment.
+- ✅ `recentLogSubjectsAndBodies` 200-commit cap — **resolved v5.78.0** (unbounded scan, pass `n <= 0`); **v5.83.0** added `--max-history-scan` escape hatch for pathologically large targets. See `spec/01-app/114-committransfer-idempotence-and-merge-default.md`.
+- ✅ Defaulting `IncludeMerges=true` — **resolved v6.0.0** (breaking change). Merge commits are now preserved by default; `--no-include-merges` opts back into legacy strip behaviour. See `spec/01-app/115-v6-migration.md`.
 
 ## Files touched
 
@@ -95,3 +92,5 @@ shape but lower severity: the user already sees the row.
 - gitmap/committransfer/log.go — reconciliation summary
 - gitmap/committransfer/count_parity_e2e_test.go — new E2E
 - .lovable/memory/issues/2026-05-09-commit-transfer-count-mismatch.md
+
+**Status:** All root causes addressed. Issue closed as of v6.0.0.

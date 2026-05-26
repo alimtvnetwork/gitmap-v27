@@ -30,13 +30,9 @@ func runTempReleaseList(args []string) {
 	}
 
 	if jsonOutput {
-		data, marshalErr := json.MarshalIndent(releases, "", constants.JSONIndent)
-		if marshalErr != nil {
-			fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal temp releases to JSON: %v\n", marshalErr)
-
-			return
+		if err := encodeTempReleaseListJSON(os.Stdout, releases); err != nil {
+			fmt.Fprintf(os.Stderr, "  ✗ Failed to encode temp releases to JSON: %v\n", err)
 		}
-		fmt.Println(string(data))
 
 		return
 	}

@@ -22,7 +22,7 @@ roughly by perceived consumer impact — high-traffic / scripting-friendly first
 |---|---|---|
 | ✅ done | ~~`gitmap-v23 list-releases --json` (`listreleases.go`, `listreleasesallrepos.go`)~~ | Migrated to `gitmap-v23/stablejson` via `listreleasesrender.go`. Schemas: [`list-releases.schema.json`](list-releases.schema.json) (per-repo, lowerCamel) + [`list-releases-all-repos.schema.json`](list-releases-all-repos.schema.json) (joined --all-repos, PascalCase preserved from legacy `MarshalIndent`). Pinned by `gitmap-v23/cmd/listreleases_jsonschema_contract_test.go` (9 tests incl. byte-compat with legacy output). |
 | high | `gitmap-v23 history --json` (`history.go`) | Migrated to stablejson via `historyrender.go` (v5.64.0). Schema: [`history.schema.json`](history.schema.json). Pinned by `gitmap/cmd/history_jsonschema_contract_test.go` + `historyjson_contract_test.go`. |
-| high | `gitmap-v23 watch --json` (`watch.go`) | Long-running; format stability matters |
+| high | `gitmap-v23 watch --json` (`watch.go`) | Migrated to stablejson via `watchrender.go` (v5.65.0). Nested repos + summary pre-rendered in compact mode. Schema: [`watch.schema.json`](watch.schema.json). Pinned by `gitmap/cmd/watch_jsonschema_contract_test.go` + `watchjson_contract_test.go`. |
 | high | `gitmap-v23 probe-report` (`probereport.go`) | Health-check consumers |
 | med | `gitmap-v23 amend list --json` (`amendlist.go`) | |
 | med | `gitmap-v23 amend audit` (`amendaudit.go`) | Single record |

@@ -8,6 +8,20 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v5.75.0",
+    date: "2026-05-26",
+    subtitle: "`stats --json` migrated to `stablejson` + published JSON schema",
+    items: [
+      "Migrated: `gitmap stats --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/statsrender.go`). Top-level + nested per-command row key order is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.OverallStats` / `model.CommandStats`. Nested array pre-rendered in compact mode and embedded as `json.RawMessage`.",
+      "Removed: legacy `json.MarshalIndent(overall, ...)` path in `stats.go`; routed through the new stable encoder.",
+      "Added: `spec/08-json-schemas/stats.schema.json` — published JSON Schema (top-level object + nested items contract).",
+      "Added: `gitmap/cmd/stats_jsonschema_contract_test.go` + `statsjson_contract_test.go` — schema drift detection + golden fixture (empty commands array) + key-order contract.",
+      "Added: `gitmap/cmd/testdata/schemas/stats.v1.json` — schema registry entry for top-level key-order drift detection.",
+      "Updated: `spec/08-json-schemas/_TODO.md` — `stats` marked done.",
+      "Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to v5.75.0.",
+    ],
+  },
+  {
     version: "v5.74.0",
     date: "2026-05-26",
     subtitle: "`ssh list --json` migrated to `stablejson` + published JSON schema",

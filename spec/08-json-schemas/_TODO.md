@@ -40,6 +40,7 @@ roughly by perceived consumer impact — high-traffic / scripting-friendly first
 | med | `gitmap-v23 task list --json` (`taskops.go`) | |
 | med | `gitmap-v23 seo write` (`seowritecreate.go`) | Sample/template output |
 | low | `gitmap-v23 scan-project` (`scanprojectoutput.go`) | File output, not piped |
+| ✅ done | ~~`gitmap-v23 stats --json` (`stats.go`)~~ | Migrated to stablejson via `statsrender.go` (v5.75.0). Top-level object + nested compact `commands` array (`json.RawMessage`). Schema: [`stats.schema.json`](stats.schema.json). Pinned by `gitmap/cmd/stats_jsonschema_contract_test.go` + `statsjson_contract_test.go`. |
 
 ## Estimated effort
 

@@ -50,29 +50,29 @@ irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.ps1 
 curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.sh | sh
 ```
 
-### 📌 Pinned version (`v5.62.0`)
+### 📌 Pinned version (`v5.63.0`)
 
 ```powershell
 # Windows · PowerShell
-irm https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/release-version-v5.62.0.ps1 | iex
+irm https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/release-version-v5.63.0.ps1 | iex
 ```
 
 ```bash
 # macOS · Linux · Bash
-curl -fsSL https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/release-version-v5.62.0.sh | bash
+curl -fsSL https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/release-version-v5.63.0.sh | bash
 ```
 
-#### 🧭 Version matrix — `v5.62.0` install-script URLs
+#### 🧭 Version matrix — `v5.63.0` install-script URLs
 
-One-line installers and release assets for the pinned **v5.62.0** build across every supported platform. All URLs resolve to the exact release tag — no fallback, no discovery.
+One-line installers and release assets for the pinned **v5.63.0** build across every supported platform. All URLs resolve to the exact release tag — no fallback, no discovery.
 
 | Platform | Shell | Install-script URL | Release binary asset |
 | --- | --- | --- | --- |
-| **Windows** (amd64) | PowerShell | [`release-version-v5.62.0.ps1`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/release-version-v5.62.0.ps1) | [`gitmap-v23.47.0-windows-amd64.zip`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/gitmap-v23.47.0-windows-amd64.zip) |
-| **macOS** (arm64) | Bash | [`release-version-v5.62.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/release-version-v5.62.0.sh) | [`gitmap-v23.47.0-darwin-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/gitmap-v23.47.0-darwin-arm64.tar.gz) |
-| **macOS** (amd64) | Bash | [`release-version-v5.62.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/release-version-v5.62.0.sh) | [`gitmap-v23.47.0-darwin-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/gitmap-v23.47.0-darwin-amd64.tar.gz) |
-| **Linux** (amd64) | Bash | [`release-version-v5.62.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/release-version-v5.62.0.sh) | [`gitmap-v23.47.0-linux-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/gitmap-v23.47.0-linux-amd64.tar.gz) |
-| **Linux** (arm64) | Bash | [`release-version-v5.62.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/release-version-v5.62.0.sh) | [`gitmap-v23.47.0-linux-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.62.0/gitmap-v23.47.0-linux-arm64.tar.gz) |
+| **Windows** (amd64) | PowerShell | [`release-version-v5.63.0.ps1`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/release-version-v5.63.0.ps1) | [`gitmap-v23.47.0-windows-amd64.zip`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/gitmap-v23.47.0-windows-amd64.zip) |
+| **macOS** (arm64) | Bash | [`release-version-v5.63.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/release-version-v5.63.0.sh) | [`gitmap-v23.47.0-darwin-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/gitmap-v23.47.0-darwin-arm64.tar.gz) |
+| **macOS** (amd64) | Bash | [`release-version-v5.63.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/release-version-v5.63.0.sh) | [`gitmap-v23.47.0-darwin-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/gitmap-v23.47.0-darwin-amd64.tar.gz) |
+| **Linux** (amd64) | Bash | [`release-version-v5.63.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/release-version-v5.63.0.sh) | [`gitmap-v23.47.0-linux-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/gitmap-v23.47.0-linux-amd64.tar.gz) |
+| **Linux** (arm64) | Bash | [`release-version-v5.63.0.sh`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/release-version-v5.63.0.sh) | [`gitmap-v23.47.0-linux-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v23/releases/download/v5.63.0/gitmap-v23.47.0-linux-arm64.tar.gz) |
 
 > **Release page:** [github.com/alimtvnetwork/gitmap-v23/releases/tag/v5.51.0](https://github.com/alimtvnetwork/gitmap-v23/releases/tag/v5.51.0) · **Asset naming contract:** `gitmap-<version>-<os>-<arch>.<ext>` (`.zip` on Windows, `.tar.gz` elsewhere) — verified by the installer pre-flight HEAD probe.
 
@@ -104,7 +104,7 @@ Pass an explicit install path on the one-liner — no prompts, no auto-detection
 curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v23/main/install.sh | sh -s -- --dir /opt/gitmap
 ```
 
-> Add `-Version v5.62.0` (PowerShell) or `--version v5.62.0` (Bash) before the closing quote / end of line to pin a specific release into your custom directory.
+> Add `-Version v5.63.0` (PowerShell) or `--version v5.63.0` (Bash) before the closing quote / end of line to pin a specific release into your custom directory.
 
 ---
 
@@ -1603,12 +1603,12 @@ gitmap make-public                          # interactive
 gitmap make-public --yes                    # CI / scripts
 gitmap make-public --dry-run --verbose      # preview the gh/glab call
 
-# v5.62.0+ — bulk visibility (N most recent versions of a base repo)
+# v5.63.0+ — bulk visibility (N most recent versions of a base repo)
 gitmap make-public 3                                # flip current + 2 prior versions
 gitmap make-public macro-ahk-v40 5                  # flip v40..v36 of macro-ahk
 gitmap make-private https://github.com/me/foo-v9 2  # privatize v9 + v8
 
-# v5.62.0+ — cfrp now offers to privatize prior public versions
+# v5.63.0+ — cfrp now offers to privatize prior public versions
 gitmap cfrp https://github.com/me/foo-v40           # prompts after publishing v40
 gitmap cfrp https://github.com/me/foo-v40 -y        # auto-privatize, no prompts
 

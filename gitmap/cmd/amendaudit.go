@@ -2,7 +2,7 @@
 package cmd
 
 import (
-	"encoding/json"
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -24,15 +24,14 @@ func writeAmendAudit(f amendFlags, commits []model.CommitEntry, branch, mode, pr
 	path := filepath.Join(dir, fileName)
 
 	record := buildAuditRecord(f, commits, branch, mode, prevName, prevEmail, ts)
-	data, err := json.MarshalIndent(record, "", constants.JSONIndent)
-
-	if err != nil {
+	var buf bytes.Buffer
+	if err := encodeAmendAuditJSON(&buf, record); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrAmendAuditWrite, err)
 
 		return path
 	}
 
-	if err := os.WriteFile(path, data, 0o644); err != nil {
+	if err := os.WriteFile(path, buf.Bytes(), 0o644); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrAmendAuditWrite, err)
 	}
 

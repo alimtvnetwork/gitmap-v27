@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -12,6 +11,7 @@ import (
 	"github.com/alimtvnetwork/gitmap-v23/gitmap/gitutil"
 	"github.com/alimtvnetwork/gitmap-v23/gitmap/model"
 )
+
 
 // runVersionHistory handles the "version-history" subcommand.
 func runVersionHistory(args []string) {

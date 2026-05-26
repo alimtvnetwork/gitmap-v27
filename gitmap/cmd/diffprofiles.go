@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -82,22 +81,9 @@ func loadProfileRepos(name string) []model.ScanRecord {
 
 // printDPJSON outputs the comparison result as JSON.
 func printDPJSON(nameA, nameB string, result dpResult) {
-	out := map[string]any{
-		"profileA":  nameA,
-		"profileB":  nameB,
-		"onlyInA":   dpRepoSummaries(result.onlyInA),
-		"onlyInB":   dpRepoSummaries(result.onlyInB),
-		"different": result.different,
-		"same":      len(result.same),
+	if err := encodeDiffProfilesJSON(os.Stdout, nameA, nameB, result); err != nil {
+		fmt.Fprintf(os.Stderr, "  ✗ Failed to encode diff result to JSON: %v\n", err)
 	}
-
-	data, err := json.MarshalIndent(out, "", "  ")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "  ✗ Failed to marshal diff result to JSON: %v\n", err)
-
-		return
-	}
-	fmt.Println(string(data))
 }
 
 // dpRepoSummaries converts records to simple name+path maps.

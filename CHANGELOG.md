@@ -1,5 +1,17 @@
 # Changelog
 
+## v5.70.0 — (2026-05-26) — `bookmark list --json` migrated to `stablejson` + published JSON schema
+
+- Migrated: `gitmap bookmark list --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/bookmarklistrender.go`). Key order (`id`, `name`, `command`, `args`, `flags`, `createdAt`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `model.BookmarkRecord`.
+- Added: `spec/08-json-schemas/bookmark-list.schema.json` — published JSON Schema for downstream consumers.
+- Added: `gitmap/cmd/bookmarklist_jsonschema_contract_test.go` — schema drift detection (top-level array shape, required key set, encoder-keys ⊂ schema.properties).
+- Added: `gitmap/cmd/bookmarklistjson_contract_test.go` — golden fixture + key-order contract for the stablejson output.
+- Added: `gitmap/cmd/testdata/schemas/bookmark-list.v1.json` — schema registry entry for key-order drift detection.
+- Updated: `spec/08-json-schemas/_TODO.md` — `bookmark list` flipped from `med` to `done`.
+- Pinned: README + `gitmap/constants/constants.go` + `src/constants/index.ts` synced to **v5.70.0**.
+
+
+
 ## v5.69.0 — (2026-05-26) — `diff-profiles --json` migrated to `stablejson` + published JSON schema
 
 - Migrated: `gitmap diff-profiles --json` encoder onto `gitmap/stablejson` (new `gitmap/cmd/diffprofilesrender.go`). Key order (`profileA`, `profileB`, `onlyInA`, `onlyInB`, `different`, `same`) is now a compile-time decision via package-level wire-key constants instead of a reflection accident on `map[string]any`. Nested `onlyInA`, `onlyInB`, and `different` arrays are pre-rendered in compact mode and embedded as `json.RawMessage` so key-order stability propagates through the entire document.

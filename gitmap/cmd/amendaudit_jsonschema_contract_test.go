@@ -10,8 +10,6 @@ import (
 	"bytes"
 	"sort"
 	"testing"
-
-	"github.com/alimtvnetwork/gitmap-v23/gitmap/model"
 )
 
 const amendAuditSchemaFilename = "amend-audit.schema.json"

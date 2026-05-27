@@ -3,7 +3,6 @@ package cmd
 import (
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v23/gitmap/committransfer"
 	"github.com/alimtvnetwork/gitmap-v23/gitmap/constants"
 )
 

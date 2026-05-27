@@ -90,13 +90,10 @@ func TestResolveCloneNextFolder(t *testing.T) {
 	})
 
 	t.Run("relative path resolves against cwd", func(t *testing.T) {
-		// Switch into tmp so the relative form has a meaningful base.
-		// Restore on cleanup so other parallel tests aren't disturbed.
-		oldCwd, _ := os.Getwd()
-		defer func() { _ = os.Chdir(oldCwd) }()
-		if err := os.Chdir(tmp); err != nil {
-			t.Fatalf("chdir: %v", err)
-		}
+		// t.Chdir auto-restores in the correct order relative to any t.TempDir
+		// cleanups in this subtest, avoiding "/" cwd fallbacks on macOS.
+		t.Chdir(tmp)
+
 
 		got, err := resolveCloneNextFolder("macro-ahk-v11")
 		if err != nil {

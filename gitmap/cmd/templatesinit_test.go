@@ -14,14 +14,10 @@ import (
 // repo's working tree with stray .gitignore / .gitattributes files.
 func chdirT(t *testing.T, dir string) {
 	t.Helper()
-	prior, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("getwd: %v", err)
-	}
-	if err := os.Chdir(dir); err != nil {
-		t.Fatalf("chdir %q: %v", dir, err)
-	}
-	t.Cleanup(func() { _ = os.Chdir(prior) })
+	// t.Chdir registers cleanup AFTER any earlier t.TempDir cleanups, so we
+	// never end up restoring CWD to a deleted dir (avoids os.Getwd → "/"
+	// fallback on macOS that breaks schema-path resolution in sibling tests).
+	t.Chdir(dir)
 }
 
 // TestParseTemplatesInitFlagsAcceptsMixedOrder locks in the

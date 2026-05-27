@@ -11,20 +11,15 @@ import (
 )
 
 // initTestRepo creates a temporary git repo with an initial commit and returns
-// the directory path. The caller's working directory is changed to the repo;
-// a cleanup function restores it.
+// the directory path. The caller's working directory is changed to the repo
+// via t.Chdir, which Go restores after the test (in the correct order relative
+// to t.TempDir cleanup, preventing leftover cwds pointing at deleted dirs that
+// poison sibling tests via os.Getwd → "/" fallbacks on macOS).
 func initTestRepo(t *testing.T) (string, func()) {
 	t.Helper()
 
 	dir := t.TempDir()
-	orig, err := os.Getwd()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if err := os.Chdir(dir); err != nil {
-		t.Fatal(err)
-	}
+	t.Chdir(dir)
 
 	run := func(args ...string) {
 		t.Helper()
@@ -48,7 +43,7 @@ func initTestRepo(t *testing.T) (string, func()) {
 	run("git", "add", "-A")
 	run("git", "commit", "-m", "initial")
 
-	return dir, func() { os.Chdir(orig) }
+	return dir, func() {}
 }
 
 func TestDeriveSlug_Integration(t *testing.T) {

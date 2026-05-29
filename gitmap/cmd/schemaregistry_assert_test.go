@@ -158,7 +158,7 @@ func listContains(commaList, want string) bool {
 // reviewer guidance survives an --update-schema run. Sorted keys
 // are NOT used — the wire order matters and must be preserved.
 func writeSchemaFile(s schema, observedKeys []string) error {
-	path := filepath.Join(schemaDir, fmt.Sprintf("%s.v%d.json", s.Name, s.Version))
+	path := filepath.Join(resolveSchemaDir(), fmt.Sprintf("%s.v%d.json", s.Name, s.Version))
 	updated := schema{
 		Name:    s.Name,
 		Version: s.Version,

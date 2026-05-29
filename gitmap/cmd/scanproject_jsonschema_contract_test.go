@@ -43,7 +43,7 @@ func TestScanProject_FileMapMatchesRegistry(t *testing.T) {
 		constants.JSONFileCsharpProjects,
 	}
 
-	regPath := filepath.Join(schemaDir, "scan-project.v1.json")
+	regPath := filepath.Join(resolveSchemaDir(), "scan-project.v1.json")
 	raw, err := os.ReadFile(regPath)
 	if err != nil {
 		t.Fatalf("read registry %s: %v", regPath, err)

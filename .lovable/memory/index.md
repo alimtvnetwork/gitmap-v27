@@ -38,6 +38,7 @@ Clone-pick / cpk (v3.153.0+, spec 100): sparse-checkout subset of repo into cwd.
 commit-in / cin (SPEC ONLY, spec 03-commit-in/, plan 2026-05-06): replays commits from N input repos into one source repo, dedupes by SourceSha via ShaMap, replicates BOTH AuthorDate+CommitterDate, profiles in .gitmap/commit-in/profiles/. Source auto-init: URL→clone, repo→reuse, non-repo folder→git init in place, missing→mkdir+init. NO IMPLEMENTATION until user types `next`.
 
 ## Memories
+- [What to Read (AI onboarding map)](.lovable/memory/project/what-to-read.md) — Read-order, folder map, JSON output contract triangle (schema ↔ model ↔ encoder ↔ test ↔ fixture), and step-by-step recipe for adding a new JSON output. **Start here on a fresh session.**
 - [Code Constraints](mem://style/code-constraints) — Strict rules for code style, structure, and pull requests
 - [Code Quality Process](mem://style/code-quality-improvement-process) — Architectural principles and resilience patterns
 - [README Branding](mem://style/readme-branding) — Strict layout and linking requirements for the project author section

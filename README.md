@@ -2753,20 +2753,62 @@ PowerShell flags are case-insensitive, so `-uninstall`, `-Uninstall`, and
 ## Project Structure
 
 ```
-gitmap/                        # Go CLI source
-  cmd/                         # Command handlers
-  constants/                   # All string constants (no magic strings)
-  completion/                  # Shell completion generators
-  release/                     # Release workflow and semver
-  store/                       # SQLite database layer
-  formatter/                   # Output formatters
-  helptext/                    # Embedded markdown help files
-  scripts/                     # Install/uninstall scripts
-gitmap-updater/                # Standalone update tool
-spec/                          # Specifications per feature
-src/                           # React documentation site
-.github/workflows/             # CI/CD pipelines
+/                                repo root
+├── README.md                    this file (pinned version + install)
+├── CHANGELOG.md                 version-by-version history
+├── gitmap/                      Go CLI source (the product)
+│   ├── cmd/                     command handlers + JSON contract tests
+│   ├── constants/               ALL string constants (no magic strings)
+│   ├── model/                   shared Go structs (mirror JSON schemas)
+│   ├── stablejson/              deterministic JSON writer (key-by-key)
+│   ├── store/                   SQLite layer + migrations
+│   ├── completion/              shell completion generators
+│   ├── release/                 release workflow + semver
+│   ├── formatter/               human / JSON / CSV output formatters
+│   ├── helptext/                embedded markdown help files
+│   └── scripts/                 embedded install / uninstall scripts
+├── gitmap-updater/              standalone updater binary
+├── spec/                        specifications (source of truth)
+│   ├── 03-general/              cross-cutting rules (logging, build, prohibited)
+│   ├── 04-generic-cli/          per-command specs
+│   ├── 05-coding-guidelines/    Go style, naming, errors
+│   ├── 08-json-schemas/         JSON Schema (draft-07) for every JSON output
+│   └── 12-consolidated-guidelines/  merged style guide
+├── scripts/                     helper shell / PowerShell scripts
+├── .github/workflows/           CI pipelines
+├── .gitmap/                     runtime artifacts — do NOT hand-edit
+├── .lovable/                    AI memory + plans + prompts
+└── src/                         React docs site (Vite + shadcn)
 ```
+
+### What to Read (AI onboarding map)
+
+A fresh AI session should open these files **in order** to understand the
+project, the JSON output contracts, and how to add a new JSON surface:
+
+1. This README — product overview + folder structure (you are here).
+2. **[`.lovable/memory/project/what-to-read.md`](./.lovable/memory/project/what-to-read.md)**
+   — full onboarding map, JSON contract triangle
+   (schema ↔ model ↔ encoder ↔ test ↔ fixture), and the step-by-step
+   recipe for adding a new JSON output.
+3. `.lovable/memory/index.md` — master memory index (Core rules + topic links).
+4. `.lovable/overview.md` and `.lovable/strictly-avoid.md` — invariants & hard NOs.
+5. `spec/08-json-schemas/` — every JSON output's schema.
+6. `gitmap/cmd/amendauditrender.go` + `amendaudit_jsonschema_contract_test.go`
+   — canonical example of the encoder + contract-test pattern to copy.
+
+### How JSON Outputs Are Structured
+
+Every JSON-emitting command follows the same four-layer contract:
+
+```
+spec/08-json-schemas/<name>.schema.json          ← contract (draft-07)
+gitmap/model/<name>.go                           ← Go struct
+gitmap/cmd/<name>render.go                       ← stablejson encoder (key order = wire contract)
+gitmap/cmd/<name>_jsonschema_contract_test.go    ← drift guard
+```
+
+See `.lovable/memory/project/what-to-read.md` §3–4 for the full recipe.
 
 ---
 

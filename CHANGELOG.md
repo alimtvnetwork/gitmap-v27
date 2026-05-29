@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.1.0 — (2026-05-29) — `gitmap cd <repo> <inner-command>` runs subcommands inside a named repo
+
+- Added: `gitmap cd <repo-name> <subcommand> [args...]` — `cd` now accepts an optional inner command (e.g. `gitmap cd myproj cn v++`, `gitmap cd myproj cfrp v+1`). The named repo is resolved via the existing slug/default/pick path, the process chdirs into it, and the inner subcommand dispatches normally. Commands that already write a shell handoff (`cn`, `cfr`, `cfrp`, `as`, `clone`, ...) continue to relocate the caller's shell to the new directory after the inner command finishes.
+- Changed: `gitmap/cmd/cdops.go` — `runCDLookup` now extracts trailing positional args via `parseCDPickFlag` (return signature widened to `(bool, []string)`) and routes them to a new `runCDInner` helper.
+- Changed: `gitmap/constants/constants_cd.go` — `ErrCDUsage` updated to advertise the optional inner-command form; added `ErrCDChdirFmt` for chdir failures.
+
 ## v6.0.0 — (2026-05-26) — Breaking: `commit-transfer` merge default flips to `true`
 
 **Breaking change:** `gitmap commit-in`, `commit-out`, `commit-left`, `commit-right`, and `commit-both` now preserve merge commits by default. The legacy strip behaviour requires explicit `--no-include-merges`.

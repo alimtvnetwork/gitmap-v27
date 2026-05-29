@@ -4,6 +4,8 @@
 
 **Git repository scanner, manager, and navigator CLI**
 
+**Pinned version: v6.1.0**
+
 [![CI](https://img.shields.io/github/actions/workflow/status/alimtvnetwork/gitmap-v24/ci.yml?style=flat-square&label=CI)](https://github.com/alimtvnetwork/gitmap-v24/actions/workflows/ci.yml)
 [![Vulnerability Scan](https://img.shields.io/github/actions/workflow/status/alimtvnetwork/gitmap-v24/vulncheck.yml?style=flat-square&label=vulnerability%20scan)](https://github.com/alimtvnetwork/gitmap-v24/actions/workflows/vulncheck.yml)
 [![Cross-Platform Build](https://img.shields.io/github/actions/workflow/status/alimtvnetwork/gitmap-v24/cross-platform.yml?style=flat-square&label=cross-platform%20build)](https://github.com/alimtvnetwork/gitmap-v24/actions/workflows/cross-platform.yml)

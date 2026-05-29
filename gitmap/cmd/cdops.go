@@ -14,6 +14,10 @@ import (
 )
 
 // runCDLookup finds a repo by name and prints its path to stdout.
+// If extra positional args follow the name, they are treated as a
+// gitmap subcommand to execute inside the resolved repo directory
+// (e.g. `gitmap cd myrepo cn v++` clones the next version of myrepo
+// and hands off to the new folder via the inner command's handoff).
 func runCDLookup(name string, args []string) {
 	if HasAlias() {
 		fmt.Print(GetAliasPath())
@@ -21,7 +25,7 @@ func runCDLookup(name string, args []string) {
 		return
 	}
 
-	pick := parseCDPickFlag(args)
+	pick, rest := parseCDPickFlag(args)
 	records := lookupCDRecords(name)
 
 	if len(records) == 0 {
@@ -30,18 +34,40 @@ func runCDLookup(name string, args []string) {
 	}
 
 	path := resolveCDPath(name, records, pick)
+
+	if len(rest) > 0 {
+		runCDInner(path, rest)
+
+		return
+	}
+
 	fmt.Print(path)
 	WriteShellHandoff(path)
 	warnIfNoWrapper()
 }
 
-// parseCDPickFlag checks for --pick in the remaining args.
-func parseCDPickFlag(args []string) bool {
+// runCDInner chdirs into path and dispatches the inner subcommand
+// (the args after `gitmap cd <name>`). The inner command is
+// responsible for writing its own shell handoff if it relocates the
+// caller — `cn`, `cfr`, `cfrp`, etc. already do this.
+func runCDInner(path string, innerArgs []string) {
+	if err := os.Chdir(path); err != nil {
+		fmt.Fprintf(os.Stderr, constants.ErrCDChdirFmt, path, err)
+		os.Exit(1)
+	}
+
+	os.Args = append([]string{os.Args[0]}, innerArgs...)
+	dispatch(innerArgs[0])
+}
+
+// parseCDPickFlag extracts --pick and returns it plus any remaining
+// positional args (the inner subcommand + its args, if any).
+func parseCDPickFlag(args []string) (bool, []string) {
 	fs := flag.NewFlagSet("cd-lookup", flag.ContinueOnError)
 	pick := fs.Bool("pick", false, constants.FlagDescCDPick)
 	_ = fs.Parse(args)
 
-	return *pick
+	return *pick, fs.Args()
 }
 
 // lookupCDRecords finds repos matching the given name via DB.

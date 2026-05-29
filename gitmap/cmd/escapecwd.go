@@ -25,8 +25,8 @@ func escapeCwdIfInside(target string) (string, error) {
 		return "", nil
 	}
 
-	cwdClean := filepath.Clean(cwd)
-	tgtClean := filepath.Clean(target)
+	cwdClean := cleanExistingPath(cwd)
+	tgtClean := cleanExistingPath(target)
 	if !isPathInside(cwdClean, tgtClean) {
 		return cwd, nil
 	}
@@ -40,6 +40,16 @@ func escapeCwdIfInside(target string) (string, error) {
 	}
 
 	return parent, nil
+}
+
+func cleanExistingPath(path string) string {
+	cleaned := filepath.Clean(path)
+	resolved, err := filepath.EvalSymlinks(cleaned)
+	if err != nil {
+		return cleaned
+	}
+
+	return filepath.Clean(resolved)
 }
 
 // isPathInside reports whether `child` equals `parent` or is a

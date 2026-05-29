@@ -34,7 +34,7 @@ func TestIsPathInside(t *testing.T) {
 
 func TestEscapeCwdIfInside_NotInside(t *testing.T) {
 	target := t.TempDir()
-	other := t.TempDir()
+	other := cleanExistingPath(t.TempDir())
 	restoreCwd(t)
 
 	if err := os.Chdir(other); err != nil {
@@ -46,7 +46,7 @@ func TestEscapeCwdIfInside_NotInside(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if !strings.EqualFold(filepath.Clean(got), filepath.Clean(other)) {
+	if !sameCleanPath(got, other) {
 		t.Fatalf("cwd should be unchanged; got %q want %q", got, other)
 	}
 }
@@ -93,13 +93,17 @@ func TestEscapeCwdIfInside_EscapesWhenInside(t *testing.T) {
 	}
 
 	wantParent := filepath.Dir(target)
-	if !strings.EqualFold(filepath.Clean(got), filepath.Clean(wantParent)) {
+	if !sameCleanPath(got, wantParent) {
 		t.Fatalf("escape landed in %q want parent %q", got, wantParent)
 	}
 
 	cwd, _ := os.Getwd()
 	resolved, _ := filepath.EvalSymlinks(cwd)
-	if !strings.EqualFold(filepath.Clean(resolved), filepath.Clean(wantParent)) {
+	if !sameCleanPath(resolved, wantParent) {
 		t.Fatalf("os cwd %q (resolved %q) != parent %q", cwd, resolved, wantParent)
 	}
+}
+
+func sameCleanPath(left, right string) bool {
+	return strings.EqualFold(cleanExistingPath(left), cleanExistingPath(right))
 }

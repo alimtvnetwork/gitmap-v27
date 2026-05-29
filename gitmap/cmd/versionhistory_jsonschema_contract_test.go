@@ -16,12 +16,12 @@ const versionHistorySchemaFilename = "version-history.schema.json"
 
 // versionHistoryItemsRequiredKeys mirrors the schema's items.required array.
 var versionHistoryItemsRequiredKeys = []string{
-	"fromVersionTag",
 	"fromVersionNum",
-	"toVersionTag",
-	"toVersionNum",
+	"fromVersionTag",
 	"id",
 	"repoId",
+	"toVersionNum",
+	"toVersionTag",
 }
 
 // TestVersionHistoryJSONSchema_TopLevelShape pins the root type (array)

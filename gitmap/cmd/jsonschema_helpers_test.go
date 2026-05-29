@@ -30,10 +30,7 @@ import (
 // to read project-relative fixtures.
 func findSchemaFile(t *testing.T, filename string) string {
 	t.Helper()
-	dir, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("getwd: %v", err)
-	}
+	dir := filepath.Dir(cmdPackageDir())
 	for i := 0; i < 8; i++ {
 		candidate := filepath.Join(dir, "spec", "08-json-schemas", filename)
 		if _, err := os.Stat(candidate); err == nil {
@@ -97,11 +94,8 @@ func stringSliceFromAny(v any) []string {
 func extractFirstObjectKeyOrder(t *testing.T, data []byte) []string {
 	t.Helper()
 	dec := json.NewDecoder(bytes.NewReader(data))
-	if err := expectDelim(dec, '['); err != nil {
-		t.Fatalf("opening array: %v", err)
-	}
-	if err := expectDelim(dec, '{'); err != nil {
-		t.Fatalf("opening object: %v", err)
+	if err := skipUntilFirstObjectStart(dec); err != nil {
+		t.Fatalf("opening first object: %v", err)
 	}
 
 	return collectObjectKeys(t, dec)

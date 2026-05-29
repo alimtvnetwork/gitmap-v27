@@ -134,7 +134,7 @@ func loadSchema(t *testing.T, name string) schema {
 // comparison so v10 sorts after v9 — matters once a schema lives
 // long enough to accumulate ten revisions.
 func findLatestVersion(name string) (string, error) {
-	pattern := filepath.Join(schemaDir, fmt.Sprintf(schemaFilePattern, name))
+	pattern := filepath.Join(resolveSchemaDir(), fmt.Sprintf(schemaFilePattern, name))
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
 

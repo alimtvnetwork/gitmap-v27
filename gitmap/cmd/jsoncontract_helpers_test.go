@@ -47,7 +47,7 @@ const goldenDir = "testdata"
 // keeps a single stray env var from rewriting fixtures in CI.
 func assertGoldenBytes(t *testing.T, name string, got []byte) {
 	t.Helper()
-	path := filepath.Join(goldenDir, name)
+	path := resolveGoldenPath(name)
 	trigger := os.Getenv("GITMAP_UPDATE_GOLDEN") == "1"
 	if goldenguard.AllowUpdate(t, trigger) {
 		mustWriteGolden(t, path, got)

@@ -4,13 +4,19 @@
 package cmd
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestExtractBaseAndVersionFromArg_URL(t *testing.T) {
-	base, ver := extractBaseAndVersionFromArg("https://github.com/alimtvnetwork/gitmap-v25")
-	if base != "gitmap" || ver != 23 {
-		t.Fatalf("expected (gitmap, 23), got (%s, %d)", base, ver)
+	// Per fix-repo digit-capture rule (mem://constraints, v4.12.0): derive the
+	// expected version from the same int used to format the input URL so a
+	// future `gitmap-vN` bump rewrites both sides atomically.
+	const wantVer = 25
+	input := fmt.Sprintf("https://github.com/alimtvnetwork/gitmap-v%d", wantVer)
+	base, ver := extractBaseAndVersionFromArg(input)
+	if base != "gitmap" || ver != wantVer {
+		t.Fatalf("expected (gitmap, %d), got (%s, %d)", wantVer, base, ver)
 	}
 }
 

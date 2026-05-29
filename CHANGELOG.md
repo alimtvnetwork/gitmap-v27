@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.2.0 — (2026-05-29) — Fix macOS/Windows CI: `TestExtractBaseAndVersionFromArg_URL` digit-capture desync
+
+- Fixed: `gitmap/cmd/visibilitybulk_test.go` — `TestExtractBaseAndVersionFromArg_URL` hard-coded the expected version (`23`) as a bare integer literal separate from the input URL `gitmap-v25`. The fix-repo rewriter only touches `{base}-vN` tokens, so when the repo bumped from v23→v25 the URL was updated but the expected int was not, producing `expected (gitmap, 23), got (gitmap, 25)` on every CI run since the bump. This was the **exact bug class** documented in mem://core (FIX-REPO DIGIT-CAPTURE GAP, closed v4.12.0): "any new fix-repo test MUST derive expected version-bearing strings from the same int it passed in — never hard-code a sibling literal." The test now formats the URL from a `const wantVer = 25` and asserts against the same constant, so the next version bump rewrites both sides atomically.
+- Root cause: a regression test for the v4.12.0 rule had itself been added in violation of the rule. CI's `macos-latest / go build + test` job (and any other matrix host) failed at `gitmap/cmd` for this single assertion.
+
+
+
 ## v6.1.0 — (2026-05-29) — `gitmap cd <repo> <inner-command>` runs subcommands inside a named repo
 
 - Added: `gitmap cd <repo-name> <subcommand> [args...]` — `cd` now accepts an optional inner command (e.g. `gitmap cd myproj cn v++`, `gitmap cd myproj cfrp v+1`). The named repo is resolved via the existing slug/default/pick path, the process chdirs into it, and the inner subcommand dispatches normally. Commands that already write a shell handoff (`cn`, `cfr`, `cfrp`, `as`, `clone`, ...) continue to relocate the caller's shell to the new directory after the inner command finishes.

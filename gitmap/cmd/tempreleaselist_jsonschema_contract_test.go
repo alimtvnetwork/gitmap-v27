@@ -16,13 +16,13 @@ const tempReleaseListSchemaFilename = "temp-release-list.schema.json"
 
 // tempReleaseListItemsRequiredKeys mirrors the schema's items.required array.
 var tempReleaseListItemsRequiredKeys = []string{
-	"id",
 	"branch",
-	"versionPrefix",
-	"sequenceNumber",
 	"commit",
 	"commitMessage",
 	"createdAt",
+	"id",
+	"sequenceNumber",
+	"versionPrefix",
 }
 
 // TestTempReleaseListJSONSchema_TopLevelShape pins the root type (array)

@@ -102,4 +102,3 @@ func TestScanProject_RecordKeysSubsetOfSchema(t *testing.T) {
 		}
 	}
 }
-

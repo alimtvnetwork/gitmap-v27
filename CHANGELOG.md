@@ -1,5 +1,10 @@
 # Changelog
 
+## v6.2.2 — (2026-05-30) — Fix macOS CI: stale `updateprobe_test.go` version expectations
+
+- Fixed: `gitmap/cmd/updateprobe_test.go` — `TestParseCurrentRepoSlug` had been self-rewritten to use `gitmap-v25` while still expecting stale parsed versions (`23` and `1`). The test now derives the current-slug case from one `currentSlugVersion` constant and uses a synthetic `tool-v1` case for the v1 parser branch, preventing future repo bumps from rewriting only half of the assertion.
+- Hardened: `fixrepo_rewrite_preview_test.go` and `fixrepo_rewrite_barebase_test.go` now use synthetic `acme-vN` tokens instead of this repo's own `gitmap-v25` literals, so future `fix-repo` bumps cannot silently rot the rewrite/preview regression tests.
+
 ## v6.2.1 — (2026-05-30) — Fix macOS CI: `fixrepo_rewrite_versionscope_test.go` self-rewrite damage
 
 - Fixed: `gitmap/cmd/fixrepo_rewrite_versionscope_test.go` — every `gitmap-vN` literal in the test's `in`/`want` strings (for N < 25) had been silently rewritten to `gitmap-v25` by fix-repo itself on the v23→v25 bump, collapsing assertions like *"bare `gitmap` should become `gitmap-v2` when current=2"* into nonsense (`want: "...gitmap-v25..."`). Distractor tokens now use a synthetic `otherpkg-vN` base so the rewriter — which only touches `{base}-vN` where base == the repo name — can't smash them on future bumps. Same lesson as the `fixrepo_rewrite_v9tov12_test.go` fix that already uses `acme-vN`.

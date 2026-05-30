@@ -1,6 +1,14 @@
 # Changelog
 
+## v6.4.0 — (2026-05-30) — `gitmap hd` auto-downloads `docs-site.zip`
+
+- Fixed: `gitmap hd` (help-dashboard) no longer dies with `Docs site directory not found at <install>\docs-site` when the installer skipped the docs asset (older installs, or releases that didn't ship `docs-site.zip`).
+- New behaviour: when neither `docs-site/` nor `docs-site.zip` exists next to the binary, `runHelpDashboard` now fetches the archive at runtime over HTTPS, trying `releases/download/v<Version>/docs-site.zip` first, then `releases/latest/download/docs-site.zip`, before extracting in place.
+- Files: `gitmap/cmd/helpdashboard.go` (download branch), new `gitmap/cmd/helpdashboard_download.go` (HTTP fetch with 30s timeout and `maxDocsSiteSize` cap), `gitmap/constants/constants_helpdashboard.go` (new messages + `DocsSiteDownloadTimeoutSec`).
+- On total failure, the error now tells the user exactly which path to drop `docs-site.zip` into and suggests `gitmap update`.
+
 ## v6.3.0 — (2026-05-30) — Release binaries stamp `gitmap binary` provenance
+
 
 - Fixed: release/CI-built binaries now embed the source repo URL, branch, commit SHA, and UTC build stamp via `-ldflags`, so the `gitmap binary` footer can identify the actual binary instead of falling back to the current working repo or showing only a version.
 - Root cause: the local `run.sh` / `run.ps1` path had build identity injection, but GitHub Actions release and CI artifact builds still passed only `constants.Version`; downloaded binaries therefore missed the v5.60.0 footer provenance fix.

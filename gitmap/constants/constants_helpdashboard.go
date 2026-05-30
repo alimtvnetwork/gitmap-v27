@@ -38,6 +38,11 @@ const (
 
 // Docs-site release messages.
 const (
-	MsgDocsSiteBundling = "  Bundling docs-site from %s...\n"
-	MsgDocsSiteBundled  = "  ✓ Docs site bundled: %s\n"
+	MsgDocsSiteBundling        = "  Bundling docs-site from %s...\n"
+	MsgDocsSiteBundled         = "  ✓ Docs site bundled: %s\n"
+	MsgDocsSiteDownload        = "  Downloading docs-site.zip from %s...\n"
+	MsgDocsSiteDownloaded      = "  ✓ Downloaded docs-site.zip (%d bytes)\n"
+	ErrDocsSiteDownload        = "  ✗ Could not auto-download docs-site.zip (tried %d source(s)). Last error: %v\n    Run `gitmap update` to reinstall, or place docs-site.zip next to the binary at:\n      %s\n"
+	DocsSiteDownloadTimeoutSec = 30
 )
+

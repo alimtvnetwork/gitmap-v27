@@ -7,7 +7,7 @@
 
 ## v6.2.1 — (2026-05-30) — Fix macOS CI: `fixrepo_rewrite_versionscope_test.go` self-rewrite damage
 
-- Fixed: `gitmap/cmd/fixrepo_rewrite_versionscope_test.go` — every `gitmap-vN` literal in the test's `in`/`want` strings (for N < 25) had been silently rewritten to `gitmap-v25` by fix-repo itself on the v23→v25 bump, collapsing assertions like *"bare `gitmap` should become `gitmap-v2` when current=2"* into nonsense (`want: "...gitmap-v25..."`). Distractor tokens now use a synthetic `otherpkg-vN` base so the rewriter — which only touches `{base}-vN` where base == the repo name — can't smash them on future bumps. Same lesson as the `fixrepo_rewrite_v9tov12_test.go` fix that already uses `acme-vN`.
+- Fixed: `gitmap/cmd/fixrepo_rewrite_versionscope_test.go` — every `gitmap-vN` literal in the test's `in`/`want` strings (for N < 25) had been silently rewritten to `gitmap-v25` by fix-repo itself on the v23→v25 bump, collapsing assertions like *"bare `gitmap` should become `gitmap-v25` when current=2"* into nonsense (`want: "...gitmap-v25..."`). Distractor tokens now use a synthetic `otherpkg-vN` base so the rewriter — which only touches `{base}-vN` where base == the repo name — can't smash them on future bumps. Same lesson as the `fixrepo_rewrite_v9tov12_test.go` fix that already uses `acme-vN`.
 - Root cause: this test data was written using the repo's own base name (`gitmap`), making it self-poisoning under any future fix-repo run. Documented in mem://core under FIX-REPO DIGIT-CAPTURE GAP — extended now to cover not just sibling integer literals but any same-base versioned token in test fixtures.
 
 

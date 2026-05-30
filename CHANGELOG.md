@@ -1,5 +1,10 @@
 # Changelog
 
+## v6.3.0 — (2026-05-30) — Release binaries stamp `gitmap binary` provenance
+
+- Fixed: release/CI-built binaries now embed the source repo URL, branch, commit SHA, and UTC build stamp via `-ldflags`, so the `gitmap binary` footer can identify the actual binary instead of falling back to the current working repo or showing only a version.
+- Root cause: the local `run.sh` / `run.ps1` path had build identity injection, but GitHub Actions release and CI artifact builds still passed only `constants.Version`; downloaded binaries therefore missed the v5.60.0 footer provenance fix.
+
 ## v6.2.2 — (2026-05-30) — Fix macOS CI: stale `updateprobe_test.go` version expectations
 
 - Fixed: `gitmap/cmd/updateprobe_test.go` — `TestParseCurrentRepoSlug` had been self-rewritten to use `gitmap-v25` while still expecting stale parsed versions (`23` and `1`). The test now derives the current-slug case from one `currentSlugVersion` constant and uses a synthetic `tool-v1` case for the v1 parser branch, preventing future repo bumps from rewriting only half of the assertion.

@@ -30,23 +30,32 @@ func runHelpDashboard(args []string) {
 	binaryDir := resolveBinaryDir()
 	docsDir := filepath.Join(binaryDir, constants.HDDocsDir)
 
-	// Auto-extract docs-site.zip if docs-site/ directory doesn't exist
+	// Auto-extract docs-site.zip if docs-site/ directory doesn't exist.
+	// If the zip is also missing (older installer, or `gitmap update` not yet
+	// run after a docs-site release), try to download it from GitHub first.
 	if _, err := os.Stat(docsDir); os.IsNotExist(err) {
 		zipPath := filepath.Join(binaryDir, constants.DocsSiteArchive)
-		if _, zipErr := os.Stat(zipPath); zipErr == nil {
-			fmt.Printf("  Extracting %s...\n", constants.DocsSiteArchive)
-			if extractErr := extractDocsSiteZip(zipPath, binaryDir); extractErr != nil {
-				fmt.Fprintf(os.Stderr, "  ✗ Failed to extract docs-site.zip: %v\n", extractErr)
+		if _, zipErr := os.Stat(zipPath); os.IsNotExist(zipErr) {
+			if _, n, dlErr := downloadDocsSiteArchive(zipPath); dlErr != nil {
+				fmt.Fprintf(os.Stderr, constants.ErrDocsSiteDownload, 2, dlErr, zipPath)
 				os.Exit(1)
+			} else {
+				fmt.Printf(constants.MsgDocsSiteDownloaded, n)
 			}
-			fmt.Printf("  ✓ Docs site extracted to %s\n", docsDir)
 		}
+		fmt.Printf("  Extracting %s...\n", constants.DocsSiteArchive)
+		if extractErr := extractDocsSiteZip(zipPath, binaryDir); extractErr != nil {
+			fmt.Fprintf(os.Stderr, "  ✗ Failed to extract docs-site.zip: %v\n", extractErr)
+			os.Exit(1)
+		}
+		fmt.Printf("  ✓ Docs site extracted to %s\n", docsDir)
 	}
 
 	if _, err := os.Stat(docsDir); os.IsNotExist(err) {
 		fmt.Fprintf(os.Stderr, constants.ErrHDNoDocsDir, docsDir)
 		os.Exit(1)
 	}
+
 
 	distDir := filepath.Join(docsDir, constants.HDDistDir)
 

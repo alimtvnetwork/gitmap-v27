@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.2.1 — (2026-05-30) — Fix macOS CI: `fixrepo_rewrite_versionscope_test.go` self-rewrite damage
+
+- Fixed: `gitmap/cmd/fixrepo_rewrite_versionscope_test.go` — every `gitmap-vN` literal in the test's `in`/`want` strings (for N < 25) had been silently rewritten to `gitmap-v25` by fix-repo itself on the v23→v25 bump, collapsing assertions like *"bare `gitmap` should become `gitmap-v2` when current=2"* into nonsense (`want: "...gitmap-v25..."`). Distractor tokens now use a synthetic `otherpkg-vN` base so the rewriter — which only touches `{base}-vN` where base == the repo name — can't smash them on future bumps. Same lesson as the `fixrepo_rewrite_v9tov12_test.go` fix that already uses `acme-vN`.
+- Root cause: this test data was written using the repo's own base name (`gitmap`), making it self-poisoning under any future fix-repo run. Documented in mem://core under FIX-REPO DIGIT-CAPTURE GAP — extended now to cover not just sibling integer literals but any same-base versioned token in test fixtures.
+
+
+
 ## v6.2.0 — (2026-05-29) — Fix macOS/Windows CI: `TestExtractBaseAndVersionFromArg_URL` digit-capture desync
 
 - Fixed: `gitmap/cmd/visibilitybulk_test.go` — `TestExtractBaseAndVersionFromArg_URL` hard-coded the expected version (`23`) as a bare integer literal separate from the input URL `gitmap-v25`. The fix-repo rewriter only touches `{base}-vN` tokens, so when the repo bumped from v23→v25 the URL was updated but the expected int was not, producing `expected (gitmap, 23), got (gitmap, 25)` on every CI run since the bump. This was the **exact bug class** documented in mem://core (FIX-REPO DIGIT-CAPTURE GAP, closed v4.12.0): "any new fix-repo test MUST derive expected version-bearing strings from the same int it passed in — never hard-code a sibling literal." The test now formats the URL from a `const wantVer = 25` and asserts against the same constant, so the next version bump rewrites both sides atomically.

@@ -16,38 +16,44 @@ func TestApplyAllTargets_VersionScopeMatrix(t *testing.T) {
 		in      string
 		want    string
 	}
+	// Distractor tokens deliberately use a non-`gitmap` base
+	// (`otherpkg-vN`) so the fix-repo rewriter — which only touches
+	// `{base}-vN` tokens where base == this repo's name — cannot
+	// silently rewrite these literals on a future version bump.
+	// (See mem://constraints fix-repo digit-capture rule + the v6.2.x
+	// regression where every `gitmap-vN<25` here got smashed to v25.)
 	cases := []tc{
 		{
 			// current=1 is a no-op floor: nothing to bump to.
 			name:    "v1_no_rewrite",
 			current: 1,
 			targets: []int{},
-			in:      "gitmap and gitmap-v25 stay put",
-			want:    "gitmap and gitmap-v25 stay put",
+			in:      "gitmap and otherpkg-v9 stay put",
+			want:    "gitmap and otherpkg-v9 stay put",
 		},
 		{
 			// v1→v2: the ONLY case where bare base is rewritten.
 			name:    "v2_bare_base_rewritten",
 			current: 2,
 			targets: []int{1},
-			in:      "url=https://github.com/x/gitmap plus gitmap-v25 token",
-			want:    "url=https://github.com/x/gitmap-v25 plus gitmap-v25 token",
+			in:      "url=https://github.com/x/gitmap plus otherpkg-v9 token",
+			want:    "url=https://github.com/x/gitmap-v2 plus otherpkg-v9 token",
 		},
 		{
 			// v3: bare base preserved even with v1 in targets.
 			name:    "v3_bare_base_preserved",
 			current: 3,
 			targets: []int{1, 2},
-			in:      "gitmap binary and gitmap-v25 and gitmap-v25",
-			want:    "gitmap binary and gitmap-v25 and gitmap-v25",
+			in:      "gitmap binary and otherpkg-v9 and otherpkg-v9",
+			want:    "gitmap binary and otherpkg-v9 and otherpkg-v9",
 		},
 		{
 			// v4: bare base preserved across full target sweep.
 			name:    "v4_bare_base_preserved",
 			current: 4,
 			targets: []int{1, 2, 3},
-			in:      "gitmap binary, gitmap-v25, gitmap-v25, gitmap-v25",
-			want:    "gitmap binary, gitmap-v25, gitmap-v25, gitmap-v25",
+			in:      "gitmap binary, otherpkg-v9, otherpkg-v9, otherpkg-v9",
+			want:    "gitmap binary, otherpkg-v9, otherpkg-v9, otherpkg-v9",
 		},
 	}
 	for _, c := range cases {

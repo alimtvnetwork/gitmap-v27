@@ -53,18 +53,18 @@ func TestApplyBareBase_SkippedWhenV1NotInTargets(t *testing.T) {
 // At v3+ the bare token (e.g. `gitmap`) is almost always an unrelated
 // identifier (binary name, package, brand) and must be left alone.
 func TestApplyAllTargets_BareBase_SkippedAtV3Plus(t *testing.T) {
-	body := "url=https://github.com/x/gitmap and gitmap-v25 plus gitmap-v25"
-	got, _ := applyAllTargets(body, "gitmap", 3, []int{1, 2})
-	want := "url=https://github.com/x/gitmap and gitmap-v25 plus gitmap-v25"
+	body := "url=https://github.com/x/acme and acme-v1 plus acme-v2"
+	got, _ := applyAllTargets(body, "acme", 3, []int{1, 2})
+	want := "url=https://github.com/x/acme and acme-v3 plus acme-v3"
 	if got != want {
 		t.Fatalf("bare-base ran at v3 (must only run at v1→v2).\n got:  %q\n want: %q", got, want)
 	}
 }
 
 func TestApplyAllTargets_BareBase_SkippedAtV4WithV1InTargets(t *testing.T) {
-	body := "gitmap and gitmap-v25 and gitmap-v25"
-	got, _ := applyAllTargets(body, "gitmap", 4, []int{1, 2, 3})
-	want := "gitmap and gitmap-v25 and gitmap-v25"
+	body := "acme and acme-v1 and acme-v2 and acme-v3"
+	got, _ := applyAllTargets(body, "acme", 4, []int{1, 2, 3})
+	want := "acme and acme-v4 and acme-v4 and acme-v4"
 	if got != want {
 		t.Fatalf("bare-base must be skipped when current>2 even if v1 targeted.\n got:  %q\n want: %q", got, want)
 	}

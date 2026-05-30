@@ -8,8 +8,8 @@ package cmd
 import "testing"
 
 func TestPreviewAllTargets_NumberedRulesOnly(t *testing.T) {
-	body := "gitmap-v25 and gitmap-v25 and gitmap-v25 and gitmap-v25"
-	total, hits := previewAllTargets(body, "gitmap", 4, []int{1, 2, 3}, false)
+	body := "acme-v1 and acme-v2 and acme-v2 and acme-v4"
+	total, hits := previewAllTargets(body, "acme", 4, []int{1, 2, 3}, false)
 	if total != 3 {
 		t.Fatalf("total: got %d want 3", total)
 	}
@@ -26,8 +26,8 @@ func TestPreviewAllTargets_NumberedRulesOnly(t *testing.T) {
 }
 
 func TestPreviewAllTargets_BareBaseSweepAtV2(t *testing.T) {
-	body := "gitmap bare and gitmap-v25 numbered"
-	total, hits := previewAllTargets(body, "gitmap", 2, []int{1}, false)
+	body := "acme bare and acme-v1 numbered"
+	total, hits := previewAllTargets(body, "acme", 2, []int{1}, false)
 	if total != 2 {
 		t.Fatalf("total: got %d want 2", total)
 	}
@@ -48,8 +48,8 @@ func TestPreviewAllTargets_BareBaseSweepAtV2(t *testing.T) {
 }
 
 func TestPreviewAllTargets_RestrictSuppressesBareBase(t *testing.T) {
-	body := "gitmap bare and gitmap-v25 numbered"
-	total, hits := previewAllTargets(body, "gitmap", 2, []int{1}, true)
+	body := "acme bare and acme-v1 numbered"
+	total, hits := previewAllTargets(body, "acme", 2, []int{1}, true)
 	if total != 1 {
 		t.Fatalf("total: got %d want 1 (bare suppressed)", total)
 	}
@@ -64,7 +64,7 @@ func TestPreviewAllTargets_TotalMatchesRewriteEngine(t *testing.T) {
 	// The preview engine MUST agree with applyAllTargetsR on the
 	// total count for every (current, targets) shape — otherwise the
 	// dry-run summary lies about what a real run would do.
-	body := "gitmap and gitmap-v25 plus gitmap-v25 plus gitmap-v25"
+	body := "acme and acme-v1 plus acme-v2 plus acme-v3"
 	cases := []struct {
 		current int
 		targets []int
@@ -76,8 +76,8 @@ func TestPreviewAllTargets_TotalMatchesRewriteEngine(t *testing.T) {
 		{4, []int{1, 2, 3}, false},
 	}
 	for _, c := range cases {
-		_, rw := applyAllTargetsR(body, "gitmap", c.current, c.targets, c.restr)
-		prev, _ := previewAllTargets(body, "gitmap", c.current, c.targets, c.restr)
+		_, rw := applyAllTargetsR(body, "acme", c.current, c.targets, c.restr)
+		prev, _ := previewAllTargets(body, "acme", c.current, c.targets, c.restr)
 		if rw != prev {
 			t.Errorf("count drift (current=%d restr=%v): rewrite=%d preview=%d",
 				c.current, c.restr, rw, prev)

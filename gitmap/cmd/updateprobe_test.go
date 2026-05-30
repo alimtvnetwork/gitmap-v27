@@ -10,15 +10,16 @@ import (
 )
 
 func TestParseCurrentRepoSlug(t *testing.T) {
+	const currentSlugVersion = 25
 	cases := []struct {
 		in       string
 		wantBase string
 		wantN    int
 		wantErr  bool
 	}{
-		{"gitmap-v25", "gitmap", 23, false},
+		{fmt.Sprintf("gitmap-v%d", currentSlugVersion), "gitmap", currentSlugVersion, false},
 		{"gitmap-v100", "gitmap", 100, false},
-		{"gitmap-v25", "gitmap", 1, false},
+		{fmt.Sprintf("tool-v%d", 1), "tool", 1, false},
 		{"gitmap", "", 0, true},
 		{"gitmap-v", "", 0, true},
 		{"-v5", "", 0, true},

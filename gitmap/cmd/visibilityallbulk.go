@@ -75,9 +75,9 @@ func parseBulkArgs(args []string) (string, string, bulkFlags) {
 	flags := bulkFlags{}
 	for _, a := range args[2:] {
 		switch a {
-		case "-Y", "-y", "--yes", "--" + constants.FlagVisYes:
+		case "-Y", "-y", "--yes":
 			flags.Yes = true
-		case "--verbose", "--" + constants.FlagVisVerbose:
+		case "--verbose":
 			flags.Verbose = true
 		}
 	}

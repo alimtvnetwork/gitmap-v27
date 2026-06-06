@@ -11,11 +11,11 @@ import (
 // ensures unknown tokens pass through as positionals.
 func TestSplitRepoRecloneArgs(t *testing.T) {
 	cases := []struct {
-		name        string
-		in          []string
-		wantYes     bool
-		wantPosLen  int
-		wantFirst   string
+		name       string
+		in         []string
+		wantYes    bool
+		wantPosLen int
+		wantFirst  string
 	}{
 		{"empty", nil, false, 0, ""},
 		{"single -y", []string{"-y"}, true, 0, ""},

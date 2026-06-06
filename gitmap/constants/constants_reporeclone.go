@@ -16,7 +16,7 @@ const (
 
 // User-facing strings. Centralised per the no-magic-strings rule.
 const (
-	MsgRepoReclonePlan = "repo-reclone: target=%s origin=%s parent=%s\n"
+	MsgRepoReclonePlan    = "repo-reclone: target=%s origin=%s parent=%s\n"
 	MsgRepoRecloneConfirm = "repo-reclone: about to DELETE %q and re-clone from %s.\n" +
 		"  Type 'y' to continue, anything else aborts: "
 	MsgRepoRecloneAborted   = "repo-reclone: aborted by user; nothing was removed\n"

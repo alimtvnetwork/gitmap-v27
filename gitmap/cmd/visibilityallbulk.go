@@ -42,6 +42,7 @@ func runMakeAllPrivate(args []string) {
 // most specific code per spec: ExitVisOK on full success, ExitVisAuthFailed
 // when every repo failed, ExitVisBulkPartial on mixed outcomes.
 func runMakeAllVisibility(target, cmdName string, args []string) {
+	checkHelp(cmdName, args)
 	if len(args) < 2 {
 		fmt.Fprintf(os.Stderr, constants.ErrMakeAllMissingArgFmt, cmdName)
 		os.Exit(constants.ExitVisBadFlag)

@@ -1,15 +1,17 @@
 // Package cmd — visibilityallbulk.go: top-level handler for the four
-// bulk wildcard visibility commands. This file owns ONLY the dispatch
-// stub + arg validation + owner resolution; pattern matching, repo
-// listing, interactive prompt, and DB persistence land in sibling files
-// across the rest of plan step 7-22.
+// bulk wildcard visibility commands (make-all-public / make-all-private
+// / MAPUB / MAPRI). Owns dispatch, flag parsing, owner resolution,
+// repo enumeration, pattern matching, the optional interactive prompt
+// (-Y skips it), the per-repo apply loop, and exit-code aggregation.
 //
-// Stub status: steps 5-6. The handler resolves the owner and prints a
-// "not yet wired" message; later steps replace the body. Keeping a
-// compiling stub now lets the dispatcher (rootcore.go) reference the
-// symbols without a TODO comment.
+// Heavy lifting is delegated:
+//   - ResolveOwnerOnly        → visibilityresolveowner.go
+//   - listOwnerRepos          → visibilityownerlist.go
+//   - visibility.ParsePatternList / MatchOwnerRepos → gitmap/visibility
+//   - renderMatchedTable / promptConfirmOrExclude   → visibilitybulkprompt.go
+//   - mustEnsureProviderCLI / read+apply+verify     → visibilityapply.go
 //
-// Spec: spec/01-app/116-bulk-visibility-mapub-mapri.md.
+// Spec: spec/01-app/116-bulk-visibility-mapub-mapri.md §plan steps 13-14.
 package cmd
 
 import (
@@ -17,11 +19,16 @@ import (
 	"os"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v25/gitmap/visibility"
 )
 
-// runMakeAllPublic / runMakeAllPrivate are the two dispatcher entry
-// points. They differ only in the target visibility; everything else
-// flows through runMakeAllVisibility.
+// bulkFlags holds the parsed CLI flags for a bulk visibility run.
+type bulkFlags struct {
+	Yes     bool
+	Verbose bool
+}
+
+// runMakeAllPublic / runMakeAllPrivate are the dispatcher entry points.
 func runMakeAllPublic(args []string) {
 	runMakeAllVisibility(constants.VisibilityPublic, constants.CmdMakeAllPublic, args)
 }
@@ -30,26 +37,127 @@ func runMakeAllPrivate(args []string) {
 	runMakeAllVisibility(constants.VisibilityPrivate, constants.CmdMakeAllPrivate, args)
 }
 
-// runMakeAllVisibility is the shared orchestrator. Steps 7-22 will
-// replace the body; for now it validates args, resolves the owner via
-// the new ResolveOwnerOnly resolver, and reports "not yet wired" with
-// a non-zero exit so callers see a loud signal instead of a silent
-// no-op (zero-swallow rule).
-func runMakeAllVisibility(target string, cmdName string, args []string) {
+// runMakeAllVisibility orchestrates the full bulk run. Exits with the
+// most specific code per spec: ExitVisOK on full success, ExitVisAuthFailed
+// when every repo failed, ExitVisBulkPartial on mixed outcomes.
+func runMakeAllVisibility(target, cmdName string, args []string) {
 	if len(args) < 2 {
 		fmt.Fprintf(os.Stderr, constants.ErrMakeAllMissingArgFmt, cmdName)
 		os.Exit(constants.ExitVisBadFlag)
 	}
 
-	ctx, err := ResolveOwnerOnly(args[0])
+	ownerArg, patternsRaw, flags := parseBulkArgs(args)
+	ctx := resolveOwnerOrExit(ownerArg)
+	mustEnsureProviderCLI(ctx.Provider, flags.Verbose)
+
+	patterns, err := visibility.ParsePatternList(patternsRaw)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "make-all-*: %v\n", err)
+		os.Exit(constants.ExitVisBadFlag)
+	}
+
+	matches := matchOrExitEmpty(ctx, patterns, flags.Verbose)
+	final := confirmOrAbort(matches, flags.Yes)
+	if len(final) == 0 {
+		fmt.Fprint(os.Stderr, constants.MsgBulkAborted)
+		os.Exit(constants.ExitVisConfirmReq)
+	}
+
+	fmt.Fprintf(os.Stdout, constants.MsgBulkApplyHeaderFmt, target, len(final), ctx.Owner)
+	changed, skipped, failed := applyBulkLoop(ctx, target, final, flags.Verbose)
+	fmt.Fprintf(os.Stdout, constants.MsgBulkSummaryFmt, changed, skipped, failed, len(final))
+	os.Exit(bulkExitCode(changed, failed))
+}
+
+// parseBulkArgs splits owner / pattern-list / flags. Accepts -Y, -y,
+// --yes, --verbose anywhere after the first two positional args.
+func parseBulkArgs(args []string) (string, string, bulkFlags) {
+	flags := bulkFlags{}
+	for _, a := range args[2:] {
+		switch a {
+		case "-Y", "-y", "--yes":
+			flags.Yes = true
+		case "--verbose":
+			flags.Verbose = true
+		}
+	}
+
+	return args[0], args[1], flags
+}
+
+// resolveOwnerOrExit wraps ResolveOwnerOnly with Code Red exit handling.
+func resolveOwnerOrExit(arg string) ownerContext {
+	ctx, err := ResolveOwnerOnly(arg)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrMakeAllResolveFmt, err)
 		os.Exit(constants.ExitVisBadProvider)
 	}
 
-	fmt.Fprintf(os.Stderr,
-		"make-all-*: resolved provider=%s owner=%s target=%s patterns=%q\n",
-		ctx.Provider, ctx.Owner, target, args[1])
-	fmt.Fprint(os.Stderr, constants.MsgMakeAllNotImpl)
-	os.Exit(constants.ExitVisBadFlag)
+	return ctx
+}
+
+// matchOrExitEmpty lists owner repos, matches patterns, exits 0 with
+// a friendly message when nothing matched.
+func matchOrExitEmpty(ctx ownerContext, patterns []visibility.Pattern, verbose bool) []visibility.MatchedRepo {
+	names, err := listOwnerRepos(ctx.Provider, ctx.Owner, verbose)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "make-all-*: %v\n", err)
+		os.Exit(constants.ExitVisAuthFailed)
+	}
+
+	matches := visibility.MatchOwnerRepos(names, patterns)
+	fmt.Fprint(os.Stdout, renderMatchedTable(ctx.Owner, len(names), matches))
+	if len(matches) == 0 {
+		fmt.Fprint(os.Stderr, constants.MsgBulkNoMatches)
+		os.Exit(constants.ExitVisOK)
+	}
+
+	return matches
+}
+
+// confirmOrAbort runs the interactive prompt unless -Y was passed.
+func confirmOrAbort(matches []visibility.MatchedRepo, yes bool) []visibility.MatchedRepo {
+	if yes {
+		return matches
+	}
+	final, proceed := promptConfirmOrExclude(os.Stdin, os.Stdout, matches)
+	if !proceed {
+		return nil
+	}
+
+	return final
+}
+
+// applyBulkLoop walks the matched set, applying target visibility to
+// each repo. Continues past per-repo failures and returns the tallied
+// (changed, skipped, failed) counts for summary + exit-code logic.
+func applyBulkLoop(ctx ownerContext, target string, matches []visibility.MatchedRepo, verbose bool) (int, int, int) {
+	changed, skipped, failed := 0, 0, 0
+	total := len(matches)
+	for i, m := range matches {
+		fmt.Fprintf(os.Stdout, constants.MsgBulkApplyItemFmt, i+1, total, m.RepoName)
+		status := applyOneRepo(ctx, m.RepoName, target, verbose)
+		switch status.outcome {
+		case "skip":
+			skipped++
+		case "ok":
+			changed++
+		default:
+			failed++
+		}
+	}
+
+	return changed, skipped, failed
+}
+
+// bulkExitCode collapses the tallies into the spec's exit-code matrix.
+func bulkExitCode(changed, failed int) int {
+	if failed == 0 {
+		return constants.ExitVisOK
+	}
+	if changed == 0 {
+		return constants.ExitVisAuthFailed
+	}
+
+	return constants.ExitVisBulkPartial
 }

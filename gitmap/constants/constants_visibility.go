@@ -139,6 +139,24 @@ const (
 	MsgBulkExcludedFmt      = "  → excluded %d, %d remaining. Re-prompting.\n"
 	ErrBulkExclusionFmt     = "  ! %v — try again, or type 'y' / 'n'.\n"
 	ErrBulkPromptEOF        = "make-all-*: prompt aborted (EOF on stdin)\n"
+
+	// -Y flag + apply-loop strings (plan steps 13-14).
+	FlagVisYesUpper       = "Y"
+	MsgBulkNoMatches      = "make-all-*: no repos matched the supplied pattern(s); nothing to do.\n"
+	MsgBulkApplyHeaderFmt = "\nmake-all-*: applying visibility=%s to %d repo(s) on %s\n"
+	MsgBulkApplyItemFmt   = "  [%d/%d] %s … "
+	MsgBulkApplySkipFmt   = "already %s\n"
+	MsgBulkApplyOKFmt     = "%s → %s\n"
+	MsgBulkApplyFailFmt   = "FAILED (%v)\n"
+	MsgBulkSummaryFmt     = "make-all-*: %d changed, %d skipped, %d failed of %d\n"
+	MsgBulkAborted        = "make-all-*: aborted by user (no changes applied).\n"
+)
+
+// Bulk-apply exit codes layered on top of ExitVis*. ExitVisBulkPartial
+// signals "at least one repo failed but others succeeded" so CI can
+// branch separately from a hard auth failure.
+const (
+	ExitVisBulkPartial = 9
 )
 
 

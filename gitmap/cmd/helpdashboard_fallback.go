@@ -18,8 +18,9 @@ func openHostedDocsFallback() {
 	openURL(constants.DocsURL)
 }
 
-// openURL launches the OS default browser for the given URL. Errors are
-// swallowed because users always have the printed URL as a manual fallback.
+// openURL launches the OS default browser for the given URL. Launch
+// failures are logged to stderr (per zero-swallow policy) but never fatal —
+// the caller always prints the URL first so the user can copy it manually.
 func openURL(url string) {
 	var cmd *exec.Cmd
 
@@ -32,5 +33,8 @@ func openURL(url string) {
 		cmd = exec.Command(constants.CmdXdgOpen, url)
 	}
 
-	_ = cmd.Start()
+	if err := cmd.Start(); err != nil {
+		fmt.Fprintf(os.Stderr, "  ⚠ Could not launch browser (%v); open the URL above manually.\n", err)
+	}
 }
+

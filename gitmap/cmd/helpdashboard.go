@@ -221,38 +221,13 @@ func serveDev(docsDir string, port int) {
 	fmt.Print(constants.MsgHDStopped)
 }
 
-// openBrowser opens the URL in the default browser.
+// openBrowser opens the local dev/static URL in the default browser.
 func openBrowser(port int) {
 	url := fmt.Sprintf("http://localhost:%d", port)
 	fmt.Printf(constants.MsgHDOpening, port)
 	openURL(url)
 }
 
-// openHostedDocsFallback opens the hosted docs URL when the local docs site
-// is unavailable (release didn't bundle docs-site.zip and download failed).
-// Best-effort: prints the URL even if launching the browser fails so the user
-// can copy it manually.
-func openHostedDocsFallback() {
-	fmt.Fprintf(os.Stderr, constants.MsgHDHostedFallback, constants.DocsURL)
-	openURL(constants.DocsURL)
-}
-
-// openURL launches the OS default browser for the given URL. Errors are
-// swallowed because users always have the printed URL as a manual fallback.
-func openURL(url string) {
-	var cmd *exec.Cmd
-
-	switch runtime.GOOS {
-	case constants.OSWindows:
-		cmd = exec.Command(constants.CmdWindowsShell, constants.CmdArgSlashC, constants.CmdArgStart, url)
-	case constants.OSDarwin:
-		cmd = exec.Command(constants.CmdOpen, url)
-	default:
-		cmd = exec.Command(constants.CmdXdgOpen, url)
-	}
-
-	_ = cmd.Start()
-}
 
 // handleShutdown gracefully stops the static server on Ctrl+C.
 func handleShutdown(server *http.Server) {

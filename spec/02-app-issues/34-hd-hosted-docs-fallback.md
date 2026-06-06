@@ -8,6 +8,12 @@ is absent AND `docs-site.zip` cannot be auto-downloaded.
 - spec/02-app-issues/26-docs-site-not-bundled-and-swallowed-errors.md (Issue 1)
 - spec/02-app-issues/27-docs-site-not-deployed-by-runscripts.md
 
+> **Number history:** this spec is numbered **34**, not 33. Number 33 was
+> previously occupied by `spec/02-app-issues/33-stale-binary-clone-folder-url-guard.md`
+> (see `CHANGELOG.md` v3.95.0 entry, ~line 2230). That file was deleted
+> upstream but the CHANGELOG link is permanent, so number 33 is
+> reserved-historical and MUST NOT be reused. Future specs continue at 35+.
+
 ---
 
 ## Symptom (before this fix)

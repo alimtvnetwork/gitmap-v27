@@ -228,7 +228,6 @@ func openBrowser(port int) {
 	openURL(url)
 }
 
-
 // handleShutdown gracefully stops the static server on Ctrl+C.
 func handleShutdown(server *http.Server) {
 	sigChan := make(chan os.Signal, 1)

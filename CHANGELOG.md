@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.13.0 — (2026-06-06) — `vh` round-trip test + `--kind` / `--since` filters (steps 35-36)
+
+- **Step 35 — Data-layer round-trip test:** new `gitmap/store/makeallvisibility_roundtrip_test.go` exercises the full `MakeAllPublic → VisibilityUndo → VisibilityRedo` lifecycle at the store layer. Inserts three runs with monotonically increasing `StartedAt`, asserts `SelectRecentMakeAllVisibilityRuns(10)` returns them newest-first (redo, undo, pub), and confirms `SelectMakeAllVisibilityRunByID(undoID)` resolves to the correct kind. Locks in the column-order + kind-routing contract that vu/vr depend on; provider-level e2e (real `gh` calls) still pending item 45 (mock harness).
+- **Step 36 — `vh --kind <K>` / `vh --since <dur>` filters:** new `gitmap/cmd/visibilityhistoryfilters.go` (37 lines) introduces pure `parseHistoryFilters` + `applyHistoryFilters` helpers — zero DB, zero I/O, fully table-testable. `runVisibilityHistory` now parses the two flags alongside `--limit` and applies them post-fetch. `--since` accepts any Go `time.ParseDuration` string (`24h`, `7d` → use `168h`, `30m`); bad values are silently ignored (limit-style strict-fail would break existing scripts that pipe extra tokens). Bogus `StartedAt` strings are dropped under `--since` (zero-swallow not applicable — these are data-side malformations, not user errors). New `gitmap/cmd/visibilityhistoryfilters_test.go` covers parse defaults, parse happy-path, bad `--since` ignored, kind-only filter, since-only filter, combined kind+since filter, and the no-op zero-value path.
+- Files: `gitmap/store/makeallvisibility_roundtrip_test.go` (new), `gitmap/cmd/visibilityhistoryfilters.go` (new), `gitmap/cmd/visibilityhistoryfilters_test.go` (new), `gitmap/cmd/visibilityhistory.go` (wire filters), `gitmap/constants/constants.go` (`6.13.0`), `README.md` (pin), `CHANGELOG.md`, `.lovable/prompts/10-next-task.md` (new).
+
+
 ## v6.12.0 — (2026-06-06) — Drift-guard seam + marker-comment audit (steps 33-34)
 
 - **Step 33 — Marker-comment audit:** verified `CmdVisibilityUndo` / `CmdVisibilityUndoAlias` / `CmdVisibilityRedo` / `CmdVisibilityRedoAlias` / `CmdVisibilityHistory` / `CmdVisibilityHistoryAlias` in `gitmap/constants/constants_cli.go` (lines 187-205) correctly inherit the file-level `// gitmap:cmd top-level` marker on line 3 — they are intentionally NOT tagged `// gitmap:cmd skip` because all six are first-class top-level CLI tokens. No code change required; audit recorded here so the next CI `generate-check` drift run has a citable baseline.

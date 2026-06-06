@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
@@ -18,12 +19,14 @@ import (
 // runVisibilityHistory is the dispatcher entry point.
 func runVisibilityHistory(args []string) {
 	limit := parseHistoryLimit(args)
+	filters := parseHistoryFilters(args, time.Now())
 	db := openDBOrExit(constants.CmdVisibilityHistory)
 	runs, err := db.SelectRecentMakeAllVisibilityRuns(limit)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(constants.ExitVisAuthFailed)
 	}
+	runs = applyHistoryFilters(runs, filters, time.Now())
 	if len(runs) == 0 {
 		fmt.Fprint(os.Stderr, constants.MsgHistoryEmpty)
 		os.Exit(constants.ExitVisOK)

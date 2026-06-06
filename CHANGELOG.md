@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.6.0 — (2026-06-06) — `gitmap visibility-undo` / `vu` reverses the last bulk make-all-* run
+
+Bulk visibility flips (`make-all-public` / `make-all-private` / `MAPUB` / `MAPRI`) are now reversible from the same audit trail they already write.
+
+- New command `gitmap visibility-undo` (alias `vu`) picks the most recent `MakeAllVisibilityRun` with `OkCount > 0`, reads its `MakeAllVisibilityResult` rows, and re-applies each repo's captured `PrevVisibility` via the existing single-repo read→apply→verify pipeline.
+- The undo is itself persisted as a fresh `MakeAllVisibilityRun` with `CommandKind='VisibilityUndo'` and `PatternList='undo:source-run=<id>'`, so a follow-up `vu` reverses the undo (this is the substrate for the upcoming `visibility-redo`).
+- Rows with empty `PrevVisibility` or `PrevVisibility == NewVisibility` are skipped at SQL-select time — no provider round-trip for no-op rows.
+- Best-effort audit: a missing/locked DB still logs to `os.Stderr` with Code Red context and continues (zero-swallow); the user's data is never the casualty of an audit failure.
+- Files: `gitmap/cmd/visibilityundo.go` (new), `gitmap/store/makeallvisibility_undo.go` (new), `gitmap/constants/constants_visibility_store_sql.go` (+`SQLSelectLatestUndoableRun`, `SQLSelectUndoableResultsForRun`, three `ErrUndo*` formats), `gitmap/constants/constants_visibility_store.go` (`CommandKindVisibilityUndo`), `gitmap/constants/constants_cli.go` (`CmdVisibilityUndo` + `vu` alias), `gitmap/cmd/rootcore.go` (dispatch), `gitmap/cmd/visibilityallbulkaudit.go` (`commandKindFor` switch extended).
+
 ## v6.5.0 — (2026-06-06) — `gitmap reclone` / `rc` wipes + re-clones a single repo
 
 New single-repo flow overlays the existing manifest-based `reclone`:

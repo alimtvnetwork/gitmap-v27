@@ -134,9 +134,9 @@ const (
 
 const (
 	ErrHistorySelectFmt  = "Error: select recent runs failed: %v (operation: SQLSelectRecentRuns, reason: %s)"
-	MsgHistoryEmpty      = "visibility-history: no make-all-* runs recorded yet\n"
-	MsgHistoryHeader     = "ID    Kind             Owner                 Matched  Ok  Skip Fail Excl Exit  Started\n"
-	MsgHistoryRowFmt     = "%-5d %-16s %-21s %7d %3d %4d %4d %4d %4d  %s\n"
+	MsgVisHistoryEmpty   = "visibility-history: no make-all-* runs recorded yet\n"
+	MsgVisHistoryHeader  = "ID    Kind             Owner                 Matched  Ok  Skip Fail Excl Exit  Started\n"
+	MsgVisHistoryRowFmt  = "%-5d %-16s %-21s %7d %3d %4d %4d %4d %4d  %s\n"
 	HistoryDefaultLimit  = 20
 )
 

@@ -33,7 +33,7 @@ func runVisibilityHistory(args []string) {
 	}
 	runs = applyHistoryFilters(runs, filters, time.Now())
 	if len(runs) == 0 {
-		fmt.Fprint(os.Stderr, constants.MsgHistoryEmpty)
+		fmt.Fprint(os.Stderr, constants.MsgVisHistoryEmpty)
 		os.Exit(constants.ExitVisOK)
 	}
 	printHistory(runs)
@@ -77,10 +77,10 @@ func parseHistoryLimit(args []string) int {
 
 // printHistory writes the table to stdout.
 func printHistory(runs []model.MakeAllVisibilityRunRecord) {
-	fmt.Fprint(os.Stdout, constants.MsgHistoryHeader)
+	fmt.Fprint(os.Stdout, constants.MsgVisHistoryHeader)
 	for _, r := range runs {
 		owner := truncate(r.Provider+"/"+r.Owner, 21)
-		fmt.Fprintf(os.Stdout, constants.MsgHistoryRowFmt,
+		fmt.Fprintf(os.Stdout, constants.MsgVisHistoryRowFmt,
 			r.ID, truncate(r.CommandKind, 16), owner,
 			r.MatchedCount, r.OkCount, r.SkippedCount, r.FailedCount,
 			r.ExcludedCount, r.ExitCode, r.StartedAt)

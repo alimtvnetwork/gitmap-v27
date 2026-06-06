@@ -35,13 +35,13 @@ func TestRenderUndoJSONZeroValuesEmitted(t *testing.T) {
 		`"runId":0`, `"sourceRunId":0`, `"matched":0`, `"changed":0`,
 		`"skipped":0`, `"failed":0`, `"exitCode":0`,
 	} {
-		if !contains(string(got), key) {
+		if !containsJSONFragment(string(got), key) {
 			t.Fatalf("missing zero-key %q in %s", key, got)
 		}
 	}
 }
 
-func contains(s, sub string) bool {
+func containsJSONFragment(s, sub string) bool {
 	for i := 0; i+len(sub) <= len(s); i++ {
 		if s[i:i+len(sub)] == sub {
 			return true

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"io"
-	"os"
 	"strings"
 	"testing"
 
@@ -31,30 +29,4 @@ func TestOpenURLNonFatalOnMissingLauncher(t *testing.T) {
 	_ = captureStderr(t, func() {
 		openURL(constants.DocsURL)
 	})
-}
-
-func captureStderr(t *testing.T, fn func()) string {
-	t.Helper()
-
-	origStderr := os.Stderr
-	r, w, err := os.Pipe()
-	if err != nil {
-		t.Fatalf("os.Pipe failed: %v", err)
-	}
-	os.Stderr = w
-
-	done := make(chan string, 1)
-	go func() {
-		b, _ := io.ReadAll(r)
-		done <- string(b)
-	}()
-
-	fn()
-
-	if err := w.Close(); err != nil {
-		t.Fatalf("close pipe writer: %v", err)
-	}
-	os.Stderr = origStderr
-
-	return <-done
 }

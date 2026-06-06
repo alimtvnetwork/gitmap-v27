@@ -167,8 +167,11 @@ func (a *runAudit) finalize(excluded, ok, skipped, failed, exitCode int) {
 // commandKindFor maps the dispatcher's command ID to the persisted
 // CommandKindEnum value.
 func commandKindFor(cmdName string) string {
-	if cmdName == constants.CmdMakeAllPrivate {
+	switch cmdName {
+	case constants.CmdMakeAllPrivate:
 		return constants.CommandKindMakeAllPrivate
+	case constants.CmdVisibilityUndo:
+		return constants.CommandKindVisibilityUndo
 	}
 
 	return constants.CommandKindMakeAllPublic

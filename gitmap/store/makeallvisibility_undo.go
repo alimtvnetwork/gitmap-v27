@@ -63,3 +63,33 @@ func scanUndoableResults(rows *sql.Rows) ([]model.MakeAllVisibilityResultRecord,
 
 	return out, nil
 }
+
+// SelectMakeAllVisibilityRunByID resolves an explicit --run <id>.
+// Returns (zero, nil) when the id is unknown — callers map to
+// ErrUndoRunNotFoundFmt at the CLI boundary.
+func (db *DB) SelectMakeAllVisibilityRunByID(id int64) (model.MakeAllVisibilityRunRecord, error) {
+	return scanRunRow(db.conn.QueryRow(constants.SQLSelectRunByID, id))
+}
+
+// SelectLatestMakeAllVisibilityRunByKind picks the most recent run
+// matching the given CommandKind that still has Ok rows.
+func (db *DB) SelectLatestMakeAllVisibilityRunByKind(kind string) (model.MakeAllVisibilityRunRecord, error) {
+	return scanRunRow(db.conn.QueryRow(constants.SQLSelectLatestRunByKind, kind))
+}
+
+// scanRunRow is the shared Scan path for the three run-select queries.
+// Uses errors.Is(sql.ErrNoRows) so the absent-row case is a clean
+// (zero, nil) return instead of a wrapped error.
+func scanRunRow(row *sql.Row) (model.MakeAllVisibilityRunRecord, error) {
+	var r model.MakeAllVisibilityRunRecord
+	err := row.Scan(&r.ID, &r.CommandKind, &r.TargetVisibility, &r.Provider,
+		&r.Owner, &r.TargetRaw, &r.OkCount)
+	if errors.Is(err, sql.ErrNoRows) {
+		return model.MakeAllVisibilityRunRecord{}, nil
+	}
+	if err != nil {
+		return model.MakeAllVisibilityRunRecord{}, fmt.Errorf(constants.ErrUndoSelectRunFmt, err, err.Error())
+	}
+
+	return r, nil
+}

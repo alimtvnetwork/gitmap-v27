@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.5.0 — (2026-06-06) — `gitmap reclone` / `rc` wipes + re-clones a single repo
+
+New single-repo flow overlays the existing manifest-based `reclone`:
+
+- Run `gitmap reclone` (aliases `rc`, `rec`, `relclone`, `clone-now`) from **inside** a git repo to wipe and re-clone it from `remote.origin.url`.
+- Run `gitmap rc <folder>` to target a sibling git repo from outside.
+- Destructive `os.RemoveAll` is gated by an interactive `y/N` prompt; pass `-y` (or `--yes`) to skip it. Non-TTY callers without `-y` are refused — protects `yes | gitmap rc` in CI.
+- Releases the Windows cwd handle via `escapeCwdIfInside` before delete, so re-cloning from inside the target works on Windows.
+- Manifest behavior is unchanged: when the args don't shape into a single-repo call, the manifest pipeline runs as before.
+
 ## v6.4.0 — (2026-05-30) — `gitmap hd` auto-downloads `docs-site.zip`
 
 - Fixed: `gitmap hd` (help-dashboard) no longer dies with `Docs site directory not found at <install>\docs-site` when the installer skipped the docs asset (older installs, or releases that didn't ship `docs-site.zip`).

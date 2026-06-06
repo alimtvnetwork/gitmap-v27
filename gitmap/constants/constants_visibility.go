@@ -120,12 +120,20 @@ const (
 const CFRPPriorMaxLookback = 15
 
 // Spec 116 — bulk wildcard visibility (make-all-public / make-all-private
-// / MAPUB / MAPRI). Owner-only resolver + handler messages live here.
+// / MAPUB / MAPRI). Owner-only resolver + repo-list pagination cap.
 const (
 	ProviderUnknownReason   = "unknown"
 	MsgMakeAllNotImpl       = "make-all-*: handler not yet wired (spec/01-app/116)\n"
 	ErrMakeAllResolveFmt    = "make-all-*: cannot resolve owner: %v\n"
 	ErrMakeAllMissingArgFmt = "make-all-*: usage: %s <target> <patterns> [-Y|--yes]\n"
+
+	// OwnerRepoListLimit caps `gh/glab repo list --limit`. Owners with
+	// more than this many repos will hit a WARNING (see plan step 26).
+	// 1000 matches `gh`'s own documented max page; `glab` accepts the
+	// same -P value without paginating internally.
+	OwnerRepoListLimit      = 1000
+	WarnOwnerRepoListCapFmt = "make-all-*: WARNING — owner %[2]s returned %[1]d repos (the --limit cap). Repos beyond the cap were NOT enumerated; narrow the patterns or raise the limit.\n"
 )
+
 
 

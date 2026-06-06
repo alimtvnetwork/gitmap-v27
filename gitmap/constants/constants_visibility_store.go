@@ -28,6 +28,7 @@ const (
 const (
 	CommandKindMakeAllPublic  = "MakeAllPublic"
 	CommandKindMakeAllPrivate = "MakeAllPrivate"
+	CommandKindVisibilityUndo = "VisibilityUndo"
 )
 
 // ResultStatusEnum — terminal status of a single repo within a run.

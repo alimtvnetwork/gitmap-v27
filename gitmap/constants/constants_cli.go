@@ -184,6 +184,14 @@ const (
 	CmdMakeAllPrivate = "make-all-private"
 	CmdMAPUB          = "MAPUB"
 	CmdMAPRI          = "MAPRI"
+	// CmdVisibilityUndo reverses the most recent successful bulk
+	// `make-all-public` / `make-all-private` (or prior undo) by
+	// reading the persisted MakeAllVisibilityResult rows and
+	// re-applying each repo's PrevVisibility. Logged as a new run
+	// with CommandKind=VisibilityUndo. Spec:
+	// spec/01-app/116-bulk-visibility-mapub-mapri.md §undo-redo.
+	CmdVisibilityUndo      = "visibility-undo"
+	CmdVisibilityUndoAlias = "vu"
 	// CmdHistoryPurge / CmdHistoryPin wrap `git filter-repo` in a
 	// mirror-clone sandbox. Spec: spec/04-generic-cli/16-history-rewrite.md.
 	// The user's working repo is never rewritten in place.

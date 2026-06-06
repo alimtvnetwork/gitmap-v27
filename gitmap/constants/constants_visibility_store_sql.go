@@ -49,3 +49,33 @@ const (
 	ErrMakeAllRunFinalizeFmt  = "Error: finalize MakeAllVisibilityRun failed: %v (operation: SQLUpdateMakeAllVisibilityRunCounts, reason: %s)"
 	ErrMakeAllResultExcludeFmt = "Error: exclude MakeAllVisibilityResult rows failed: %v (operation: SQLUpdateMakeAllVisibilityResultExcluded, reason: %s)"
 )
+
+// SQLSelectLatestUndoableRun — picks the most recent run that has at
+// least one Ok result with a captured PrevVisibility. Used by
+// `gitmap visibility-undo` when no explicit --run is supplied.
+const SQLSelectLatestUndoableRun = `SELECT
+	MakeAllVisibilityRunId, CommandKind, TargetVisibility, Provider,
+	Owner, TargetRaw, OkCount
+	FROM MakeAllVisibilityRun
+	WHERE OkCount > 0
+	ORDER BY MakeAllVisibilityRunId DESC
+	LIMIT 1`
+
+// SQLSelectUndoableResultsForRun — Ok results with non-empty Prev/New
+// visibility that still need reversing, in deterministic ID order.
+const SQLSelectUndoableResultsForRun = `SELECT
+	MakeAllVisibilityResultId, RepoName, MatchedPattern,
+	PrevVisibility, NewVisibility
+	FROM MakeAllVisibilityResult
+	WHERE MakeAllVisibilityRunId = ?
+	  AND Status = 'Ok'
+	  AND PrevVisibility != ''
+	  AND PrevVisibility != NewVisibility
+	ORDER BY MakeAllVisibilityResultId ASC`
+
+// Error format strings for the select path.
+const (
+	ErrUndoSelectRunFmt     = "Error: select latest undoable run failed: %v (operation: SQLSelectLatestUndoableRun, reason: %s)"
+	ErrUndoSelectResultsFmt = "Error: select undoable results failed: %v (operation: SQLSelectUndoableResultsForRun, reason: %s)"
+	ErrUndoNoRunFound       = "Error: no undoable make-all-* run found (operation: visibility-undo, reason: MakeAllVisibilityRun has no row with OkCount>0)"
+)

@@ -31,6 +31,7 @@ type undoFlags struct {
 	Verbose bool
 	DryRun  bool
 	Force   bool
+	JSON    bool
 	RunID   int64
 }
 
@@ -137,7 +138,27 @@ func reverseRunAndExit(run model.MakeAllVisibilityRunRecord, results []model.Mak
 	fmt.Fprintf(os.Stdout, constants.MsgBulkSummaryFmt, changed, skipped, failed, len(results))
 	exit := bulkExitCode(changed, failed)
 	audit.finalize(0, changed, skipped, failed, exit)
+	if flags.JSON {
+		emitUndoJSON(cmdName, run, audit.RunID(), len(results), changed, skipped, failed, exit)
+	}
 	os.Exit(exit)
+}
+
+// emitUndoJSON writes the canonical --json summary line to stdout.
+// Errors are surfaced to stderr (zero-swallow) but do not change
+// the process exit code, which is owned by the apply outcome.
+func emitUndoJSON(cmdName string, run model.MakeAllVisibilityRunRecord, newRunID int64, matched, changed, skipped, failed, exit int) {
+	out, err := renderUndoJSON(undoJSONSummary{
+		Command: cmdName, RunID: newRunID, SourceRun: run.ID,
+		Provider: run.Provider, Owner: run.Owner,
+		Matched: matched, Changed: changed, Skipped: skipped, Failed: failed, ExitCode: exit,
+	})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "visibility-undo: json render failed: %v\n", err)
+
+		return
+	}
+	fmt.Fprintln(os.Stdout, string(out))
 }
 
 // matchesFromResults synthesizes MatchedRepo entries so the existing

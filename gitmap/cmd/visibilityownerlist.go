@@ -30,8 +30,8 @@ func listOwnerRepos(provider, owner string, verbose bool) ([]string, error) {
 	args := ownerRepoListArgs(provider, owner)
 	out, err := runProviderCLI(provider, args, verbose)
 	if err != nil {
-		return nil, fmt.Errorf("Error: provider repo list failed for %s/%s: %v (operation: %s repo list, reason: %s)",
-			provider, owner, err, providerCLI(provider), err.Error())
+		return nil, fmt.Errorf("Error: provider repo list failed for %s/%s: %v (operation: %s %s, reason: %s, stderr: %s)",
+			provider, owner, err, providerCLI(provider), strings.Join(args, " "), err.Error(), strings.TrimSpace(out))
 	}
 
 	names, err := parseOwnerRepoNames(out)

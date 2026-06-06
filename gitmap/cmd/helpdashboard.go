@@ -71,67 +71,8 @@ func runHelpDashboard(args []string) {
 	}
 }
 
-// extractDocsSiteZip extracts docs-site.zip into the target directory.
-// Validates paths to prevent traversal (G305) and limits total size (G110).
-func extractDocsSiteZip(zipPath, targetDir string) error {
-	r, err := zip.OpenReader(zipPath)
-	if err != nil {
-		return fmt.Errorf("open zip: %w", err)
-	}
-	defer r.Close()
+// extractDocsSiteZip is implemented in helpdashboard_extract.go.
 
-	absTarget, err := filepath.Abs(targetDir)
-	if err != nil {
-		return fmt.Errorf("resolve target dir: %w", err)
-	}
-
-	var totalSize int64
-
-	for _, f := range r.File {
-		destPath := filepath.Join(absTarget, f.Name) // #nosec G305 — validated below
-		absDestPath, absErr := filepath.Abs(destPath)
-		if absErr != nil || !strings.HasPrefix(absDestPath, absTarget+string(os.PathSeparator)) {
-			return fmt.Errorf("illegal file path in zip: %s", f.Name)
-		}
-
-		if f.FileInfo().IsDir() {
-			if mkErr := os.MkdirAll(absDestPath, constants.DirPermission); mkErr != nil {
-				return fmt.Errorf("create dir %s: %w", absDestPath, mkErr)
-			}
-			continue
-		}
-
-		if mkErr := os.MkdirAll(filepath.Dir(absDestPath), constants.DirPermission); mkErr != nil {
-			return fmt.Errorf("create parent dir: %w", mkErr)
-		}
-
-		rc, openErr := f.Open()
-		if openErr != nil {
-			return fmt.Errorf("open entry %s: %w", f.Name, openErr)
-		}
-
-		outFile, createErr := os.Create(absDestPath)
-		if createErr != nil {
-			rc.Close()
-			return fmt.Errorf("create file %s: %w", absDestPath, createErr)
-		}
-
-		written, copyErr := io.CopyN(outFile, rc, maxDocsSiteSize-totalSize) // #nosec G110 — size-limited
-		outFile.Close()
-		rc.Close()
-
-		if copyErr != nil && !errors.Is(copyErr, io.EOF) {
-			return fmt.Errorf("write file %s: %w", absDestPath, copyErr)
-		}
-
-		totalSize += written
-		if totalSize >= maxDocsSiteSize {
-			return fmt.Errorf("archive exceeds maximum extraction size (%d bytes)", maxDocsSiteSize)
-		}
-	}
-
-	return nil
-}
 
 // parseHelpDashboardFlags parses the --port flag.
 func parseHelpDashboardFlags(args []string) int {

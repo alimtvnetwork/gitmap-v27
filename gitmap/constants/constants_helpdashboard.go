@@ -43,6 +43,6 @@ const (
 	MsgDocsSiteDownload        = "  Downloading docs-site.zip from %s...\n"
 	MsgDocsSiteDownloaded      = "  ✓ Downloaded docs-site.zip (%d bytes)\n"
 	ErrDocsSiteDownload        = "  ✗ Could not auto-download docs-site.zip (tried %d source(s)). Last error: %v\n    Run `gitmap update` to reinstall, or place docs-site.zip next to the binary at:\n      %s\n"
+	MsgHDHostedFallback        = "  ↪ Local docs unavailable — opening hosted docs at %s\n"
 	DocsSiteDownloadTimeoutSec = 30
 )
-

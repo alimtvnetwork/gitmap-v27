@@ -33,12 +33,15 @@ func runHelpDashboard(args []string) {
 	// Auto-extract docs-site.zip if docs-site/ directory doesn't exist.
 	// If the zip is also missing (older installer, or `gitmap update` not yet
 	// run after a docs-site release), try to download it from GitHub first.
+	// If that also fails (release didn't bundle docs-site.zip), gracefully
+	// fall back to opening the hosted docs URL instead of hard-exiting.
 	if _, err := os.Stat(docsDir); os.IsNotExist(err) {
 		zipPath := filepath.Join(binaryDir, constants.DocsSiteArchive)
 		if _, zipErr := os.Stat(zipPath); os.IsNotExist(zipErr) {
 			if _, n, dlErr := downloadDocsSiteArchive(zipPath); dlErr != nil {
 				fmt.Fprintf(os.Stderr, constants.ErrDocsSiteDownload, 2, dlErr, zipPath)
-				os.Exit(1)
+				openHostedDocsFallback()
+				return
 			} else {
 				fmt.Printf(constants.MsgDocsSiteDownloaded, n)
 			}
@@ -46,16 +49,17 @@ func runHelpDashboard(args []string) {
 		fmt.Printf("  Extracting %s...\n", constants.DocsSiteArchive)
 		if extractErr := extractDocsSiteZip(zipPath, binaryDir); extractErr != nil {
 			fmt.Fprintf(os.Stderr, "  ✗ Failed to extract docs-site.zip: %v\n", extractErr)
-			os.Exit(1)
+			openHostedDocsFallback()
+			return
 		}
 		fmt.Printf("  ✓ Docs site extracted to %s\n", docsDir)
 	}
 
 	if _, err := os.Stat(docsDir); os.IsNotExist(err) {
 		fmt.Fprintf(os.Stderr, constants.ErrHDNoDocsDir, docsDir)
-		os.Exit(1)
+		openHostedDocsFallback()
+		return
 	}
-
 
 	distDir := filepath.Join(docsDir, constants.HDDistDir)
 
@@ -221,7 +225,21 @@ func serveDev(docsDir string, port int) {
 func openBrowser(port int) {
 	url := fmt.Sprintf("http://localhost:%d", port)
 	fmt.Printf(constants.MsgHDOpening, port)
+	openURL(url)
+}
 
+// openHostedDocsFallback opens the hosted docs URL when the local docs site
+// is unavailable (release didn't bundle docs-site.zip and download failed).
+// Best-effort: prints the URL even if launching the browser fails so the user
+// can copy it manually.
+func openHostedDocsFallback() {
+	fmt.Fprintf(os.Stderr, constants.MsgHDHostedFallback, constants.DocsURL)
+	openURL(constants.DocsURL)
+}
+
+// openURL launches the OS default browser for the given URL. Errors are
+// swallowed because users always have the printed URL as a manual fallback.
+func openURL(url string) {
 	var cmd *exec.Cmd
 
 	switch runtime.GOOS {

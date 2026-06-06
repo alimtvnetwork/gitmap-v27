@@ -103,10 +103,10 @@ func TestTryRunRepoRecloneFallthrough(t *testing.T) {
 		t.Fatal(err)
 	}
 	cases := [][]string{
-		{".gitmap/output/gitmap.json"},                  // manifest path, no .git
-		{"--manifest", ".gitmap/output/gitmap.json"},    // flag form
-		{"file1.json", "file2.json"},                    // multi-positional
-		{"/definitely/not/a/real/path/xyz123"},          // missing path
+		{".gitmap/output/gitmap.json"},               // manifest path, no .git
+		{"--manifest", ".gitmap/output/gitmap.json"}, // flag form
+		{"file1.json", "file2.json"},                 // multi-positional
+		{"/definitely/not/a/real/path/xyz123"},       // missing path
 	}
 	for _, args := range cases {
 		if tryRunRepoReclone(args) {
@@ -114,4 +114,3 @@ func TestTryRunRepoRecloneFallthrough(t *testing.T) {
 		}
 	}
 }
-

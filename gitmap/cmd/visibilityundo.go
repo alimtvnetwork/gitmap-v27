@@ -114,7 +114,7 @@ func mustLoadLatestRun(db *store.DB, kind, notFoundMsg string) model.MakeAllVisi
 func openDBOrExit(cmdLabel string) *store.DB {
 	db, err := openDB()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: audit DB open failed: %v\n", cmdLabel, err)
+		fmt.Fprintf(os.Stderr, constants.ErrUndoAuditDBOpenFmt, cmdLabel, err)
 		os.Exit(constants.ExitVisAuthFailed)
 	}
 
@@ -131,7 +131,7 @@ func reverseRunAndExit(run model.MakeAllVisibilityRunRecord, results []model.Mak
 	matches := matchesFromResults(results)
 	audit := beginReverseAudit(ctx, flags, run.ID, matches, cmdName)
 
-	fmt.Fprintf(os.Stdout, "%s: reversing run #%d (%s/%s) — %d repo(s)\n",
+	fmt.Fprintf(os.Stdout, constants.MsgUndoReverseHeaderFmt,
 		cmdName, run.ID, run.Provider, run.Owner, len(results))
 	changed, skipped, failed := applyUndoLoop(ctx, results, flags, audit)
 	fmt.Fprintf(os.Stdout, constants.MsgBulkSummaryFmt, changed, skipped, failed, len(results))
@@ -154,7 +154,7 @@ func matchesFromResults(rs []model.MakeAllVisibilityResultRecord) []visibility.M
 // beginReverseAudit writes a fresh MakeAllVisibilityRun row with the
 // supplied cmdName (which `commandKindFor` maps to the right enum).
 func beginReverseAudit(ctx ownerContext, flags undoFlags, sourceRunID int64, matches []visibility.MatchedRepo, cmdName string) *runAudit {
-	patternsRaw := fmt.Sprintf("%s:source-run=%d", cmdName, sourceRunID)
+	patternsRaw := fmt.Sprintf(constants.UndoPatternsRawFmt, cmdName, sourceRunID)
 
 	return beginRunAudit(ctx, "mixed", cmdName, patternsRaw, bulkFlags{Yes: true, Verbose: flags.Verbose}, len(matches), matches)
 }

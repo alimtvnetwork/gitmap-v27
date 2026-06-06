@@ -84,6 +84,7 @@ set -euo pipefail
 
 REPO="alimtvnetwork/gitmap-v25"
 BINARY_NAME="gitmap"
+BINARY_ALIAS="gm"
 TMP_DIR=""
 APP_DIR=""
 PATH_SHELL=""
@@ -671,6 +672,22 @@ install_binary() {
     fi
 
     ok "Installed ${BINARY_NAME} to ${app_dir}"
+
+    # Install short alias `gm` alongside `gitmap` so both commands resolve to
+    # the same binary on PATH. Prefer a symlink (atomic, single source of
+    # truth); fall back to a copy when the filesystem rejects symlinks
+    # (e.g. some FAT/exFAT mounts). Non-fatal: the primary install already
+    # succeeded by this point.
+    local alias_path="${app_dir}/${BINARY_ALIAS}"
+    rm -f "${alias_path}" 2>/dev/null || true
+    if ln -s "${BINARY_NAME}" "${alias_path}" 2>/dev/null; then
+        ok "Installed alias ${BINARY_ALIAS} -> ${BINARY_NAME} (symlink)"
+    elif cp -f "${target_path}" "${alias_path}" 2>/dev/null; then
+        chmod +x "${alias_path}" 2>/dev/null || true
+        ok "Installed alias ${BINARY_ALIAS} -> ${BINARY_NAME} (copy fallback)"
+    else
+        err "  ⚠ Could not create '${BINARY_ALIAS}' alias next to ${BINARY_NAME}; only the full '${BINARY_NAME}' command will be available."
+    fi
 
     # Echo the app dir so main() can use it for PATH + summary.
     APP_DIR="${app_dir}"

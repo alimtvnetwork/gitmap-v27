@@ -100,6 +100,7 @@ try {
 
 $Repo = "alimtvnetwork/gitmap-v25"
 $BinaryName = "gitmap.exe"
+$BinaryAlias = "gm.exe"
 $InstallerVersion = "1.0.0"
 
 class InstallerFailure : System.Exception {
@@ -617,6 +618,21 @@ function Install-Binary([string]$zipPath, [string]$installDir) {
     }
 
     Write-OK "Installed $BinaryName to $installDir"
+
+    # Install short alias `gm.exe` alongside `gitmap.exe` so both commands
+    # resolve to the same binary on PATH. Windows symlinks require admin or
+    # Developer Mode, so a straight Copy-Item is the only reliable approach
+    # for HKCU installs. Non-fatal: the primary install already succeeded.
+    $aliasPath = Join-Path $installDir $BinaryAlias
+    try {
+        if (Test-Path $aliasPath) {
+            Remove-Item $aliasPath -Force -ErrorAction Stop
+        }
+        Copy-Item -Path $targetPath -Destination $aliasPath -Force -ErrorAction Stop
+        Write-OK "Installed alias $BinaryAlias -> $BinaryName (copy)"
+    } catch {
+        Write-Err "  ! Could not create '$BinaryAlias' alias next to ${BinaryName}: $($_.Exception.Message); only the full '$BinaryName' command will be available."
+    }
 }
 
 # --- Download seed data files (downloader-config.json, etc.) ---

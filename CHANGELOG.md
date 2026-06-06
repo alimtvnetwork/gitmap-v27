@@ -1,5 +1,14 @@
 # Changelog
 
+## v6.9.0 — (2026-06-06) — Drift guard + `--force` on `vu` / `vr` + preflight `gh`/`glab auth status`
+
+- **Drift guard (step 27):** `gitmap visibility-undo` and `visibility-redo` now read each repo's *current* visibility before reversing and skip with `DRIFT SKIP (current=… expected=…)` when the live state no longer matches the `NewVisibility` we persisted in the source run. Prevents the audit trail from silently overwriting out-of-band manual changes (someone flipped a repo via the GitHub UI after the original `make-all-*` run). New `--force` flag opts out of the guard with an audible `[--force] overriding drift guard for <repo>` log line.
+- **Preflight `auth status` (step 28):** `mustEnsureProviderAuth` runs `<cli> auth status` BEFORE any provider mutation (`make-all-*`, `vu`, `vr`) and fails fast with `ExitVisAuthFailed` and a Code Red message instructing the user to `gh auth login` / `glab auth login`. Previously an unauthenticated CLI passed the `exec.LookPath` gate and failed mid-loop on the first per-repo call, leaving a half-populated audit run.
+- Internal: drift loop extracted into `reverseOneRepo` (≤15 lines) so `applyUndoLoop` stays readable; auth preflight isolated to `visibilityauthstatus.go` (one file, one responsibility).
+- Files: `gitmap/cmd/visibilityauthstatus.go` (new), `gitmap/cmd/visibilityundo.go` (`Force` field, `reverseOneRepo` drift helper, auth-status call), `gitmap/cmd/visibilityundoflags.go` (`--force` parsing), `gitmap/cmd/visibilityallbulk.go` (auth-status preflight in `runMakeAllVisibility`), `gitmap/constants/constants_visibility.go` (+`ErrVisAuthStatusFailedFmt`, `MsgUndoDriftSkipFmt`, `MsgUndoForceOverrideFmt`), `gitmap/constants/constants.go` (`6.9.0`), `README.md` (pin), `.lovable/prompts/06-next-task.md` (new).
+
+
+
 ## v6.8.0 — (2026-06-06) — `gitmap visibility-history` (`vh`) + `--dry-run` on `vu` / `vr`
 
 - New command `gitmap visibility-history` (alias `vh`) prints the most recent `MakeAllVisibilityRun` rows newest-first, with id, kind, owner, matched/ok/skip/fail/excl tallies, exit code, and `StartedAt`. Default limit 20; `--limit N` overrides. Empty-database case prints a friendly stderr message and exits `ExitVisOK`. This is the discovery layer behind the v6.7.0 `--run <id>` selector — users can now see *which* IDs to target.

@@ -24,10 +24,13 @@ import (
 
 // undoFlags is parseBulkArgs's sibling for the undo/redo path.
 // RunID == 0 means "pick latest". DryRun prints the plan without
-// touching the provider.
+// touching the provider. Force bypasses the drift guard (current
+// visibility != persisted NewVisibility) so users can overwrite
+// out-of-band manual changes explicitly.
 type undoFlags struct {
 	Verbose bool
 	DryRun  bool
+	Force   bool
 	RunID   int64
 }
 
@@ -123,13 +126,14 @@ func openDBOrExit(cmdLabel string) *store.DB {
 // a fresh run keyed by `cmdName` (CmdVisibilityUndo or *Redo).
 func reverseRunAndExit(run model.MakeAllVisibilityRunRecord, results []model.MakeAllVisibilityResultRecord, flags undoFlags, cmdName string) {
 	mustEnsureProviderCLI(run.Provider, flags.Verbose)
+	mustEnsureProviderAuth(run.Provider, flags.Verbose)
 	ctx := ownerContext{Provider: run.Provider, Owner: run.Owner, TargetRaw: run.TargetRaw}
 	matches := matchesFromResults(results)
 	audit := beginReverseAudit(ctx, flags, run.ID, matches, cmdName)
 
 	fmt.Fprintf(os.Stdout, "%s: reversing run #%d (%s/%s) — %d repo(s)\n",
 		cmdName, run.ID, run.Provider, run.Owner, len(results))
-	changed, skipped, failed := applyUndoLoop(ctx, results, flags.Verbose, audit)
+	changed, skipped, failed := applyUndoLoop(ctx, results, flags, audit)
 	fmt.Fprintf(os.Stdout, constants.MsgBulkSummaryFmt, changed, skipped, failed, len(results))
 	exit := bulkExitCode(changed, failed)
 	audit.finalize(0, changed, skipped, failed, exit)
@@ -157,13 +161,18 @@ func beginReverseAudit(ctx ownerContext, flags undoFlags, sourceRunID int64, mat
 
 // applyUndoLoop walks the persisted result rows, calling
 // applyOneRepo with target = the row's original PrevVisibility.
-func applyUndoLoop(ctx ownerContext, rs []model.MakeAllVisibilityResultRecord, verbose bool, audit *runAudit) (int, int, int) {
+// When --force is NOT set, a per-repo drift check reads the *current*
+// visibility first and skips the reversal if it no longer matches the
+// persisted NewVisibility — i.e. someone (or something) changed it
+// out-of-band after the original run; blindly re-applying PrevVisibility
+// would silently destroy that intentional change.
+func applyUndoLoop(ctx ownerContext, rs []model.MakeAllVisibilityResultRecord, flags undoFlags, audit *runAudit) (int, int, int) {
 	changed, skipped, failed := 0, 0, 0
 	total := len(rs)
 	for i, r := range rs {
 		fmt.Fprintf(os.Stdout, constants.MsgBulkApplyItemFmt, i+1, total, r.RepoName)
 		start := time.Now()
-		status := applyOneRepo(ctx, r.RepoName, r.PrevVisibility, verbose)
+		status := reverseOneRepo(ctx, r, flags)
 		audit.updateResult(r.RepoName, status, status.prev, status.next, start)
 		switch status.outcome {
 		case "skip":
@@ -176,4 +185,29 @@ func applyUndoLoop(ctx ownerContext, rs []model.MakeAllVisibilityResultRecord, v
 	}
 
 	return changed, skipped, failed
+}
+
+// reverseOneRepo enforces the drift guard, then delegates to applyOneRepo.
+// Drift = current visibility != the NewVisibility we persisted last time.
+// Force overrides the guard with an audible log line.
+func reverseOneRepo(ctx ownerContext, r model.MakeAllVisibilityResultRecord, flags undoFlags) applyStatus {
+	if flags.Force {
+		fmt.Fprintf(os.Stdout, constants.MsgUndoForceOverrideFmt, r.RepoName)
+
+		return applyOneRepo(ctx, r.RepoName, r.PrevVisibility, flags.Verbose)
+	}
+	slug := ctx.Owner + "/" + r.RepoName
+	current, readErr := readVisibilityNoExit(visibilityContext{Provider: ctx.Provider, Slug: slug}, flags.Verbose)
+	if readErr != nil {
+		fmt.Fprintf(os.Stdout, constants.MsgBulkApplyFailFmt, readErr)
+
+		return applyStatus{outcome: "fail", err: readErr}
+	}
+	if current != r.NewVisibility {
+		fmt.Fprintf(os.Stdout, constants.MsgUndoDriftSkipFmt, current, r.NewVisibility)
+
+		return applyStatus{outcome: "skip", prev: current, next: current}
+	}
+
+	return applyOneRepo(ctx, r.RepoName, r.PrevVisibility, flags.Verbose)
 }

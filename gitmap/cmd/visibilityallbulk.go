@@ -50,6 +50,7 @@ func runMakeAllVisibility(target, cmdName string, args []string) {
 	ownerArg, patternsRaw, flags := parseBulkArgs(args)
 	ctx := resolveOwnerOrExit(ownerArg)
 	mustEnsureProviderCLI(ctx.Provider, flags.Verbose)
+	mustEnsureProviderAuth(ctx.Provider, flags.Verbose)
 
 	patterns, err := visibility.ParsePatternList(patternsRaw)
 	if err != nil {

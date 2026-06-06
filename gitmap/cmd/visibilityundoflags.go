@@ -14,7 +14,7 @@ import (
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
 )
 
-// parseUndoArgs accepts --verbose, --dry-run, and --run <id>.
+// parseUndoArgs accepts --verbose, --dry-run, --force, and --run <id>.
 // Unknown tokens are tolerated (mirrors parseBulkArgs).
 func parseUndoArgs(args []string) undoFlags {
 	flags := undoFlags{}
@@ -24,6 +24,8 @@ func parseUndoArgs(args []string) undoFlags {
 			flags.Verbose = true
 		case "--dry-run":
 			flags.DryRun = true
+		case "--force":
+			flags.Force = true
 		case "--run":
 			flags.RunID = mustParseRunID(args, i)
 			i++

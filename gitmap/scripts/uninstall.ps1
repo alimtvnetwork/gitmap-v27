@@ -32,6 +32,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $BinaryName = "gitmap.exe"
+$BinaryAlias = "gm.exe"
 
 # --- Logging helpers ---
 
@@ -164,6 +165,14 @@ function Remove-InstallDir([string]$dir, [string]$dataChoice) {
     if (Test-Path $binPath) {
         Remove-Item $binPath -Force
         Write-OK "Removed $BinaryName"
+    }
+
+    # Also remove the `gm.exe` alias copy installed by install.ps1 so the
+    # uninstall is symmetric and doesn't leave a stale short command on PATH.
+    $aliasPath = Join-Path $dir $BinaryAlias
+    if (Test-Path $aliasPath) {
+        Remove-Item $aliasPath -Force -ErrorAction SilentlyContinue
+        Write-OK "Removed $BinaryAlias"
     }
 
     $dataDir = Join-Path $dir "data"

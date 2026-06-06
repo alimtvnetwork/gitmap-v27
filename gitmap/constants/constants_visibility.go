@@ -159,13 +159,17 @@ const (
 	ExitVisBulkPartial = 9
 )
 
-// Spec 116 §preflight + §undo-redo — auth-status gate and drift guard
-// messages shared by `make-all-*`, `vu`, and `vr`.
+// Spec 116 §preflight + §undo-redo — auth-status gate, drift guard,
+// and reverse-loop messages shared by `make-all-*`, `vu`, and `vr`.
 const (
 	ErrVisAuthStatusFailedFmt = "Error: %s auth status failed: %v (operation: provider-auth-preflight, reason: %s) — run `%[1]s auth login` and retry.\n"
 	MsgUndoDriftSkipFmt       = "DRIFT SKIP (current=%q expected=%q; re-run with --force to overwrite)\n"
 	MsgUndoForceOverrideFmt   = "[--force] overriding drift guard for %s ... "
+	ErrUndoAuditDBOpenFmt     = "%s: audit DB open failed: %v\n"
+	MsgUndoReverseHeaderFmt   = "%s: reversing run #%d (%s/%s) — %d repo(s)\n"
+	UndoPatternsRawFmt        = "%s:source-run=%d"
 )
+
 
 
 

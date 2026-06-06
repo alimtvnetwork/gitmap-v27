@@ -1,5 +1,13 @@
 # Changelog
 
+## v6.10.0 — (2026-06-06) — Centralized undo/redo strings + unit tests for `parseUndoArgs` / `bulkExitCode`
+
+- **Step 29 — Centralized 3 magic strings in `visibilityundo.go`:** `audit DB open failed`, the reverse-loop header (`reversing run #N (provider/owner) — N repo(s)`), and the `<cmd>:source-run=<id>` `PatternList` template moved to `constants_visibility.go` as `ErrUndoAuditDBOpenFmt`, `MsgUndoReverseHeaderFmt`, `UndoPatternsRawFmt`. The patternsRaw template is the audit trail's only link back to the source run — a typo would silently break `vh` filtering — so it now lives behind a single named constant.
+- **Step 30 — Unit tests for `parseUndoArgs` + `matchesFromResults` + `bulkExitCode`:** new `gitmap/cmd/visibilityundoflags_test.go` covers defaults, all flags set together (`--verbose --dry-run --force --run 42`), `--force` in isolation, unknown-token tolerance, result→match adapter preservation, and the full bulk exit-code matrix (all-ok → 0, all-failed → 5, mixed → 9). Guards against the failure mode where a future refactor silently demotes `--force` to a no-op or mis-routes `--run <id>` — both of which would destroy real user data without any visible error.
+- Files: `gitmap/constants/constants_visibility.go` (+`ErrUndoAuditDBOpenFmt`, `MsgUndoReverseHeaderFmt`, `UndoPatternsRawFmt`), `gitmap/cmd/visibilityundo.go` (3 inline strings → constants), `gitmap/cmd/visibilityundoflags_test.go` (new), `gitmap/constants/constants.go` (`6.10.0`), `README.md` (pin), `.lovable/prompts/07-next-task.md` (new).
+
+
+
 ## v6.9.0 — (2026-06-06) — Drift guard + `--force` on `vu` / `vr` + preflight `gh`/`glab auth status`
 
 - **Drift guard (step 27):** `gitmap visibility-undo` and `visibility-redo` now read each repo's *current* visibility before reversing and skip with `DRIFT SKIP (current=… expected=…)` when the live state no longer matches the `NewVisibility` we persisted in the source run. Prevents the audit trail from silently overwriting out-of-band manual changes (someone flipped a repo via the GitHub UI after the original `make-all-*` run). New `--force` flag opts out of the guard with an audible `[--force] overriding drift guard for <repo>` log line.

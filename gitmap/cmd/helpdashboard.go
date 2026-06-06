@@ -33,13 +33,13 @@ func runHelpDashboard(args []string) {
 	if _, err := os.Stat(docsDir); os.IsNotExist(err) {
 		zipPath := filepath.Join(binaryDir, constants.DocsSiteArchive)
 		if _, zipErr := os.Stat(zipPath); os.IsNotExist(zipErr) {
-			if _, n, dlErr := downloadDocsSiteArchive(zipPath); dlErr != nil {
+			_, n, dlErr := downloadDocsSiteArchive(zipPath)
+			if dlErr != nil {
 				fmt.Fprintf(os.Stderr, constants.ErrDocsSiteDownload, 2, dlErr, zipPath)
 				openHostedDocsFallback()
 				return
-			} else {
-				fmt.Printf(constants.MsgDocsSiteDownloaded, n)
 			}
+			fmt.Printf(constants.MsgDocsSiteDownloaded, n)
 		}
 		fmt.Printf("  Extracting %s...\n", constants.DocsSiteArchive)
 		if extractErr := extractDocsSiteZip(zipPath, binaryDir); extractErr != nil {

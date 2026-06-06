@@ -94,22 +94,35 @@ func ownerFromURL(url string) (ownerContext, error) {
 	return ownerContext{Provider: provider, Owner: owner, TargetRaw: url}, nil
 }
 
-// firstPathSegment pulls the first non-empty path component from any
-// supported URL form, stripping ".git" and trailing slashes.
+// firstPathSegment pulls the first non-empty path component (the
+// owner/org segment) from any supported URL form, stripping ".git"
+// and any leading/trailing slashes. Skips the scheme and host so
+// https://github.com/alice and https://github.com/alice/ both yield
+// "alice" (NOT "github.com").
 func firstPathSegment(url string) string {
-	trimmed := strings.TrimSuffix(strings.TrimSpace(url), "/")
+	trimmed := strings.TrimSpace(url)
+	for strings.HasSuffix(trimmed, "/") {
+		trimmed = strings.TrimSuffix(trimmed, "/")
+	}
 	trimmed = strings.TrimSuffix(trimmed, ".git")
 
-	if idx := strings.Index(trimmed, "@"); idx >= 0 {
+	// git@host:owner/repo form — owner is the segment after ':'.
+	if idx := strings.Index(trimmed, "@"); idx >= 0 && !strings.Contains(trimmed[:idx], "/") {
 		if colon := strings.Index(trimmed[idx:], ":"); colon >= 0 {
 			rest := trimmed[idx+colon+1:]
 
-			return strings.Split(rest, "/")[0]
+			return strings.Split(strings.TrimLeft(rest, "/"), "/")[0]
 		}
 	}
 
+	// Strip scheme (https://, http://, ssh://, git://).
+	if schemeIdx := strings.Index(trimmed, "://"); schemeIdx >= 0 {
+		trimmed = trimmed[schemeIdx+3:]
+	}
+
+	// Now trimmed is "<host>[/<owner>[/<repo>...]]" — drop the host.
 	parts := strings.Split(trimmed, "/")
-	for i := 2; i < len(parts); i++ {
+	for i := 1; i < len(parts); i++ {
 		if len(parts[i]) > 0 {
 			return parts[i]
 		}

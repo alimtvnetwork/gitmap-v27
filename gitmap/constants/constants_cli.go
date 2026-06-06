@@ -192,6 +192,12 @@ const (
 	// spec/01-app/116-bulk-visibility-mapub-mapri.md §undo-redo.
 	CmdVisibilityUndo      = "visibility-undo"
 	CmdVisibilityUndoAlias = "vu"
+	// CmdVisibilityRedo reverses the most recent VisibilityUndo run
+	// (i.e. re-applies the visibility state that the undo reverted).
+	// Logged as a new run with CommandKind=VisibilityRedo. Accepts
+	// `--run <id>` to target a specific historical undo run.
+	CmdVisibilityRedo      = "visibility-redo"
+	CmdVisibilityRedoAlias = "vr"
 	// CmdHistoryPurge / CmdHistoryPin wrap `git filter-repo` in a
 	// mirror-clone sandbox. Spec: spec/04-generic-cli/16-history-rewrite.md.
 	// The user's working repo is never rewritten in place.

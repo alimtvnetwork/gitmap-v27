@@ -1,5 +1,13 @@
 # Changelog
 
+## v6.11.0 — (2026-06-06) — Store SELECT tests + 5 missing help files (unblocks CI)
+
+- **Step 31 — Store SELECT round-trip tests:** new `gitmap/store/makeallvisibility_undo_test.go` and `gitmap/store/makeallvisibility_history_test.go` seed a temp SQLite DB through the canonical `InsertMakeAllVisibilityRun` → `InsertMakeAllVisibilityPendingResults` → `UpdateMakeAllVisibilityResult` → `FinalizeMakeAllVisibilityRun` pipeline and then exercise every new SELECT (`SelectLatestUndoableMakeAllVisibilityRun`, `SelectMakeAllVisibilityRunByID`, `SelectLatestMakeAllVisibilityRunByKind`, `SelectUndoableResultsForRun`, `SelectRecentMakeAllVisibilityRuns`). Covers happy-path, empty-DB → `(zero, nil)` contract, unknown-id → `(zero, nil)`, newest-first ordering, kind-filter routing, and `--limit` honoring. Guards against a future column-order swap in the SQL silently routing the wrong field into `Provider`/`Owner`/`OkCount` — which would corrupt every undo decision without any error.
+- **Step 32 — Five missing help files:** `helptext/coverage_test.go::TestEveryCmdIDHasHelpFile` reflects every `Cmd*` constant in `constants_cli.go` and requires a matching `<id>.md`. The five visibility commands shipped without docs, leaving the test failing. Added `gitmap/helptext/make-all-public.md`, `make-all-private.md`, `visibility-undo.md`, `visibility-redo.md`, `visibility-history.md` — all under the 120-line cap, all documenting flags / examples / exit-code matrix / drift-guard behavior / `--force` semantics / `--run <id>` selector.
+- Files: `gitmap/store/makeallvisibility_undo_test.go` (new), `gitmap/store/makeallvisibility_history_test.go` (new), `gitmap/helptext/make-all-public.md` (new), `gitmap/helptext/make-all-private.md` (new), `gitmap/helptext/visibility-undo.md` (new), `gitmap/helptext/visibility-redo.md` (new), `gitmap/helptext/visibility-history.md` (new), `gitmap/constants/constants.go` (`6.11.0`), `README.md` (pin), `.lovable/prompts/08-next-task.md` (new).
+
+
+
 ## v6.10.0 — (2026-06-06) — Centralized undo/redo strings + unit tests for `parseUndoArgs` / `bulkExitCode`
 
 - **Step 29 — Centralized 3 magic strings in `visibilityundo.go`:** `audit DB open failed`, the reverse-loop header (`reversing run #N (provider/owner) — N repo(s)`), and the `<cmd>:source-run=<id>` `PatternList` template moved to `constants_visibility.go` as `ErrUndoAuditDBOpenFmt`, `MsgUndoReverseHeaderFmt`, `UndoPatternsRawFmt`. The patternsRaw template is the audit trail's only link back to the source run — a typo would silently break `vh` filtering — so it now lives behind a single named constant.

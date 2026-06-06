@@ -46,5 +46,3 @@ const (
 	MsgHDHostedFallback        = "  ↪ Local docs unavailable — opening hosted docs at %s\n"
 	DocsSiteDownloadTimeoutSec = 30
 )
-
-

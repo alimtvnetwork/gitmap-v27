@@ -61,8 +61,6 @@ func runHelpDashboard(args []string) {
 		return
 	}
 
-
-
 	distDir := filepath.Join(docsDir, constants.HDDistDir)
 
 	if info, err := os.Stat(distDir); err == nil && info.IsDir() {
@@ -255,7 +253,6 @@ func openURL(url string) {
 
 	_ = cmd.Start()
 }
-
 
 // handleShutdown gracefully stops the static server on Ctrl+C.
 func handleShutdown(server *http.Server) {

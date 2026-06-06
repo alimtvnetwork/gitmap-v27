@@ -31,7 +31,36 @@ gitmap clone-now <file> --execute                         # legacy alias (kept f
 gitmap cnow     <file> --execute                          # legacy short alias
 gitmap relclone <file> --execute                          # legacy alias
 gitmap rc       <file> --execute                          # legacy short alias
+
+# Single-repo mode (overlay) — wipe + re-clone ONE git repo from its origin
+gitmap reclone                                            # inside a git repo: prompts, then deletes + re-clones from remote.origin.url
+gitmap reclone -y                                         # skip the y/N prompt
+gitmap rc      ./some/repo                                # target a sibling repo by path
+gitmap rc      ./some/repo -y                             # skip prompt + target sibling
 ```
+
+## Single-repo mode (overlay)
+
+When invoked WITHOUT a manifest — i.e. zero positionals + the cwd
+contains `.git/`, OR exactly one positional that is a directory
+containing `.git/` — `reclone` switches to single-repo mode:
+
+1. Reads `remote.origin.url` from the target.
+2. Confirms destructive removal interactively (`y/N`). Pass `-y` /
+   `--yes` to skip. Non-TTY callers without `-y` are refused
+   (exit `1`) — protects `yes | gitmap rc` in CI from nuking the
+   wrong tree.
+3. Releases the Windows cwd handle (so re-cloning from inside the
+   target works on Windows), `os.RemoveAll`s the folder, then
+   `git clone <origin>` into the same parent under the same name.
+4. Emits a shell handoff so the wrapper cd's back into the fresh
+   checkout.
+
+Manifest mode is unchanged: any other arg shape (a `<file>` path,
+`--manifest`, `--scan-root`, etc.) falls through to the manifest
+pipeline byte-for-byte.
+
+```text
 
 ## Source resolution
 

@@ -1,23 +1,19 @@
 package cmd
 
 import (
-	"archive/zip"
-	"errors"
 	"flag"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"os/exec"
 	"os/signal"
 	"path/filepath"
-
-	"strings"
 	"syscall"
 	"time"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 )
+
 
 // maxDocsSiteSize is the maximum total extraction size for docs-site.zip (100 MB).
 const maxDocsSiteSize = 100 * 1024 * 1024

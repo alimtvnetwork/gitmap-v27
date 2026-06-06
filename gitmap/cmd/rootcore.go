@@ -58,6 +58,10 @@ func coreDispatchEntries() []dispatchEntry {
 			func() { runVisibilityUndo(argsTail()) },
 		},
 		{
+			[]string{constants.CmdVisibilityRedo, constants.CmdVisibilityRedoAlias},
+			func() { runVisibilityRedo(argsTail()) },
+		},
+		{
 			[]string{constants.CmdCloneFixRepo, constants.CmdCloneFixRepoAlias},
 			func() { runCloneFixRepo(argsTail()) },
 		},

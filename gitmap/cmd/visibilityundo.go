@@ -14,7 +14,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
@@ -24,9 +23,11 @@ import (
 )
 
 // undoFlags is parseBulkArgs's sibling for the undo/redo path.
-// RunID == 0 means "pick latest".
+// RunID == 0 means "pick latest". DryRun prints the plan without
+// touching the provider.
 type undoFlags struct {
 	Verbose bool
+	DryRun  bool
 	RunID   int64
 }
 
@@ -34,42 +35,15 @@ type undoFlags struct {
 func runVisibilityUndo(args []string) {
 	flags := parseUndoArgs(args)
 	run, results := loadReversible(flags.RunID, "", constants.ErrUndoNoRunFound)
+	if flags.DryRun {
+		printDryRun(constants.CmdVisibilityUndo, run, results)
+		os.Exit(constants.ExitVisOK)
+	}
 	reverseRunAndExit(run, results, flags, constants.CmdVisibilityUndo)
 }
 
-// parseUndoArgs accepts --verbose and --run <id>. Unknown tokens are
-// ignored (mirrors parseBulkArgs's tolerant style).
-func parseUndoArgs(args []string) undoFlags {
-	flags := undoFlags{}
-	for i := 0; i < len(args); i++ {
-		switch args[i] {
-		case "--verbose":
-			flags.Verbose = true
-		case "--run":
-			flags.RunID = mustParseRunID(args, i)
-			i++
-		}
-	}
-
-	return flags
-}
-
-// mustParseRunID validates the `--run <id>` pairing and exits on bad
-// input (zero-swallow — a typo here would silently undo the wrong run).
-func mustParseRunID(args []string, i int) int64 {
-	if i+1 >= len(args) {
-		fmt.Fprintf(os.Stderr, constants.ErrUndoBadRunFlagFmt, "", fmt.Errorf("missing value"), "no value after --run")
-		os.Exit(constants.ExitVisBadFlag)
-	}
-	raw := args[i+1]
-	id, err := strconv.ParseInt(raw, 10, 64)
-	if err != nil || id <= 0 {
-		fmt.Fprintf(os.Stderr, constants.ErrUndoBadRunFlagFmt, raw, err, "must be positive integer")
-		os.Exit(constants.ExitVisBadFlag)
-	}
-
-	return id
-}
+// parseUndoArgs + mustParseRunID + printDryRun live in
+// visibilityundoflags.go to keep this file under the 200-line cap.
 
 // loadReversible resolves the target run for either undo or redo.
 // When runID > 0 it loads that exact row; otherwise it picks the

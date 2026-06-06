@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.8.0 — (2026-06-06) — `gitmap visibility-history` (`vh`) + `--dry-run` on `vu` / `vr`
+
+- New command `gitmap visibility-history` (alias `vh`) prints the most recent `MakeAllVisibilityRun` rows newest-first, with id, kind, owner, matched/ok/skip/fail/excl tallies, exit code, and `StartedAt`. Default limit 20; `--limit N` overrides. Empty-database case prints a friendly stderr message and exits `ExitVisOK`. This is the discovery layer behind the v6.7.0 `--run <id>` selector — users can now see *which* IDs to target.
+- `--dry-run` on both `vu` and `vr` enumerates the planned per-repo reversal (`would set visibility -> <prev>`) without calling the provider CLI. Lets users verify a reversal is safe before letting it touch GitHub/GitLab. Also paves the way for the upcoming drift-detection guard (step 29) which will compare *current* visibility against the persisted `NewVisibility` along this same enumeration path.
+- Internal layout: flag parsing + dry-run rendering extracted into `visibilityundoflags.go` so `visibilityundo.go` stays under the 200-line per-file cap; every new func ≤15 lines.
+- Files: `gitmap/cmd/visibilityhistory.go` (new), `gitmap/cmd/visibilityundoflags.go` (new — `parseUndoArgs`, `mustParseRunID`, `printDryRun`), `gitmap/store/makeallvisibility_history.go` (new — `SelectRecentMakeAllVisibilityRuns`), `gitmap/constants/constants_visibility_store_sql.go` (+`SQLSelectRecentRuns`, history messages, dry-run messages, `HistoryDefaultLimit`), `gitmap/constants/constants_cli.go` (`CmdVisibilityHistory` + `vh`), `gitmap/cmd/visibilityundo.go` (DryRun field + dispatch branch), `gitmap/cmd/visibilityredo.go` (dry-run branch), `gitmap/cmd/rootcore.go` (vh dispatch).
+
 ## v6.7.0 — (2026-06-06) — `gitmap visibility-redo` / `vr` + `--run <id>` selector on undo/redo
 
 - New command `gitmap visibility-redo` (alias `vr`) reverses the most recent `VisibilityUndo` run, restoring the visibility state the undo reverted. The redo is itself persisted as a fresh `MakeAllVisibilityRun` with `CommandKind='VisibilityRedo'` and `PatternList='visibility-redo:source-run=<id>'`, keeping the audit chain (apply → undo → redo → undo → …) intact.

@@ -103,3 +103,27 @@ const (
 	ErrUndoRunNotFoundFmt = "Error: run id %d not found in MakeAllVisibilityRun (operation: SQLSelectRunByID, reason: no row)"
 	ErrRedoNoRunFound = "Error: no undoable VisibilityUndo run found (operation: visibility-redo, reason: MakeAllVisibilityRun has no VisibilityUndo row with OkCount>0)"
 )
+
+// SQLSelectRecentRuns — newest-first list for `visibility-history`.
+const SQLSelectRecentRuns = `SELECT
+	MakeAllVisibilityRunId, CommandKind, TargetVisibility, Provider,
+	Owner, MatchedCount, OkCount, SkippedCount, FailedCount,
+	ExcludedCount, ExitCode, StartedAt, FinishedAt
+	FROM MakeAllVisibilityRun
+	ORDER BY MakeAllVisibilityRunId DESC
+	LIMIT ?`
+
+const (
+	ErrHistorySelectFmt  = "Error: select recent runs failed: %v (operation: SQLSelectRecentRuns, reason: %s)"
+	MsgHistoryEmpty      = "visibility-history: no make-all-* runs recorded yet\n"
+	MsgHistoryHeader     = "ID    Kind             Owner                 Matched  Ok  Skip Fail Excl Exit  Started\n"
+	MsgHistoryRowFmt     = "%-5d %-16s %-21s %7d %3d %4d %4d %4d %4d  %s\n"
+	HistoryDefaultLimit  = 20
+)
+
+// Dry-run messaging for `vu` / `vr` --dry-run.
+const (
+	MsgDryRunHeaderFmt = "%s --dry-run: would reverse run #%d (%s/%s) — %d repo(s):\n"
+	MsgDryRunRowFmt    = "  %3d/%-3d %-40s : would set visibility -> %s\n"
+	MsgDryRunFooterFmt = "%s --dry-run: no mutations performed (re-run without --dry-run to apply)\n"
+)

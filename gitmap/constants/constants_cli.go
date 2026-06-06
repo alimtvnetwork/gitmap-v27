@@ -198,6 +198,11 @@ const (
 	// `--run <id>` to target a specific historical undo run.
 	CmdVisibilityRedo      = "visibility-redo"
 	CmdVisibilityRedoAlias = "vr"
+	// CmdVisibilityHistory lists the most recent make-all-* /
+	// VisibilityUndo / VisibilityRedo runs (newest first) so users
+	// can pick a `--run <id>` for vu/vr. Accepts `--limit N`.
+	CmdVisibilityHistory      = "visibility-history"
+	CmdVisibilityHistoryAlias = "vh"
 	// CmdHistoryPurge / CmdHistoryPin wrap `git filter-repo` in a
 	// mirror-clone sandbox. Spec: spec/04-generic-cli/16-history-rewrite.md.
 	// The user's working repo is never rewritten in place.

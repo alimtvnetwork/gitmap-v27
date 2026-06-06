@@ -51,7 +51,7 @@ gitmap make-all-private https://gitlab.com/alice "*" --verbose
 - `gitmap make-all-public` — opposite direction.
 - `gitmap visibility-undo` (`vu`) — reverse the most recent run.
 - `gitmap visibility-redo` (`vr`) — replay an undone run.
-- `gitmap visibility-history` (`vh`) — list past runs and their IDs.
+- `gitmap visibility-history` (`vish`) — list past runs and their IDs.
 
 ## Scripting (JSON)
 

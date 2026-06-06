@@ -202,7 +202,7 @@ const (
 	// VisibilityUndo / VisibilityRedo runs (newest first) so users
 	// can pick a `--run <id>` for vu/vr. Accepts `--limit N`.
 	CmdVisibilityHistory      = "visibility-history"
-	CmdVisibilityHistoryAlias = "vh"
+	CmdVisibilityHistoryAlias = "vish"
 	// CmdHistoryPurge / CmdHistoryPin wrap `git filter-repo` in a
 	// mirror-clone sandbox. Spec: spec/04-generic-cli/16-history-rewrite.md.
 	// The user's working repo is never rewritten in place.

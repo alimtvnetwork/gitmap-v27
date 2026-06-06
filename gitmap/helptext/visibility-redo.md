@@ -55,7 +55,7 @@ gitmap vr --force               # ignore drift skips
 ## See also
 
 - `gitmap visibility-undo` (`vu`) — the run kind `vr` consumes.
-- `gitmap visibility-history` (`vh`) — list runs to find `--run <id>`.
+- `gitmap visibility-history` (`vish`) — list runs to find `--run <id>`.
 
 ## Scripting (JSON)
 

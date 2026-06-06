@@ -57,7 +57,7 @@ gitmap vu --run 42 --force      # ignore drift skips
 ## See also
 
 - `gitmap visibility-redo` (`vr`) — roll a `vu` back.
-- `gitmap visibility-history` (`vh`) — discover `--run <id>` values.
+- `gitmap visibility-history` (`vish`) — discover `--run <id>` values.
 - `gitmap make-all-public` / `make-all-private` — the runs `vu` reverses.
 
 ## Scripting (JSON)

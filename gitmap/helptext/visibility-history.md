@@ -1,11 +1,11 @@
-# gitmap visibility-history (`vh`)
+# gitmap visibility-history (`vish`)
 
 List the most recent `MakeAllVisibilityRun` rows newest-first — the
 discovery layer behind `--run <id>` on `vu` and `vr`.
 
 ```
 gitmap visibility-history [--limit <N>]
-gitmap vh                 [--limit <N>]
+gitmap vish                 [--limit <N>]
 ```
 
 ## What it does
@@ -27,8 +27,8 @@ gitmap vh                 [--limit <N>]
 ## Examples
 
 ```
-gitmap vh                       # last 20 runs
-gitmap vh --limit 5             # last 5 runs only
+gitmap vish                       # last 20 runs
+gitmap vish --limit 5             # last 5 runs only
 ```
 
 Sample output:

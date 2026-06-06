@@ -23,7 +23,7 @@ every flip is reversible via `gitmap visibility-undo`.
    `y`, `n`, or exclusion expressions like `1,3-5` to drop entries.
 6. Per repo: reads current visibility → skips if already public →
    applies via the provider CLI → verifies the change took effect.
-7. Persists every step in the audit DB so `vu`, `vr`, and `vh` can
+7. Persists every step in the audit DB so `vu`, `vr`, and `vish` can
    replay or inspect the run later.
 
 ## Flags
@@ -57,7 +57,7 @@ gitmap make-all-public https://github.com/alice "*" -Y --verbose
 - `gitmap make-all-private` — opposite direction, same machinery.
 - `gitmap visibility-undo` (`vu`) — reverse the most recent run.
 - `gitmap visibility-redo` (`vr`) — replay an undone run.
-- `gitmap visibility-history` (`vh`) — list past runs and their IDs.
+- `gitmap visibility-history` (`vish`) — list past runs and their IDs.
 
 ## Scripting (JSON)
 

@@ -29,7 +29,7 @@ func extractDocsSiteZip(zipPath, targetDir string) error {
 	var totalSize int64
 
 	for _, f := range r.File {
-		written, entryErr := extractZipEntry(f, absTarget, totalSize)
+		written, entryErr := extractDocsZipEntry(f, absTarget, totalSize)
 		if entryErr != nil {
 			return entryErr
 		}
@@ -43,9 +43,9 @@ func extractDocsSiteZip(zipPath, targetDir string) error {
 	return nil
 }
 
-// extractZipEntry writes a single zip entry to absTarget, validating the path
+// extractDocsZipEntry writes a single zip entry to absTarget, validating the path
 // against traversal and respecting the remaining size budget.
-func extractZipEntry(f *zip.File, absTarget string, totalSize int64) (int64, error) {
+func extractDocsZipEntry(f *zip.File, absTarget string, totalSize int64) (int64, error) {
 	destPath := filepath.Join(absTarget, f.Name) // #nosec G305 — validated below
 	absDestPath, absErr := filepath.Abs(destPath)
 	if absErr != nil || !strings.HasPrefix(absDestPath, absTarget+string(os.PathSeparator)) {

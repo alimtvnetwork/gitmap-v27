@@ -49,20 +49,11 @@ func TestRunRepoRecloneEndToEnd(t *testing.T) {
 	swapStdin(t)
 	runRepoReclone(work, true /*yes*/)
 
-	if _, err := os.Stat(filepath.Join(work, ".git")); err != nil {
-		t.Fatalf("post-stat .git: %v (re-clone did not rebuild .git)", err)
-	}
-	_, err := os.Stat(sentinel)
-	if !os.IsNotExist(err) {
-		t.Fatalf("sentinel survived reclone: %v", err)
-	}
-	gotOrigin := capture(t, work, "git", "config", "--get", "remote.origin.url")
-	if !strings.EqualFold(filepath.Clean(gotOrigin), filepath.Clean(bare)) {
-		t.Fatalf("origin: got %q want %q", gotOrigin, bare)
-	}
+	assertRepoRecloned(t, work, sentinel)
+	assertRepoOrigin(t, work, bare)
 }
 
-func assertRepoRecloned(t *testing.T, work, sentinel, bare string) {
+func assertRepoRecloned(t *testing.T, work, sentinel string) {
 	t.Helper()
 	if _, err := os.Stat(filepath.Join(work, ".git")); err != nil {
 		t.Fatalf("post-stat .git: %v (re-clone did not rebuild .git)", err)
@@ -75,10 +66,6 @@ func assertRepoRecloned(t *testing.T, work, sentinel, bare string) {
 		t.Fatalf("stat sentinel: %v", err)
 	}
 	t.Fatal("sentinel survived reclone")
-	gotOrigin := capture(t, work, "git", "config", "--get", "remote.origin.url")
-	if !strings.EqualFold(filepath.Clean(gotOrigin), filepath.Clean(bare)) {
-		t.Fatalf("origin: got %q want %q", gotOrigin, bare)
-	}
 }
 
 func assertRepoOrigin(t *testing.T, work, bare string) {

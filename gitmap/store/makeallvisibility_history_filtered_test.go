@@ -5,7 +5,16 @@ import (
 	"testing"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
 )
+
+func modelKindRow(kind string) model.MakeAllVisibilityRunRecord {
+	return model.MakeAllVisibilityRunRecord{
+		CommandKind: kind, TargetVisibility: constants.VisibilityPublic,
+		Provider: constants.ProviderGitHub, Owner: "acme", TargetRaw: "acme",
+		PatternList: "*", StartedAt: "2026-06-06T11:00:00Z",
+	}
+}
 
 func TestBuildRecentRunsQueryNoFilter(t *testing.T) {
 	sql, args := BuildRecentRunsQuery(RecentRunsFilter{Limit: 20})

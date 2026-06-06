@@ -16,12 +16,16 @@ import (
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
 )
 
-// runVisibilityHistory is the dispatcher entry point.
+// runVisibilityHistory is the dispatcher entry point. When `--kind`
+// or `--since` is set, the filter is pushed down to SQL (step 39);
+// the in-memory `applyHistoryFilters` (step 36) is retained as a
+// defense-in-depth second pass that also drops malformed StartedAt
+// rows the SQL `>=` comparison would let through as text-compare.
 func runVisibilityHistory(args []string) {
 	limit := parseHistoryLimit(args)
 	filters := parseHistoryFilters(args, time.Now())
 	db := openDBOrExit(constants.CmdVisibilityHistory)
-	runs, err := db.SelectRecentMakeAllVisibilityRuns(limit)
+	runs, err := loadHistoryRuns(db, limit, filters)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(constants.ExitVisAuthFailed)
@@ -33,6 +37,22 @@ func runVisibilityHistory(args []string) {
 	}
 	printHistory(runs)
 	os.Exit(constants.ExitVisOK)
+}
+
+// loadHistoryRuns picks the pushdown path when any filter is set,
+// otherwise falls back to the unfiltered newest-first SELECT.
+func loadHistoryRuns(db *store.DB, limit int, f historyFilters) ([]model.MakeAllVisibilityRunRecord, error) {
+	if f.Kind == "" && f.Since == 0 {
+		return db.SelectRecentMakeAllVisibilityRuns(limit)
+	}
+	sinceISO := ""
+	if f.Since > 0 {
+		sinceISO = time.Now().Add(-f.Since).UTC().Format(time.RFC3339)
+	}
+
+	return db.SelectRecentMakeAllVisibilityRunsFiltered(store.RecentRunsFilter{
+		Kind: f.Kind, SinceISO: sinceISO, Limit: limit,
+	})
 }
 
 // parseHistoryLimit accepts `--limit N` (default HistoryDefaultLimit).

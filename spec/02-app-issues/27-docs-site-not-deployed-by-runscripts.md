@@ -1,6 +1,6 @@
 # docs-site Missing After `run.ps1` / `run.sh` Deploy and `install.*` Install
 
-**Status:** Fixed in v2.84.0 — user-visible failure mode further softened in v6.0.x (see `spec/02-app-issues/33-hd-hosted-docs-fallback.md`: `gitmap hd` now falls back to hosted docs at `constants.DocsURL` instead of hard-exiting when local `docs-site/` is missing).
+**Status:** Fixed in v2.84.0 — user-visible failure mode further softened in v6.0.x (see `spec/02-app-issues/34-hd-hosted-docs-fallback.md`: `gitmap hd` now falls back to hosted docs at `constants.DocsURL` instead of hard-exiting when local `docs-site/` is missing).
 **Affects:** `gitmap-v25 help-dashboard` (`gitmap-v25 hd`) on every install path
 
 ---

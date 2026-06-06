@@ -10,7 +10,7 @@ import (
 )
 
 // TestOpenHostedDocsFallbackPrintsURL pins the runtime guarantee from
-// spec/02-app-issues/33-hd-hosted-docs-fallback.md: the hosted docs URL
+// spec/02-app-issues/34-hd-hosted-docs-fallback.md: the hosted docs URL
 // is always written to stderr BEFORE attempting to launch the browser,
 // so the user can copy it manually even when `start`/`open`/`xdg-open`
 // is missing (e.g. minimal CI containers).

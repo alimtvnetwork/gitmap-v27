@@ -89,7 +89,7 @@ violating the project's Code Red error management rule.
 - [ ] Verified with `golangci-lint run ./...`
 
 > **Issue 1 user-visible failure mode superseded by**
-> `spec/02-app-issues/33-hd-hosted-docs-fallback.md` (v6.0.x): `gitmap hd`
+> `spec/02-app-issues/34-hd-hosted-docs-fallback.md` (v6.0.x): `gitmap hd`
 > no longer hard-exits when `docs-site/` cannot be materialized — it falls
 > back to the hosted docs at `constants.DocsURL`. The bundling fix here
 > remains the happy path; #33 is the safety net.

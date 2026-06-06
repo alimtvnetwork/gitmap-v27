@@ -29,6 +29,11 @@ type runAudit struct {
 	resultIDs map[string]int64 // RepoName → row PK for fast UPDATE
 }
 
+// RunID exposes the new audit row's primary key (read-only, zero
+// when the audit DB was unreachable) so callers like `--json`
+// emitters can include it in their wire output.
+func (a *runAudit) RunID() int64 { return a.runID }
+
 // beginRunAudit opens the audit DB, writes the run row + one Pending
 // result per matched repo. Returns a non-nil *runAudit even when the
 // DB is unreachable so callers can treat audit as fire-and-forget.

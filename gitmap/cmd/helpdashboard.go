@@ -11,7 +11,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
-	"path/filepath"
+
 	"strings"
 	"syscall"
 	"time"

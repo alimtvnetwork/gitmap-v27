@@ -37,4 +37,3 @@ func openURL(url string) {
 		fmt.Fprintf(os.Stderr, "  ⚠ Could not launch browser (%v); open the URL above manually.\n", err)
 	}
 }
-

@@ -56,17 +56,24 @@ func runMakeAllVisibility(target, cmdName string, args []string) {
 		os.Exit(constants.ExitVisBadFlag)
 	}
 
-	matches := matchOrExitEmpty(ctx, patterns, flags.Verbose)
+	matches, ownerTotal := matchOrExitEmpty(ctx, patterns, flags.Verbose)
+	audit := beginRunAudit(ctx, target, cmdName, patternsRaw, flags, ownerTotal, matches)
+
 	final := confirmOrAbort(matches, flags.Yes)
 	if len(final) == 0 {
+		excluded := audit.markExcluded(matches, nil)
+		audit.finalize(excluded, 0, 0, 0, constants.ExitVisConfirmReq)
 		fmt.Fprint(os.Stderr, constants.MsgBulkAborted)
 		os.Exit(constants.ExitVisConfirmReq)
 	}
+	excludedCount := audit.markExcluded(matches, final)
 
 	fmt.Fprintf(os.Stdout, constants.MsgBulkApplyHeaderFmt, target, len(final), ctx.Owner)
-	changed, skipped, failed := applyBulkLoop(ctx, target, final, flags.Verbose)
+	changed, skipped, failed := applyBulkLoop(ctx, target, final, flags.Verbose, audit)
 	fmt.Fprintf(os.Stdout, constants.MsgBulkSummaryFmt, changed, skipped, failed, len(final))
-	os.Exit(bulkExitCode(changed, failed))
+	exit := bulkExitCode(changed, failed)
+	audit.finalize(excludedCount, changed, skipped, failed, exit)
+	os.Exit(exit)
 }
 
 // parseBulkArgs splits owner / pattern-list / flags. Accepts -Y, -y,

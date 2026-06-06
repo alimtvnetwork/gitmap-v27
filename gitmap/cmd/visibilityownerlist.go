@@ -17,9 +17,9 @@ package cmd
 
 import (
 	"encoding/json"
-	"strings"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 )

@@ -119,3 +119,13 @@ const (
 // — far enough for realistic release histories without abusing the API.
 const CFRPPriorMaxLookback = 15
 
+// Spec 116 — bulk wildcard visibility (make-all-public / make-all-private
+// / MAPUB / MAPRI). Owner-only resolver + handler messages live here.
+const (
+	ProviderUnknownReason   = "unknown"
+	MsgMakeAllNotImpl       = "make-all-*: handler not yet wired (spec/01-app/116)\n"
+	ErrMakeAllResolveFmt    = "make-all-*: cannot resolve owner: %v\n"
+	ErrMakeAllMissingArgFmt = "make-all-*: usage: %s <target> <patterns> [-Y|--yes]\n"
+)
+
+

@@ -46,6 +46,14 @@ func coreDispatchEntries() []dispatchEntry {
 		{[]string{constants.CmdMakePublic}, func() { runMakePublic(argsTail()) }},
 		{[]string{constants.CmdMakePrivate}, func() { runMakePrivate(argsTail()) }},
 		{
+			[]string{constants.CmdMakeAllPublic, constants.CmdMAPUB},
+			func() { runMakeAllPublic(argsTail()) },
+		},
+		{
+			[]string{constants.CmdMakeAllPrivate, constants.CmdMAPRI},
+			func() { runMakeAllPrivate(argsTail()) },
+		},
+		{
 			[]string{constants.CmdCloneFixRepo, constants.CmdCloneFixRepoAlias},
 			func() { runCloneFixRepo(argsTail()) },
 		},

@@ -191,7 +191,7 @@ func applyUndoLoop(ctx ownerContext, rs []model.MakeAllVisibilityResultRecord, f
 // Drift = current visibility != the NewVisibility we persisted last time.
 // Force overrides the guard with an audible log line.
 func reverseOneRepo(ctx ownerContext, r model.MakeAllVisibilityResultRecord, flags undoFlags) applyStatus {
-	if flags.Force {
+	if decideDriftAction("", "", flags.Force) == driftActionForce {
 		fmt.Fprintf(os.Stdout, constants.MsgUndoForceOverrideFmt, r.RepoName)
 
 		return applyOneRepo(ctx, r.RepoName, r.PrevVisibility, flags.Verbose)
@@ -203,7 +203,7 @@ func reverseOneRepo(ctx ownerContext, r model.MakeAllVisibilityResultRecord, fla
 
 		return applyStatus{outcome: "fail", err: readErr}
 	}
-	if current != r.NewVisibility {
+	if decideDriftAction(current, r.NewVisibility, false) == driftActionSkip {
 		fmt.Fprintf(os.Stdout, constants.MsgUndoDriftSkipFmt, current, r.NewVisibility)
 
 		return applyStatus{outcome: "skip", prev: current, next: current}

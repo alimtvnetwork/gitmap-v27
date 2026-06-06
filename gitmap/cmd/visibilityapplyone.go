@@ -16,10 +16,14 @@ import (
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 )
 
-// applyOutcome is one of: "ok" | "skip" | "fail".
+// applyOutcome is one of: "ok" | "skip" | "fail". prev/next carry the
+// visibility tokens observed pre/post-apply so the audit layer can
+// persist them on the result row.
 type applyStatus struct {
 	outcome string
 	err     error
+	prev    string
+	next    string
 }
 
 // applyOneRepo runs read → (skip|apply → verify) for a single repo.
@@ -39,13 +43,13 @@ func applyOneRepo(owner ownerContext, repoName, target string, verbose bool) app
 	if current == target {
 		fmt.Fprintf(os.Stdout, constants.MsgBulkApplySkipFmt, current)
 
-		return applyStatus{outcome: "skip"}
+		return applyStatus{outcome: "skip", prev: current, next: current}
 	}
 
 	if applyErr := applyVisibilityNoExit(repoCtx, target, verbose); applyErr != nil {
 		fmt.Fprintf(os.Stdout, constants.MsgBulkApplyFailFmt, applyErr)
 
-		return applyStatus{outcome: "fail", err: applyErr}
+		return applyStatus{outcome: "fail", err: applyErr, prev: current}
 	}
 
 	verified, verifyErr := readVisibilityNoExit(repoCtx, verbose)
@@ -53,12 +57,12 @@ func applyOneRepo(owner ownerContext, repoName, target string, verbose bool) app
 		err := fmt.Errorf("verify failed: got=%q want=%q (%v)", verified, target, verifyErr)
 		fmt.Fprintf(os.Stdout, constants.MsgBulkApplyFailFmt, err)
 
-		return applyStatus{outcome: "fail", err: err}
+		return applyStatus{outcome: "fail", err: err, prev: current, next: verified}
 	}
 
 	fmt.Fprintf(os.Stdout, constants.MsgBulkApplyOKFmt, current, verified)
 
-	return applyStatus{outcome: "ok"}
+	return applyStatus{outcome: "ok", prev: current, next: verified}
 }
 
 // readVisibilityNoExit mirrors mustReadCurrentVisibility but returns

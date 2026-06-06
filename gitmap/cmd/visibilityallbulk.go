@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/visibility"
@@ -56,17 +57,24 @@ func runMakeAllVisibility(target, cmdName string, args []string) {
 		os.Exit(constants.ExitVisBadFlag)
 	}
 
-	matches := matchOrExitEmpty(ctx, patterns, flags.Verbose)
+	matches, ownerTotal := matchOrExitEmpty(ctx, patterns, flags.Verbose)
+	audit := beginRunAudit(ctx, target, cmdName, patternsRaw, flags, ownerTotal, matches)
+
 	final := confirmOrAbort(matches, flags.Yes)
 	if len(final) == 0 {
+		excluded := audit.markExcluded(matches, nil)
+		audit.finalize(excluded, 0, 0, 0, constants.ExitVisConfirmReq)
 		fmt.Fprint(os.Stderr, constants.MsgBulkAborted)
 		os.Exit(constants.ExitVisConfirmReq)
 	}
+	excludedCount := audit.markExcluded(matches, final)
 
 	fmt.Fprintf(os.Stdout, constants.MsgBulkApplyHeaderFmt, target, len(final), ctx.Owner)
-	changed, skipped, failed := applyBulkLoop(ctx, target, final, flags.Verbose)
+	changed, skipped, failed := applyBulkLoop(ctx, target, final, flags.Verbose, audit)
 	fmt.Fprintf(os.Stdout, constants.MsgBulkSummaryFmt, changed, skipped, failed, len(final))
-	os.Exit(bulkExitCode(changed, failed))
+	exit := bulkExitCode(changed, failed)
+	audit.finalize(excludedCount, changed, skipped, failed, exit)
+	os.Exit(exit)
 }
 
 // parseBulkArgs splits owner / pattern-list / flags. Accepts -Y, -y,
@@ -97,8 +105,9 @@ func resolveOwnerOrExit(arg string) ownerContext {
 }
 
 // matchOrExitEmpty lists owner repos, matches patterns, exits 0 with
-// a friendly message when nothing matched.
-func matchOrExitEmpty(ctx ownerContext, patterns []visibility.Pattern, verbose bool) []visibility.MatchedRepo {
+// a friendly message when nothing matched. Returns the matched subset
+// AND the owner-wide total so the audit layer can persist OwnerRepoTotal.
+func matchOrExitEmpty(ctx ownerContext, patterns []visibility.Pattern, verbose bool) ([]visibility.MatchedRepo, int) {
 	names, err := listOwnerRepos(ctx.Provider, ctx.Owner, verbose)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "make-all-*: %v\n", err)
@@ -112,7 +121,7 @@ func matchOrExitEmpty(ctx ownerContext, patterns []visibility.Pattern, verbose b
 		os.Exit(constants.ExitVisOK)
 	}
 
-	return matches
+	return matches, len(names)
 }
 
 // confirmOrAbort runs the interactive prompt unless -Y was passed.
@@ -128,15 +137,17 @@ func confirmOrAbort(matches []visibility.MatchedRepo, yes bool) []visibility.Mat
 	return final
 }
 
-// applyBulkLoop walks the matched set, applying target visibility to
-// each repo. Continues past per-repo failures and returns the tallied
-// (changed, skipped, failed) counts for summary + exit-code logic.
-func applyBulkLoop(ctx ownerContext, target string, matches []visibility.MatchedRepo, verbose bool) (int, int, int) {
+// applyBulkLoop walks the matched set, applying target visibility +
+// streaming results to the audit layer (timed per repo). Continues
+// past per-repo failures and returns (changed, skipped, failed).
+func applyBulkLoop(ctx ownerContext, target string, matches []visibility.MatchedRepo, verbose bool, audit *runAudit) (int, int, int) {
 	changed, skipped, failed := 0, 0, 0
 	total := len(matches)
 	for i, m := range matches {
 		fmt.Fprintf(os.Stdout, constants.MsgBulkApplyItemFmt, i+1, total, m.RepoName)
+		start := time.Now()
 		status := applyOneRepo(ctx, m.RepoName, target, verbose)
+		audit.updateResult(m.RepoName, status, status.prev, status.next, start)
 		switch status.outcome {
 		case "skip":
 			skipped++

@@ -9,6 +9,7 @@ Strict code style: <200 lines/file, <15 lines/func, positive logic, pascal case 
 Organize constants by owning package/domain; do not force artificial prefix-only naming rules.
 Zero-swallow error policy. Explicitly log errors to os.Stderr using standardized format. Use `errors.Is`.
 NEVER manually create, modify, or delete files within `.gitmap/release/` or `.gitmap/release-assets/`.
+STRICTLY-PROHIBITED: NEVER edit `.github/workflows/release.yml` or any release-pipeline script (`.github/scripts/smoke-installer.*`). Empty/missing GitHub Release artifacts are ALWAYS caused by an upstream build/test failure gating the upload step — fix the application code, never the workflow. See mem://constraints/ci-release-pipeline-untouchable.
 No magic strings. Centralize in constants. All CLI IDs must be exclusively in `constants_cli.go`.
 Windows-first platform development strategy. Scripts must handle Windows encoding (UTF-8 BOM).
 Go v1.24.13. golangci-lint pinned to v1.64.8, govulncheck pinned to v1.1.4.

@@ -7,6 +7,8 @@ package completion
 // the `gitmap:cmd top-level` marker comment. AllCommands() unions this slice
 // with manualExtras so completion stays in sync with constants automatically.
 var generatedCommands = []string{
+	"MAPRI",
+	"MAPUB",
 	"a",
 	"al",
 	"alias",
@@ -225,12 +227,18 @@ var generatedCommands = []string{
 	"version",
 	"version-history",
 	"vh",
+	"vish",
+	"visibility-history",
+	"visibility-redo",
+	"visibility-undo",
 	"vpath",
 	"vpm",
+	"vr",
 	"vscode-pm-path",
 	"vscode-pm-sync",
 	"vscode-workspace",
 	"vsws",
+	"vu",
 	"w",
 	"watch",
 	"x",

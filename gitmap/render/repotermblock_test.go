@@ -25,6 +25,9 @@ func TestRenderRepoTermBlock_FullBlock(t *testing.T) {
 	want := strings.Join([]string{
 		"  1. scripts-fixer",
 		"     branch:    main (HEAD)",
+		"     transport: https",
+		"     https:     https://github.com/owner/scripts-fixer.git",
+		"     ssh:       (unknown)",
 		"     from:      https://github.com/owner/scripts-fixer.git",
 		"     to:        https://github.com/owner/scripts-fixer.git",
 		"     command:   git clone https://github.com/owner/scripts-fixer.git scripts-fixer",
@@ -46,6 +49,9 @@ func TestRenderRepoTermBlock_UnknownPlaceholders(t *testing.T) {
 	got := buf.String()
 	for _, line := range []string{
 		"     branch:    (unknown)",
+		"     transport: other",
+		"     https:     (unknown)",
+		"     ssh:       (unknown)",
 		"     from:      (unknown)",
 		"     to:        (unknown)",
 		"     command:   (unknown)",

@@ -37,8 +37,19 @@ func buildRepoEntries(records []model.ScanRecord) []RepoEntry {
 	return entries
 }
 
-// cloneURL picks the best URL from a record.
+// cloneURL picks the best URL from a record, honoring the repo's
+// identified transport. Origin-SSH repos must NOT be silently
+// re-cloned over HTTPS (that triggers browser auth on private
+// remotes); we only fall through to the other transport when the
+// preferred URL is empty.
 func cloneURL(r model.ScanRecord) string {
+	if r.Transport == "ssh" {
+		if len(r.SSHUrl) > 0 {
+			return r.SSHUrl
+		}
+
+		return r.HTTPSUrl
+	}
 	if len(r.HTTPSUrl) > 0 {
 		return r.HTTPSUrl
 	}

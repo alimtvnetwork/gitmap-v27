@@ -91,7 +91,12 @@ func buildOneRecord(repo scanner.RepoInfo, opts BuildOptions) model.ScanRecord {
 		repo.AbsolutePath, resolveDefaultBranch(opts.DefaultBranch))
 	httpsURL := toHTTPS(remoteURL)
 	sshURL := toSSH(remoteURL)
-	cloneURL := selectCloneURL(httpsURL, sshURL, opts.Mode)
+	transport := classifyTransport(remoteURL)
+	// Per-repo transport drives clone-URL selection so an SSH-origin
+	// repo never gets a silent HTTPS clone command (which triggers
+	// browser auth on private remotes). The scan-wide --mode flag is
+	// the tiebreaker only when transport is "other".
+	cloneURL := selectCloneURLForTransport(httpsURL, sshURL, transport, opts.Mode)
 	repoName := extractRepoName(remoteURL)
 	noteText := buildNote(remoteURL, opts.DefaultNote)
 	instruction := buildInstruction(cloneURL, branch, repo.RelativePath)
@@ -106,8 +111,30 @@ func buildOneRecord(repo scanner.RepoInfo, opts BuildOptions) model.ScanRecord {
 		RelativePath: repo.RelativePath, AbsolutePath: repo.AbsolutePath,
 		CloneInstruction: instruction, Notes: noteText,
 		Depth:     repo.Depth,
-		Transport: classifyTransport(remoteURL),
+		Transport: transport,
 	}
+}
+
+// selectCloneURLForTransport picks the URL whose transport matches the
+// repo's identified origin transport. Falls through to the other URL
+// if the preferred one is empty, then to the user-mode default.
+func selectCloneURLForTransport(httpsURL, sshURL, transport, mode string) string {
+	switch transport {
+	case constants.ScanTransportSSH:
+		if len(sshURL) > 0 {
+			return sshURL
+		}
+
+		return httpsURL
+	case constants.ScanTransportHTTPS:
+		if len(httpsURL) > 0 {
+			return httpsURL
+		}
+
+		return sshURL
+	}
+
+	return selectCloneURL(httpsURL, sshURL, mode)
 }
 
 // toHTTPS converts a remote URL to HTTPS format.

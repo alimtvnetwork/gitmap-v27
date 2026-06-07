@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.19.0 — (2026-06-07) — Scan/clone honor per-repo identified transport (SSH stays SSH)
+
+- **Bugfix (fatal):** `gitmap scan` on a repo whose `origin` is SSH was emitting an **HTTPS** `git clone` command (and the background probe + clone scripts followed suit), which prompted `info: please complete authentication in your browser...` against private GitHub/GitLab remotes. Root cause: `mapper.buildOneRecord` selected the per-record clone URL via the scan-wide `--mode` flag (default `https`), and `formatter.cloneURL` unconditionally preferred `HTTPSUrl` even when the repo's identified `Transport` was `ssh`. The `Transport` field was correctly classified from `origin` but ignored by every downstream URL consumer.
+- **Fix:** New `selectCloneURLForTransport(httpsURL, sshURL, transport, mode)` in `gitmap/mapper/mapper.go` — if `transport == "ssh"` it returns the SSH URL (falling back to HTTPS only when SSH is empty); if `transport == "https"` it returns HTTPS; only `"other"` falls back to the user-mode default. `formatter.cloneURL` got the same treatment so generated `clone.ps1` entries and the terminal `command:` line both honor the repo's identified transport. Mixed-transport manifests now emit mixed clone commands as they should.
+- **Files:** `gitmap/mapper/mapper.go`, `gitmap/formatter/clonescript.go`, `gitmap/constants/constants.go` (`6.19.0`), `src/constants/index.ts` (`v6.19.0`), `README.md` (pin → v6.19.0), `CHANGELOG.md`.
+
 ## v6.18.0 — (2026-06-06) — Fix `make-all-*` owner extraction from URLs + richer provider-CLI errors
 
 - **Bugfix:** `gitmap make-all-public https://github.com/<owner>` (and `make-all-private` / `MAPUB` / `MAPRI`) previously extracted the **host** (`github.com`) as the owner because `firstPathSegment` started its scan at `parts[2]` — which is the host, not the first path segment. The provider CLI then failed with `gh repo list github.com → exit status 1`. Rewrote `firstPathSegment` in `gitmap/cmd/visibilityresolveowner.go` to strip the scheme (`https://`, `http://`, `ssh://`, `git://`), then drop the host, then return the first non-empty path component. Works for `https://github.com/alice`, `https://github.com/alice/`, `https://github.com/alice/repo`, `git@github.com:alice/repo.git`, and `github.com/alice` bare form.

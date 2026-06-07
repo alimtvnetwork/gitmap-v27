@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.26.0 — (2026-06-07) — `cfr` / `cfrp` honor the destination folder's existing origin transport
+
+- **Bugfix (closes the partial gap from v6.25.0 audit):** `gitmap clone-fix-repo` (`cfr`) and `clone-fix-repo-pub` (`cfrp`) passed the user's positional URL straight to `executeDirectClone` without consulting the destination folder's `.git/config remote.origin.url`. When the user pasted an HTTPS URL but the destination folder already existed with an SSH origin, the reclone silently downgraded transport to HTTPS and re-triggered the browser-auth prompt on private remotes — the same class as the v6.19→v6.22 chain, but in the URL-driven reclone path the earlier fixes did not cover.
+- **Root cause (one sentence):** `runCloneFixRepoPipeline` resolved `absPath` only to know which folder to `cd` into afterwards; it never read the existing origin to decide which transport the actual `git clone` should use.
+- **Fix:** new `preferExistingFolderTransport(url, absPath)` in `gitmap/cmd/clonefixrepofoldertransport.go`, called between `applyCloneFixRepoScheme` and `executeDirectClone`. When `absPath/.git` exists, it reads `gitutil.RemoteURL`, classifies SSH vs HTTPS via the new `isSSHURL` helper, and — only when the positional URL diverges from the existing origin — rewrites it with `ConvertURLToSSH` / `ConvertURLToHTTPS`, surfacing the swap with a one-line `MsgCFRFolderTransport` stderr notice. Fail-open: any detection or rewrite failure logs a `WarnCFRFolderTransport` line and keeps the user's URL so the clone still attempts (zero-swallow per memory rule).
+- **Tests (5 cases, package `cmd`):** `TestIsSSHURL` (7 boundary inputs), `TestPreferExistingFolderTransport_NoDotGit` (fresh-clone untouched), `TestRewriteToMatchExisting_SSHFromHTTPS`, `TestRewriteToMatchExisting_HTTPSFromSSH`. Could not run `go test` in this sandbox (`go: command not found`) — the harness build/lint will exercise them on push.
+- **Files:** `gitmap/cmd/clonefixrepo.go` (3-line wiring), `gitmap/cmd/clonefixrepofoldertransport.go` (new, 99 lines), `gitmap/cmd/clonefixrepofoldertransport_test.go` (new), `gitmap/constants/constants_clonefixrepo.go` (3 new message constants), `gitmap/constants/constants.go` (`6.26.0`), `src/constants/index.ts` (`v6.26.0`), `README.md` (pin → v6.26.0), `CHANGELOG.md`.
+- **Plan progress:** closes the `cfr`/`cfrp` half of plan 03 step 3. Step 2 (`Repo.IdentifiedTransport` persistence + migration 007) and the reclone-history log half of step 3 remain.
+
+
 ## v6.25.0 — (2026-06-07) — Reclone URL-picker audit (plan 03, step 1)
 
 - **Audit (no behavior change yet):** answers the user's question "which CFR / CFRP path honors SSH transport on reclone?" Drives the next two steps of plan `03-reclone-transport-and-vscode-open` (DB persistence + `cfr`/`cfrp` folder-aware picker swap + reclone history log).

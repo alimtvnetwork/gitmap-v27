@@ -53,6 +53,7 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 	url = applyCloneFixRepoScheme(url, useSSH, useHTTPS)
 
 	absPath := resolveCloneTargetFolder(url, folderName)
+	url = preferExistingFolderTransport(url, absPath)
 	requireOnline()
 	executeDirectClone(url, folderName, true, false, "", noVSCodeSync)
 

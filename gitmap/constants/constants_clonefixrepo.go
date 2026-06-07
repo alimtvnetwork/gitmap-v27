@@ -31,6 +31,16 @@ const (
 	ErrCloneFixRepoExecFmt     = "clone-fix-repo: ERROR could not run chained step: %v\n"
 	ErrCloneFixRepoNeedVersion = "clone-fix-repo: ERROR --require-version set but repo %q has no -vN suffix\n"
 	ErrCloneFixRepoRemoteParse = "unparseable remote URL"
+
+	// MsgCFRFolderTransport fires when cfr/cfrp rewrites the user's
+	// positional URL to match the destination folder's existing
+	// origin transport. Format: scheme, before, after.
+	MsgCFRFolderTransport = "clone-fix-repo: rewriting URL to %s to match existing folder origin: %s → %s\n"
+	// WarnCFRFolderTransport surfaces non-fatal transport-detection
+	// failures (existing origin unreadable, URL rewrite failed).
+	// Format: absPath, reason, err.
+	WarnCFRFolderTransport      = "clone-fix-repo: warning: %s: %s: %v\n"
+	WarnCFRFolderTransportNoErr = "clone-fix-repo: warning: %s: %s\n"
 )
 
 // Clone-fix-repo flags.

@@ -94,12 +94,33 @@ func parseSSHGenFlags(args []string) (name, keyPath, email string, force bool, h
 	confirmFlag := fs.Bool("confirm", false, "Require explicit confirmation")
 	fs.Parse(args)
 
-	path := *pathFlag
-	if len(path) == 0 {
-		path = defaultSSHKeyPath(*nameFlag)
+	name = *nameFlag
+	email = *emailFlag
+	// Accept positional args: an "@"-bearing token is treated as the
+	// email comment, anything else as the key name. Lets users write
+	// `gitmap ssh create me@x.com` or `gitmap ssh create mykey me@x.com`.
+	for _, a := range fs.Args() {
+		if strings.Contains(a, "@") && len(email) == 0 {
+			email = a
+
+			continue
+		}
+		if name == constants.DefaultSSHKeyName {
+			name = a
+		}
+	}
+	// `--name me@x.com` (or `-n me@x.com`) — treat as email too.
+	if strings.Contains(name, "@") && len(email) == 0 {
+		email = name
+		name = constants.DefaultSSHKeyName
 	}
 
-	return *nameFlag, path, *emailFlag, *forceFlag, *hostFlag, *confirmFlag
+	path := *pathFlag
+	if len(path) == 0 {
+		path = defaultSSHKeyPath(name)
+	}
+
+	return name, path, email, *forceFlag, *hostFlag, *confirmFlag
 }
 
 // handleExistingKey prompts the user when a key already exists.

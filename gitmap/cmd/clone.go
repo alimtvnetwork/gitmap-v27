@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/cloneconcurrency"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/clonenext"
+	
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/cloner"
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/desktop"
@@ -245,12 +245,13 @@ func repoNameFromURL(url string) string {
 func executeDirectClone(url, folderName string, ghDesktopFlag, noReplace bool, output string, noVSCodeSync bool) {
 	repoName := repoNameFromURL(url)
 	if len(folderName) == 0 {
-		parsed := clonenext.ParseRepoName(repoName)
-		if parsed.HasVersion {
-			folderName = parsed.BaseName
-		} else {
-			folderName = repoName
-		}
+		// Local folder mirrors the URL verbatim (including any `-vN`
+		// suffix). The previous behavior auto-flattened versioned
+		// URLs (codex-june-6-v1 → codex-june-6) which surprised users
+		// running `gitmap clone <url>` — they expect the folder to
+		// match what they typed. Version-bump flattening lives in
+		// `gitmap clone-next`, not here.
+		folderName = repoName
 	}
 
 	// Defensive guard: if the resolved folder name itself looks like a URL,

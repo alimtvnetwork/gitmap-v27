@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.21.0 — (2026-06-07) — Per-repo terminal block reports the SSH URL for SSH-origin repos
+
+- **Bugfix (last consumer in the v6.19/v6.20 chain):** the "Per-Repo Summary" block (rendered by `gitmap/render/adapters.go`'s `FromScanRecord` via `preferHTTPS`) still picked `HTTPSUrl` first regardless of the record's identified `Transport`. So even after v6.19.0 (mapper / formatter) and v6.20.0 (probe / cloner) honored SSH, the scan log's `from:` / `to:` / `command:` lines kept showing the HTTPS URL for SSH-origin repos — a confusing UX mismatch that hid the v6.20.0 fix from users reading the report.
+- **Fix:** replaced `preferHTTPS(https, ssh)` with `pickURLForTransport(transport, https, ssh)`. When `transport == "ssh"` and the SSH URL is non-empty it returns SSH; otherwise it falls back to the previous "HTTPS, else SSH" order so HTTPS-origin and "other"/unknown repos behave identically to v6.20.0. `FromScanRecord` now passes `r.Transport` in.
+- **Why this is the minimum correct change:** `FromScanRecord` is the sole adapter feeding `RenderRepoTermBlocks`, and its only caller is `formatter.printRepoSummaryBlocks` — fixing the picker fixes every "from / to / command" line everywhere without changing the block layout (no golden churn for HTTPS-origin fixtures; the existing SSH-only goldens already render `git@…` because their `HTTPSUrl` is empty, which the new path still handles).
+- **Files:** `gitmap/render/adapters.go`, `gitmap/constants/constants.go` (`6.21.0`), `src/constants/index.ts` (`v6.21.0`), `README.md` (pin → v6.21.0), `CHANGELOG.md`.
+
 ## v6.20.0 — (2026-06-07) — Probe + cloner honor identified SSH transport (kills browser-auth prompt)
 
 - **Bugfix (fatal, follow-up to v6.19.0):** v6.19.0 fixed the clone *command* shown in the scan report, but the background **probe** that runs at the end of `gitmap scan` (and the **cloner**'s `pickURL`) still hardcoded HTTPS-first, so SSH-origin repos kept triggering `info: please complete authentication in your browser...` against private GitHub/GitLab remotes. Root cause: `pickProbeURL` in `gitmap/cmd/probereport.go` and `pickURL` in `gitmap/cloner/summary.go` both returned `r.HTTPSUrl` unconditionally when present, ignoring the per-repo `Transport` already classified from `origin`.

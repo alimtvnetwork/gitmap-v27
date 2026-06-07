@@ -21,7 +21,7 @@ import (
 // When the instruction is empty we synthesize a minimal command
 // from the picked URL so the block is always populated.
 func FromScanRecord(idx int, r model.ScanRecord) RepoTermBlock {
-	original := preferHTTPS(r.HTTPSUrl, r.SSHUrl)
+	original := pickURLForTransport(r.Transport, r.HTTPSUrl, r.SSHUrl)
 	target := original
 	cmd := strings.TrimSpace(r.CloneInstruction)
 	if len(cmd) == 0 && len(target) > 0 {
@@ -49,11 +49,21 @@ func FromScanRecords(records []model.ScanRecord) []RepoTermBlock {
 	return out
 }
 
-// preferHTTPS returns the HTTPS URL when present, otherwise the SSH
-// URL. Mirrors formatter.cloneURL — duplicated here to avoid an
-// import cycle (formatter → render → formatter).
-func preferHTTPS(https, ssh string) string {
-	if len(strings.TrimSpace(https)) > 0 {
+// pickURLForTransport returns the URL whose transport matches the
+// repo's identified `origin` transport. SSH-origin repos surface as
+// SSH in the per-repo "from / to / command" block so the displayed
+// command matches what gitmap will actually invoke (fixes the
+// browser-auth-prompt class of bugs where an SSH repo was reported
+// as being cloned over HTTPS). Empty preferred URL falls through to
+// the other transport so the block is never blank when ANY URL is
+// known.
+func pickURLForTransport(transport, https, ssh string) string {
+	httpsTrim := strings.TrimSpace(https)
+	sshTrim := strings.TrimSpace(ssh)
+	if transport == "ssh" && len(sshTrim) > 0 {
+		return ssh
+	}
+	if len(httpsTrim) > 0 {
 		return https
 	}
 

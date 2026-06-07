@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.29.0 — (2026-06-07) — `gitmap pull` always logs; bare-pull hint when no targets
+
+- **`gitmap pull` is no longer silent.** Prints `→ gitmap pull (cwd: …)` at startup so users always see something, plus `↳ resolved N repo(s) to pull` after target resolution and `↳ cwd is a git repo — running plain git pull here` when short-circuiting.
+- **Actionable hint on bare `gitmap pull`** outside a git repo with no slug/group/--all/-A alias: lists the four valid invocation shapes instead of exiting with a stderr-only error that some terminals swallow.
+- **Scan → DB → cd already works:** confirmed `scan` upserts every discovered repo via `UpsertRepos` (scan.go:199) before `cd <name>` lookup hits `db.FindBySlug` (cdops.go:82). No code change needed for cd-after-scan.
+- **Files:** `gitmap/cmd/pull.go` (startup banner, `pullNoTargetsHint`), `gitmap/constants/constants.go` (`6.29.0`), `src/constants/index.ts` (`v6.29.0`), `CHANGELOG.md`.
+
 ## v6.28.0 — (2026-06-07) — Planning artifact: next-task prompt 20 (Plan 03 Step 2 re-queued)
 
 - **Planning bump (no Go code changes).** v6.27.0 stamped the Step 2 scoping prompt but did not execute the migration. v6.28.0 re-queues the same work with prompt `20-next-task.md` and refreshes the README pin.

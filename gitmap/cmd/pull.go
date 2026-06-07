@@ -31,6 +31,8 @@ type pullOptions struct {
 // runPull handles the "pull" subcommand.
 func runPull(args []string) {
 	checkHelp("pull", args)
+	cwd, _ := os.Getwd()
+	fmt.Printf("→ gitmap pull (cwd: %s)\n", cwd)
 	requireOnline()
 	// Transport flags (--ssh/--sh/--https/--ht) are only meaningful
 	// for the cwd short-circuit; when present we MUST take the cwd
@@ -45,10 +47,15 @@ func runPull(args []string) {
 		initVerboseLog()
 	}
 	if shouldPullCWD(opts) {
+		fmt.Println("  ↳ cwd is a git repo — running plain `git pull` here")
 		runPullCWD()
 		return
 	}
+	if pullNoTargetsHint(opts) {
+		return
+	}
 	records := resolvePullTargets(opts.slug, opts.group, opts.all)
+	fmt.Printf("  ↳ resolved %d repo(s) to pull\n", len(records))
 	if opts.onlyAvailable {
 		records = filterByAvailableUpdates(records)
 		if len(records) == 0 {
@@ -86,6 +93,29 @@ func shouldPullCWD(opts pullOptions) bool {
 	}
 	return isGitRepoCWD()
 }
+
+// pullNoTargetsHint prints an actionable message when the user runs
+// bare `gitmap pull` from a directory that is NOT a git repo and
+// without any targeting flag (slug/group/all/alias). Without this
+// the command would exit via resolvePullTargets' stderr error, which
+// is easy to miss in some terminals — leaving the user staring at a
+// blank prompt. Returns true when the hint was printed (caller stops).
+func pullNoTargetsHint(opts pullOptions) bool {
+	if opts.slug != "" || opts.group != "" || opts.all || HasAlias() {
+		return false
+	}
+	if isGitRepoCWD() {
+		return false
+	}
+	fmt.Println("  ↳ nothing to pull:")
+	fmt.Println("     • current directory is not a git repository")
+	fmt.Println("     • no <repo-name>, --group, --all, or -A alias provided")
+	fmt.Println("  Try one of:")
+	fmt.Println("     gitmap pull <repo-name>")
+	fmt.Println("     gitmap pull --all")
+	fmt.Println("     gitmap pull --group <group>")
+	fmt.Println("     cd <repo> && gitmap pull")
+	return true
 
 // isGitRepoCWD returns true when the cwd (or an ancestor) is inside a
 // git work tree. Uses `git rev-parse --is-inside-work-tree` so worktrees

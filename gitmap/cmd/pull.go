@@ -31,6 +31,8 @@ type pullOptions struct {
 // runPull handles the "pull" subcommand.
 func runPull(args []string) {
 	checkHelp("pull", args)
+	cwd, _ := os.Getwd()
+	fmt.Printf("→ gitmap pull (cwd: %s)\n", cwd)
 	requireOnline()
 	// Transport flags (--ssh/--sh/--https/--ht) are only meaningful
 	// for the cwd short-circuit; when present we MUST take the cwd
@@ -45,10 +47,15 @@ func runPull(args []string) {
 		initVerboseLog()
 	}
 	if shouldPullCWD(opts) {
+		fmt.Println("  ↳ cwd is a git repo — running plain `git pull` here")
 		runPullCWD()
 		return
 	}
+	if pullNoTargetsHint(opts) {
+		return
+	}
 	records := resolvePullTargets(opts.slug, opts.group, opts.all)
+	fmt.Printf("  ↳ resolved %d repo(s) to pull\n", len(records))
 	if opts.onlyAvailable {
 		records = filterByAvailableUpdates(records)
 		if len(records) == 0 {

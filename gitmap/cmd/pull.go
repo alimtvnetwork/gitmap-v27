@@ -94,6 +94,29 @@ func shouldPullCWD(opts pullOptions) bool {
 	return isGitRepoCWD()
 }
 
+// pullNoTargetsHint prints an actionable message when the user runs
+// bare `gitmap pull` from a directory that is NOT a git repo and
+// without any targeting flag (slug/group/all/alias). Without this
+// the command would exit via resolvePullTargets' stderr error, which
+// is easy to miss in some terminals — leaving the user staring at a
+// blank prompt. Returns true when the hint was printed (caller stops).
+func pullNoTargetsHint(opts pullOptions) bool {
+	if opts.slug != "" || opts.group != "" || opts.all || HasAlias() {
+		return false
+	}
+	if isGitRepoCWD() {
+		return false
+	}
+	fmt.Println("  ↳ nothing to pull:")
+	fmt.Println("     • current directory is not a git repository")
+	fmt.Println("     • no <repo-name>, --group, --all, or -A alias provided")
+	fmt.Println("  Try one of:")
+	fmt.Println("     gitmap pull <repo-name>")
+	fmt.Println("     gitmap pull --all")
+	fmt.Println("     gitmap pull --group <group>")
+	fmt.Println("     cd <repo> && gitmap pull")
+	return true
+
 // isGitRepoCWD returns true when the cwd (or an ancestor) is inside a
 // git work tree. Uses `git rev-parse --is-inside-work-tree` so worktrees
 // and submodules are honoured.

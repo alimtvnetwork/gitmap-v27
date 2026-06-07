@@ -4,7 +4,6 @@ package desktop
 import (
 	"fmt"
 	"os/exec"
-	"runtime"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
@@ -13,25 +12,19 @@ import (
 // AddRepos registers discovered repositories with GitHub Desktop.
 func AddRepos(records []model.ScanRecord) DesktopSummary {
 	summary := DesktopSummary{}
-	if isInstalled() {
-		return addAll(records, summary)
+	cli := ResolveCLI()
+	if cli != "" {
+		return addAll(records, summary, cli)
 	}
 	fmt.Println(constants.MsgDesktopNotFound)
 
 	return summary
 }
 
-// isInstalled checks if GitHub Desktop CLI is available.
-func isInstalled() bool {
-	_, err := exec.LookPath(constants.GitHubDesktopBin)
-
-	return err == nil
-}
-
 // addAll iterates records and adds each to GitHub Desktop.
-func addAll(records []model.ScanRecord, summary DesktopSummary) DesktopSummary {
+func addAll(records []model.ScanRecord, summary DesktopSummary, cli string) DesktopSummary {
 	for _, rec := range records {
-		err := addOne(rec.AbsolutePath)
+		err := addOne(rec.AbsolutePath, cli)
 		summary = updateSummary(summary, rec.RepoName, err)
 	}
 
@@ -39,20 +32,11 @@ func addAll(records []model.ScanRecord, summary DesktopSummary) DesktopSummary {
 }
 
 // addOne opens a single repo in GitHub Desktop.
-func addOne(repoPath string) error {
-	cmd := buildCommand(repoPath)
+func addOne(repoPath, cli string) error {
+	cmd := exec.Command(cli, repoPath)
 	_, err := cmd.Output()
 
 	return err
-}
-
-// buildCommand creates the platform-appropriate command.
-func buildCommand(repoPath string) *exec.Cmd {
-	if runtime.GOOS == constants.OSWindows {
-		return exec.Command(constants.GitHubDesktopBin, repoPath)
-	}
-
-	return exec.Command(constants.GitHubDesktopBin, repoPath)
 }
 
 // updateSummary tracks success/failure for each repo.

@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v25/gitmap/desktop"
 )
 
 // runGitHubDesktop registers the current working directory with GitHub

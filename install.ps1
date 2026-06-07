@@ -230,6 +230,24 @@ function Write-Err([string]$msg) {
     Write-Host "  $msg" -ForegroundColor Red
 }
 
+# Get-Sha256Hex computes a lowercase SHA256 hex digest. Uses Get-FileHash
+# when available (PowerShell 3.0+) and falls back to .NET SHA256 so the
+# installer works on stock Windows 7 / PowerShell 2.0 hosts where
+# Get-FileHash is not a recognized cmdlet.
+function Get-Sha256Hex([string]$path) {
+    if (Get-Command Get-FileHash -ErrorAction SilentlyContinue) {
+        return (Get-FileHash -Path $path -Algorithm SHA256).Hash.ToLower()
+    }
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $stream = [System.IO.File]::OpenRead($path)
+        try {
+            $bytes = $sha.ComputeHash($stream)
+        } finally { $stream.Dispose() }
+    } finally { $sha.Dispose() }
+    return -join ($bytes | ForEach-Object { $_.ToString('x2') })
+}
+
 function Set-InstallerExitCode([int]$exitCode) {
     $global:LASTEXITCODE = $exitCode
     [System.Environment]::ExitCode = $exitCode
@@ -530,7 +548,7 @@ function Get-Asset([string]$version, [string]$arch) {
     }
 
     $expectedHash = ($expectedLine -split '\s+')[0]
-    $actualHash = (Get-FileHash -Path $zipPath -Algorithm SHA256).Hash.ToLower()
+    $actualHash = Get-Sha256Hex $zipPath
 
     if ($actualHash -ne $expectedHash) {
         Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue

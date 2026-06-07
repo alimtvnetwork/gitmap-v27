@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.22.0 — (2026-06-07) — Direct-clone script honors per-repo SSH transport
+
+- **Bugfix (closes the v6.19/v6.20/v6.21 chain for the `.sh`/`.ps1` clone-all generators):** `buildDirectCloneEntries` in `gitmap/formatter/directclone.go` picked `r.HTTPSUrl` whenever the scan-wide `--mode` was `https` (the default), ignoring the per-repo identified `Transport`. So even after v6.21.0 made the terminal log show SSH commands for SSH-origin repos, the *generated* `clone.sh` / `clone.ps1` scripts users actually run later still contained HTTPS URLs — re-introducing the browser-auth prompt at clone time.
+- **Root cause (one sentence):** the direct-clone template builder treated the scan-wide `--mode` as the source of truth instead of the per-record `Transport` classified from `origin`.
+- **Fix:** new `pickDirectCloneURL(r, useSSH)` helper — if `r.Transport == "ssh"` and `SSHUrl` is non-empty it returns SSH; if `r.Transport == "https"` and `HTTPSUrl` is non-empty it returns HTTPS; only when `Transport` is `"other"` / unset does it fall back to the user's `useSSH` mode. Mirrors the v6.19/v6.20/v6.21 rule across the last remaining consumer.
+- **Files:** `gitmap/formatter/directclone.go`, `gitmap/constants/constants.go` (`6.22.0`), `src/constants/index.ts` (`v6.22.0`), `README.md` (pin → v6.22.0), `CHANGELOG.md`.
+
 ## v6.21.0 — (2026-06-07) — Per-repo terminal block reports the SSH URL for SSH-origin repos
 
 - **Bugfix (last consumer in the v6.19/v6.20 chain):** the "Per-Repo Summary" block (rendered by `gitmap/render/adapters.go`'s `FromScanRecord` via `preferHTTPS`) still picked `HTTPSUrl` first regardless of the record's identified `Transport`. So even after v6.19.0 (mapper / formatter) and v6.20.0 (probe / cloner) honored SSH, the scan log's `from:` / `to:` / `command:` lines kept showing the HTTPS URL for SSH-origin repos — a confusing UX mismatch that hid the v6.20.0 fix from users reading the report.

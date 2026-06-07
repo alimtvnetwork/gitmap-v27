@@ -32,13 +32,14 @@ func writeDirectCloneScriptTemplate(w io.Writer, records []model.ScanRecord, tem
 }
 
 // buildDirectCloneEntries builds direct clone template entries.
+// Per-repo Transport (identified from origin) wins over the scan-wide
+// useSSH default — an SSH-origin repo must not be silently rewritten
+// to HTTPS, otherwise private remotes trigger browser auth at clone
+// time. useSSH still acts as the fallback when Transport is unset.
 func buildDirectCloneEntries(records []model.ScanRecord, useSSH bool) []RepoEntry {
 	entries := make([]RepoEntry, 0, len(records))
 	for _, r := range records {
-		url := r.HTTPSUrl
-		if useSSH {
-			url = r.SSHUrl
-		}
+		url := pickDirectCloneURL(r, useSSH)
 		if len(url) == 0 {
 			url = cloneURL(r)
 		}
@@ -51,4 +52,20 @@ func buildDirectCloneEntries(records []model.ScanRecord, useSSH bool) []RepoEntr
 	}
 
 	return entries
+}
+
+// pickDirectCloneURL honors the per-repo identified transport first,
+// then falls back to the scan-wide useSSH preference.
+func pickDirectCloneURL(r model.ScanRecord, useSSH bool) string {
+	if r.Transport == "ssh" && len(r.SSHUrl) > 0 {
+		return r.SSHUrl
+	}
+	if r.Transport == "https" && len(r.HTTPSUrl) > 0 {
+		return r.HTTPSUrl
+	}
+	if useSSH {
+		return r.SSHUrl
+	}
+
+	return r.HTTPSUrl
 }

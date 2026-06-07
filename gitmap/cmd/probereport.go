@@ -71,8 +71,15 @@ func emitProbeJSON(entries []probeJSONEntry) {
 	}
 }
 
-// pickProbeURL prefers HTTPS (less auth friction in CI), falls back to SSH.
+// pickProbeURL honors the repo's identified Transport so an SSH-origin
+// repo is probed over SSH (avoids interactive browser-auth prompts on
+// private remotes). Falls back to the other transport only when the
+// preferred URL is empty; "other"/unknown still prefers HTTPS for CI
+// auth-friction reasons.
 func pickProbeURL(r model.ScanRecord) string {
+	if r.Transport == constants.ScanTransportSSH && r.SSHUrl != "" {
+		return r.SSHUrl
+	}
 	if r.HTTPSUrl != "" {
 		return r.HTTPSUrl
 	}

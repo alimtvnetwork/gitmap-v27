@@ -33,8 +33,15 @@ func recordTag(rec model.ScanRecord) string {
 	}
 }
 
-// pickURL selects the best available URL from a record.
+// pickURL selects the best available URL from a record, honoring the
+// repo's identified Transport: SSH-origin repos are cloned/pulled over
+// SSH (never silently fall back to HTTPS — that triggers browser auth
+// on private remotes). Falls through to the other transport only when
+// the preferred URL is empty.
 func pickURL(rec model.ScanRecord) string {
+	if rec.Transport == "ssh" && len(rec.SSHUrl) > 0 {
+		return rec.SSHUrl
+	}
 	if len(rec.HTTPSUrl) > 0 {
 		return rec.HTTPSUrl
 	}

@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.20.0 — (2026-06-07) — Probe + cloner honor identified SSH transport (kills browser-auth prompt)
+
+- **Bugfix (fatal, follow-up to v6.19.0):** v6.19.0 fixed the clone *command* shown in the scan report, but the background **probe** that runs at the end of `gitmap scan` (and the **cloner**'s `pickURL`) still hardcoded HTTPS-first, so SSH-origin repos kept triggering `info: please complete authentication in your browser...` against private GitHub/GitLab remotes. Root cause: `pickProbeURL` in `gitmap/cmd/probereport.go` and `pickURL` in `gitmap/cloner/summary.go` both returned `r.HTTPSUrl` unconditionally when present, ignoring the per-repo `Transport` already classified from `origin`.
+- **Fix:** Both pickers now check `Transport == "ssh"` first and return `SSHUrl` (falling back to HTTPS only when SSH is empty). HTTPS-origin and "other"/unknown repos still prefer HTTPS as before, preserving the CI auth-friction behavior the original comment called out.
+- **Files:** `gitmap/cmd/probereport.go`, `gitmap/cloner/summary.go`, `gitmap/constants/constants.go` (`6.20.0`), `src/constants/index.ts` (`v6.20.0`), `README.md` (pin → v6.20.0), `CHANGELOG.md`.
+
 ## v6.19.0 — (2026-06-07) — Scan/clone honor per-repo identified transport (SSH stays SSH)
 
 - **Bugfix (fatal):** `gitmap scan` on a repo whose `origin` is SSH was emitting an **HTTPS** `git clone` command (and the background probe + clone scripts followed suit), which prompted `info: please complete authentication in your browser...` against private GitHub/GitLab remotes. Root cause: `mapper.buildOneRecord` selected the per-record clone URL via the scan-wide `--mode` flag (default `https`), and `formatter.cloneURL` unconditionally preferred `HTTPSUrl` even when the repo's identified `Transport` was `ssh`. The `Transport` field was correctly classified from `origin` but ignored by every downstream URL consumer.

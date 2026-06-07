@@ -530,7 +530,7 @@ function Get-Asset([string]$version, [string]$arch) {
     }
 
     $expectedHash = ($expectedLine -split '\s+')[0]
-    $actualHash = (Get-FileHash -Path $zipPath -Algorithm SHA256).Hash.ToLower()
+    $actualHash = Get-Sha256Hex $zipPath
 
     if ($actualHash -ne $expectedHash) {
         Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue

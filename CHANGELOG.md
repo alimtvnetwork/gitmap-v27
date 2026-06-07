@@ -1,5 +1,13 @@
 # Changelog
 
+## v6.23.0 — (2026-06-07) — Per-repo terminal block shows transport audit fields
+
+- **Bugfix / spec closure:** the standardized per-repo terminal block still rendered only `branch`, `from`, `to`, and `command`, so scan output could not explicitly show the repo's identified `transport`, `httpsUrl`, and `sshUrl` even though `model.ScanRecord` already carried those fields.
+- **Root cause (one sentence):** `render.FromScanRecord` mapped only branch/from/to/command into `RepoTermBlock`, so the shared renderer had no transport metadata available to print the explicit audit lines required by `.lovable/spec/commands/03-respect-identified-transport.md`.
+- **Fix:** extended `render.RepoTermBlock` with `Transport`, `HTTPSUrl`, and `SSHUrl`; `FromScanRecord` now passes the scan record fields through, while clone/probe-style URL-only blocks infer transport from the displayed URL and show `(unknown)` for the missing alternate URL.
+- **Verification:** focused Go tests could not run in this sandbox because `go` is not installed (`go: command not found`); checked-in golden fixtures were updated to the deterministic new 8-line block shape.
+- **Files:** `gitmap/render/repotermblock.go`, `gitmap/render/adapters.go`, `gitmap/render/repotermblock_test.go`, `gitmap/cmd/testdata/clonetermblock_*.golden`, `gitmap/cmd/testdata/clonestream_blocks_3rows.stdout.golden`, `gitmap/constants/constants.go` (`6.23.0`), `src/constants/index.ts` (`v6.23.0`), `README.md` (pin → v6.23.0), `CHANGELOG.md`.
+
 ## v6.22.0 — (2026-06-07) — Direct-clone script honors per-repo SSH transport
 
 - **Bugfix (closes the v6.19/v6.20/v6.21 chain for the `.sh`/`.ps1` clone-all generators):** `buildDirectCloneEntries` in `gitmap/formatter/directclone.go` picked `r.HTTPSUrl` whenever the scan-wide `--mode` was `https` (the default), ignoring the per-repo identified `Transport`. So even after v6.21.0 made the terminal log show SSH commands for SSH-origin repos, the *generated* `clone.sh` / `clone.ps1` scripts users actually run later still contained HTTPS URLs — re-introducing the browser-auth prompt at clone time.

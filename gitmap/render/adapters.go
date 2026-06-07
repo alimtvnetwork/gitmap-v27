@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
 )
 
@@ -33,6 +34,9 @@ func FromScanRecord(idx int, r model.ScanRecord) RepoTermBlock {
 		Name:         r.RepoName,
 		Branch:       r.Branch,
 		BranchSource: r.BranchSource,
+		Transport:    r.Transport,
+		HTTPSUrl:     r.HTTPSUrl,
+		SSHUrl:       r.SSHUrl,
 		OriginalURL:  original,
 		TargetURL:    target,
 		CloneCommand: cmd,
@@ -60,7 +64,7 @@ func FromScanRecords(records []model.ScanRecord) []RepoTermBlock {
 func pickURLForTransport(transport, https, ssh string) string {
 	httpsTrim := strings.TrimSpace(https)
 	sshTrim := strings.TrimSpace(ssh)
-	if transport == "ssh" && len(sshTrim) > 0 {
+	if transport == constants.ScanTransportSSH && len(sshTrim) > 0 {
 		return ssh
 	}
 	if len(httpsTrim) > 0 {

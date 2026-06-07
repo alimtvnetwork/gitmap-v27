@@ -11,6 +11,9 @@
 //
 //	N. <repo-name>
 //	   branch:    <branch> (<source>)
+//	   transport: <ssh|https|other>
+//	   https:     <httpsURL>
+//	   ssh:       <sshURL>
 //	   from:      <originalURL>
 //	   to:        <targetURL>
 //	   command:   <cloneCommand>
@@ -25,6 +28,8 @@ import (
 	"fmt"
 	"io"
 	"strings"
+
+	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 )
 
 // RepoTermBlock is the input to RenderRepoTermBlock. All fields are
@@ -40,6 +45,12 @@ type RepoTermBlock struct {
 	// BranchSource describes how the branch was chosen: "HEAD",
 	// "config", "default", "manifest", "detached", "unknown".
 	BranchSource string
+	// Transport is the discovered origin bucket: "ssh", "https", or "other".
+	Transport string
+	// HTTPSUrl is the HTTPS clone URL when known.
+	HTTPSUrl string
+	// SSHUrl is the SSH clone URL when known.
+	SSHUrl string
 	// OriginalURL is the URL as discovered (HTTPS preferred,
 	// SSH fallback) or as supplied by the user.
 	OriginalURL string
@@ -92,11 +103,56 @@ func RenderRepoTermBlocks(w io.Writer, blocks []RepoTermBlock) error {
 func buildBlockBody(b RepoTermBlock) string {
 	var sb strings.Builder
 	fmt.Fprintf(&sb, "     branch:    %s\n", formatBranch(b.Branch, b.BranchSource))
+	fmt.Fprintf(&sb, "     transport: %s\n", fallback(blockTransport(b)))
+	fmt.Fprintf(&sb, "     https:     %s\n", fallback(blockHTTPSUrl(b)))
+	fmt.Fprintf(&sb, "     ssh:       %s\n", fallback(blockSSHUrl(b)))
 	fmt.Fprintf(&sb, "     from:      %s\n", fallback(b.OriginalURL))
 	fmt.Fprintf(&sb, "     to:        %s\n", fallback(b.TargetURL))
 	fmt.Fprintf(&sb, "     command:   %s\n", fallback(b.CloneCommand))
 
 	return sb.String()
+}
+
+func blockTransport(b RepoTermBlock) string {
+	if len(strings.TrimSpace(b.Transport)) > 0 {
+		return b.Transport
+	}
+
+	return inferTransport(b.OriginalURL)
+}
+
+func blockHTTPSUrl(b RepoTermBlock) string {
+	if len(strings.TrimSpace(b.HTTPSUrl)) > 0 {
+		return b.HTTPSUrl
+	}
+	if inferTransport(b.OriginalURL) == constants.ScanTransportHTTPS {
+		return b.OriginalURL
+	}
+
+	return ""
+}
+
+func blockSSHUrl(b RepoTermBlock) string {
+	if len(strings.TrimSpace(b.SSHUrl)) > 0 {
+		return b.SSHUrl
+	}
+	if inferTransport(b.OriginalURL) == constants.ScanTransportSSH {
+		return b.OriginalURL
+	}
+
+	return ""
+}
+
+func inferTransport(url string) string {
+	trimmed := strings.TrimSpace(strings.ToLower(url))
+	if strings.HasPrefix(trimmed, constants.PrefixSSH) || strings.HasPrefix(trimmed, constants.CommitInUrlPrefixSsh) {
+		return constants.ScanTransportSSH
+	}
+	if strings.HasPrefix(trimmed, constants.PrefixHTTPS) {
+		return constants.ScanTransportHTTPS
+	}
+
+	return constants.ScanTransportOther
 }
 
 // formatBranch renders "<branch> (<source>)" or just "<branch>" when

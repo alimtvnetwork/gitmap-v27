@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/cloneconcurrency"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/clonenext"
+	
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/cloner"
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/desktop"

@@ -1,5 +1,16 @@
 # Changelog
 
+## v6.25.0 — (2026-06-07) — Reclone URL-picker audit (plan 03, step 1)
+
+- **Audit (no behavior change yet):** answers the user's question "which CFR / CFRP path honors SSH transport on reclone?" Drives the next two steps of plan `03-reclone-transport-and-vscode-open` (DB persistence + `cfr`/`cfrp` folder-aware picker swap + reclone history log).
+- **Findings:**
+  - `repo-reclone` / `rc` (folder-or-cwd shape via `gitmap/cmd/reporeclone.go:106`) — HONORS transport; reads `git config --get remote.origin.url` and reclones the literal origin URL, so SSH-origin folders never silently downgrade to HTTPS.
+  - `clone-now` / `reclone` (manifest shape via `gitmap/cmd/clonenow.go:82`) — HONORS transport per-record through the shared `cloner.pickURL` (fixed in v6.20.0).
+  - `clone` direct-URL (`gitmap/cmd/clone.go:337`) — HONORS trivially; clones the literal URL.
+  - `cfr` / `cfrp` (`gitmap/cmd/clonefixrepo.go:33,39,46`) — **PARTIAL.** Honors only the user-supplied URL + `--ssh`/`--https` flags; does NOT consult the destination folder's existing `remote.origin.url` before issuing the clone. Plan 03 step 3 will close this.
+- **Files:** `.lovable/audits/2026-06-07-reclone-pickers.md` (new), `.lovable/plans/subtasks/03-reclone-transport-and-vscode-open/01-audit-reclone-pickers.md` (status → completed), `gitmap/constants/constants.go` (`6.25.0`), `src/constants/index.ts` (`v6.25.0`), `README.md` (pin → v6.25.0), `CHANGELOG.md`.
+
+
 ## v6.24.0 — (2026-06-07) — `desktop-sync` finds GitHub Desktop without PATH config
 
 - **Bugfix (silent failure):** `gitmap desktop-sync` (and `gitmap github-desktop` / `gd`) returned to the shell prompt with no visible action on Windows even when GitHub Desktop was installed. Root cause: every call site used `exec.LookPath("github")`, but the Desktop installer drops its `github.bat` shim under `%LOCALAPPDATA%\GitHubDesktop\bin\` which is **not** on `PATH` by default — so the lookup silently failed and only printed `GitHub Desktop CLI not found` to stderr (often invisible in PowerShell paste-back), making the command look like a no-op.

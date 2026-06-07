@@ -44,9 +44,25 @@ func runSSHCat(args []string) {
 			err = nil
 		}
 	}
+	// Fallback: key not in DB — check disk at the conventional path.
+	// Covers keys created outside gitmap (raw `ssh-keygen`, OS imports).
 	if err != nil {
+		diskPath := defaultSSHKeyPath(name)
+		if keyExistsOnDisk(diskPath) {
+			pubBytes, rerr := os.ReadFile(diskPath + ".pub")
+			if rerr == nil {
+				pub := strings.TrimSpace(string(pubBytes))
+				fp := readFingerprint(diskPath)
+				upsertExistingKeyToDB(db, name, diskPath, string(pubBytes), fp)
+				fmt.Println(pub)
+				copyPubKeyAndAnnounce(pub)
+
+				return
+			}
+		}
 		fmt.Fprintf(os.Stderr, constants.ErrSSHNotFound, name)
 		printAvailableKeys(db)
+		fmt.Fprint(os.Stderr, "\n  Hint: run `gitmap ssh` to generate a new SSH key for GitHub.\n")
 		os.Exit(1)
 	}
 

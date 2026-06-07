@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v25/gitmap/desktop"
 	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
 )
 

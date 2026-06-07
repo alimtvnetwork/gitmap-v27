@@ -1,7 +1,7 @@
 ---
 Slug: audit-reclone-pickers
 Parent: 03-reclone-transport-and-vscode-open
-Status: pending
+Status: completed
 Created: 2026-06-07
 ---
 

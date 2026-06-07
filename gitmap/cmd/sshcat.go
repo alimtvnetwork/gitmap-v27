@@ -17,6 +17,16 @@ func runSSHCat(args []string) {
 	fs.StringVar(nameFlag, "n", constants.DefaultSSHKeyName, "Key name (short)")
 	fs.Parse(args)
 
+	name := *nameFlag
+	// Allow positional: `gitmap ssh view mykey`.
+	for _, a := range fs.Args() {
+		if !strings.HasPrefix(a, "-") {
+			name = a
+
+			break
+		}
+	}
+
 	db, err := openDB()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrSSHQuery, err)
@@ -24,9 +34,18 @@ func runSSHCat(args []string) {
 	}
 	defer db.Close()
 
-	key, err := db.FindSSHKeyByName(*nameFlag)
+	key, err := db.FindSSHKeyByName(name)
+	// Fallback: if the default name was requested and missing, and there
+	// is exactly one stored key, use that one.
+	if err != nil && name == constants.DefaultSSHKeyName {
+		keys, lerr := db.ListSSHKeys()
+		if lerr == nil && len(keys) == 1 {
+			key = keys[0]
+			err = nil
+		}
+	}
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrSSHNotFound, *nameFlag)
+		fmt.Fprintf(os.Stderr, constants.ErrSSHNotFound, name)
 		printAvailableKeys(db)
 		os.Exit(1)
 	}

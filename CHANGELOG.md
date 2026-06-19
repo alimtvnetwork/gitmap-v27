@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.35.1 — (2026-06-19) — `gitmap rm` adds repo removal + parity-test alias fix
+
+- **New `gitmap rm <name-or-path> [...]`** removes one or more repos from the gitmap DB. Each target is resolved as a path first (`filepath.Abs`), then falls back to slug. On-disk files are NOT touched. Aliases: `gitmap remove`. Files: `gitmap/cmd/rm.go` (new), `gitmap/store/repo.go` (`DeleteByPath` / `DeleteBySlug`), `gitmap/constants/constants_store.go` (`SQLDeleteRepoByPath` / `SQLDeleteRepoBySlug`), `gitmap/constants/constants_cli.go` (`CmdRm` / `CmdRmAlias`), `gitmap/cmd/rootutility.go` (dispatch wiring), `gitmap/constants/cmd_constants_test.go` (registry parity).
+- **Parity-test fix.** Removed the `// gitmap:cmd skip` marker from `CmdRmAlias` so the AST-vs-registry parity guard in `TestTopLevelCmdRegistryMatchesAST` stays balanced — the registry already lists `CmdRmAlias`, so leaving it skip-marked would have produced an "extra in registry" failure.
+- **Files:** `gitmap/cmd/rm.go`, `gitmap/store/repo.go`, `gitmap/constants/constants_store.go`, `gitmap/constants/constants_cli.go`, `gitmap/cmd/rootutility.go`, `gitmap/constants/cmd_constants_test.go`, `gitmap/constants/constants.go` (`6.35.1`), `src/constants/index.ts` (`v6.35.1`), `README.md` (pin → v6.35.1), `CHANGELOG.md`.
+
 ## v6.35.0 — (2026-06-19) — chrome-profile commands gain help text + root help discoverability
 
 - **`gitmap help chrome` now resolves.** Added a dedicated `Chrome Profile (copy / export / import / list / delete)` group under the **PROJECTS & DATA** super-category in `gitmap help`, wired via new `HelpGroupChromeProf` constant and `printGroupChromeProfile()` in `gitmap/cmd/rootusage.go`. The same group is registered in `allHelpRows()` (`gitmap/cmd/rootusagefilter.go`) so `gitmap help --filter chrome` and the fuzzy "did you mean" matcher surface every cpc/cpe/cpi/cpl/cpd line instead of returning `No matches`.

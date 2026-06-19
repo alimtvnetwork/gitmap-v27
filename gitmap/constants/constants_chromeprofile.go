@@ -28,7 +28,7 @@ const (
 
 // Chrome profile messages and errors.
 const (
-	MsgChromeProfileCopyStart   = "chrome-profile-copy: %s → %s\n"
+	MsgChromeProfileCopyStart   = "chrome-profile-copy: %s → %s\n  source: %s\n  destination: %s\n"
 	MsgChromeProfileCopyDone    = "chrome-profile-copy: done (%d files, %s)\n"
 	MsgChromeProfileExportOk    = "chrome-profile-export: wrote %s (%d bytes)\n"
 	MsgChromeProfileExportCSV   = "chrome-profile-export: csv  %s (%d bytes)\n"
@@ -44,6 +44,7 @@ const (
 	MsgChromeProfileListDBHdr   = "Tracked in gitmap DB:\n"
 	MsgChromeProfileListDBRow   = "  - %-30s  exports=%d  last=%s\n"
 	MsgChromeProfileSkipChrome  = "  Hint: close Chrome before copying — open sessions may corrupt the destination.\n"
+	WarnChromeProfileSkipLock   = "chrome-profile-copy: WARN skipped volatile Chrome lock file\n  source: %s\n  destination: %s\n  reason: %v\n"
 	MsgChromeProfileDeleteOk    = "chrome-profile-delete: removed profile %q (%d artifacts)\n"
 	MsgChromeProfileDeleteRm    = "  rm %s\n"
 	MsgChromeProfileDeleteAbort = "chrome-profile-delete: aborted — re-run with --yes to confirm\n"
@@ -53,11 +54,21 @@ const (
 	ErrChromeProfileUsageImport = "chrome-profile-import: ERROR <file> is required\n  usage: gitmap chrome-profile-import <file.json|file.csv> [dst-profile]\n"
 	ErrChromeProfileUsageDelete = "chrome-profile-delete: ERROR <name> is required\n  usage: gitmap chrome-profile-delete <name> [--yes]\n"
 	ErrChromeProfileSrcMissing  = "chrome-profile-copy: ERROR source profile %q not found at %s\n"
-	ErrChromeProfileCopyFailed  = "chrome-profile-copy: ERROR copy failed: %v\n"
+	ErrChromeProfileCopyFailed  = "chrome-profile-copy: ERROR copy failed\n  source profile: %s\n  destination profile: %s\n  source path: %s\n  destination path: %s\n  failed entry: %s\n  operation: %s\n  cause: %v\n  hint: close Chrome completely, then retry. If it still fails, check the listed file permissions.\n"
 	ErrChromeProfileExportFail  = "chrome-profile-export: ERROR %v\n"
 	ErrChromeProfileImportFail  = "chrome-profile-import: ERROR %v\n"
 	ErrChromeProfileDeleteFail  = "chrome-profile-delete: ERROR %v\n"
 	ErrChromeProfileNotInDB     = "chrome-profile-delete: ERROR profile %q not found in gitmap DB\n"
+)
+
+// Chrome profile copy operation labels.
+const (
+	ChromeProfileCopyOpMkdir  = "create destination directory"
+	ChromeProfileCopyOpStat   = "inspect source path"
+	ChromeProfileCopyOpRead   = "read source file"
+	ChromeProfileCopyOpWrite  = "write destination file"
+	ChromeProfileCopyOpList   = "list source directory"
+	ChromeProfileLockFileName = "LOCK"
 )
 
 // HelpChromeProfileDelete extends the help block (kept beside its peers).

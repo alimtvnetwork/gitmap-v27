@@ -11,6 +11,7 @@ package cmd
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -27,24 +28,24 @@ func runChromeProfileCopy(args []string) {
 		fmt.Fprint(os.Stderr, constants.ErrChromeProfileUsageCopy)
 		os.Exit(constants.ExitChromeProfileUsage)
 	}
-	srcPath, ok := resolveChromeProfileDir(args[0])
-	dstPath := chromeProfilePath(args[1])
+	srcProfile, ok := resolveChromeProfile(args[0])
+	dstProfile := chromeProfileDestination(args[1])
 	if !ok {
-		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileSrcMissing, args[0], srcPath)
+		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileSrcMissing, args[0], srcProfile.Path)
 		printAvailableChromeProfilesWithDisplay()
 		os.Exit(constants.ExitChromeProfileNotFound)
 	}
 	fmt.Fprint(os.Stderr, constants.MsgChromeProfileSkipChrome)
-	fmt.Printf(constants.MsgChromeProfileCopyStart, srcPath, dstPath)
+	fmt.Printf(constants.MsgChromeProfileCopyStart, chromeProfileSummary(srcProfile), chromeProfileSummary(dstProfile), srcProfile.Path, dstProfile.Path)
 	start := time.Now()
-	files, err := copyChromeProfile(srcPath, dstPath)
+	files, err := copyChromeProfile(srcProfile.Path, dstProfile.Path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileCopyFailed, err)
+		printChromeProfileCopyError(srcProfile, dstProfile, err)
 		os.Exit(constants.ExitChromeProfileCopyFailed)
 	}
 	fmt.Printf(constants.MsgChromeProfileCopyDone, files, time.Since(start).Round(time.Millisecond))
-	rec := emitChromeSnapshots(dstPath, args[1])
-	persistChromeProfile(args[1], dstPath, rec)
+	rec := emitChromeSnapshots(dstProfile.Path, args[1])
+	persistChromeProfile(args[1], dstProfile.Path, rec)
 }
 
 // emitChromeSnapshots writes the JSON + CSV companions for a profile

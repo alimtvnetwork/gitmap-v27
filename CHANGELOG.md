@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.36.0 — (2026-06-19) — `gitmap rm` repo-removal command
+
+- **New top-level `gitmap rm <name-or-path> [<name-or-path> ...]`** (alias: `gitmap remove`) removes one or more repositories from the gitmap database. Each target is resolved as an absolute path first (`filepath.Abs`); on no match it falls back to slug/name. On-disk files are NOT touched — this only untracks the repo in the DB. Missing targets emit a per-target warning but never abort the batch; exit code is `1` if any target was not found, `0` only when every target was removed.
+- **Implementation:** new `gitmap/cmd/rm.go` with `runRm` + `removeOne`; new `DeleteByPath` / `DeleteBySlug` methods on `*store.DB` in `gitmap/store/repo.go`; new `SQLDeleteRepoByPath` / `SQLDeleteRepoBySlug` constants in `gitmap/constants/constants_store.go`; new `CmdRm` / `CmdRmAlias` constants under the existing top-level block in `gitmap/constants/constants_cli.go`; dispatch wired in `gitmap/cmd/rootutility.go`; AST-vs-registry parity guard updated in `gitmap/constants/cmd_constants_test.go`.
+- **Files:** `gitmap/cmd/rm.go`, `gitmap/store/repo.go`, `gitmap/constants/constants_store.go`, `gitmap/constants/constants_cli.go`, `gitmap/cmd/rootutility.go`, `gitmap/constants/cmd_constants_test.go`, `gitmap/constants/constants.go` (`6.36.0`), `src/constants/index.ts` (`v6.36.0`), `README.md` (pin → v6.36.0), `CHANGELOG.md`.
+
 ## v6.35.1 — (2026-06-19) — `gitmap rm` adds repo removal + parity-test alias fix
 
 - **New `gitmap rm <name-or-path> [...]`** removes one or more repos from the gitmap DB. Each target is resolved as a path first (`filepath.Abs`), then falls back to slug. On-disk files are NOT touched. Aliases: `gitmap remove`. Files: `gitmap/cmd/rm.go` (new), `gitmap/store/repo.go` (`DeleteByPath` / `DeleteBySlug`), `gitmap/constants/constants_store.go` (`SQLDeleteRepoByPath` / `SQLDeleteRepoBySlug`), `gitmap/constants/constants_cli.go` (`CmdRm` / `CmdRmAlias`), `gitmap/cmd/rootutility.go` (dispatch wiring), `gitmap/constants/cmd_constants_test.go` (registry parity).

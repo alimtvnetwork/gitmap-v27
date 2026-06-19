@@ -14,6 +14,8 @@ const (
 	CmdChromeProfileImportAlias = "cpi"
 	CmdChromeProfileList        = "chrome-profile-list"
 	CmdChromeProfileListAlias   = "cpl"
+	CmdChromeProfileDelete      = "chrome-profile-delete"
+	CmdChromeProfileDeleteAlias = "cpd"
 )
 
 // Chrome profile help-line entries surfaced by `gitmap help`.
@@ -26,27 +28,40 @@ const (
 
 // Chrome profile messages and errors.
 const (
-	MsgChromeProfileCopyStart  = "chrome-profile-copy: %s → %s\n"
-	MsgChromeProfileCopyDone   = "chrome-profile-copy: done (%d files, %s)\n"
-	MsgChromeProfileExportOk   = "chrome-profile-export: wrote %s (%d bytes)\n"
-	MsgChromeProfileExportCSV  = "chrome-profile-export: csv  %s (%d bytes)\n"
-	MsgChromeProfileDBSynced   = "chrome-profile: db synced (%s)\n"
-	MsgChromeProfileDBWarn     = "  ⚠ chrome-profile: db sync failed: %v\n"
-	MsgChromeProfileImportOk   = "chrome-profile-import: imported %s into profile %q\n"
-	MsgChromeProfileListEmpty  = "chrome-profile-list: no profiles found at %s\n"
-	MsgChromeProfileListHdr    = "Chrome profiles (%s):\n"
-	MsgChromeProfileListDBHdr  = "Tracked in gitmap DB:\n"
-	MsgChromeProfileListDBRow  = "  - %-30s  exports=%d  last=%s\n"
-	MsgChromeProfileSkipChrome = "  Hint: close Chrome before copying — open sessions may corrupt the destination.\n"
+	MsgChromeProfileCopyStart   = "chrome-profile-copy: %s → %s\n"
+	MsgChromeProfileCopyDone    = "chrome-profile-copy: done (%d files, %s)\n"
+	MsgChromeProfileExportOk    = "chrome-profile-export: wrote %s (%d bytes)\n"
+	MsgChromeProfileExportCSV   = "chrome-profile-export: csv  %s (%d bytes)\n"
+	MsgChromeProfileArtifactsHd = "Artifacts:\n"
+	MsgChromeProfileArtifactRow = "  %-4s  %s\n"
+	MsgChromeProfileArtifactNA  = "(skipped)"
+	MsgChromeProfileDBSynced    = "chrome-profile: db synced (%s)\n"
+	MsgChromeProfileDBWarn      = "  ⚠ chrome-profile: db sync failed: %v\n"
+	MsgChromeProfileImportOk    = "chrome-profile-import: imported %s into profile %q\n"
+	MsgChromeProfileImportCSV   = "chrome-profile-import: csv source detected — restoring extension IDs + known preferences (bookmarks omitted)\n"
+	MsgChromeProfileListEmpty   = "chrome-profile-list: no profiles found at %s\n"
+	MsgChromeProfileListHdr     = "Chrome profiles (%s):\n"
+	MsgChromeProfileListDBHdr   = "Tracked in gitmap DB:\n"
+	MsgChromeProfileListDBRow   = "  - %-30s  exports=%d  last=%s\n"
+	MsgChromeProfileSkipChrome  = "  Hint: close Chrome before copying — open sessions may corrupt the destination.\n"
+	MsgChromeProfileDeleteOk    = "chrome-profile-delete: removed profile %q (%d artifacts)\n"
+	MsgChromeProfileDeleteRm    = "  rm %s\n"
+	MsgChromeProfileDeleteAbort = "chrome-profile-delete: aborted — re-run with --yes to confirm\n"
 
 	ErrChromeProfileUsageCopy   = "chrome-profile-copy: ERROR <src> and <dst> are required\n  usage: gitmap chrome-profile-copy <src-profile> <dst-profile>\n"
 	ErrChromeProfileUsageExport = "chrome-profile-export: ERROR <name> is required\n  usage: gitmap chrome-profile-export <name> [out.json]\n"
-	ErrChromeProfileUsageImport = "chrome-profile-import: ERROR <file> is required\n  usage: gitmap chrome-profile-import <file.json> [dst-profile]\n"
+	ErrChromeProfileUsageImport = "chrome-profile-import: ERROR <file> is required\n  usage: gitmap chrome-profile-import <file.json|file.csv> [dst-profile]\n"
+	ErrChromeProfileUsageDelete = "chrome-profile-delete: ERROR <name> is required\n  usage: gitmap chrome-profile-delete <name> [--yes]\n"
 	ErrChromeProfileSrcMissing  = "chrome-profile-copy: ERROR source profile %q not found at %s\n"
 	ErrChromeProfileCopyFailed  = "chrome-profile-copy: ERROR copy failed: %v\n"
 	ErrChromeProfileExportFail  = "chrome-profile-export: ERROR %v\n"
 	ErrChromeProfileImportFail  = "chrome-profile-import: ERROR %v\n"
+	ErrChromeProfileDeleteFail  = "chrome-profile-delete: ERROR %v\n"
+	ErrChromeProfileNotInDB     = "chrome-profile-delete: ERROR profile %q not found in gitmap DB\n"
 )
+
+// HelpChromeProfileDelete extends the help block (kept beside its peers).
+const HelpChromeProfileDelete = "  chrome-profile-delete (cpd) <name> [--yes] Remove a profile + its stored artifacts from the gitmap DB"
 
 // Chrome User Data subpaths copied by cpc. Excluded by design:
 // Cookies, Login Data, History, Cache, GPUCache, sync tokens.

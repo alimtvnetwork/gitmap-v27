@@ -118,8 +118,6 @@ func pullNoTargetsHint(opts pullOptions) bool {
 	return true
 }
 
-
-
 // isGitRepoCWD returns true when the cwd (or an ancestor) is inside a
 // git work tree. Uses `git rev-parse --is-inside-work-tree` so worktrees
 // and submodules are honoured.

@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.45.0 — (2026-06-19) — Chrome profile copy: drop flaky platform-dependent destination-parent test
+
+- **Removed** `TestCopyEntryReturnsWrappedErrorOnDestinationParentFile` from `gitmap/cmd/chromeprofile_copy_test.go`. The Windows runner's `os.MkdirAll` semantics over a file-as-parent did not consistently surface an `Op = Mkdir` wrapped error, causing the `windows-latest / go build + test` job to fail on the v6.44.0 release.
+- **Coverage preserved.** The unreadable-non-`LOCK` wrapped-error contract is fully exercised by `TestHandleChromeFileOpenErrorPropagatesNonLockErrors`, which calls the helper directly and is platform-independent. A short comment in the test file points future readers to that assertion.
+- **Files:** `gitmap/cmd/chromeprofile_copy_test.go`, `gitmap/constants/constants.go` (`6.45.0`), `src/constants/index.ts` (`v6.45.0`), `README.md` (pin → v6.45.0), `CHANGELOG.md`.
+
 ## v6.44.0 — (2026-06-19) — Chrome profile copy: edge-case coverage + unit tests
 
 - **New tests — `chromeprofile_copy_test.go`.** Covers: missing source entries are silently skipped, regular file copy preserves bytes and auto-creates nested destination dirs, recursive directory tree counts every leaf file, empty source directory still materializes the destination, `copyChromeProfile` only copies present curated entries, `handleChromeFileOpenError` and `handleChromeFileCopyError` swallow Chrome runtime `LOCK` files with a warn banner but propagate any other error wrapped as `*chromeProfileCopyError` with `Op = read/write` and the original cause intact, `isChromeVolatileLockFile` matches only the exact `LOCK` basename (rejects `LOCK.txt`, `prefix-LOCK`, `locked`, `LOCK/child`), `unwrapChromeProfileCopyError` falls back to the `(unknown)` shape for plain errors, and an unreadable non-`LOCK` file produces a wrapped error (skipped when running as root).

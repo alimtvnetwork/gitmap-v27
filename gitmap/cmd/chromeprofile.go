@@ -156,21 +156,19 @@ func runChromeProfileImport(args []string) {
 func runChromeProfileList(args []string) {
 	checkHelp(constants.CmdChromeProfileList, args)
 	root := chromeUserDataDir()
-	entries, err := os.ReadDir(root)
-	if err != nil || len(entries) == 0 {
+	entries := chromeProfileEntries()
+	if len(entries) == 0 {
 		fmt.Printf(constants.MsgChromeProfileListEmpty, root)
 		listChromeProfilesFromDB()
 		return
 	}
 	fmt.Printf(constants.MsgChromeProfileListHdr, root)
 	for _, e := range entries {
-		if !e.IsDir() {
+		if e.DisplayName != "" {
+			fmt.Printf("  - %s  (display: %q)\n", e.Dir, e.DisplayName)
 			continue
 		}
-		name := e.Name()
-		if name == "Default" || hasPrefixProfile(name) {
-			fmt.Printf("  - %s\n", name)
-		}
+		fmt.Printf("  - %s\n", e.Dir)
 	}
 	listChromeProfilesFromDB()
 }

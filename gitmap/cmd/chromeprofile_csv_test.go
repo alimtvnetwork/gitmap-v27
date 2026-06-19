@@ -114,3 +114,48 @@ func containsCategory(rows [][]string, c string) bool {
 	}
 	return false
 }
+
+func TestResolveChromeProfileUsesDisplayNameSummary(t *testing.T) {
+	root := t.TempDir()
+	t.Setenv("GITMAP_CHROME_USER_DATA", root)
+	mustWriteProfileState(t, root)
+	res, ok := resolveChromeProfile("Lovable")
+	if !ok || chromeProfileSummary(res) != "Lovable (dir: Profile 15)" {
+		t.Fatalf("unexpected profile resolution: ok=%v res=%+v", ok, res)
+	}
+}
+
+func TestCopyChromeProfileReportsDestinationMkdir(t *testing.T) {
+	src := writeChromeFixtureProfile(t)
+	dst := filepath.Join(t.TempDir(), "blocked")
+	mustWriteFile(t, dst, "not a dir")
+	_, err := copyChromeProfile(src, dst)
+	copyErr := unwrapChromeProfileCopyError(err)
+	if copyErr.Op != constants.ChromeProfileCopyOpMkdir || copyErr.Target != dst {
+		t.Fatalf("unexpected copy error: %+v", copyErr)
+	}
+}
+
+func TestChromeProfileLockOpenErrorIsSkipped(t *testing.T) {
+	lockName := constants.ChromeProfileLockFileName
+	lockPath := filepath.Join(t.TempDir(), lockName)
+	if err := chromeProfileCopyFile(lockPath, filepath.Join(t.TempDir(), lockName)); err != nil {
+		t.Fatalf("LOCK file open error should be skipped: %v", err)
+	}
+}
+
+func mustWriteProfileState(t *testing.T, root string) {
+	t.Helper()
+	if err := os.MkdirAll(filepath.Join(root, "Profile 15"), 0o755); err != nil {
+		t.Fatalf("mkdir profile: %v", err)
+	}
+	body := `{"profile":{"info_cache":{"Profile 15":{"name":"Lovable"}}}}`
+	mustWriteFile(t, filepath.Join(root, "Local State"), body)
+}
+
+func mustWriteFile(t *testing.T, path, body string) {
+	t.Helper()
+	if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
+		t.Fatalf("write %s: %v", path, err)
+	}
+}

@@ -97,6 +97,10 @@ func resolveChromeProfileDir(name string) (string, bool) {
 	return res.Path, ok
 }
 
+func chromeProfileDestination(name string) chromeProfileResolution {
+	return chromeProfileFromPath(name, chromeProfilePath(name))
+}
+
 func chromeProfileFromPath(input, path string) chromeProfileResolution {
 	dir := filepath.Base(path)
 	return chromeProfileResolution{Input: input, Path: path, Dir: dir, DisplayName: chromeProfileDisplayName(dir)}

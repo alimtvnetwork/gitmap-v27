@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"path/filepath" //nolint:typecheck
 	"strings"
 
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"

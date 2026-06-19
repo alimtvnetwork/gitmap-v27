@@ -1,5 +1,13 @@
 # Changelog
 
+## v6.34.0 — (2026-06-19) — chrome-profile not-found errors now list every available profile
+
+- **Discoverability fix for `cpc` / `cpe`.** When the user passes a profile name that doesn't exist under Chrome's User Data root, the not-found error is followed by `available profiles under <root>:` and one indented line per real profile (`Default`, `Profile 1`, `Profile 2`, …). Eliminates the "ERROR profile X not found" dead end that forced users to manually `ls` the User Data dir.
+- **Implementation:** new `availableChromeProfileNames()` + `printAvailableChromeProfiles()` helpers in `gitmap/cmd/chromeprofile_paths.go` (reuses `chromeUserDataDir()`; honors `GITMAP_CHROME_USER_DATA` test override). Both `runChromeProfileCopy` and `runChromeProfileExport` invoke the printer before `os.Exit(ExitChromeProfileNotFound)`. Read failures degrade to `(none found)` so the helper never panics on unreadable roots.
+- **Files:** `gitmap/cmd/chromeprofile_paths.go`, `gitmap/cmd/chromeprofile.go`, `gitmap/constants/constants.go` (`6.34.0`), `src/constants/index.ts` (`v6.34.0`), `README.md` (pin → v6.34.0), `CHANGELOG.md`.
+
+
+
 ## v6.33.0 — (2026-06-19) — CI green: top-level Cmd registry parity for chrome-profile-* + bulk-visibility skip-current semantics
 
 - **`TestTopLevelCmdRegistryMatchesAST` fixed.** Added the 10 new `CmdChromeProfile{Copy,Export,Import,List,Delete}` constants (plus their `cpc`/`cpe`/`cpi`/`cpl`/`cpd` aliases) to `topLevelCmds()` in `gitmap/constants/cmd_constants_test.go` so the AST↔registry parity gate stays green.

@@ -30,6 +30,7 @@ func utilityDispatchEntries() []dispatchEntry {
 			func() { checkHelp("installed-dir", argsTail()); runInstalledDir() },
 		},
 		{[]string{constants.CmdRevert}, func() { runRevert(argsTail()) }},
+		{[]string{constants.CmdRm, constants.CmdRmAlias}, func() { runRm(argsTail()) }},
 		{[]string{constants.CmdRevertRunner}, func() { runRevertRunner() }},
 		{
 			[]string{constants.CmdVersion, constants.CmdVersionAlias},

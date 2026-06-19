@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.38.0 — (2026-06-19) — `gitmap rm` gains `del` alias + full help coverage
+
+- **Alias expansion.** `gitmap rm` now also dispatches through `gitmap del`, matching the existing full-word `gitmap remove` alias. All three spellings run the same path-first, slug-fallback database untracking flow and still leave on-disk files untouched.
+- **Help coverage.** Updated the embedded `rm.md` help page, no-arg usage text, full help screen, compact help, filtered help, LLM docs command catalog, and README command table so `rm`, `remove`, and `del` are discoverable consistently.
+- **Files:** `gitmap/constants/constants_cli.go` (`CmdRmAlias2`, `HelpRm`), `gitmap/cmd/rootutility.go`, `gitmap/cmd/rm.go`, `gitmap/cmd/rootusage.go`, `gitmap/cmd/rootusagefilter.go`, `gitmap/cmd/llmdocsgroups.go`, `gitmap/constants/constants_helpgroups.go`, `gitmap/constants/cmd_constants_test.go`, `gitmap/helptext/rm.md`, `gitmap/constants/constants.go` (`6.38.0`), `src/constants/index.ts` (`v6.38.0`), `README.md` (pin → v6.38.0), `CHANGELOG.md`.
+
 ## v6.37.0 — (2026-06-19) — release rollup for `gitmap rm` + chrome-profile help discoverability
 
 - **Rollup release.** Cuts a fresh minor that bundles the v6.35.x / v6.36.0 work — `gitmap rm` repo-removal command, `gitmap help chrome` group + per-command help text, and the chrome-profile not-found "available profiles" listing — into a single installable artifact for users tracking minor releases only.

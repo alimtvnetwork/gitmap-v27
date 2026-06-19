@@ -7,9 +7,10 @@ Remove one or more repositories from the gitmap database.
 ```
 gitmap rm <name-or-path> [<name-or-path> ...]
 gitmap remove <name-or-path> [<name-or-path> ...]
+gitmap del <name-or-path> [<name-or-path> ...]
 ```
 
-Alias: `remove`.
+Aliases: `remove`, `del`.
 
 ## What it does
 
@@ -27,6 +28,12 @@ remotes are all left alone. To delete the folder too, use your shell
 
 ```
 $ gitmap rm my-repo
+removed 1 repo(s) by name: my-repo
+
+$ gitmap remove my-repo
+removed 1 repo(s) by name: my-repo
+
+$ gitmap del my-repo
 removed 1 repo(s) by name: my-repo
 
 $ gitmap rm ./projects/foo ../bar

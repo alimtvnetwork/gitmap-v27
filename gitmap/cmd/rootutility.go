@@ -30,7 +30,7 @@ func utilityDispatchEntries() []dispatchEntry {
 			func() { checkHelp("installed-dir", argsTail()); runInstalledDir() },
 		},
 		{[]string{constants.CmdRevert}, func() { runRevert(argsTail()) }},
-		{[]string{constants.CmdRm, constants.CmdRmAlias}, func() { runRm(argsTail()) }},
+		{[]string{constants.CmdRm, constants.CmdRmAlias, constants.CmdRmAlias2}, func() { runRm(argsTail()) }},
 		{[]string{constants.CmdRevertRunner}, func() { runRevertRunner() }},
 		{
 			[]string{constants.CmdVersion, constants.CmdVersionAlias},
@@ -56,6 +56,9 @@ func utilityDispatchEntries() []dispatchEntry {
 func runHelpDispatch() {
 	if len(os.Args) >= 3 && !isFlagToken(os.Args[2]) {
 		topic := os.Args[2]
+		if topic == constants.CmdRmAlias || topic == constants.CmdRmAlias2 {
+			topic = constants.CmdRm
+		}
 		if _, err := helptext.ReadRaw(topic); err == nil {
 			_, mode := ParsePrettyFlag(os.Args[3:])
 			helptext.PrintWithMode(topic, mode)

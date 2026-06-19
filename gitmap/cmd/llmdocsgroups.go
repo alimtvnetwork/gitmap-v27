@@ -100,6 +100,7 @@ func buildDataGroup() llmCmdGroup {
 			{"import", "im", "Import repos from file", "gitmap import gitmap-export.json"},
 			{"profile", "pf", "Manage database profiles (create, switch, list)", "gitmap profile create work"},
 			{"bookmark", "bk", "Save commands as named bookmarks and replay them", "gitmap bookmark save daily scan ~/projects"},
+			{"rm", "remove, del", "Untrack repos from the database without deleting files", "gitmap rm my-repo"},
 			{"db-reset", "—", "Reset the SQLite database (requires --confirm)", "gitmap db-reset --confirm"},
 		},
 	}

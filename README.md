@@ -4,7 +4,7 @@
 
 **Git repository scanner, manager, and navigator CLI**
 
-**Pinned version: v6.37.0**
+**Pinned version: v6.38.0**
 
 [![CI](https://img.shields.io/github/actions/workflow/status/alimtvnetwork/gitmap-v26/ci.yml?style=flat-square&label=CI)](https://github.com/alimtvnetwork/gitmap-v26/actions/workflows/ci.yml)
 [![Vulnerability Scan](https://img.shields.io/github/actions/workflow/status/alimtvnetwork/gitmap-v26/vulncheck.yml?style=flat-square&label=vulnerability%20scan)](https://github.com/alimtvnetwork/gitmap-v26/actions/workflows/vulncheck.yml)
@@ -52,31 +52,31 @@ irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v26/main/install.ps1 
 curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v26/main/install.sh | sh
 ```
 
-### 📌 Pinned version (`v6.37.0`)
+### 📌 Pinned version (`v6.38.0`)
 
 ```powershell
 # Windows · PowerShell
-irm https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/release-version-v6.37.0.ps1 | iex
+irm https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/release-version-v6.38.0.ps1 | iex
 ```
 
 ```bash
 # macOS · Linux · Bash
-curl -fsSL https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/release-version-v6.37.0.sh | bash
+curl -fsSL https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/release-version-v6.38.0.sh | bash
 ```
 
-#### 🧭 Version matrix — `v6.37.0` install-script URLs
+#### 🧭 Version matrix — `v6.38.0` install-script URLs
 
-One-line installers and release assets for the pinned **v6.37.0** build across every supported platform. All URLs resolve to the exact release tag — no fallback, no discovery.
+One-line installers and release assets for the pinned **v6.38.0** build across every supported platform. All URLs resolve to the exact release tag — no fallback, no discovery.
 
 | Platform | Shell | Install-script URL | Release binary asset |
 | --- | --- | --- | --- |
-| **Windows** (amd64) | PowerShell | [`release-version-v6.37.0.ps1`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/release-version-v6.37.0.ps1) | [`gitmap-v26.35.0-windows-amd64.zip`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/gitmap-v26.35.0-windows-amd64.zip) |
-| **macOS** (arm64) | Bash | [`release-version-v6.37.0.sh`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/release-version-v6.37.0.sh) | [`gitmap-v26.35.0-darwin-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/gitmap-v26.35.0-darwin-arm64.tar.gz) |
-| **macOS** (amd64) | Bash | [`release-version-v6.37.0.sh`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/release-version-v6.37.0.sh) | [`gitmap-v26.35.0-darwin-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/gitmap-v26.35.0-darwin-amd64.tar.gz) |
-| **Linux** (amd64) | Bash | [`release-version-v6.37.0.sh`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/release-version-v6.37.0.sh) | [`gitmap-v26.35.0-linux-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/gitmap-v26.35.0-linux-amd64.tar.gz) |
-| **Linux** (arm64) | Bash | [`release-version-v6.37.0.sh`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/release-version-v6.37.0.sh) | [`gitmap-v26.35.0-linux-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.37.0/gitmap-v26.35.0-linux-arm64.tar.gz) |
+| **Windows** (amd64) | PowerShell | [`release-version-v6.38.0.ps1`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/release-version-v6.38.0.ps1) | [`gitmap-v6.38.0-windows-amd64.zip`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/gitmap-v6.38.0-windows-amd64.zip) |
+| **macOS** (arm64) | Bash | [`release-version-v6.38.0.sh`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/release-version-v6.38.0.sh) | [`gitmap-v6.38.0-darwin-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/gitmap-v6.38.0-darwin-arm64.tar.gz) |
+| **macOS** (amd64) | Bash | [`release-version-v6.38.0.sh`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/release-version-v6.38.0.sh) | [`gitmap-v6.38.0-darwin-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/gitmap-v6.38.0-darwin-amd64.tar.gz) |
+| **Linux** (amd64) | Bash | [`release-version-v6.38.0.sh`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/release-version-v6.38.0.sh) | [`gitmap-v6.38.0-linux-amd64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/gitmap-v6.38.0-linux-amd64.tar.gz) |
+| **Linux** (arm64) | Bash | [`release-version-v6.38.0.sh`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/release-version-v6.38.0.sh) | [`gitmap-v6.38.0-linux-arm64.tar.gz`](https://github.com/alimtvnetwork/gitmap-v26/releases/download/v6.38.0/gitmap-v6.38.0-linux-arm64.tar.gz) |
 
-> **Release page:** [github.com/alimtvnetwork/gitmap-v26/releases/tag/v6.37.0](https://github.com/alimtvnetwork/gitmap-v26/releases/tag/v6.37.0) · **Asset naming contract:** `gitmap-<version>-<os>-<arch>.<ext>` (`.zip` on Windows, `.tar.gz` elsewhere) — verified by the installer pre-flight HEAD probe.
+> **Release page:** [github.com/alimtvnetwork/gitmap-v26/releases/tag/v6.38.0](https://github.com/alimtvnetwork/gitmap-v26/releases/tag/v6.38.0) · **Asset naming contract:** `gitmap-<version>-<os>-<arch>.<ext>` (`.zip` on Windows, `.tar.gz` elsewhere) — verified by the installer pre-flight HEAD probe.
 
 ### 🎯 Install — Quick (pick your install drive)
 
@@ -2409,6 +2409,7 @@ gitmap revert v2.48.0
 | `import` | `im` | Import repos from file |
 | `profile` | `pf` | Manage database profiles |
 | `bookmark` | `bk` | Save and run bookmarked commands |
+| `rm` | `remove`, `del` | Untrack repos from the database without deleting files |
 | `db-reset` | — | Reset the local SQLite database |
 
 ```bash
@@ -2416,9 +2417,10 @@ gitmap export && gitmap import gitmap-export.json
 gitmap profile create work && gitmap profile switch work
 gitmap bookmark save daily scan ~/projects
 gitmap bookmark run daily
+gitmap del old-repo
 ```
 
-→ [export](gitmap/helptext/export.md) · [import](gitmap/helptext/import.md) · [profile](gitmap/helptext/profile.md) · [bookmark](gitmap/helptext/bookmark.md) · [db-reset](gitmap/helptext/db-reset.md)
+→ [export](gitmap/helptext/export.md) · [import](gitmap/helptext/import.md) · [profile](gitmap/helptext/profile.md) · [bookmark](gitmap/helptext/bookmark.md) · [rm](gitmap/helptext/rm.md) · [db-reset](gitmap/helptext/db-reset.md)
 
 ---
 

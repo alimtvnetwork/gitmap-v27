@@ -11,6 +11,8 @@ import (
 
 // rmUsage describes the `gitmap rm` command.
 const rmUsage = `Usage: gitmap rm <name-or-path> [<name-or-path> ...]
+       gitmap remove <name-or-path> [<name-or-path> ...]
+       gitmap del <name-or-path> [<name-or-path> ...]
 
 Removes one or more repositories from the gitmap database. Each target
 may be a repo slug/name (e.g. "my-repo") or an absolute/relative path
@@ -18,6 +20,8 @@ to the repo on disk. The on-disk files are NOT touched.
 
 Examples:
   gitmap rm my-repo
+  gitmap remove my-repo
+  gitmap del my-repo
   gitmap rm ./projects/foo ../bar
   gitmap rm repo-a repo-b /abs/path/repo-c
 `

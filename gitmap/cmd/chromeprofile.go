@@ -29,7 +29,7 @@ func runChromeProfileCopy(args []string) {
 	}
 	srcPath := chromeProfilePath(args[0])
 	dstPath := chromeProfilePath(args[1])
-	if !pathExists(srcPath) {
+	if !chromeProfilePathExists(srcPath) {
 		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileSrcMissing, args[0], srcPath)
 		os.Exit(constants.ExitChromeProfileNotFound)
 	}
@@ -95,7 +95,7 @@ func runChromeProfileExport(args []string) {
 		outPath = args[1]
 	}
 	srcPath := chromeProfilePath(name)
-	if !pathExists(srcPath) {
+	if !chromeProfilePathExists(srcPath) {
 		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileSrcMissing, name, srcPath)
 		os.Exit(constants.ExitChromeProfileNotFound)
 	}
@@ -221,13 +221,13 @@ func copyEntry(src, dst string) (int, error) {
 		return 0, nil
 	}
 	if !info.IsDir() {
-		return 1, copyFile(src, dst)
+		return 1, chromeProfileCopyFile(src, dst)
 	}
 	return copyDir(src, dst)
 }
 
-// copyFile copies a single file from src to dst preserving mode.
-func copyFile(src, dst string) error {
+// chromeProfileCopyFile copies a single file from src to dst preserving mode.
+func chromeProfileCopyFile(src, dst string) error {
 	in, err := os.Open(src) //nolint:gosec // curated entry list
 	if err != nil {
 		return err

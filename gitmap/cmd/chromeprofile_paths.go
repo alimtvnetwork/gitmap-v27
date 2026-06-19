@@ -37,8 +37,8 @@ func chromeProfilePath(name string) string {
 	return filepath.Join(chromeUserDataDir(), name)
 }
 
-// pathExists reports whether path exists on disk.
-func pathExists(path string) bool {
+// chromeProfilePathExists reports whether path exists on disk.
+func chromeProfilePathExists(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
 }

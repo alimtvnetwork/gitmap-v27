@@ -128,7 +128,7 @@ func TestResolveChromeProfileUsesDisplayNameSummary(t *testing.T) {
 func TestCopyChromeProfileReportsDestinationMkdir(t *testing.T) {
 	src := writeChromeFixtureProfile(t)
 	dst := filepath.Join(t.TempDir(), "blocked")
-	mustWriteFile(t, dst, "not a dir")
+	mustWriteTextFile(t, dst, "not a dir")
 	_, err := copyChromeProfile(src, dst)
 	copyErr := unwrapChromeProfileCopyError(err)
 	if copyErr.Op != constants.ChromeProfileCopyOpMkdir || copyErr.Target != dst {
@@ -151,10 +151,10 @@ func mustWriteProfileState(t *testing.T, root string) {
 		t.Fatalf("mkdir profile: %v", err)
 	}
 	body := `{"profile":{"info_cache":{"Profile 15":{"name":"Lovable"}}}}`
-	mustWriteFile(t, filepath.Join(root, "Local State"), body)
+	mustWriteTextFile(t, filepath.Join(root, "Local State"), body)
 }
 
-func mustWriteFile(t *testing.T, path, body string) {
+func mustWriteTextFile(t *testing.T, path, body string) {
 	t.Helper()
 	if err := os.WriteFile(path, []byte(body), 0o644); err != nil {
 		t.Fatalf("write %s: %v", path, err)

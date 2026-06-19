@@ -40,7 +40,7 @@ const (
 	CompactNavigation = "  cd (go), group (g), multi-group (mg), alias (a), diff-profiles (dp)"
 	CompactRelease    = "  release (r), pull-release (pr), release-self (rs), release-branch (rb), temp-release"
 	CompactRelInfo    = "  changelog (cl), changelog-generate, list-versions (lv), list-releases (lr), release-pending (rp), revert, clear-release-json (crj), prune"
-	CompactData       = "  export (ex), import (im), profile (pf), bookmark (bk), db-reset"
+	CompactData       = "  export (ex), import (im), profile (pf), bookmark (bk), rm (remove/del), db-reset"
 	CompactHistory    = "  history (hi), history-reset (hr), stats (ss)"
 	CompactAmend      = "  amend (am), amend-list (al)"
 	CompactProject    = "  go-repos (gr), node-repos (nr), react-repos (rr), cpp-repos (cr), csharp-repos (csr)"

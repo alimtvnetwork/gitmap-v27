@@ -43,7 +43,7 @@ func allHelpRows() []helpRow {
 		constants.HelpClearReleaseJSON, constants.HelpPrune)
 	addGroup(&rows, constants.HelpGroupData,
 		constants.HelpExport, constants.HelpImport, constants.HelpProfile,
-		constants.HelpBookmark, constants.HelpDBReset)
+		constants.HelpBookmark, constants.HelpRm, constants.HelpDBReset)
 	addGroup(&rows, constants.HelpGroupHistory,
 		constants.HelpHistory, constants.HelpHistoryReset,
 		constants.HelpVersionHistory, constants.HelpStats)

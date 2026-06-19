@@ -54,9 +54,9 @@ func TestMatchGlobBasename(t *testing.T) {
 		{"src/main.go", "[invalid", false}, // bad pattern -> false
 	}
 	for _, c := range cases {
-		got := matchGlob(c.path, c.pattern)
+		got := matchGitignoreGlob(c.path, c.pattern)
 		if got != c.want {
-			t.Errorf("matchGlob(%q,%q) = %v, want %v", c.path, c.pattern, got, c.want)
+			t.Errorf("matchGitignoreGlob(%q,%q) = %v, want %v", c.path, c.pattern, got, c.want)
 		}
 	}
 }

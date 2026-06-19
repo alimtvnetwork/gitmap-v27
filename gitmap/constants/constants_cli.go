@@ -26,10 +26,10 @@ const (
 	// CmdPush is the cwd-scoped `git push` wrapper added in v5.29.0.
 	// Alias is `ph` (NOT `p` — collides with CmdPullAlias). Supports
 	// shared `--ssh` / `--https` transport flags.
-	CmdPush      = "push"
-	CmdPushAlias = "ph"
-	CmdRescan             = "rescan"
-	CmdRescanAlias        = "rsc"
+	CmdPush        = "push"
+	CmdPushAlias   = "ph"
+	CmdRescan      = "rescan"
+	CmdRescanAlias = "rsc"
 	// CmdRescanSubtree narrowly re-runs `gitmap scan` against the
 	// absolutePath of an at-cap row from a previous scan output. Default
 	// MaxDepth is bumped to RescanSubtreeDefaultMaxDepth so users get a
@@ -123,8 +123,8 @@ const (
 	CmdLFSCommonAlias       = "lfsc"
 	CmdReplace              = "replace"
 	CmdReplaceAlias         = "rpl"
-	CmdInject      = "inject"
-	CmdInjectAlias = "inj"
+	CmdInject               = "inject"
+	CmdInjectAlias          = "inj"
 	// CmdOpen launches GitHub Desktop AND VS Code on the current repo
 	// (cwd-detected via `git remote get-url origin`). Re-injects on
 	// every call so newly cloned/moved repos always show up in both

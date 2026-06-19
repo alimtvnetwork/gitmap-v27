@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.37.0 — (2026-06-19) — release rollup for `gitmap rm` + chrome-profile help discoverability
+
+- **Rollup release.** Cuts a fresh minor that bundles the v6.35.x / v6.36.0 work — `gitmap rm` repo-removal command, `gitmap help chrome` group + per-command help text, and the chrome-profile not-found "available profiles" listing — into a single installable artifact for users tracking minor releases only.
+- **No new behavior** beyond what shipped in v6.35.0 → v6.36.0. See those entries below for the underlying changes.
+- **Files:** `gitmap/constants/constants.go` (`6.37.0`), `src/constants/index.ts` (`v6.37.0`), `README.md` (pin → v6.37.0), `CHANGELOG.md`.
+
 ## v6.36.0 — (2026-06-19) — `gitmap rm` repo-removal command
 
 - **New top-level `gitmap rm <name-or-path> [<name-or-path> ...]`** (alias: `gitmap remove`) removes one or more repositories from the gitmap database. Each target is resolved as an absolute path first (`filepath.Abs`); on no match it falls back to slug/name. On-disk files are NOT touched — this only untracks the repo in the DB. Missing targets emit a per-target warning but never abort the batch; exit code is `1` if any target was not found, `0` only when every target was removed.

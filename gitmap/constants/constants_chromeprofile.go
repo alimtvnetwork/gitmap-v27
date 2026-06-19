@@ -68,6 +68,8 @@ const (
 	ChromeProfileCopyOpRead   = "read source file"
 	ChromeProfileCopyOpWrite  = "write destination file"
 	ChromeProfileCopyOpList   = "list source directory"
+	ChromeProfileCopyOpCopy   = "copy profile"
+	ChromeProfileCopyUnknown  = "(unknown)"
 	ChromeProfileLockFileName = "LOCK"
 )
 

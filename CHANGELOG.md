@@ -1,5 +1,14 @@
 # Changelog
 
+## v6.41.0 — (2026-06-19) — `gitmap rm` deletes folders, supports globs + `-y`
+
+- **On-disk deletion.** `gitmap rm` / `remove` / `del` now removes the repo folder from disk in addition to untracking it in the database. By default each match is confirmed with a `[y/N]` prompt that shows the slug and absolute path.
+- **Glob targets.** Patterns containing `*`, `?`, or `[` are matched against the repo slug **and** the basename of its absolute path via `filepath.Match`. Examples: `gitmap rm macro*`, `gitmap rm gitmap-v?`.
+- **Comma-joined batches.** A single argument may pack multiple targets separated by commas: `gitmap rm macro*,gitmap*` expands to both globs in one command.
+- **`-y` / `--yes` auto-confirm.** Skips every per-repo prompt so CI/scripts can run `gitmap rm macro* -y` non-interactively. Flag may appear anywhere in the arg list.
+- **De-dup.** When overlapping targets/globs match the same repo, it is only deleted once (de-duped by DB id).
+- **Files:** `gitmap/cmd/rm.go` (rewrite — glob/comma/-y/folder-removal), `gitmap/helptext/rm.md` (updated examples), `gitmap/constants/constants.go` (`6.41.0`), `src/constants/index.ts` (`v6.41.0`), `README.md` (pin → v6.41.0), `CHANGELOG.md`.
+
 ## v6.40.0 — (2026-06-19) — `cpc`/`cpe` accept Chrome display names (e.g. `Lovable`)
 
 - **Display-name resolution.** `gitmap chrome-profile-copy` (`cpc`), `chrome-profile-export` (`cpe`), and `chrome-profile-list` (`cpl`) now resolve a user-supplied profile identifier through Chrome's `<UserData>/Local State` → `profile.info_cache[*].name`. You can pass the same name shown in Chrome's profile picker (e.g. `Lovable`) instead of guessing the on-disk directory (e.g. `Profile 7`). Resolution order: absolute path → literal dir → display name (case-insensitive, trimmed).

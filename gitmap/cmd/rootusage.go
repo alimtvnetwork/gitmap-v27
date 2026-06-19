@@ -33,6 +33,7 @@ func printUsage() {
 	printSuperCategory("PROJECTS & DATA", func() {
 		printGroupProject()
 		printGroupData()
+		printGroupChromeProfile()
 		printGroupZip()
 		printGroupTasks()
 		printGroupVisualize()
@@ -246,4 +247,17 @@ func printGroupCommitXfer() {
 	fmt.Println(constants.HelpCommitRight)
 	fmt.Println(constants.HelpCommitLeft)
 	fmt.Println(constants.HelpCommitBoth)
+}
+
+// printGroupChromeProfile prints the chrome-profile-* family so users
+// can discover cpc / cpe / cpi / cpl / cpd from a bare `gitmap help`.
+// Without this block these commands were invisible to fuzzy search.
+func printGroupChromeProfile() {
+	fmt.Println()
+	fmt.Println(colorGroupHeader(constants.HelpGroupChromeProf))
+	fmt.Println(constants.HelpChromeProfileCopy)
+	fmt.Println(constants.HelpChromeProfileExport)
+	fmt.Println(constants.HelpChromeProfileImport)
+	fmt.Println(constants.HelpChromeProfileList)
+	fmt.Println(constants.HelpChromeProfileDelete)
 }

@@ -19,6 +19,7 @@ const (
 	HelpGroupUtilities   = "  Utilities:"
 	HelpGroupVisualize   = "  Visualization:"
 	HelpGroupCommitXfer  = "  Commit Transfer (replay between repos):"
+	HelpGroupChromeProf  = "  Chrome Profile (copy / export / import / list / delete):"
 
 	HelpGroupHint    = "  Run any command with --help or -h for detailed usage and examples."
 	HelpGroupExample = "  Quick start:"

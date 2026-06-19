@@ -27,11 +27,11 @@ func runChromeProfileCopy(args []string) {
 		fmt.Fprint(os.Stderr, constants.ErrChromeProfileUsageCopy)
 		os.Exit(constants.ExitChromeProfileUsage)
 	}
-	srcPath := chromeProfilePath(args[0])
+	srcPath, ok := resolveChromeProfileDir(args[0])
 	dstPath := chromeProfilePath(args[1])
-	if !chromeProfilePathExists(srcPath) {
+	if !ok {
 		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileSrcMissing, args[0], srcPath)
-		printAvailableChromeProfiles()
+		printAvailableChromeProfilesWithDisplay()
 		os.Exit(constants.ExitChromeProfileNotFound)
 	}
 	fmt.Fprint(os.Stderr, constants.MsgChromeProfileSkipChrome)
@@ -95,10 +95,10 @@ func runChromeProfileExport(args []string) {
 	if len(args) >= 2 {
 		outPath = args[1]
 	}
-	srcPath := chromeProfilePath(name)
-	if !chromeProfilePathExists(srcPath) {
+	srcPath, ok := resolveChromeProfileDir(name)
+	if !ok {
 		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileSrcMissing, name, srcPath)
-		printAvailableChromeProfiles()
+		printAvailableChromeProfilesWithDisplay()
 		os.Exit(constants.ExitChromeProfileNotFound)
 	}
 	jsonBytes, err := writeChromeExport(srcPath, name, outPath)
@@ -156,21 +156,19 @@ func runChromeProfileImport(args []string) {
 func runChromeProfileList(args []string) {
 	checkHelp(constants.CmdChromeProfileList, args)
 	root := chromeUserDataDir()
-	entries, err := os.ReadDir(root)
-	if err != nil || len(entries) == 0 {
+	entries := chromeProfileEntries()
+	if len(entries) == 0 {
 		fmt.Printf(constants.MsgChromeProfileListEmpty, root)
 		listChromeProfilesFromDB()
 		return
 	}
 	fmt.Printf(constants.MsgChromeProfileListHdr, root)
 	for _, e := range entries {
-		if !e.IsDir() {
+		if e.DisplayName != "" {
+			fmt.Printf("  - %s  (display: %q)\n", e.Dir, e.DisplayName)
 			continue
 		}
-		name := e.Name()
-		if name == "Default" || hasPrefixProfile(name) {
-			fmt.Printf("  - %s\n", name)
-		}
+		fmt.Printf("  - %s\n", e.Dir)
 	}
 	listChromeProfilesFromDB()
 }
@@ -181,10 +179,7 @@ func defaultChromeExportPath(name string) string {
 	return filepath.Join(constants.GitMapDir, "chrome", name+constants.ExtJSON)
 }
 
-// hasPrefixProfile reports whether name looks like "Profile N".
-func hasPrefixProfile(name string) bool {
-	return len(name) > 8 && name[:8] == "Profile "
-}
+
 
 // readChromeExport loads a JSON export file from disk.
 func readChromeExport(path string) (*chromeExport, error) {

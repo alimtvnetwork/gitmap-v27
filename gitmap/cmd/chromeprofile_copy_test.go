@@ -139,20 +139,19 @@ func TestUnwrapChromeProfileCopyErrorFallsBackForPlainError(t *testing.T) {
 	}
 }
 
-func TestCopyEntryReturnsWrappedErrorOnUnreadableNonLockFile(t *testing.T) {
-	if os.Geteuid() == 0 {
-		t.Skip("root bypasses unix perms")
-	}
+func TestCopyEntryReturnsWrappedErrorOnDestinationParentFile(t *testing.T) {
 	src := filepath.Join(t.TempDir(), "Bookmarks")
+	dstParent := filepath.Join(t.TempDir(), "not-a-dir")
 	mustWrite(t, src, "{}")
-	if err := os.Chmod(src, 0); err != nil {
-		t.Fatal(err)
-	}
-	defer os.Chmod(src, 0o600) //nolint:errcheck
-	_, err := copyEntry(src, filepath.Join(t.TempDir(), "out"))
+	mustWrite(t, dstParent, "blocks mkdir")
+
+	_, err := copyEntry(src, filepath.Join(dstParent, "out"))
 	var ce *chromeProfileCopyError
 	if !errors.As(err, &ce) {
 		t.Fatalf("want wrapped err, got %v", err)
+	}
+	if ce.Op != constants.ChromeProfileCopyOpMkdir {
+		t.Fatalf("op = %q, want %q", ce.Op, constants.ChromeProfileCopyOpMkdir)
 	}
 }
 

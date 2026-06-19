@@ -81,7 +81,7 @@ const (
 	CmdRevert                = "revert"
 	CmdRevertRunner          = "revert-runner" // gitmap:cmd skip
 	CmdRm                    = "rm"
-	CmdRmAlias               = "remove" // gitmap:cmd skip
+	CmdRmAlias               = "remove"
 	CmdListReleases          = "list-releases"
 	CmdListReleasesAlias     = "lr"
 	CmdReleases              = "releases" // v3.20.0: alias of list-releases, intended for --all-repos batch view

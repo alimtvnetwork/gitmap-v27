@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.43.0 — (2026-06-19) — `cpc` shows profile names and skips Chrome `LOCK` files
+
+- **Profile visualization.** `gitmap chrome-profile-copy` / `gitmap cpc` now prints the Chrome display name plus resolved directory, e.g. `Lovable (dir: Profile 15) → lv2`, followed by explicit source and destination paths.
+- **Detailed copy errors.** Copy failures now show source profile, destination profile, source path, destination path, failed entry, operation, cause, and retry hint instead of a single wrapped error line.
+- **Locked extension files.** Runtime-only Chrome `LOCK` files are skipped with a warning when Chrome or an extension still holds them, so `Local Extension Settings\...\LOCK` no longer aborts the entire copy.
+- **Files:** `gitmap/cmd/chromeprofile.go`, `gitmap/cmd/chromeprofile_copy.go`, `gitmap/cmd/chromeprofile_resolve.go`, `gitmap/cmd/chromeprofile_csv_test.go`, `gitmap/constants/constants_chromeprofile.go`, `gitmap/helptext/chrome-profile-copy.md`, `gitmap/constants/constants.go` (`6.43.0`), `src/constants/index.ts` (`v6.43.0`), `README.md` (pin → v6.43.0), `CHANGELOG.md`.
+
 ## v6.42.0 — (2026-06-19) — Build fix: rename `matchGlob` helper in `taskfilter.go`
 
 - Renamed the gitignore-only `matchGlob(path, pattern) bool` helper in

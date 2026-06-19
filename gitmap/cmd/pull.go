@@ -116,6 +116,9 @@ func pullNoTargetsHint(opts pullOptions) bool {
 	fmt.Println("     gitmap pull --group <group>")
 	fmt.Println("     cd <repo> && gitmap pull")
 	return true
+}
+
+
 
 // isGitRepoCWD returns true when the cwd (or an ancestor) is inside a
 // git work tree. Uses `git rev-parse --is-inside-work-tree` so worktrees

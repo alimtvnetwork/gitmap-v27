@@ -11,7 +11,6 @@ package store
 
 import (
 	"fmt"
-	"time"
 )
 
 const sqlCreateChromeProfile = `
@@ -124,6 +123,3 @@ func (db *DB) ListChromeProfilesDB() ([]ChromeProfileRow, error) {
 	}
 	return out, nil
 }
-
-// nowChromeProfileStamp is a small helper so tests can stub time.
-func nowChromeProfileStamp() string { return time.Now().UTC().Format(time.RFC3339) }

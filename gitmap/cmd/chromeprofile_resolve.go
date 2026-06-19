@@ -32,6 +32,13 @@ type chromeProfileEntry struct {
 	DisplayName string
 }
 
+type chromeProfileResolution struct {
+	Input       string
+	Path        string
+	Dir         string
+	DisplayName string
+}
+
 // readChromeLocalState loads <UserData>/Local State, returning nil on
 // any I/O or parse error so callers degrade gracefully to dir-only.
 func readChromeLocalState() *chromeLocalState {
@@ -73,28 +80,64 @@ func chromeProfileEntries() []chromeProfileEntry {
 //
 // Returns (path, ok). When ok is false, callers should print the
 // available list and exit ExitChromeProfileNotFound.
-func resolveChromeProfileDir(name string) (string, bool) {
+func resolveChromeProfile(name string) (chromeProfileResolution, bool) {
 	if filepath.IsAbs(name) {
-		return name, chromeProfilePathExists(name)
+		res := chromeProfileFromPath(name, name)
+		return res, chromeProfilePathExists(name)
 	}
 	direct := filepath.Join(chromeUserDataDir(), name)
 	if chromeProfilePathExists(direct) {
-		return direct, true
+		return chromeProfileFromPath(name, direct), true
 	}
+	return resolveChromeProfileDisplayName(name, direct)
+}
+
+func resolveChromeProfileDir(name string) (string, bool) {
+	res, ok := resolveChromeProfile(name)
+	return res.Path, ok
+}
+
+func chromeProfileFromPath(input, path string) chromeProfileResolution {
+	dir := filepath.Base(path)
+	return chromeProfileResolution{Input: input, Path: path, Dir: dir, DisplayName: chromeProfileDisplayName(dir)}
+}
+
+func chromeProfileDisplayName(dir string) string {
 	state := readChromeLocalState()
 	if state == nil {
-		return direct, false
+		return ""
+	}
+	if info, ok := state.Profile.InfoCache[dir]; ok {
+		return info.Name
+	}
+	return ""
+}
+
+func resolveChromeProfileDisplayName(name, direct string) (chromeProfileResolution, bool) {
+	state := readChromeLocalState()
+	if state == nil {
+		return chromeProfileResolution{Input: name, Path: direct, Dir: filepath.Base(direct)}, false
 	}
 	want := strings.ToLower(strings.TrimSpace(name))
 	for dir, info := range state.Profile.InfoCache {
 		if strings.ToLower(strings.TrimSpace(info.Name)) == want {
 			p := filepath.Join(chromeUserDataDir(), dir)
 			if chromeProfilePathExists(p) {
-				return p, true
+				return chromeProfileResolution{Input: name, Path: p, Dir: dir, DisplayName: info.Name}, true
 			}
 		}
 	}
-	return direct, false
+	return chromeProfileResolution{Input: name, Path: direct, Dir: filepath.Base(direct)}, false
+}
+
+func chromeProfileSummary(p chromeProfileResolution) string {
+	if p.DisplayName != "" && p.DisplayName != p.Dir {
+		return fmt.Sprintf("%s (dir: %s)", p.DisplayName, p.Dir)
+	}
+	if p.Dir != "" {
+		return p.Dir
+	}
+	return p.Input
 }
 
 // printAvailableChromeProfilesWithDisplay writes a "did you mean…"

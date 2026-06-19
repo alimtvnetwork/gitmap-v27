@@ -121,6 +121,9 @@ const (
 	SQLSelectRepoBySlug = "SELECT RepoId, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes FROM Repo WHERE Slug = ?"
 
 	SQLSelectRepoByPath = "SELECT RepoId, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes FROM Repo WHERE AbsolutePath = ?"
+
+	SQLDeleteRepoByPath = "DELETE FROM Repo WHERE AbsolutePath = ?"
+	SQLDeleteRepoBySlug = "DELETE FROM Repo WHERE Slug = ?"
 )
 
 // SQL: upsert by AbsolutePath (spec requirement).

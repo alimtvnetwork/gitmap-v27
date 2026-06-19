@@ -26,12 +26,17 @@ const (
 
 // Chrome profile messages and errors.
 const (
-	MsgChromeProfileCopyStart = "chrome-profile-copy: %s → %s\n"
-	MsgChromeProfileCopyDone  = "chrome-profile-copy: done (%d files, %s)\n"
-	MsgChromeProfileExportOk  = "chrome-profile-export: wrote %s (%d bytes)\n"
-	MsgChromeProfileImportOk  = "chrome-profile-import: imported %s into profile %q\n"
-	MsgChromeProfileListEmpty = "chrome-profile-list: no profiles found at %s\n"
-	MsgChromeProfileListHdr   = "Chrome profiles (%s):\n"
+	MsgChromeProfileCopyStart  = "chrome-profile-copy: %s → %s\n"
+	MsgChromeProfileCopyDone   = "chrome-profile-copy: done (%d files, %s)\n"
+	MsgChromeProfileExportOk   = "chrome-profile-export: wrote %s (%d bytes)\n"
+	MsgChromeProfileExportCSV  = "chrome-profile-export: csv  %s (%d bytes)\n"
+	MsgChromeProfileDBSynced   = "chrome-profile: db synced (%s)\n"
+	MsgChromeProfileDBWarn     = "  ⚠ chrome-profile: db sync failed: %v\n"
+	MsgChromeProfileImportOk   = "chrome-profile-import: imported %s into profile %q\n"
+	MsgChromeProfileListEmpty  = "chrome-profile-list: no profiles found at %s\n"
+	MsgChromeProfileListHdr    = "Chrome profiles (%s):\n"
+	MsgChromeProfileListDBHdr  = "Tracked in gitmap DB:\n"
+	MsgChromeProfileListDBRow  = "  - %-30s  exports=%d  last=%s\n"
 	MsgChromeProfileSkipChrome = "  Hint: close Chrome before copying — open sessions may corrupt the destination.\n"
 
 	ErrChromeProfileUsageCopy   = "chrome-profile-copy: ERROR <src> and <dst> are required\n  usage: gitmap chrome-profile-copy <src-profile> <dst-profile>\n"

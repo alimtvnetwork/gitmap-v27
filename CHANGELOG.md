@@ -1,5 +1,14 @@
 # Changelog
 
+## v6.44.0 — (2026-06-19) — Chrome profile copy: edge-case coverage + unit tests
+
+- **New tests — `chromeprofile_copy_test.go`.** Covers: missing source entries are silently skipped, regular file copy preserves bytes and auto-creates nested destination dirs, recursive directory tree counts every leaf file, empty source directory still materializes the destination, `copyChromeProfile` only copies present curated entries, `handleChromeFileOpenError` and `handleChromeFileCopyError` swallow Chrome runtime `LOCK` files with a warn banner but propagate any other error wrapped as `*chromeProfileCopyError` with `Op = read/write` and the original cause intact, `isChromeVolatileLockFile` matches only the exact `LOCK` basename (rejects `LOCK.txt`, `prefix-LOCK`, `locked`, `LOCK/child`), `unwrapChromeProfileCopyError` falls back to the `(unknown)` shape for plain errors, and an unreadable non-`LOCK` file produces a wrapped error (skipped when running as root).
+- **New tests — `chromeprofile_resolve_test.go`.** Drives a fake Chrome User Data root via `GITMAP_CHROME_USER_DATA` and a synthetic `Local State` JSON to verify: resolution by directory name, case-insensitive + whitespace-trimmed display-name resolution, absolute-path passthrough (and `!ok` when the absolute path is missing), unknown identifiers return `!ok`, `resolveChromeProfileDir` thin wrapper, `chromeProfileDestination` carries the enriched `DisplayName`, `chromeProfileSummary` formatting across all four shapes (`display+dir`, dir-only, display==dir, input fallback), `availableChromeProfileNames` filters non-profile dirs and regular files, and `readChromeLocalState` returns `nil` gracefully for missing or malformed JSON instead of panicking.
+- **Edge cases hardened.** The test matrix locks in the LOCK-skip contract (open-time and mid-copy), the wrapped-error contract on the unhappy path, and the display-name enrichment contract — preventing future regressions in the resilient copy + resolution code paths exercised by `gitmap cpc`.
+- **Files:** `gitmap/cmd/chromeprofile_copy_test.go` (new), `gitmap/cmd/chromeprofile_resolve_test.go` (new), `gitmap/constants/constants.go` (`6.44.0`), `src/constants/index.ts` (`v6.44.0`), `README.md` (pin → v6.44.0), `CHANGELOG.md`.
+
+
+
 ## v6.43.0 — (2026-06-19) — `cpc` shows profile names and skips Chrome `LOCK` files
 
 - **Profile visualization.** `gitmap chrome-profile-copy` / `gitmap cpc` now prints the Chrome display name plus resolved directory, e.g. `Lovable (dir: Profile 15) → lv2`, followed by explicit source and destination paths.

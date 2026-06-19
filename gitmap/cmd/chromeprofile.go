@@ -47,7 +47,8 @@ func runChromeProfileCopy(args []string) {
 }
 
 // emitChromeSnapshots writes the JSON + CSV companions for a profile
-// and prints both paths. Used by cpc and cpe so they share output shape.
+// and prints both paths in a consistent Artifacts block. Used by cpc
+// and cpe so the output is identical and copy-paste friendly.
 func emitChromeSnapshots(srcPath, name string) chromeExportRecord {
 	jsonPath := defaultChromeExportPath(name)
 	jsonBytes, err := writeChromeExport(srcPath, name, jsonPath)
@@ -61,11 +62,24 @@ func emitChromeSnapshots(srcPath, name string) chromeExportRecord {
 		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileExportFail, err)
 		csvPath = ""
 	}
-	fmt.Printf(constants.MsgChromeProfileExportOk, jsonPath, jsonBytes)
-	if csvPath != "" {
-		fmt.Printf(constants.MsgChromeProfileExportCSV, csvPath, csvBytes)
+	rec := chromeExportRecord{JSONPath: jsonPath, JSONSize: jsonBytes, CSVPath: csvPath, CSVSize: csvBytes}
+	printChromeArtifacts(rec)
+	return rec
+}
+
+// printChromeArtifacts prints the canonical Artifacts: block. Always
+// emits both rows so callers can grep `json:`/`csv:` deterministically.
+func printChromeArtifacts(rec chromeExportRecord) {
+	fmt.Print(constants.MsgChromeProfileArtifactsHd)
+	fmt.Printf(constants.MsgChromeProfileArtifactRow, "json:", artifactValue(rec.JSONPath))
+	fmt.Printf(constants.MsgChromeProfileArtifactRow, "csv:", artifactValue(rec.CSVPath))
+}
+
+func artifactValue(path string) string {
+	if path == "" {
+		return constants.MsgChromeProfileArtifactNA
 	}
-	return chromeExportRecord{JSONPath: jsonPath, JSONSize: jsonBytes, CSVPath: csvPath, CSVSize: csvBytes}
+	return path
 }
 
 // runChromeProfileExport implements `gitmap chrome-profile-export`.
@@ -90,7 +104,6 @@ func runChromeProfileExport(args []string) {
 		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileExportFail, err)
 		os.Exit(constants.ExitChromeProfileCopyFailed)
 	}
-	fmt.Printf(constants.MsgChromeProfileExportOk, outPath, jsonBytes)
 	csvPath := outPath
 	if ext := constants.ExtJSON; len(csvPath) > len(ext) && csvPath[len(csvPath)-len(ext):] == ext {
 		csvPath = csvPath[:len(csvPath)-len(ext)] + constants.ExtCSV
@@ -101,16 +114,18 @@ func runChromeProfileExport(args []string) {
 	if csvErr != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileExportFail, csvErr)
 		csvPath = ""
-	} else {
-		fmt.Printf(constants.MsgChromeProfileExportCSV, csvPath, csvBytes)
 	}
-	persistChromeProfile(name, srcPath, chromeExportRecord{
+	rec := chromeExportRecord{
 		JSONPath: outPath, JSONSize: jsonBytes,
 		CSVPath: csvPath, CSVSize: csvBytes,
-	})
+	}
+	printChromeArtifacts(rec)
+	persistChromeProfile(name, srcPath, rec)
 }
 
 // runChromeProfileImport implements `gitmap chrome-profile-import`.
+// Accepts both .json (full snapshot) and .csv (lossy: extension IDs +
+// known preferences only — bookmarks omitted).
 func runChromeProfileImport(args []string) {
 	checkHelp(constants.CmdChromeProfileImport, args)
 	if len(args) < 1 {
@@ -118,7 +133,7 @@ func runChromeProfileImport(args []string) {
 		os.Exit(constants.ExitChromeProfileUsage)
 	}
 	srcFile := args[0]
-	exp, err := readChromeExport(srcFile)
+	exp, err := loadChromeImport(srcFile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrChromeProfileImportFail, err)
 		os.Exit(constants.ExitChromeProfileCopyFailed)

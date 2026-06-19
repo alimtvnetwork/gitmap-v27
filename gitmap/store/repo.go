@@ -29,6 +29,28 @@ func (db *DB) upsertOne(r model.ScanRecord) error {
 	return err
 }
 
+// DeleteByPath removes the repo row whose AbsolutePath matches.
+// Returns the number of rows deleted (0 when no match).
+func (db *DB) DeleteByPath(absPath string) (int64, error) {
+	res, err := db.conn.Exec(constants.SQLDeleteRepoByPath, absPath)
+	if err != nil {
+		return 0, err
+	}
+
+	return res.RowsAffected()
+}
+
+// DeleteBySlug removes every repo row whose Slug matches.
+// Returns the number of rows deleted.
+func (db *DB) DeleteBySlug(slug string) (int64, error) {
+	res, err := db.conn.Exec(constants.SQLDeleteRepoBySlug, slug)
+	if err != nil {
+		return 0, err
+	}
+
+	return res.RowsAffected()
+}
+
 // ListRepos returns all tracked repositories ordered by slug.
 func (db *DB) ListRepos() ([]model.ScanRecord, error) {
 	rows, err := db.conn.Query(constants.SQLSelectAllRepos)

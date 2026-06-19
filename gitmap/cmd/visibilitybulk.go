@@ -62,7 +62,7 @@ func parseBulkSingleArg(arg string) (bulkVisibilityRequest, bool) {
 
 	base, ver := resolveCurrentRepoBaseAndVersion()
 
-	return bulkVisibilityRequest{BaseRepo: base, StartVer: ver, Count: count}, true
+	return bulkVisibilityRequest{BaseRepo: base, StartVer: ver - 1, Count: count}, true
 }
 
 func parseBulkPairArg(repoArg, countArg string) (bulkVisibilityRequest, bool) {
@@ -78,7 +78,7 @@ func parseBulkPairArg(repoArg, countArg string) (bulkVisibilityRequest, bool) {
 		os.Exit(constants.ExitVisBadFlag)
 	}
 
-	return bulkVisibilityRequest{BaseRepo: base, StartVer: ver, Count: count}, true
+	return bulkVisibilityRequest{BaseRepo: base, StartVer: ver - 1, Count: count}, true
 }
 
 // resolveCurrentRepoBaseAndVersion reads origin and splits its repo

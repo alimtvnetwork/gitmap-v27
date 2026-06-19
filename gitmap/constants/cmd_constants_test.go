@@ -271,6 +271,16 @@ func topLevelCmds() map[string]string {
 		"CmdVSCodeWorkspaceAlias": CmdVSCodeWorkspaceAlias,
 		"CmdVSCodePMSync":         CmdVSCodePMSync,
 		"CmdVSCodePMSyncAlias":    CmdVSCodePMSyncAlias,
+		"CmdChromeProfileCopy":        CmdChromeProfileCopy,
+		"CmdChromeProfileCopyAlias":   CmdChromeProfileCopyAlias,
+		"CmdChromeProfileExport":      CmdChromeProfileExport,
+		"CmdChromeProfileExportAlias": CmdChromeProfileExportAlias,
+		"CmdChromeProfileImport":      CmdChromeProfileImport,
+		"CmdChromeProfileImportAlias": CmdChromeProfileImportAlias,
+		"CmdChromeProfileList":        CmdChromeProfileList,
+		"CmdChromeProfileListAlias":   CmdChromeProfileListAlias,
+		"CmdChromeProfileDelete":      CmdChromeProfileDelete,
+		"CmdChromeProfileDeleteAlias": CmdChromeProfileDeleteAlias,
 	}
 }
 

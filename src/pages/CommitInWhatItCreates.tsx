@@ -21,19 +21,19 @@ const CommitInWhatItCreates = () => (
         </thead>
         <tbody>
           <tr className="border-t border-border">
-            <td className="px-4 py-2 font-mono text-xs text-primary">gitmap-v25 cin ./new-repo https://github.com/me/old.git</td>
+            <td className="px-4 py-2 font-mono text-xs text-primary">gitmap-v26 cin ./new-repo https://github.com/me/old.git</td>
             <td className="px-4 py-2 text-xs text-muted-foreground"><code>./new-repo/</code> is created + <code>git init</code>'d, then every commit from <code>old.git</code> is appended in author-date order.</td>
           </tr>
           <tr className="border-t border-border">
-            <td className="px-4 py-2 font-mono text-xs text-primary">gitmap-v25 cin ./gitmap-v25 all</td>
-            <td className="px-4 py-2 text-xs text-muted-foreground">Every <code>./gitmap-v25</code>, <code>-v2</code>, …, <code>-vN</code> sibling on disk is auto-discovered and replayed into <code>./gitmap-v25/</code> oldest&nbsp;→&nbsp;newest.</td>
+            <td className="px-4 py-2 font-mono text-xs text-primary">gitmap-v26 cin ./gitmap-v26 all</td>
+            <td className="px-4 py-2 text-xs text-muted-foreground">Every <code>./gitmap-v26</code>, <code>-v2</code>, …, <code>-vN</code> sibling on disk is auto-discovered and replayed into <code>./gitmap-v26/</code> oldest&nbsp;→&nbsp;newest.</td>
           </tr>
           <tr className="border-t border-border">
-            <td className="px-4 py-2 font-mono text-xs text-primary">gitmap-v25 cin ./gitmap-v25 -3</td>
+            <td className="px-4 py-2 font-mono text-xs text-primary">gitmap-v26 cin ./gitmap-v26 -3</td>
             <td className="px-4 py-2 text-xs text-muted-foreground">Same as above, but only the latest 3 siblings (e.g. v17, v18, v19).</td>
           </tr>
           <tr className="border-t border-border">
-            <td className="px-4 py-2 font-mono text-xs text-primary">gitmap-v25 cin ./canonical a,b,git@host:c.git</td>
+            <td className="px-4 py-2 font-mono text-xs text-primary">gitmap-v26 cin ./canonical a,b,git@host:c.git</td>
             <td className="px-4 py-2 text-xs text-muted-foreground">Mixed inputs — local + remote — interleaved by author date into one timeline in <code>./canonical/</code>.</td>
           </tr>
         </tbody>

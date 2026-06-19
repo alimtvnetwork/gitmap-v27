@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // seoWriteFlags holds parsed flags for the seo-write command.

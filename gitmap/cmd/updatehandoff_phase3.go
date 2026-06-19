@@ -19,8 +19,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/verbose"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/verbose"
 )
 
 // scheduleDeployedCleanupHandoff hands off cleanup work to the freshly

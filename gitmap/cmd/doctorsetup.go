@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/store"
 )
 
 // checkSetupConfig verifies git-setup.json can be resolved from the binary.

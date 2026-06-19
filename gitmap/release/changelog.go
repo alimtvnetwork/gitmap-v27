@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // ChangelogEntry represents one version section in CHANGELOG.md.

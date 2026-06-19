@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // openHostedDocsFallback opens the hosted docs URL when the local docs site

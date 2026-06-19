@@ -17,11 +17,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/errreport"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/probe"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/errreport"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/probe"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/store"
 )
 
 // startBackgroundProbe decides whether the background probe should

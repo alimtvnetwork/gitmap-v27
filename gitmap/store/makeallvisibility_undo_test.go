@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
 )
 
 // freshUndoDB returns a migrated DB at a per-test temp path.

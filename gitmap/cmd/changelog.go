@@ -10,9 +10,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/release"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/render"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/release"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/render"
 )
 
 // runChangelog handles the 'changelog' command.

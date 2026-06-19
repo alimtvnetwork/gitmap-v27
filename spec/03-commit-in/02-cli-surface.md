@@ -13,7 +13,7 @@ Both resolve to the same handler. CLI ID lives in `constants_cli.go`
 ## 2.2 Argv grammar (formal)
 
 ```
-gitmap-v25 (commit-in | cin) <source> <inputs...> [flags]
+gitmap-v26 (commit-in | cin) <source> <inputs...> [flags]
 
 <source>     := PATH | URL
 <inputs...>  := INPUT (SEP INPUT)*  |  KEYWORD
@@ -59,7 +59,7 @@ Discovery rules:
 - Search the **parent directory of `<source>`**.
 - A sibling matches when its basename equals `<base>` or `<base>-vN`
   where `<base>` is `<source>`'s basename with any trailing `-vN`
-  stripped (e.g. `gitmap-v25` → base `gitmap-v25`).
+  stripped (e.g. `gitmap-v26` → base `gitmap-v26`).
 - Walk order: plain `<base>` FIRST (treated as `v0`), then `v1`, `v2`,
   …, `vK`. Numeric ascending. (Resolves Ambiguity #1, #2.)
 - `<source>` itself is excluded from the input list.

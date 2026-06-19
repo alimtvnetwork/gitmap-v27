@@ -4,7 +4,7 @@
 
 ## Overview
 
-Every gitmap-v25 command supports a `--help` flag that prints detailed
+Every gitmap-v26 command supports a `--help` flag that prints detailed
 usage information including description, syntax, flags, 2–3 examples
 with sample output, and prerequisites. Help content is authored as
 Markdown files and embedded into the binary via `go:embed`.
@@ -21,17 +21,17 @@ section showing every command with examples.
 Each command has a dedicated Markdown file under:
 
 ```
-gitmap-v25/helptext/<command-name>.md
+gitmap-v26/helptext/<command-name>.md
 ```
 
 Example files:
 
 ```
-gitmap-v25/helptext/scan.md
-gitmap-v25/helptext/clone.md
-gitmap-v25/helptext/cd.md
-gitmap-v25/helptext/go-repos.md
-gitmap-v25/helptext/release.md
+gitmap-v26/helptext/scan.md
+gitmap-v26/helptext/clone.md
+gitmap-v26/helptext/cd.md
+gitmap-v26/helptext/go-repos.md
+gitmap-v26/helptext/release.md
 ...
 ```
 
@@ -40,7 +40,7 @@ gitmap-v25/helptext/release.md
 Every help file follows this structure:
 
 ```markdown
-# gitmap-v25 <command>
+# gitmap-v26 <command>
 
 <One-line description>
 
@@ -50,7 +50,7 @@ Every help file follows this structure:
 
 ## Usage
 
-    gitmap-v25 <command> [args] [flags]
+    gitmap-v26 <command> [args] [flags]
 
 ## Flags
 
@@ -60,14 +60,14 @@ Every help file follows this structure:
 
 ## Prerequisites
 
-- Run `gitmap-v25 scan` first to populate the database (link to scan.md)
+- Run `gitmap-v26 scan` first to populate the database (link to scan.md)
 - (or "None" if no prerequisites)
 
 ## Examples
 
 ### Example 1: <title>
 
-    gitmap-v25 <command> <args>
+    gitmap-v26 <command> <args>
 
 **Output:**
 
@@ -75,7 +75,7 @@ Every help file follows this structure:
 
 ### Example 2: <title>
 
-    gitmap-v25 <command> <args>
+    gitmap-v26 <command> <args>
 
 **Output:**
 
@@ -89,7 +89,7 @@ Every help file follows this structure:
 
 ### Embedding
 
-A new package `gitmap-v25/helptext` bundles all `.md` files:
+A new package `gitmap-v26/helptext` bundles all `.md` files:
 
 ```go
 package helptext
@@ -102,7 +102,7 @@ var files embed.FS
 
 ### Runtime Behavior
 
-When a user runs `gitmap-v25 <command> --help`:
+When a user runs `gitmap-v26 <command> --help`:
 
 1. The command handler detects `--help` in the args (before flag parsing).
 2. It calls `helptext.Print("<command-name>")` which reads the
@@ -137,7 +137,7 @@ A shared helper in the `cmd` package intercepts `--help` early:
 // cmd/helpcheck.go
 package cmd
 
-import "github.com/alimtvnetwork/gitmap-v25/gitmap-v25/helptext"
+import "github.com/alimtvnetwork/gitmap-v26/gitmap-v26/helptext"
 
 // checkHelp prints embedded help and exits if --help is present.
 func checkHelp(command string, args []string) {
@@ -184,7 +184,7 @@ Each command entry in the README includes:
 - One-line description
 - 1–2 inline examples with sample output
 
-For full details, each entry links to `gitmap-v25/helptext/<command>.md`.
+For full details, each entry links to `gitmap-v26/helptext/<command>.md`.
 
 ---
 
@@ -261,9 +261,9 @@ For full details, each entry links to `gitmap-v25/helptext/<command>.md`.
 
 ## Implementation Checklist
 
-1. Create `gitmap-v25/helptext/` directory with all 41 `.md` files
-2. Create `gitmap-v25/helptext/print.go` with `go:embed` and `Print` function
-3. Create `gitmap-v25/cmd/helpcheck.go` with `checkHelp` function
+1. Create `gitmap-v26/helptext/` directory with all 41 `.md` files
+2. Create `gitmap-v26/helptext/print.go` with `go:embed` and `Print` function
+3. Create `gitmap-v26/cmd/helpcheck.go` with `checkHelp` function
 4. Add `checkHelp` call to every command handler
 5. Update root `README.md` with grouped command reference
 6. Add constants: `FlagHelp = "--help"`, `FlagHelpShort = "-h"`
@@ -273,10 +273,10 @@ For full details, each entry links to `gitmap-v25/helptext/<command>.md`.
 
 ## Acceptance Criteria
 
-- [ ] `gitmap-v25 scan --help` prints scan help with examples and exits 0
-- [ ] `gitmap-v25 cd --help` prints cd help including prerequisites
-- [ ] `gitmap-v25 go-repos -h` prints project detection help
+- [ ] `gitmap-v26 scan --help` prints scan help with examples and exits 0
+- [ ] `gitmap-v26 cd --help` prints cd help including prerequisites
+- [ ] `gitmap-v26 go-repos -h` prints project detection help
 - [ ] Every command handler checks for `--help` before flag parsing
 - [ ] Root README contains grouped command reference with examples
 - [ ] Help files are embedded (no file I/O at runtime)
-- [ ] `gitmap-v25 help` continues to print the existing summary usage
+- [ ] `gitmap-v26 help` continues to print the existing summary usage

@@ -73,22 +73,22 @@ const HistoryRewritePage = () => (
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
         <CodeBlock code={`# Remove leaked credentials from all history
-gitmap-v25 history-purge .env secrets/api.key
-gitmap-v25 hp            .env secrets/api.key            # short alias
+gitmap-v26 history-purge .env secrets/api.key
+gitmap-v26 hp            .env secrets/api.key            # short alias
 
 # Multi-path: separate args, comma, or comma-space all work
-gitmap-v25 hp "secret.env, build/cache.bin"
-gitmap-v25 hp secret.env,build/cache.bin
+gitmap-v26 hp "secret.env, build/cache.bin"
+gitmap-v26 hp secret.env,build/cache.bin
 
 # Pin a doc to its current content across every past commit
-gitmap-v25 history-pin docs/README.md
-gitmap-v25 hpin        docs/README.md
+gitmap-v26 history-pin docs/README.md
+gitmap-v26 hpin        docs/README.md
 
 # Dry run (no push, sandbox kept on disk for inspection)
-gitmap-v25 hp .env --dry-run --keep-sandbox
+gitmap-v26 hp .env --dry-run --keep-sandbox
 
 # Hide what was scrubbed by rewriting touched commit messages
-gitmap-v25 hp .env --message "history cleanup" --yes`} />
+gitmap-v26 hp .env --message "history cleanup" --yes`} />
       </section>
 
       <section>
@@ -162,7 +162,7 @@ brew install git-filter-repo
 # Windows alternative
 scoop install git-filter-repo`} />
         <p className="text-xs text-muted-foreground mt-2">
-          Missing? gitmap-v25 exits <code>3</code> with the install hint.
+          Missing? gitmap-v26 exits <code>3</code> with the install hint.
         </p>
       </section>
 

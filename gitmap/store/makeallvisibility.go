@@ -17,8 +17,8 @@ package store
 import (
 	"fmt"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
 )
 
 // InsertMakeAllVisibilityRun writes the pre-prompt run row and returns

@@ -4,17 +4,17 @@ import TerminalDemo from "@/components/docs/TerminalDemo";
 import { Tag, GitBranch, Terminal, ArrowLeftRight } from "lucide-react";
 
 const features = [
-  { icon: Tag, title: "Self-Release", desc: "Release gitmap-v25 itself from any directory" },
+  { icon: Tag, title: "Self-Release", desc: "Release gitmap-v26 itself from any directory" },
   { icon: ArrowLeftRight, title: "Auto-Fallback", desc: "release auto-detects non-Git dirs and falls back to self-release" },
   { icon: GitBranch, title: "Full Flag Parity", desc: "All release flags work identically in self-release mode" },
   { icon: Terminal, title: "Directory Return", desc: "Returns to your original working directory after release" },
 ];
 
 const selfReleaseDemo = {
-  title: "gitmap-v25 release-self --bump patch",
+  title: "gitmap-v26 release-self --bump patch",
   lines: [
-    { text: "$ gitmap-v25 rs --bump patch", type: "input" as const, delay: 0 },
-    { text: "→ Self-release: switching to /home/user/go/src/gitmap-v25", type: "accent" as const, delay: 600 },
+    { text: "$ gitmap-v26 rs --bump patch", type: "input" as const, delay: 0 },
+    { text: "→ Self-release: switching to /home/user/go/src/gitmap-v26", type: "accent" as const, delay: 600 },
     { text: "v2.45.0 → v2.45.1", type: "output" as const, delay: 400 },
     { text: "Creating release v2.45.1...", type: "header" as const, delay: 400 },
     { text: "  ✓ Created branch release/v2.45.1", type: "output" as const, delay: 300 },
@@ -29,8 +29,8 @@ const autoFallbackDemo = {
   title: "Auto-fallback when not in a Git repo",
   lines: [
     { text: "$ cd /tmp", type: "input" as const, delay: 0 },
-    { text: "$ gitmap-v25 release --bump minor", type: "input" as const, delay: 600 },
-    { text: "→ Self-release: switching to /home/user/go/src/gitmap-v25", type: "accent" as const, delay: 600 },
+    { text: "$ gitmap-v26 release --bump minor", type: "input" as const, delay: 600 },
+    { text: "→ Self-release: switching to /home/user/go/src/gitmap-v26", type: "accent" as const, delay: 600 },
     { text: "v2.45.0 → v2.46.0", type: "output" as const, delay: 400 },
     { text: "Creating release v2.46.0...", type: "header" as const, delay: 400 },
     { text: "  ✓ Created branch release/v2.46.0", type: "output" as const, delay: 300 },
@@ -42,7 +42,7 @@ const autoFallbackDemo = {
 };
 
 const errorScenarios = [
-  { scenario: "Executable path + DB fallback both fail", behavior: "Exit 1: could not locate gitmap-v25 source repository" },
+  { scenario: "Executable path + DB fallback both fail", behavior: "Exit 1: could not locate gitmap-v26 source repository" },
   { scenario: "DB path stale (no .git)", behavior: "Falls through to error" },
   { scenario: "Release fails", behavior: "Standard release error handling; still returns to original dir" },
   { scenario: "Return chdir fails", behavior: "Warning printed; exit 0 (release succeeded)" },
@@ -61,7 +61,7 @@ const ReleaseSelfPage = () => {
             <span className="text-xs font-mono bg-muted px-2 py-0.5 rounded text-muted-foreground">rself</span>
           </div>
           <p className="text-muted-foreground text-lg">
-            Release gitmap-v25 itself from any directory — explicitly or via auto-fallback.
+            Release gitmap-v26 itself from any directory — explicitly or via auto-fallback.
           </p>
         </div>
 
@@ -81,7 +81,7 @@ const ReleaseSelfPage = () => {
         {/* Usage */}
         <section>
           <h2 className="text-xl font-heading font-semibold text-foreground mb-3">Usage</h2>
-          <CodeBlock code="gitmap-v25 release-self [version] [flags]" />
+          <CodeBlock code="gitmap-v26 release-self [version] [flags]" />
           <p className="text-sm text-muted-foreground mt-2">
             Accepts all flags supported by <code className="text-primary font-mono">release</code> —
             <code className="text-primary font-mono"> --assets</code>,{" "}
@@ -101,7 +101,7 @@ const ReleaseSelfPage = () => {
               { step: "1", title: "Resolve source repo", desc: "Tries os.Executable() + symlink resolution first. If that fails (e.g., binary installed outside source tree), falls back to the source_repo_path stored in the SQLite Settings table." },
               { step: "2", title: "Check current directory", desc: "If already in the source repo, skips the directory switch and proceeds directly." },
               { step: "3", title: "Switch directory", desc: "Records the caller's working directory, then os.Chdir() into the resolved source repo root." },
-              { step: "4", title: "Execute release", desc: "Runs the full release workflow (identical to gitmap-v25 release) from the source repo." },
+              { step: "4", title: "Execute release", desc: "Runs the full release workflow (identical to gitmap-v26 release) from the source repo." },
               { step: "5", title: "Return to caller", desc: "os.Chdir() back to the original working directory and prints a confirmation message." },
             ].map((s) => (
               <div key={s.step} className="flex items-start gap-3 p-3 rounded-lg border border-border bg-card">
@@ -138,15 +138,15 @@ const ReleaseSelfPage = () => {
           <div className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground mb-1">Dry-run self-release</p>
-              <CodeBlock code="gitmap-v25 rs --bump minor --dry-run" />
+              <CodeBlock code="gitmap-v26 rs --bump minor --dry-run" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-1">Self-release with assets and compression</p>
-              <CodeBlock code="gitmap-v25 rs v2.46.0 --assets ./dist --compress --checksums" />
+              <CodeBlock code="gitmap-v26 rs v2.46.0 --assets ./dist --compress --checksums" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-1">Draft self-release</p>
-              <CodeBlock code="gitmap-v25 rs --bump patch --draft --notes 'pre-release test'" />
+              <CodeBlock code="gitmap-v26 rs --bump patch --draft --notes 'pre-release test'" />
             </div>
           </div>
         </section>

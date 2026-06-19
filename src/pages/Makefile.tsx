@@ -9,7 +9,7 @@ const targets = [
   },
   {
     name: "run",
-    desc: "Build, deploy, and run gitmap-v25 with optional arguments.",
+    desc: "Build, deploy, and run gitmap-v26 with optional arguments.",
     example: 'make run ARGS="list --json"',
   },
   {
@@ -56,7 +56,7 @@ const MakefilePage = () => {
       <section className="space-y-6">
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 text-foreground">Quick start</h2>
-          <CodeBlock code={`cd gitmap-v25\nmake build          # full pipeline\nmake run ARGS="scan ~/code"   # build + run\nmake test           # tests with report`} title="Terminal" />
+          <CodeBlock code={`cd gitmap-v26\nmake build          # full pipeline\nmake run ARGS="scan ~/code"   # build + run\nmake test           # tests with report`} title="Terminal" />
         </div>
 
         <div>
@@ -81,7 +81,7 @@ const MakefilePage = () => {
           <h2 className="text-xl font-heading font-semibold mb-3 text-foreground">Passing arguments</h2>
           <p className="text-muted-foreground mb-3">
             The <code className="font-mono text-primary">run</code> target forwards
-            everything in <code className="font-mono text-primary">ARGS</code> to gitmap-v25 after building:
+            everything in <code className="font-mono text-primary">ARGS</code> to gitmap-v26 after building:
           </p>
           <CodeBlock
             code={`make run ARGS="list --json"\nmake run ARGS="scan ~/projects"\nmake run ARGS="latest-branch --top 5"`}
@@ -95,7 +95,7 @@ const MakefilePage = () => {
             Each target delegates to{" "}
             <code className="font-mono text-primary">run.sh</code> with the appropriate flag.
             The Makefile lives at{" "}
-            <code className="font-mono text-primary">gitmap-v25/Makefile</code> and invokes{" "}
+            <code className="font-mono text-primary">gitmap-v26/Makefile</code> and invokes{" "}
             <code className="font-mono text-primary">../run.sh</code> relative to the repo root.
             On Windows, use <code className="font-mono text-primary">run.ps1</code> directly
             instead of Make.

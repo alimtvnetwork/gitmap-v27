@@ -108,15 +108,15 @@ const ReleasePage = () => {
           <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Commands</h2>
           <div className="space-y-4">
             <div className="p-4 rounded-lg border border-border bg-card">
-              <h3 className="font-mono font-semibold text-foreground mb-1">gitmap-v25 release [version] <span className="text-muted-foreground font-normal text-sm">(alias: r)</span></h3>
+              <h3 className="font-mono font-semibold text-foreground mb-1">gitmap-v26 release [version] <span className="text-muted-foreground font-normal text-sm">(alias: r)</span></h3>
               <p className="text-sm text-muted-foreground">Create a release branch, Git tag, push to remote, and optionally cross-compile + upload Go binaries.</p>
             </div>
             <div className="p-4 rounded-lg border border-border bg-card">
-              <h3 className="font-mono font-semibold text-foreground mb-1">gitmap-v25 release-branch &lt;branch&gt; <span className="text-muted-foreground font-normal text-sm">(alias: rb)</span></h3>
+              <h3 className="font-mono font-semibold text-foreground mb-1">gitmap-v26 release-branch &lt;branch&gt; <span className="text-muted-foreground font-normal text-sm">(alias: rb)</span></h3>
               <p className="text-sm text-muted-foreground">Complete a release from an existing release/vX.Y.Z branch.</p>
             </div>
             <div className="p-4 rounded-lg border border-border bg-card">
-              <h3 className="font-mono font-semibold text-foreground mb-1">gitmap-v25 release-pending <span className="text-muted-foreground font-normal text-sm">(alias: rp)</span></h3>
+              <h3 className="font-mono font-semibold text-foreground mb-1">gitmap-v26 release-pending <span className="text-muted-foreground font-normal text-sm">(alias: rp)</span></h3>
               <p className="text-sm text-muted-foreground">Release all release/v* branches that are missing tags.</p>
             </div>
           </div>
@@ -126,7 +126,7 @@ const ReleasePage = () => {
         <div>
           <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Release Workflow</h2>
 
-          <h3 className="text-base font-heading font-semibold text-foreground mb-3">gitmap-v25 release [version]</h3>
+          <h3 className="text-base font-heading font-semibold text-foreground mb-3">gitmap-v26 release [version]</h3>
           <div className="p-5 rounded-lg border border-border bg-card font-mono text-sm space-y-1 mb-6">
             {[
               "1. Resolve version (CLI → --bump → version.json → error)",
@@ -149,7 +149,7 @@ const ReleasePage = () => {
             ))}
           </div>
 
-          <h3 className="text-base font-heading font-semibold text-foreground mb-3">gitmap-v25 release-branch / release-pending</h3>
+          <h3 className="text-base font-heading font-semibold text-foreground mb-3">gitmap-v26 release-branch / release-pending</h3>
           <div className="p-5 rounded-lg border border-border bg-card font-mono text-sm space-y-1">
             {[
               "1. Validate branch exists / discover pending branches + metadata",
@@ -175,7 +175,7 @@ const ReleasePage = () => {
         <div>
           <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Go Cross-Compilation</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            When a <code className="font-mono text-primary">go.mod</code> file is detected, gitmap-v25 automatically
+            When a <code className="font-mono text-primary">go.mod</code> file is detected, gitmap-v26 automatically
             cross-compiles binaries for all OS/arch targets using <code className="font-mono text-primary">CGO_ENABLED=0</code>.
             No external tools required — uses Go's native cross-compilation.
           </p>
@@ -219,15 +219,15 @@ const ReleasePage = () => {
           </div>
 
           <p className="text-sm text-muted-foreground mt-4">
-            Use <code className="font-mono text-primary">gitmap-v25 release --list-targets</code> to inspect
+            Use <code className="font-mono text-primary">gitmap-v26 release --list-targets</code> to inspect
             the resolved matrix:
           </p>
-          <CodeBlock code={`$ gitmap-v25 release --list-targets\nRelease targets (6):\nSource: built-in defaults\n\n  windows/amd64\n  windows/arm64\n  linux/amd64\n  linux/arm64\n  darwin/amd64\n  darwin/arm64`} />
+          <CodeBlock code={`$ gitmap-v26 release --list-targets\nRelease targets (6):\nSource: built-in defaults\n\n  windows/amd64\n  windows/arm64\n  linux/amd64\n  linux/arm64\n  darwin/amd64\n  darwin/arm64`} />
 
           <p className="text-sm text-muted-foreground mt-4">
             With a <code className="font-mono text-primary">--targets</code> override:
           </p>
-          <CodeBlock code={`$ gitmap-v25 release --list-targets --targets windows/amd64,linux/amd64\nRelease targets (2):\nSource: --targets flag\n\n  windows/amd64\n  linux/amd64`} />
+          <CodeBlock code={`$ gitmap-v26 release --list-targets --targets windows/amd64,linux/amd64\nRelease targets (2):\nSource: --targets flag\n\n  windows/amd64\n  linux/amd64`} />
         </div>
 
         {/* Version Resolution */}
@@ -236,7 +236,7 @@ const ReleasePage = () => {
           <p className="text-sm text-muted-foreground mb-3">Version is resolved in priority order:</p>
           <div className="space-y-2 mb-6">
             {[
-              { label: "CLI argument", example: "gitmap-v25 release v1.2.3" },
+              { label: "CLI argument", example: "gitmap-v26 release v1.2.3" },
               { label: "--bump flag", example: "reads latest, increments" },
               { label: "version.json", example: '{ "version": "1.2.3" }' },
               { label: "Error", example: "no version source found" },
@@ -354,47 +354,47 @@ const ReleasePage = () => {
           <div className="space-y-4">
             <div>
               <p className="text-sm text-muted-foreground mb-2">Full semver release from HEAD</p>
-              <CodeBlock code="gitmap-v25 release v1.2.3" />
+              <CodeBlock code="gitmap-v26 release v1.2.3" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Auto-increment with compression and checksums</p>
-              <CodeBlock code="gitmap-v25 release --bump patch --compress --checksums" />
+              <CodeBlock code="gitmap-v26 release --bump patch --compress --checksums" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Custom cross-compile targets</p>
-              <CodeBlock code="gitmap-v25 release v2.0.0 --targets windows/amd64,linux/amd64" />
+              <CodeBlock code="gitmap-v26 release v2.0.0 --targets windows/amd64,linux/amd64" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Inspect resolved target matrix</p>
-              <CodeBlock code="gitmap-v25 release --list-targets" />
+              <CodeBlock code="gitmap-v26 release --list-targets" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Skip Go binary compilation</p>
-              <CodeBlock code="gitmap-v25 release v1.0.0 --no-assets" />
+              <CodeBlock code="gitmap-v26 release v1.0.0 --no-assets" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Release with a persistent zip group</p>
-              <CodeBlock code="gitmap-v25 release v3.0.0 --zip-group docs-bundle" />
+              <CodeBlock code="gitmap-v26 release v3.0.0 --zip-group docs-bundle" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Ad-hoc zip with bundle</p>
-              <CodeBlock code={`gitmap-v25 release v3.0.0 -Z ./dist/report.pdf -Z ./dist/manual.pdf --bundle docs.zip`} />
+              <CodeBlock code={`gitmap-v26 release v3.0.0 -Z ./dist/report.pdf -Z ./dist/manual.pdf --bundle docs.zip`} />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Combine persistent groups and ad-hoc items</p>
-              <CodeBlock code="gitmap-v25 release v3.0.0 --zip-group docs-bundle -Z ./extras/notes.txt" />
+              <CodeBlock code="gitmap-v26 release v3.0.0 --zip-group docs-bundle -Z ./extras/notes.txt" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Release with notes (title and tag annotation)</p>
-              <CodeBlock code={`gitmap-v25 release --bump patch -N 'Hotfix for auth timeout'`} />
+              <CodeBlock code={`gitmap-v26 release --bump patch -N 'Hotfix for auth timeout'`} />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Draft and dry-run</p>
-              <CodeBlock code={`gitmap-v25 release v3.0.0-rc.1 --draft\ngitmap release v1.0.0 --dry-run`} />
+              <CodeBlock code={`gitmap-v26 release v3.0.0-rc.1 --draft\ngitmap release v1.0.0 --dry-run`} />
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-2">Release from existing branch / pending</p>
-              <CodeBlock code={`gitmap-v25 release-branch release/v1.2.0\ngitmap release-pending\ngitmap release-pending --dry-run`} />
+              <CodeBlock code={`gitmap-v26 release-branch release/v1.2.0\ngitmap release-pending\ngitmap release-pending --dry-run`} />
             </div>
           </div>
         </div>
@@ -403,7 +403,7 @@ const ReleasePage = () => {
         <div>
           <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Dry-Run Preview</h2>
           <div className="bg-card border border-border rounded-lg p-5 font-mono text-sm space-y-1">
-            <p className="text-muted-foreground">{`$ gitmap-v25 release v1.2.3 --dry-run`}</p>
+            <p className="text-muted-foreground">{`$ gitmap-v26 release v1.2.3 --dry-run`}</p>
             <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Create branch release/v1.2.3 from main</p>
             <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Create tag v1.2.3</p>
             <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Push branch and tag to origin</p>
@@ -428,7 +428,7 @@ const ReleasePage = () => {
           </p>
 
           <div className="bg-card border border-border rounded-lg p-5 font-mono text-sm space-y-1 mb-6">
-            <p className="text-muted-foreground">$ gitmap-v25 release --bump patch</p>
+            <p className="text-muted-foreground">$ gitmap-v26 release --bump patch</p>
             <p className="text-foreground/80">&nbsp;&nbsp;→ Bumped v2.3.9 → v2.3.10</p>
             <p className="text-yellow-500">&nbsp;&nbsp;⚠ Release metadata exists for v2.3.10 but no tag or branch was found.</p>
             <p className="text-foreground/80">&nbsp;&nbsp;→ Do you want to remove the release JSON and proceed? (y/N): <span className="text-primary">y</span></p>
@@ -545,7 +545,7 @@ const ReleasePage = () => {
 
           <h3 className="text-base font-heading font-semibold text-foreground mt-6 mb-3">Dry-Run Output</h3>
           <div className="bg-card border border-border rounded-lg p-5 font-mono text-sm space-y-1">
-            <p className="text-muted-foreground">$ gitmap-v25 release v3.0.0 --zip-group docs-bundle -Z ./report.pdf --dry-run</p>
+            <p className="text-muted-foreground">$ gitmap-v26 release v3.0.0 --zip-group docs-bundle -Z ./report.pdf --dry-run</p>
             <p className="text-foreground/80">&nbsp;&nbsp;[dry-run] Would create 2 zip archive(s):</p>
             <p className="text-foreground/60">&nbsp;&nbsp;&nbsp;&nbsp;→ docs-bundle_v3.0.0.zip (3 items: README.md, CHANGELOG.md, docs/)</p>
             <p className="text-foreground/60">&nbsp;&nbsp;&nbsp;&nbsp;→ report.pdf.zip (1 item: dist/report.pdf)</p>

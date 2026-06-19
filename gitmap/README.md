@@ -1,7 +1,7 @@
 # GitMap
 
-[![CI](https://github.com/alimtvnetwork/gitmap-v25/actions/workflows/ci.yml/badge.svg)](https://github.com/alimtvnetwork/gitmap-v25/actions/workflows/ci.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/alimtvnetwork/gitmap-v25?style=flat-square)](https://goreportcard.com/report/github.com/alimtvnetwork/gitmap-v25)
+[![CI](https://github.com/alimtvnetwork/gitmap-v26/actions/workflows/ci.yml/badge.svg)](https://github.com/alimtvnetwork/gitmap-v26/actions/workflows/ci.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/alimtvnetwork/gitmap-v26?style=flat-square)](https://goreportcard.com/report/github.com/alimtvnetwork/gitmap-v26)
 [![Go](https://img.shields.io/badge/Go-1.24+-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](./LICENSE)
 

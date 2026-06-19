@@ -24,17 +24,17 @@ at a configurable interval (default 5 seconds).
 
 ## Commands
 
-### `gitmap-v25 task` (alias: `tk`)
+### `gitmap-v26 task` (alias: `tk`)
 
 Manage and execute file-sync watch tasks.
 
 ```bash
-gitmap-v25 task create <name> --src <path> --dest <path>
-gitmap-v25 task list
-gitmap-v25 task run <name>
-gitmap-v25 task run <name> --interval 10
-gitmap-v25 task delete <name>
-gitmap-v25 task show <name>
+gitmap-v26 task create <name> --src <path> --dest <path>
+gitmap-v26 task list
+gitmap-v26 task run <name>
+gitmap-v26 task run <name> --interval 10
+gitmap-v26 task delete <name>
+gitmap-v26 task show <name>
 ```
 
 ---
@@ -115,7 +115,7 @@ Tasks persist in `.gitmap/tasks.json`:
 ## Dashboard Output
 
 ```
-gitmap-v25 task run frontend-sync — checking every 5s (Ctrl+C to stop)
+gitmap-v26 task run frontend-sync — checking every 5s (Ctrl+C to stop)
 Last sync: 2026-04-04 10:05:32
 
   Watched: 142 files | Synced: 3 | Skipped (gitignore): 28
@@ -165,22 +165,22 @@ Last sync: 2026-04-04 10:05:32
 
 ```bash
 # Create a task
-gitmap-v25 task create ui-sync --src ./frontend/src --dest ./backend/static
+gitmap-v26 task create ui-sync --src ./frontend/src --dest ./backend/static
 
 # List all tasks
-gitmap-v25 task list
+gitmap-v26 task list
 
 # Run a task with default 5s interval
-gitmap-v25 task run ui-sync
+gitmap-v26 task run ui-sync
 
 # Run with faster polling and verbose output
-gitmap-v25 task run ui-sync --interval 2 --verbose
+gitmap-v26 task run ui-sync --interval 2 --verbose
 
 # Preview what would sync
-gitmap-v25 task run ui-sync --dry-run
+gitmap-v26 task run ui-sync --dry-run
 
 # Delete a task
-gitmap-v25 task delete ui-sync
+gitmap-v26 task delete ui-sync
 ```
 
 ---

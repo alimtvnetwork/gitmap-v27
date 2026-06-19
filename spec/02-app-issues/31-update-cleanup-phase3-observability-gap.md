@@ -2,7 +2,7 @@
 
 ## Summary
 
-`gitmap-v25 update` can still appear to "repeat the same cleanup error with no logs" even after the Phase 3 deployed-binary handoff was introduced.
+`gitmap-v26 update` can still appear to "repeat the same cleanup error with no logs" even after the Phase 3 deployed-binary handoff was introduced.
 
 The actual failure point is **inside the detached `update-cleanup` child**, after the Phase 3 parent has already reported a successful spawn. The parent logs `start_ok`, but several inner cleanup branches still write **only to child stderr**:
 
@@ -35,13 +35,13 @@ But only the outer lifecycle events (`start`, `done`, `start_fail`, etc.) were m
 
 ## Files involved
 
-- `gitmap-v25/cmd/updatecleanup.go`
-- `gitmap-v25/cmd/updatecleanup_remove.go`
-- `gitmap-v25/cmd/updatecleanup_extra.go`
-- `gitmap-v25/cmd/updatehandoff_phase3.go`
-- `gitmap-v25/cmd/updatehandofflog.go`
-- `gitmap-v25/cmd/updatedebugwindows.go`
-- `gitmap-v25/cmd/updatedebugwindows_json.go`
+- `gitmap-v26/cmd/updatecleanup.go`
+- `gitmap-v26/cmd/updatecleanup_remove.go`
+- `gitmap-v26/cmd/updatecleanup_extra.go`
+- `gitmap-v26/cmd/updatehandoff_phase3.go`
+- `gitmap-v26/cmd/updatehandofflog.go`
+- `gitmap-v26/cmd/updatedebugwindows.go`
+- `gitmap-v26/cmd/updatedebugwindows_json.go`
 
 ## Solution
 
@@ -65,4 +65,4 @@ So even if the hidden child console output disappears, the failure remains foren
 
 - `go test ./cmd -run 'TestFormatHandoffLogLine|TestBuildCleanupChildEnv|TestBuildCleanupChildArgs'`
 - Confirm `GITMAP_UPDATE_CLEANUP_DELAY_MS`, `GITMAP_DEBUG_WINDOWS`, and `GITMAP_DEBUG_WINDOWS_JSON` are forwarded into the cleanup child env.
-- Native Windows manual check with `gitmap-v25 update --debug-windows --debug-windows-json` should now produce both console diagnostics and durable per-branch child failure events.
+- Native Windows manual check with `gitmap-v26 update --debug-windows --debug-windows-json` should now produce both console diagnostics and durable per-branch child failure events.

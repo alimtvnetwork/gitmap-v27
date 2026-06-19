@@ -19,8 +19,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/visibility"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/visibility"
 )
 
 // bulkFlags holds the parsed CLI flags for a bulk visibility run.

@@ -73,7 +73,7 @@ export const commitInProfileJson = `{
   "MessagePrefix":   ["chore:", "feat:", "fix:"],
   "MessageSuffix":   [],
   "TitlePrefix":     "",
-  "TitleSuffix":     " — via gitmap-v25",
+  "TitleSuffix":     " — via gitmap-v26",
   "OverrideMessages": ["Improve module", "Refine implementation"],
   "OverrideOnlyWeak": true,
   "WeakWords":        ["change", "update", "updates", "misc"],

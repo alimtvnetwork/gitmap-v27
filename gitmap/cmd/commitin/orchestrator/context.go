@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"path/filepath"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/cmd/commitin"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/cmd/commitin/finalize"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/cmd/commitin/profile"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/cmd/commitin/workspace"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/cmd/commitin"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/cmd/commitin/finalize"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/cmd/commitin/profile"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/cmd/commitin/workspace"
 )
 
 // dbCloser is the subset of *store.DB the orchestrator needs. Defined

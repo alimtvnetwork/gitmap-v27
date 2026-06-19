@@ -27,9 +27,9 @@ package cmd
 import (
 	"io"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/stablejson"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/stablejson"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/store"
 )
 
 // list-releases per-repo wire keys. Names + order mirror the

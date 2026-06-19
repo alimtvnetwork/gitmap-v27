@@ -7,7 +7,7 @@ var Version = "0.1.0"
 // GitHub repository coordinates.
 const (
 	RepoOwner = "alimtvnetwork"
-	RepoName  = "gitmap-v25"
+	RepoName  = "gitmap-v26"
 	RepoSlug  = RepoOwner + "/" + RepoName
 )
 

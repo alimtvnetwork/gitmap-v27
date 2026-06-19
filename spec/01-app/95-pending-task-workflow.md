@@ -2,13 +2,13 @@
 
 ## Overview
 
-Every file-system operation in gitmap-v25 (delete, remove, scan, clone, pull,
+Every file-system operation in gitmap-v26 (delete, remove, scan, clone, pull,
 exec) must be recorded as a task in SQLite **before** the actual operation
 is attempted. This ensures no work is silently lost when an operation fails
 due to locks, permissions, or missing targets.
 
 The system stores the full CLI command so that failed tasks can be
-automatically replayed via `gitmap-v25 do-pending`.
+automatically replayed via `gitmap-v26 do-pending`.
 
 ## Database Schema
 
@@ -100,7 +100,7 @@ Before any file-system operation:
 ### 4. Replay via do-pending
 
 For replayable types (Scan, Clone, Pull, Exec):
-1. Re-execute `gitmap-v25 <CommandArgs>` as a subprocess.
+1. Re-execute `gitmap-v26 <CommandArgs>` as a subprocess.
 2. Set `cmd.Dir` to `WorkingDirectory`.
 3. On success → complete. On failure → update reason.
 
@@ -110,18 +110,18 @@ For delete types (Delete, Remove):
 
 ## CLI Commands
 
-### `gitmap-v25 pending`
+### `gitmap-v26 pending`
 
 Display all rows in `PendingTask`.
 
 Output columns: Id, Type, TargetPath, FailureReason.
 
-### `gitmap-v25 do-pending` (alias `dp`)
+### `gitmap-v26 do-pending` (alias `dp`)
 
 Retry all pending tasks. Each success moves to `CompletedTask`.
 Each failure updates `FailureReason` and remains pending.
 
-### `gitmap-v25 do-pending <id>`
+### `gitmap-v26 do-pending <id>`
 
 Retry a single pending task by its integer Id.
 
@@ -216,9 +216,9 @@ marked complete.
 2. No operation path bypasses task creation.
 3. Failed operations remain visible in `PendingTask`.
 4. Successful operations appear in `CompletedTask` and are removed from `PendingTask`.
-5. `gitmap-v25 pending` lists all pending tasks with Id, type, path, reason.
-6. `gitmap-v25 do-pending` retries all; `gitmap-v25 dp` is an alias.
-7. `gitmap-v25 do-pending <id>` retries a single task.
+5. `gitmap-v26 pending` lists all pending tasks with Id, type, path, reason.
+6. `gitmap-v26 do-pending` retries all; `gitmap-v26 dp` is an alias.
+7. `gitmap-v26 do-pending <id>` retries a single task.
 8. Duplicate pending tasks for the same type+path are prevented.
 9. Replayable tasks use type+path+cmdArgs for duplicate detection.
 10. Replayable tasks store full CLI args and working directory.

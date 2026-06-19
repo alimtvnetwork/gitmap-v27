@@ -38,8 +38,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/clonenow"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/clonenow"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // validateRecloneManifestOrExit runs every row through the semantic

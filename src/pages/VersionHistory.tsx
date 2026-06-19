@@ -53,7 +53,7 @@ const VersionHistoryPage = () => {
         {/* Usage */}
         <section className="mb-10">
           <h2 className="text-xl font-heading font-semibold mb-3">Usage</h2>
-          <CodeBlock code="gitmap-v25 version-history [--limit N] [--json]" />
+          <CodeBlock code="gitmap-v26 version-history [--limit N] [--json]" />
         </section>
 
         {/* How it works */}
@@ -109,7 +109,7 @@ const VersionHistoryPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Show all version transitions</h3>
           <TerminalPreview
-            title="gitmap-v25 vh"
+            title="gitmap-v26 vh"
             lines={[
               "Version history for D:\\wp-work\\riseup-asia\\macro-ahk:",
               "",
@@ -124,7 +124,7 @@ const VersionHistoryPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">Limit to last 2 transitions</h3>
           <TerminalPreview
-            title="gitmap-v25 vh --limit 2"
+            title="gitmap-v26 vh --limit 2"
             lines={[
               "Version history for D:\\wp-work\\riseup-asia\\macro-ahk:",
               "",
@@ -138,7 +138,7 @@ const VersionHistoryPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">JSON output</h3>
           <TerminalPreview
-            title="gitmap-v25 vh --limit 1 --json"
+            title="gitmap-v26 vh --limit 1 --json"
             lines={[
               "[",
               "  {",
@@ -157,7 +157,7 @@ const VersionHistoryPage = () => {
 
           <h3 className="font-mono text-sm font-semibold mb-2 text-muted-foreground">No history found</h3>
           <TerminalPreview
-            title="gitmap-v25 vh"
+            title="gitmap-v26 vh"
             lines={[
               "No version history found for this repo.",
             ]}
@@ -224,7 +224,7 @@ const VersionHistoryPage = () => {
                   ["model/version_history.go", "RepoVersionHistoryRecord struct"],
                   ["constants/constants_version_history.go", "SQL statements, table name, error messages"],
                   ["constants/constants_version_history_cmd.go", "CLI command names, help text, output formats"],
-                  ["helptext/version-history.md", "Embedded help text for gitmap-v25 help version-history"],
+                  ["helptext/version-history.md", "Embedded help text for gitmap-v26 help version-history"],
                 ].map(([file, desc]) => (
                   <tr key={file} className="bg-card">
                     <td className="px-4 py-2 font-mono text-xs text-primary">{file}</td>

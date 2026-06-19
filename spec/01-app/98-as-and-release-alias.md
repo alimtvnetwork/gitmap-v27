@@ -1,4 +1,4 @@
-# Repo Aliases & Remote Release — `gitmap-v25 as` / `release-alias` / `release-alias-pull`
+# Repo Aliases & Remote Release — `gitmap-v26 as` / `release-alias` / `release-alias-pull`
 
 > **Status:** Implemented in v2.97.0; auto-stash semantics finalised in v2.99.0.
 > **Related specs:**
@@ -13,9 +13,9 @@ Three CLI verbs that decouple the "I am sitting in a repo" step from
 the "I want to release a repo" step:
 
 ```
-gitmap-v25 as          [alias-name]            # tag the CURRENT repo with an alias (run inside it)
-gitmap-v25 release-alias <alias> <version>     # release a previously-aliased repo from anywhere
-gitmap-v25 release-alias-pull <alias> <ver>    # pull --ff-only first, then release
+gitmap-v26 as          [alias-name]            # tag the CURRENT repo with an alias (run inside it)
+gitmap-v26 release-alias <alias> <version>     # release a previously-aliased repo from anywhere
+gitmap-v26 release-alias-pull <alias> <ver>    # pull --ff-only first, then release
 ```
 
 The pair lets a developer register a repo once with `as`, then trigger
@@ -44,10 +44,10 @@ in the active-profile SQLite database.
 1. Resolve the repo top level via `git rev-parse --show-toplevel`.
    Abort if the CWD is not inside a Git repository.
 2. Build a `ScanRecord` for that single repo using the same
-   `mapper.BuildRecords()` path that `gitmap-v25 scan` uses
+   `mapper.BuildRecords()` path that `gitmap-v26 scan` uses
    — guarantees the upserted row matches the schema other commands
    already understand.
-3. Upsert the record into the `Repos` table (so `gitmap-v25 list`,
+3. Upsert the record into the `Repos` table (so `gitmap-v26 list`,
    `status`, `pull`, etc. immediately see it).
 4. Map `alias-name → Repos.Id` in the alias store. When `alias-name`
    is omitted the repo folder basename is used.
@@ -57,10 +57,10 @@ in the active-profile SQLite database.
 ### Usage
 
 ```
-gitmap-v25 as                       # alias defaults to filepath.Base(repo-root)
-gitmap-v25 as project-x             # explicit alias
-gitmap-v25 as project-x --force     # overwrite an existing project-x alias
-gitmap-v25 s-alias project-x        # long-form alias for the verb
+gitmap-v26 as                       # alias defaults to filepath.Base(repo-root)
+gitmap-v26 as project-x             # explicit alias
+gitmap-v26 as project-x --force     # overwrite an existing project-x alias
+gitmap-v26 s-alias project-x        # long-form alias for the verb
 ```
 
 ### Flags
@@ -76,7 +76,7 @@ gitmap-v25 s-alias project-x        # long-form alias for the verb
 | CWD not inside a Git repo | 1 | `error: 'as' must be run from inside a Git repo (cwd: <path>)` |
 | `mapper.BuildRecords` returned no records | 1 | `error: could not resolve repo metadata for <path>: <reason>` |
 | Alias exists, no `--force` | 1 | `error: alias '<name>' already maps to <other-path>; pass --force to overwrite` |
-| More than one positional arg | 2 | `usage: gitmap-v25 as [alias-name] [--force]` |
+| More than one positional arg | 2 | `usage: gitmap-v26 as [alias-name] [--force]` |
 
 ---
 
@@ -97,17 +97,17 @@ pipeline — without requiring the user to `cd` into the repo first.
 4. **Auto-stash** dirty working trees (see semantics below) unless
    `--no-stash` is passed.
 5. Invoke `runRelease(<version> [--dry-run])` — the same entry
-   point used by `gitmap-v25 release` from inside the repo.
+   point used by `gitmap-v26 release` from inside the repo.
 6. **Pop the auto-stash** on the way out, even on release failure.
 
 ### Usage
 
 ```
-gitmap-v25 release-alias project-x v1.2.0
-gitmap-v25 ra              project-x v1.2.0
-gitmap-v25 ra              project-x v1.2.0 --pull --dry-run
-gitmap-v25 release-alias-pull project-x v1.2.0     # equivalent to: ra ... --pull
-gitmap-v25 rap             project-x v1.2.0
+gitmap-v26 release-alias project-x v1.2.0
+gitmap-v26 ra              project-x v1.2.0
+gitmap-v26 ra              project-x v1.2.0 --pull --dry-run
+gitmap-v26 release-alias-pull project-x v1.2.0     # equivalent to: ra ... --pull
+gitmap-v26 rap             project-x v1.2.0
 ```
 
 ### Flags
@@ -122,10 +122,10 @@ gitmap-v25 rap             project-x v1.2.0
 
 | Condition | Exit | Message |
 |-----------|------|---------|
-| Alias not found | 1 | `error: unknown alias '<name>'. Run 'gitmap-v25 as <name>' inside the repo first, or 'gitmap-v25 alias list' to see registered aliases.` |
+| Alias not found | 1 | `error: unknown alias '<name>'. Run 'gitmap-v26 as <name>' inside the repo first, or 'gitmap-v26 alias list' to see registered aliases.` |
 | `os.Chdir` failed | 1 | `error: cannot chdir into '<path>': <reason>` |
 | `git pull --ff-only` failed | 1 | `error: pull failed in '<path>': <reason>` |
-| Wrong arg count | 2 | `usage: gitmap-v25 release-alias <alias> <version> [--pull] [--no-stash] [--dry-run]` |
+| Wrong arg count | 2 | `usage: gitmap-v26 release-alias <alias> <version> [--pull] [--no-stash] [--dry-run]` |
 | Inner `runRelease` failure | propagated | (handled by `runRelease`) |
 
 ---
@@ -193,7 +193,7 @@ checkout and want to fail loudly on unexpected dirt.
 ## Dispatcher Wiring
 
 All three verbs route through the data-domain dispatcher chain in
-`gitmap-v25/cmd/rootcore.go` and `gitmap-v25/cmd/rootrelease.go`:
+`gitmap-v26/cmd/rootcore.go` and `gitmap-v26/cmd/rootrelease.go`:
 
 ```
 main() -> Dispatch()
@@ -223,12 +223,12 @@ main() -> Dispatch()
 
 ### Completion
 
-Both constants files carry the `// gitmap-v25:cmd top-level` marker so the
-generator at `gitmap-v25/completion/internal/gencommands/main.go` picks
+Both constants files carry the `// gitmap-v26:cmd top-level` marker so the
+generator at `gitmap-v26/completion/internal/gencommands/main.go` picks
 every command + alias up automatically. After adding a verb, run:
 
 ```
-cd gitmap-v25 && go generate ./completion/...
+cd gitmap-v26 && go generate ./completion/...
 ```
 
 The CI `generate-check` job (`.github/workflows/ci.yml`) fails the
@@ -240,17 +240,17 @@ build if `allcommands_generated.go` drifts.
 
 | File | Role |
 |------|------|
-| `gitmap-v25/cmd/as.go` | `runAs`, arg parsing, `git rev-parse` lookup. |
-| `gitmap-v25/cmd/asops.go` | `upsertSingleRepo`, `registerAlias`. |
-| `gitmap-v25/cmd/releasealias.go` | `runReleaseAlias`, arg parsing, dispatcher into `runRelease`. |
-| `gitmap-v25/cmd/releasealias_git.go` | `runReleaseAliasPull`, `autoStashIfDirty`, `popAutoStash`, `findStashIndex`. |
-| `gitmap-v25/cmd/rootdata.go` | Dispatch for `as`, `s-alias`, `db-migrate`, `dbm`. |
-| `gitmap-v25/cmd/rootrelease.go` | Dispatch for `release-alias`, `ra`, `release-alias-pull`, `rap`. |
-| `gitmap-v25/constants/constants_as.go` | Cmd / flag / message constants for `as`. |
-| `gitmap-v25/constants/constants_releasealias.go` | Cmd / flag / message constants for `release-alias` family. |
-| `gitmap-v25/helptext/as.md` | `gitmap-v25 as --help` content. |
-| `gitmap-v25/helptext/release-alias.md` | `gitmap-v25 ra --help` content. |
-| `gitmap-v25/helptext/release-alias-pull.md` | `gitmap-v25 rap --help` content. |
+| `gitmap-v26/cmd/as.go` | `runAs`, arg parsing, `git rev-parse` lookup. |
+| `gitmap-v26/cmd/asops.go` | `upsertSingleRepo`, `registerAlias`. |
+| `gitmap-v26/cmd/releasealias.go` | `runReleaseAlias`, arg parsing, dispatcher into `runRelease`. |
+| `gitmap-v26/cmd/releasealias_git.go` | `runReleaseAliasPull`, `autoStashIfDirty`, `popAutoStash`, `findStashIndex`. |
+| `gitmap-v26/cmd/rootdata.go` | Dispatch for `as`, `s-alias`, `db-migrate`, `dbm`. |
+| `gitmap-v26/cmd/rootrelease.go` | Dispatch for `release-alias`, `ra`, `release-alias-pull`, `rap`. |
+| `gitmap-v26/constants/constants_as.go` | Cmd / flag / message constants for `as`. |
+| `gitmap-v26/constants/constants_releasealias.go` | Cmd / flag / message constants for `release-alias` family. |
+| `gitmap-v26/helptext/as.md` | `gitmap-v26 as --help` content. |
+| `gitmap-v26/helptext/release-alias.md` | `gitmap-v26 ra --help` content. |
+| `gitmap-v26/helptext/release-alias-pull.md` | `gitmap-v26 rap --help` content. |
 
 ---
 
@@ -259,29 +259,29 @@ build if `allcommands_generated.go` drifts.
 ```
 # 1. Sit in the repo once, register the alias.
 cd /code/project-x
-gitmap-v25 as                                # alias = "project-x" (basename)
-gitmap-v25 as px                             # explicit alias
-gitmap-v25 alias list                        # confirm
+gitmap-v26 as                                # alias = "project-x" (basename)
+gitmap-v26 as px                             # explicit alias
+gitmap-v26 alias list                        # confirm
 
 # 2. From anywhere, release it.
 cd ~                                     # any directory
-gitmap-v25 ra px v1.2.0
-gitmap-v25 ra px v1.2.0 --dry-run            # preview without tagging
-gitmap-v25 rap px v1.2.0                     # pull --ff-only first
+gitmap-v26 ra px v1.2.0
+gitmap-v26 ra px v1.2.0 --dry-run            # preview without tagging
+gitmap-v26 rap px v1.2.0                     # pull --ff-only first
 
 # 3. Dirty tree? auto-stash kicks in.
 cd /code/project-x && echo dirt > scratch.txt
-cd ~ && gitmap-v25 ra px v1.3.0
+cd ~ && gitmap-v26 ra px v1.3.0
 #   ▸ stashed: gitmap-release-alias autostash px-v1.3.0-1729400123
 #   ▸ release v1.3.0 ... ok
 #   ▸ popped stash: gitmap-release-alias autostash px-v1.3.0-1729400123
 
 # 4. Refuse the auto-stash on a CI runner.
-gitmap-v25 ra px v1.3.0 --no-stash           # exits non-zero if dirty
+gitmap-v26 ra px v1.3.0 --no-stash           # exits non-zero if dirty
 
 # 5. Reassign an alias that already exists.
 cd /code/project-x-v2
-gitmap-v25 as px --force
+gitmap-v26 as px --force
 ```
 
 ---
@@ -308,22 +308,22 @@ gitmap-v25 as px --force
 
 ## Acceptance Checklist
 
-- [x] `gitmap-v25 as` inside a repo registers the basename as alias.
-- [x] `gitmap-v25 as <name>` registers an explicit alias.
-- [x] `gitmap-v25 as <name> --force` overwrites an existing alias.
-- [x] `gitmap-v25 as` outside a Git repo exits 1 with a CWD-aware message.
-- [x] `gitmap-v25 ra <alias> <ver>` releases from anywhere.
-- [x] `gitmap-v25 rap <alias> <ver>` pulls then releases (equivalent to `ra --pull`).
+- [x] `gitmap-v26 as` inside a repo registers the basename as alias.
+- [x] `gitmap-v26 as <name>` registers an explicit alias.
+- [x] `gitmap-v26 as <name> --force` overwrites an existing alias.
+- [x] `gitmap-v26 as` outside a Git repo exits 1 with a CWD-aware message.
+- [x] `gitmap-v26 ra <alias> <ver>` releases from anywhere.
+- [x] `gitmap-v26 rap <alias> <ver>` pulls then releases (equivalent to `ra --pull`).
 - [x] Dirty tree triggers labelled `git stash push --include-untracked`.
 - [x] Stash is popped on the way out, even when `runRelease` aborts.
 - [x] `--no-stash` skips stashing; release fails fast on dirty repo.
 - [x] `--dry-run` is forwarded to `runRelease`.
-- [x] Unknown alias exits 1 with a `gitmap-v25 as ...` hint.
+- [x] Unknown alias exits 1 with a `gitmap-v26 as ...` hint.
 - [x] `pull --ff-only` failure exits 1 — never releases on a non-FF tree.
 - [x] All four verb tokens (`as`, `s-alias`, `release-alias`, `ra`,
       `release-alias-pull`, `rap`) appear in `allcommands_generated.go`.
 
-> **Implementation:** v2.97.0 — `gitmap-v25/cmd/{as.go, asops.go,
+> **Implementation:** v2.97.0 — `gitmap-v26/cmd/{as.go, asops.go,
 > releasealias.go, releasealias_git.go}`, `constants/constants_as.go`,
 > `constants/constants_releasealias.go`. Auto-stash defer-pop hardened
 > in v2.98.0; helptext + dispatcher coverage finalised in v2.99.0.

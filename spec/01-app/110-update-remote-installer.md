@@ -16,8 +16,8 @@ which a typical end user has.
 1. `requireOnline()` — bail early if offline.
 2. Unless `--source-rebuild` is present, run `runUpdateRemoteInstall()`:
    - Resolve the installer URL for the host OS:
-     - **Windows** → `https://raw.githubusercontent.com/alimtvnetwork/gitmap-v25/main/install.ps1`
-     - **macOS / Linux** → `https://raw.githubusercontent.com/alimtvnetwork/gitmap-v25/main/install.sh`
+     - **Windows** → `https://raw.githubusercontent.com/alimtvnetwork/gitmap-v26/main/install.ps1`
+     - **macOS / Linux** → `https://raw.githubusercontent.com/alimtvnetwork/gitmap-v26/main/install.sh`
    - Download to `os.TempDir()/gitmap-update-*.{ps1|sh}` (UTF-8 BOM on
      Windows, `chmod 0755` on Unix).
    - Exec the script with the right shell (`powershell -ExecutionPolicy

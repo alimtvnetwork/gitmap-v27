@@ -16,7 +16,7 @@ mechanical role: fetch + place the binary for the slug Go hands it.
 `resolveLatestRepoSlug()` returns `(slug, source, err)` where `source` is
 one of `"sibling-probe"`, `"current-release"`, `"current-main"`.
 
-1. **Sibling probe** — parse current slug (`gitmap-v25`) → base
+1. **Sibling probe** — parse current slug (`gitmap-v26`) → base
    (`gitmap`) + `N=23`. Fire `UpdateProbeMaxSiblings` (20) parallel
    `HEAD https://github.com/<owner>/gitmap-v<N+i>` requests with a
    per-request timeout of `UpdateProbeTimeoutSec` (5s). Any 2xx counts as
@@ -53,9 +53,9 @@ Once a slug is resolved:
 ## Logging
 
 ```
-■ Probing sibling repos (gitmap-v25..gitmap-v43)...
+■ Probing sibling repos (gitmap-v26..gitmap-v43)...
   hit: gitmap-v27 (HTTP 200)
-  hit: gitmap-v25 (HTTP 200)
+  hit: gitmap-v26 (HTTP 200)
 ✓ Resolved: gitmap-v27 (source: sibling-probe)
 ■ Fetching installer: https://raw.githubusercontent.com/alimtvnetwork/gitmap-v27/main/install.ps1
 ```

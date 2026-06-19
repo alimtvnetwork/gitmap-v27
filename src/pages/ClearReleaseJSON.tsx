@@ -31,7 +31,7 @@ const exitCodes = [
 const constants = [
   { constant: "MsgClearReleaseDone", format: "✓ Removed .gitmap/release/%s.json" },
   { constant: "MsgClearReleaseDryRun", format: "[dry-run] Would remove %s" },
-  { constant: "ErrClearReleaseUsage", format: "Usage: gitmap-v25 clear-release-json <version> [--dry-run]" },
+  { constant: "ErrClearReleaseUsage", format: "Usage: gitmap-v26 clear-release-json <version> [--dry-run]" },
   { constant: "ErrClearReleaseNotFound", format: "Error: no release file found for %s" },
   { constant: "ErrClearReleaseFailed", format: "Error: could not remove release file: %v" },
 ];
@@ -50,7 +50,7 @@ const ClearReleaseJSONPage = () => {
         {/* Command & Alias */}
         <section>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Command</h2>
-          <CodeBlock code="gitmap-v25 clear-release-json <version> [--dry-run]" />
+          <CodeBlock code="gitmap-v26 clear-release-json <version> [--dry-run]" />
           <p className="text-sm text-muted-foreground mt-2">
             Alias: <code className="font-mono text-primary">crj</code>
           </p>
@@ -114,12 +114,12 @@ const ClearReleaseJSONPage = () => {
 
           <h3 className="text-lg font-mono font-medium mb-2 mt-4">Normal Mode</h3>
           <CodeBlock code={`# Remove release metadata for v2.20.0
-gitmap-v25 clear-release-json v2.20.0
+gitmap-v26 clear-release-json v2.20.0
 # ✓ Removed .gitmap/release/v2.20.0.json`} title="Normal removal" />
 
           <h3 className="text-lg font-mono font-medium mb-2 mt-4">Dry-Run Mode</h3>
           <CodeBlock code={`# Preview without deleting
-gitmap-v25 clear-release-json v2.20.0 --dry-run
+gitmap-v26 clear-release-json v2.20.0 --dry-run
 # [dry-run] Would remove .gitmap/release/v2.20.0.json`} title="Dry-run preview" />
         </section>
 

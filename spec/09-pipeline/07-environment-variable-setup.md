@@ -11,9 +11,9 @@ This is particularly useful for portable installations where the binary lives on
 ## Core Concept
 
 ```
-User specifies:    E:\gitmap-v25           (or /opt/gitmap-v25)
-Tool ensures:      GITMAP_HOME=E:\gitmap-v25   is set persistently
-                   E:\gitmap-v25 is in PATH    if not already present
+User specifies:    E:\gitmap-v26           (or /opt/gitmap-v26)
+Tool ensures:      GITMAP_HOME=E:\gitmap-v26   is set persistently
+                   E:\gitmap-v26 is in PATH    if not already present
 ```
 
 If the environment variable is already set and valid → no action taken.
@@ -42,25 +42,25 @@ If the environment variable is missing or points to a stale path → auto-regist
 This is the primary power feature. The user specifies where the tool lives:
 
 ```
-$ <tool> env home E:\gitmap-v25
+$ <tool> env home E:\gitmap-v26
 ```
 
 This does:
 
 1. Validates the directory exists (or creates it with confirmation)
-2. Sets `<TOOL>_HOME=E:\gitmap-v25` persistently
-3. Adds `E:\gitmap-v25` to PATH if not already present
+2. Sets `<TOOL>_HOME=E:\gitmap-v26` persistently
+3. Adds `E:\gitmap-v26` to PATH if not already present
 4. Records the registration in `env-registry.json`
 5. Prints activation command
 
 ### Terminal Output
 
 ```
-$ <tool> env home E:\gitmap-v25
+$ <tool> env home E:\gitmap-v26
 
   Setting <TOOL>_HOME...
 
-  [+] <TOOL>_HOME = E:\gitmap-v25
+  [+] <TOOL>_HOME = E:\gitmap-v26
 
   Registering PATH...
 
@@ -73,8 +73,8 @@ $ <tool> env home E:\gitmap-v25
 
   To activate in this session:
 
-    $env:GITMAP_HOME = "E:\gitmap-v25"
-    $env:Path = "E:\gitmap-v25;" + $env:Path
+    $env:GITMAP_HOME = "E:\gitmap-v26"
+    $env:Path = "E:\gitmap-v26;" + $env:Path
 
   Or restart your terminal.
   ============================================
@@ -132,7 +132,7 @@ Environment variables are persisted by writing to shell profiles:
 
 ```bash
 # Appended to ~/.bashrc, ~/.zshrc, etc.
-export GITMAP_HOME="/opt/gitmap-v25"   # <tool>-env
+export GITMAP_HOME="/opt/gitmap-v26"   # <tool>-env
 ```
 
 The marker comment (`# <tool>-env`) enables idempotent updates and clean removal.
@@ -155,20 +155,20 @@ The tool maintains an `env-registry.json` file to track all managed variables:
   "variables": [
     {
       "key": "GITMAP_HOME",
-      "value": "E:\\gitmap-v25",
+      "value": "E:\\gitmap-v26",
       "createdAt": "2026-04-09T14:30:00Z",
       "platforms": ["registry", "powershell-profile", "git-bash"]
     },
     {
       "key": "GITMAP_DATA",
-      "value": "E:\\gitmap-v25\\data",
+      "value": "E:\\gitmap-v26\\data",
       "createdAt": "2026-04-09T14:30:00Z",
       "platforms": ["registry", "powershell-profile"]
     }
   ],
   "pathEntries": [
     {
-      "directory": "E:\\gitmap-v25",
+      "directory": "E:\\gitmap-v26",
       "createdAt": "2026-04-09T14:30:00Z"
     }
   ]
@@ -189,8 +189,8 @@ $ <tool> env doctor
 
   Checking managed environment variables...
 
-  [OK]   GITMAP_HOME = E:\gitmap-v25 (directory exists)
-  [OK]   E:\gitmap-v25 is in PATH
+  [OK]   GITMAP_HOME = E:\gitmap-v26 (directory exists)
+  [OK]   E:\gitmap-v26 is in PATH
 
   Checking shell profiles...
 
@@ -208,12 +208,12 @@ $ <tool> env doctor
 
   Checking managed environment variables...
 
-  [FAIL] GITMAP_HOME = E:\gitmap-v25 (directory does NOT exist)
-  [WARN] E:\gitmap-v25 is NOT in PATH
+  [FAIL] GITMAP_HOME = E:\gitmap-v26 (directory does NOT exist)
+  [WARN] E:\gitmap-v26 is NOT in PATH
 
   Suggested fix:
 
-    <tool> env home E:\gitmap-v25    # Re-register with valid path
+    <tool> env home E:\gitmap-v26    # Re-register with valid path
 
   1 failure, 1 warning.
 ```

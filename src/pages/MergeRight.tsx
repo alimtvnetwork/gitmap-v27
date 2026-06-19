@@ -60,8 +60,8 @@ const MergeRightPage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v25 merge-right LEFT RIGHT [flags]
-gitmap-v25 mr          LEFT RIGHT [flags]`} />
+        <CodeBlock code={`gitmap-v26 merge-right LEFT RIGHT [flags]
+gitmap-v26 mr          LEFT RIGHT [flags]`} />
       </section>
 
       <section>
@@ -91,13 +91,13 @@ gitmap-v25 mr          LEFT RIGHT [flags]`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Push LEFT's changes into a remote repo (LEFT wins by default)
-gitmap-v25 merge-right ./local https://github.com/owner/repo -y
+gitmap-v26 merge-right ./local https://github.com/owner/repo -y
 
 # Push to a specific branch
-gitmap-v25 mr ./local https://github.com/owner/repo:develop -y
+gitmap-v26 mr ./local https://github.com/owner/repo:develop -y
 
 # Stage changes locally without pushing
-gitmap-v25 merge-right ./local ./mirror --no-push`} />
+gitmap-v26 merge-right ./local ./mirror --no-push`} />
       </section>
 
       <section>

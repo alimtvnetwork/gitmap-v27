@@ -31,7 +31,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/goldenguard"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/goldenguard"
 )
 
 // goldenDir is the conventional Go location for committed test

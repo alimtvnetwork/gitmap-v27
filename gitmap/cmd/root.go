@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/cliexit"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/glyphs"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/theme"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/cliexit"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/glyphs"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/theme"
 )
 
 // Run is the main entry point for the CLI.

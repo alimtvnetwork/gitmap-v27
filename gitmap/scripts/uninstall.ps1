@@ -10,10 +10,10 @@
     Directory where gitmap is installed. Default: $env:LOCALAPPDATA\gitmap
 
 .EXAMPLE
-    irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v25/main/gitmap/scripts/uninstall.ps1 | iex
+    irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v26/main/gitmap/scripts/uninstall.ps1 | iex
 
 .NOTES
-    Repository: https://github.com/alimtvnetwork/gitmap-v25
+    Repository: https://github.com/alimtvnetwork/gitmap-v26
 #>
 
 param(

@@ -16,7 +16,7 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v25 zip-group list</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 zip-group list</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto">
       <div className="text-primary font-bold text-xs mb-1">
@@ -42,7 +42,7 @@ const ShowPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v25 z show "chrome extension"</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 z show "chrome extension"</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto">
       <div className="text-primary font-bold text-xs mb-1">{"  "}chrome extension (1 item(s)):</div>
@@ -121,7 +121,7 @@ const ZipGroupPage = () => (
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Path Resolution</h2>
     <div className="rounded-lg border border-border bg-card p-4 mb-8">
       <p className="text-sm text-muted-foreground mb-3">
-        When you provide a path, gitmap-v25 resolves it into three components:
+        When you provide a path, gitmap-v26 resolves it into three components:
       </p>
       <div className="grid md:grid-cols-3 gap-3">
         <div className="rounded border border-border p-3">
@@ -140,24 +140,24 @@ const ZipGroupPage = () => (
     </div>
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Subcommands</h2>
-    <CodeBlock code={`gitmap-v25 z create "chrome extension" chrome-extension/dist`} title="Create group with path (one step)" />
-    <CodeBlock code="gitmap-v25 z create docs-bundle" title="Create empty group" />
-    <CodeBlock code="gitmap-v25 z add docs-bundle ./README.md ./CHANGELOG.md ./docs/" title="Add items to a group" />
-    <CodeBlock code="gitmap-v25 z create extras --archive extra-files.zip" title="Create with custom archive name" />
-    <CodeBlock code={`gitmap-v25 z show "chrome extension"`} title="Show group contents (folders expanded)" />
-    <CodeBlock code="gitmap-v25 z list" title="List all zip groups" />
-    <CodeBlock code="gitmap-v25 z rename docs-bundle --archive release-docs.zip" title="Set custom archive name" />
-    <CodeBlock code="gitmap-v25 z remove docs-bundle ./CHANGELOG.md" title="Remove an item from a group" />
-    <CodeBlock code="gitmap-v25 z delete extras" title="Delete a zip group" />
+    <CodeBlock code={`gitmap-v26 z create "chrome extension" chrome-extension/dist`} title="Create group with path (one step)" />
+    <CodeBlock code="gitmap-v26 z create docs-bundle" title="Create empty group" />
+    <CodeBlock code="gitmap-v26 z add docs-bundle ./README.md ./CHANGELOG.md ./docs/" title="Add items to a group" />
+    <CodeBlock code="gitmap-v26 z create extras --archive extra-files.zip" title="Create with custom archive name" />
+    <CodeBlock code={`gitmap-v26 z show "chrome extension"`} title="Show group contents (folders expanded)" />
+    <CodeBlock code="gitmap-v26 z list" title="List all zip groups" />
+    <CodeBlock code="gitmap-v26 z rename docs-bundle --archive release-docs.zip" title="Set custom archive name" />
+    <CodeBlock code="gitmap-v26 z remove docs-bundle ./CHANGELOG.md" title="Remove an item from a group" />
+    <CodeBlock code="gitmap-v26 z delete extras" title="Delete a zip group" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Release Integration</h2>
     <p className="text-sm text-muted-foreground mb-4">
       Use persistent groups or ad-hoc items during a release. Each group produces a single
       <code className="text-primary font-mono"> .zip</code> archive attached as a release asset.
     </p>
-    <CodeBlock code="gitmap-v25 release v3.0.0 --zip-group docs-bundle" title="Release with a persistent zip group" />
-    <CodeBlock code="gitmap-v25 release v3.0.0 -Z ./dist/report.pdf -Z ./dist/manual.pdf --bundle docs.zip" title="Ad-hoc bundle" />
-    <CodeBlock code="gitmap-v25 release v3.0.0 --zip-group docs-bundle -Z ./extras/notes.txt" title="Combined: group + ad-hoc" />
+    <CodeBlock code="gitmap-v26 release v3.0.0 --zip-group docs-bundle" title="Release with a persistent zip group" />
+    <CodeBlock code="gitmap-v26 release v3.0.0 -Z ./dist/report.pdf -Z ./dist/manual.pdf --bundle docs.zip" title="Ad-hoc bundle" />
+    <CodeBlock code="gitmap-v26 release v3.0.0 --zip-group docs-bundle -Z ./extras/notes.txt" title="Combined: group + ad-hoc" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Release Flags</h2>
     <div className="rounded-lg border border-border overflow-hidden mb-8">

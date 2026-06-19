@@ -6,7 +6,7 @@ const ConfigPage = () => {
     <DocsLayout>
       <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Configuration</h1>
       <p className="text-muted-foreground mb-8">
-        Customize gitmap-v25 behavior through JSON config files, profiles, and the three-layer merge pattern.
+        Customize gitmap-v26 behavior through JSON config files, profiles, and the three-layer merge pattern.
       </p>
 
       <section className="space-y-8">
@@ -135,7 +135,7 @@ const ConfigPage = () => {
           <p className="text-sm text-muted-foreground mt-3">
             Each target object has <code className="docs-inline-code">goos</code> and{" "}
             <code className="docs-inline-code">goarch</code> string fields. Use{" "}
-            <code className="docs-inline-code">gitmap-v25 release --list-targets</code> to verify
+            <code className="docs-inline-code">gitmap-v26 release --list-targets</code> to verify
             the resolved matrix.
           </p>
         </div>
@@ -145,7 +145,7 @@ const ConfigPage = () => {
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">git-setup.json</h2>
           <p className="text-muted-foreground mb-3">
-            Configure global Git settings applied by <code className="docs-inline-code">gitmap-v25 setup</code>:
+            Configure global Git settings applied by <code className="docs-inline-code">gitmap-v26 setup</code>:
           </p>
           <CodeBlock
             title="data/git-setup.json"
@@ -186,7 +186,7 @@ const ConfigPage = () => {
             Set default navigation paths for repos cloned to multiple locations:
           </p>
           <CodeBlock
-            code={`gitmap-v25 cd set-default myrepo C:\\repos\\github\\myrepo\ngitmap cd clear-default myrepo`}
+            code={`gitmap-v26 cd set-default myrepo C:\\repos\\github\\myrepo\ngitmap cd clear-default myrepo`}
             title="Terminal"
           />
         </div>

@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // Backend enumerates the Windows-specific add targets. Linux/macOS

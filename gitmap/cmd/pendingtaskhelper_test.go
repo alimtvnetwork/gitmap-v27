@@ -3,8 +3,8 @@ package cmd
 import (
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/store"
 )
 
 // openTestDB creates a temp DB with migrations and seeded task types.

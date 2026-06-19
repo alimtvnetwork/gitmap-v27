@@ -40,8 +40,8 @@ Defined in `constants/constants_project.go` as `MsgLegacyProjectData`:
 Database contains legacy project data from a previous version.
 To fix, run one of:
 
-  gitmap-v25 rescan          Re-scan repos and rebuild project data
-  gitmap-v25 db-reset --confirm   Reset the entire database
+  gitmap-v26 rescan          Re-scan repos and rebuild project data
+  gitmap-v26 db-reset --confirm   Reset the entire database
 ```
 
 ## Status

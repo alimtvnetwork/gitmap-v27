@@ -5,14 +5,14 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 const (
 	TestCloneFixGitInitCmd = "init"
-	TestCloneFixRepoName   = "gitmap-v25"
+	TestCloneFixRepoName   = "gitmap-v26"
 	TestCloneFixFolderName = "gitmap"
-	TestCloneFixRemoteURL  = "https://github.com/alimtvnetwork/gitmap-v25.git"
+	TestCloneFixRemoteURL  = "https://github.com/alimtvnetwork/gitmap-v26.git"
 	TestCloneFixRemoteKey  = "remote.origin.url"
 )
 

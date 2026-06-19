@@ -20,7 +20,7 @@ gitmap ud                         # short alias
 
 ```
 <repoRoot>/.gitmap/backup/
-  <repo>/                         # e.g. gitmap-v25
+  <repo>/                         # e.g. gitmap-v26
     v<current>/                   # current version at backup time
       fix-repo/
         <UTC-timestamp>/          # one dir per fix-repo invocation
@@ -29,7 +29,7 @@ gitmap ud                         # short alias
 ```
 
 Snapshots are scoped to the current repo + current version so an
-`undo` inside `gitmap-v25` never touches a `gitmap-v25` snapshot.
+`undo` inside `gitmap-v26` never touches a `gitmap-v26` snapshot.
 
 ## Example
 
@@ -37,10 +37,10 @@ Snapshots are scoped to the current repo + current version so an
 $ gitmap fix-repo --all
 fix-repo  base=gitmap  current=v20  mode=--all
 ...
-fix-repo: backed up 7 file(s) → .gitmap/backup/gitmap-v25/v20/fix-repo/20260519T134210Z
+fix-repo: backed up 7 file(s) → .gitmap/backup/gitmap-v26/v20/fix-repo/20260519T134210Z
 
 $ gitmap undo --list
-undo: snapshots under .gitmap/backup/gitmap-v25/v20/fix-repo (2 total)
+undo: snapshots under .gitmap/backup/gitmap-v26/v20/fix-repo (2 total)
   * 20260519T134210Z  (7 files)
     20260519T112055Z  (3 files)
 

@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // maxDocsSiteSize is the maximum total extraction size for docs-site.zip (100 MB).

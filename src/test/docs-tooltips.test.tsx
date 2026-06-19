@@ -119,14 +119,14 @@ describe("docs tooltip wiring — version badge (non-icon trigger)", () => {
 
   it("surfaces a tooltip for the version badge on focus", async () => {
     renderDocsChrome();
-    // The version badge has aria-label="gitmap-v25 version <X>" (no icon
+    // The version badge has aria-label="gitmap-v26 version <X>" (no icon
     // but it is a focus-able decorative chip — the audit lists it
     // as needing a tooltip alongside the icon-only controls).
-    const badge = screen.getByLabelText(/gitmap-v25 version /i);
+    const badge = screen.getByLabelText(/gitmap-v26 version /i);
     badge.focus();
     const tips = await screen.findAllByRole("tooltip");
     const matched = tips.some((t) =>
-      (t.textContent ?? "").toLowerCase().includes("gitmap-v25 version"),
+      (t.textContent ?? "").toLowerCase().includes("gitmap-v26 version"),
     );
     expect(matched).toBe(true);
   });

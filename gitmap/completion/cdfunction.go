@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // InstallCDFunction writes the gitmap/gcd shell wrapper to user profiles.

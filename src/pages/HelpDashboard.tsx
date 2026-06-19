@@ -21,7 +21,7 @@ const fileLayout = [
 ];
 
 const demoStaticLines = [
-  { text: "gitmap-v25 help-dashboard", type: "input" as const, delay: 800 },
+  { text: "gitmap-v26 help-dashboard", type: "input" as const, delay: 800 },
   { text: "  Serving docs from /usr/local/bin/docs-site/dist on http://localhost:5173", type: "accent" as const },
   { text: "  Opening http://localhost:5173 in browser...", type: "output" as const },
   { text: "", type: "output" as const, delay: 1200 },
@@ -31,7 +31,7 @@ const demoStaticLines = [
 ];
 
 const demoDevLines = [
-  { text: "gitmap-v25 hd", type: "input" as const, delay: 800 },
+  { text: "gitmap-v26 hd", type: "input" as const, delay: 800 },
   { text: "  No pre-built dist/ found, falling back to npm run dev", type: "output" as const },
   { text: "  Running npm install...", type: "output" as const, delay: 600 },
   { text: "  Starting dev server from /usr/local/bin/docs-site...", type: "accent" as const, delay: 800 },
@@ -43,7 +43,7 @@ const demoDevLines = [
 ];
 
 const demoPortLines = [
-  { text: "gitmap-v25 hd --port 8080", type: "input" as const, delay: 800 },
+  { text: "gitmap-v26 hd --port 8080", type: "input" as const, delay: 800 },
   { text: "  Serving docs from /usr/local/bin/docs-site/dist on http://localhost:8080", type: "accent" as const },
   { text: "  Opening http://localhost:8080 in browser...", type: "output" as const },
 ];
@@ -69,7 +69,7 @@ const HelpDashboardPage = () => (
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">How It Works</h2>
     <div className="rounded-lg border border-border bg-card p-4 mb-8 text-sm text-muted-foreground space-y-2">
-      <p><strong className="text-foreground">1.</strong> Locates the <code className="text-primary">docs-site/</code> directory relative to the gitmap-v25 binary.</p>
+      <p><strong className="text-foreground">1.</strong> Locates the <code className="text-primary">docs-site/</code> directory relative to the gitmap-v26 binary.</p>
       <p><strong className="text-foreground">2.</strong> If a pre-built <code className="text-primary">dist/</code> folder exists, serves it with Go's built-in HTTP server (no dependencies).</p>
       <p><strong className="text-foreground">3.</strong> If no <code className="text-primary">dist/</code> is found, falls back to <code className="text-primary">npm install && npm run dev</code>.</p>
       <p><strong className="text-foreground">4.</strong> Opens the dashboard in your default browser automatically.</p>
@@ -83,8 +83,8 @@ const HelpDashboardPage = () => (
     </div>
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Usage</h2>
-    <CodeBlock code="gitmap-v25 help-dashboard [flags]" title="Basic usage" />
-    <CodeBlock code="gitmap-v25 hd --port 8080" title="Custom port" />
+    <CodeBlock code="gitmap-v26 help-dashboard [flags]" title="Basic usage" />
+    <CodeBlock code="gitmap-v26 hd --port 8080" title="Custom port" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Flags</h2>
     <div className="rounded-lg border border-border overflow-hidden">

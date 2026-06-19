@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/cliexit"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/diff"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/cliexit"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/diff"
 )
 
 // runDiff implements `gitmap diff LEFT RIGHT`: a read-only preview

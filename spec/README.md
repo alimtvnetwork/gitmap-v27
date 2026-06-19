@@ -6,7 +6,7 @@ This folder contains all specification documents, issue post-mortems, design gui
 
 ## 01-app/ — Application Specifications
 
-Feature specs, command designs, and refactor documentation for the gitmap-v25 CLI.
+Feature specs, command designs, and refactor documentation for the gitmap-v26 CLI.
 
 | # | File | Topic |
 |---|------|-------|

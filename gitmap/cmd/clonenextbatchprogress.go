@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // batchProgressReporter tracks completed/failed/skipped counters and

@@ -7,7 +7,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // makeRepoFixture writes a few marker files so DetectTagsCustom has

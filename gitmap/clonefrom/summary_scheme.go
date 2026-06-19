@@ -15,7 +15,7 @@ package clonefrom
 import (
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // schemeOrder returns the canonical render order for the per-mode

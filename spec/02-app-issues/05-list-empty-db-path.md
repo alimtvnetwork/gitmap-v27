@@ -1,8 +1,8 @@
-# Issue 05: `gitmap-v25 ls` Returns Empty After Scan
+# Issue 05: `gitmap-v26 ls` Returns Empty After Scan
 
 ## Symptom
 
-Running `gitmap-v25 ls` shows "No repos tracked. Run 'gitmap-v25 scan' first."
+Running `gitmap-v26 ls` shows "No repos tracked. Run 'gitmap-v26 scan' first."
 even though a scan was previously completed successfully.
 
 ## Root Cause
@@ -41,5 +41,5 @@ v2.15.1 through v2.19.0
 
 ## Verification
 
-After fix: `gitmap-v25 ls --verbose` should print the resolved DB path.
+After fix: `gitmap-v26 ls --verbose` should print the resolved DB path.
 Re-scanning should persist to the same location that `ls` reads from.

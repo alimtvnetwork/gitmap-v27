@@ -12,12 +12,12 @@ const INSTALL_TABS = [
   {
     label: "Windows",
     command:
-      "irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v25/main/install-quick.ps1 | iex",
+      "irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v26/main/install-quick.ps1 | iex",
   },
   {
     label: "Linux / macOS",
     command:
-      "curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v25/main/install-quick.sh | bash",
+      "curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v26/main/install-quick.sh | bash",
   },
 ];
 
@@ -25,12 +25,12 @@ const UNINSTALL_TABS = [
   {
     label: "Windows",
     command:
-      "irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v25/main/uninstall-quick.ps1 | iex",
+      "irm https://raw.githubusercontent.com/alimtvnetwork/gitmap-v26/main/uninstall-quick.ps1 | iex",
   },
   {
     label: "Linux / macOS",
     command:
-      "curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v25/main/uninstall-quick.sh | bash",
+      "curl -fsSL https://raw.githubusercontent.com/alimtvnetwork/gitmap-v26/main/uninstall-quick.sh | bash",
   },
 ];
 
@@ -41,7 +41,7 @@ const HomePage = () => {
         <div className="reveal">
           <div className="flex items-center justify-center gap-3 mb-4">
             <h1 className="text-4xl md:text-6xl font-heading font-bold docs-h1 text-shimmer tracking-tight">
-              gitmap-v25
+              gitmap-v26
             </h1>
             <span className="rounded-sm border border-border bg-card px-2 py-0.5 text-xs font-mono text-muted-foreground shadow-sm">
               {VERSION}
@@ -80,8 +80,8 @@ const HomePage = () => {
             </div>
 
             <p className="mx-auto mt-6 max-w-2xl text-xs text-muted-foreground font-sans leading-relaxed">
-              Uninstall removes the <code className="font-mono text-foreground">gitmap-v25</code> binary and its PATH entries, then prompts before deleting your data folder
-              (<code className="font-mono text-foreground">%APPDATA%\gitmap-v25</code> on Windows, <code className="font-mono text-foreground">~/.config/gitmap-v25</code> on Linux/macOS).
+              Uninstall removes the <code className="font-mono text-foreground">gitmap-v26</code> binary and its PATH entries, then prompts before deleting your data folder
+              (<code className="font-mono text-foreground">%APPDATA%\gitmap-v26</code> on Windows, <code className="font-mono text-foreground">~/.config/gitmap-v26</code> on Linux/macOS).
               Pass <code className="font-mono text-foreground">--keep-data</code> to always keep it, or <code className="font-mono text-foreground">-y</code>/<code className="font-mono text-foreground">--yes</code> to skip the prompt.
             </p>
           </div>
@@ -138,7 +138,7 @@ const HomePage = () => {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            name: "gitmap-v25",
+            name: "gitmap-v26",
             applicationCategory: "DeveloperApplication",
             operatingSystem: "Windows, macOS, Linux",
             description: "CLI tool to scan, map, and re-clone Git repository trees.",

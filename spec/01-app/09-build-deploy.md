@@ -138,7 +138,7 @@ The build step embeds the **absolute path of the source repo** into the
 binary via Go `-ldflags`:
 
 ```powershell
-$ldflags = "-X 'github.com/alimtvnetwork/gitmap-v25/gitmap/constants.RepoPath=$absRepoRoot'"
+$ldflags = "-X 'github.com/alimtvnetwork/gitmap-v26/gitmap/constants.RepoPath=$absRepoRoot'"
 go build -ldflags $ldflags -o $outPath .
 ```
 
@@ -184,8 +184,8 @@ Before executing gitmap, the script prints diagnostic context:
 ```
   [RUN] Executing gitmap
   ──────────────────────────────────────────────────
-  → Runner CWD: D:\wp-work\riseup-asia\gitmap-v25
-  → Repo root: D:\wp-work\riseup-asia\gitmap-v25
+  → Runner CWD: D:\wp-work\riseup-asia\gitmap-v26
+  → Repo root: D:\wp-work\riseup-asia\gitmap-v26
   → Command: gitmap scan D:\wp-work
   → Scan target: D:\wp-work
   ──────────────────────────────────────────────────
@@ -194,7 +194,7 @@ Before executing gitmap, the script prints diagnostic context:
 | Line | Description |
 |------|-------------|
 | Runner CWD | Current working directory of the PowerShell session |
-| Repo root | Root of the gitmap-v25 project |
+| Repo root | Root of the gitmap-v26 project |
 | Command | Full command being executed |
 | Scan target | Resolved absolute path passed to `scan` (shown only for scan commands) |
 

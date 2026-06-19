@@ -3,11 +3,11 @@ import TerminalDemo from "@/components/docs/TerminalDemo";
 
 const demos = [
   {
-    title: "gitmap-v25 scan",
+    title: "gitmap-v26 scan",
     lines: [
-      { text: "gitmap-v25 scan ~/projects", type: "input" as const, delay: 800 },
+      { text: "gitmap-v26 scan ~/projects", type: "input" as const, delay: 800 },
       { text: "", delay: 200 },
-      { text: "gitmap-v25 v2.28.0", type: "header" as const },
+      { text: "gitmap-v26 v2.28.0", type: "header" as const },
       { text: "", delay: 100 },
       { text: "Scanning: /home/user/projects", delay: 150 },
       { text: "Found 12 repositories", type: "accent" as const, delay: 300 },
@@ -25,11 +25,11 @@ const demos = [
     ],
   },
   {
-    title: "gitmap-v25 watch",
+    title: "gitmap-v26 watch",
     lines: [
-      { text: "gitmap-v25 watch --interval 10", type: "input" as const, delay: 800 },
+      { text: "gitmap-v26 watch --interval 10", type: "input" as const, delay: 800 },
       { text: "", delay: 300 },
-      { text: "gitmap-v25 watch — refreshing every 10s", type: "header" as const, delay: 200 },
+      { text: "gitmap-v26 watch — refreshing every 10s", type: "header" as const, delay: 200 },
       { text: "", delay: 100 },
       { text: "REPO              BRANCH    STATUS    AHEAD  BEHIND  STASH", delay: 150 },
       { text: "────────────────  ────────  ────────  ─────  ──────  ─────", delay: 100 },
@@ -43,9 +43,9 @@ const demos = [
     ],
   },
   {
-    title: "gitmap-v25 latest-branch",
+    title: "gitmap-v26 latest-branch",
     lines: [
-      { text: "gitmap-v25 lb --top 3 --format terminal", type: "input" as const, delay: 800 },
+      { text: "gitmap-v26 lb --top 3 --format terminal", type: "input" as const, delay: 800 },
       { text: "", delay: 300 },
       { text: "Latest branches (top 3):", type: "header" as const, delay: 200 },
       { text: "", delay: 100 },
@@ -60,9 +60,9 @@ const demos = [
     ],
   },
   {
-    title: "gitmap-v25 clone",
+    title: "gitmap-v26 clone",
     lines: [
-      { text: "gitmap-v25 clone json --target ~/new-machine", type: "input" as const, delay: 800 },
+      { text: "gitmap-v26 clone json --target ~/new-machine", type: "input" as const, delay: 800 },
       { text: "", delay: 300 },
       { text: "Cloning from: .gitmap/output/gitmap.json", type: "header" as const, delay: 200 },
       { text: "Target: /home/user/new-machine", delay: 150 },
@@ -77,10 +77,10 @@ const demos = [
     ],
   },
   {
-    title: "gitmap-v25 clone-next",
+    title: "gitmap-v26 clone-next",
     lines: [
       { text: "D:\\wp-work\\riseup-asia\\macro-ahk-v11>", type: "header" as const, delay: 200 },
-      { text: "gitmap-v25 cn v++", type: "input" as const, delay: 800 },
+      { text: "gitmap-v26 cn v++", type: "input" as const, delay: 800 },
       { text: "", delay: 300 },
       { text: "Cloning macro-ahk-v12 into D:\\wp-work\\riseup-asia...", delay: 400 },
       { text: "✓ Cloned macro-ahk-v12", type: "accent" as const, delay: 350 },
@@ -90,7 +90,7 @@ const demos = [
       { text: "→ Now in macro-ahk-v12", type: "accent" as const, delay: 200 },
       { text: "", delay: 200 },
       { text: "D:\\wp-work\\riseup-asia\\macro-ahk-v12>", type: "header" as const, delay: 300 },
-      { text: "gitmap-v25 cn v15 --delete", type: "input" as const, delay: 800 },
+      { text: "gitmap-v26 cn v15 --delete", type: "input" as const, delay: 800 },
       { text: "", delay: 300 },
       { text: "Cloning macro-ahk-v15 into D:\\wp-work\\riseup-asia...", delay: 400 },
       { text: "✓ Cloned macro-ahk-v15", type: "accent" as const, delay: 350 },
@@ -106,7 +106,7 @@ const InteractiveExamplesPage = () => {
     <DocsLayout>
       <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Interactive Examples</h1>
       <p className="text-muted-foreground mb-8">
-        Live terminal demos for key gitmap-v25 commands. Click <strong>▶</strong> to play.
+        Live terminal demos for key gitmap-v26 commands. Click <strong>▶</strong> to play.
       </p>
 
       <div className="space-y-8">

@@ -1,13 +1,13 @@
 import CodeBlock from "@/components/docs/CodeBlock";
 import { BadgeCheck, ClipboardList, HelpCircle, ListChecks, Route, ShieldCheck } from "lucide-react";
 
-const HELP_COMMAND = `gitmap-v25 install --help
-gitmap-v25 install --list
-gitmap-v25 install node --dry-run
-gitmap-v25 install node --manager choco --version 22.5.0`;
+const HELP_COMMAND = `gitmap-v26 install --help
+gitmap-v26 install --list
+gitmap-v26 install node --dry-run
+gitmap-v26 install node --manager choco --version 22.5.0`;
 
 const HELP_BLOCKS = [
-  [BadgeCheck, "Recommended path", "Use `gitmap-v25 install <tool>` first. It detects the platform, chooses the manager, verifies the binary, then records the install.", "recommended"],
+  [BadgeCheck, "Recommended path", "Use `gitmap-v26 install <tool>` first. It detects the platform, chooses the manager, verifies the binary, then records the install.", "recommended"],
   [ListChecks, "Discovery commands", "`--list`, `--status`, and `--check` answer what is supported, what is installed, and whether a target is already present.", "power"],
   [ShieldCheck, "Safe execution", "`--dry-run`, `--manager`, and `--version` make the command predictable before it touches the machine.", "pinned"],
 ] as const;

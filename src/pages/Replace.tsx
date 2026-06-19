@@ -58,11 +58,11 @@ const ReplacePage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v25 replace "<old>" "<new>"     # literal text replace
-gitmap-v25 replace -N                   # bump v(K-N)..v(K-1) -> vK
-gitmap-v25 replace --audit              # report-only scan, no writes
-gitmap-v25 replace all                  # bump v1..v(K-1) -> vK
-gitmap-v25 rpl "<old>" "<new>"          # short alias`} />
+        <CodeBlock code={`gitmap-v26 replace "<old>" "<new>"     # literal text replace
+gitmap-v26 replace -N                   # bump v(K-N)..v(K-1) -> vK
+gitmap-v26 replace --audit              # report-only scan, no writes
+gitmap-v26 replace all                  # bump v1..v(K-1) -> vK
+gitmap-v26 rpl "<old>" "<new>"          # short alias`} />
       </section>
 
       <section>
@@ -92,19 +92,19 @@ gitmap-v25 rpl "<old>" "<new>"          # short alias`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Literal swap, preview only
-gitmap-v25 replace "old-name" "new-name" --dry-run
+gitmap-v26 replace "old-name" "new-name" --dry-run
 
 # Bump the previous 3 versions to the current one (reads -vK from origin)
-gitmap-v25 replace -3 -y
+gitmap-v26 replace -3 -y
 
 # Bump every prior version
-gitmap-v25 replace all -y
+gitmap-v26 replace all -y
 
 # CI audit gate: fail if any legacy URL still appears
-gitmap-v25 replace --audit
+gitmap-v26 replace --audit
 
 # Restrict to Go + Markdown only
-gitmap-v25 replace "github.com/old" "github.com/new" --ext .go,.md -y`} />
+gitmap-v26 replace "github.com/old" "github.com/new" --ext .go,.md -y`} />
       </section>
 
       <section>
@@ -144,7 +144,7 @@ gitmap-v25 replace "github.com/old" "github.com/new" --ext .go,.md -y`} />
         <ul className="list-disc list-inside space-y-1 text-sm">
           <li><a href="/fix-repo" className="text-primary hover:underline">fix-repo</a> — Rewrite <code>{`{base}-vN`}</code> tokens specifically</li>
           <li><a href="/clone-fix-repo" className="text-primary hover:underline">clone-fix-repo</a> — Clone + fix-repo --all in one shot</li>
-          <li><a href="/release-self" className="text-primary hover:underline">release-self</a> — Bump gitmap-v25's own version</li>
+          <li><a href="/release-self" className="text-primary hover:underline">release-self</a> — Bump gitmap-v26's own version</li>
         </ul>
       </section>
     </div>

@@ -6,7 +6,7 @@ package cmd
 // every clone command produces the same block shape.
 
 import (
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/clonenext"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/clonenext"
 )
 
 // printCloneTermBlockForURL detects the remote default branch (best

@@ -21,7 +21,7 @@ const ChangelogGenerate = () => {
             Usage
           </h2>
           <CodeBlock
-            code={`gitmap-v25 changelog-generate [--from <tag>] [--to <tag>] [--write]\ngitmap cg [--from <tag>] [--to <tag>] [--write]`}
+            code={`gitmap-v26 changelog-generate [--from <tag>] [--to <tag>] [--write]\ngitmap cg [--from <tag>] [--to <tag>] [--write]`}
             language="bash"
             title="Command"
           />
@@ -107,7 +107,7 @@ const ChangelogGenerate = () => {
             <div>
               <h3 className="font-mono text-sm font-semibold text-foreground mb-2">Generate between latest two tags</h3>
               <CodeBlock
-                code={`$ gitmap-v25 changelog-generate
+                code={`$ gitmap-v26 changelog-generate
 
   Changelog: v2.23.0 → v2.24.0
 
@@ -125,7 +125,7 @@ const ChangelogGenerate = () => {
             <div>
               <h3 className="font-mono text-sm font-semibold text-foreground mb-2">From a specific tag to HEAD</h3>
               <CodeBlock
-                code={`$ gitmap-v25 cg --from v2.22.0
+                code={`$ gitmap-v26 cg --from v2.22.0
 
   Changelog: v2.22.0 → HEAD
 
@@ -143,7 +143,7 @@ const ChangelogGenerate = () => {
             <div>
               <h3 className="font-mono text-sm font-semibold text-foreground mb-2">Write directly to CHANGELOG.md</h3>
               <CodeBlock
-                code={`$ gitmap-v25 cg --from v2.23.0 --to v2.24.0 --write
+                code={`$ gitmap-v26 cg --from v2.23.0 --to v2.24.0 --write
 
   Changelog: v2.23.0 → v2.24.0
 

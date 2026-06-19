@@ -20,7 +20,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // seedSkippableRows pre-creates each row's destination so executeRow

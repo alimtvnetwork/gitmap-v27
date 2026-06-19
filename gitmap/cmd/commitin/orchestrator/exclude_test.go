@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/cmd/commitin/profile"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/cmd/commitin/profile"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 func TestApplyExclusions_FiltersFolderAndFile(t *testing.T) {

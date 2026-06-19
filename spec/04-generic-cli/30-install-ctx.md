@@ -9,34 +9,34 @@
 
 ## 1. Purpose
 
-Add a single `gitmap-v25 ▸` entry to the Windows Explorer right-click menu
+Add a single `gitmap-v26 ▸` entry to the Windows Explorer right-click menu
 on **folder backgrounds** (clicking inside a folder) and on **folder
 items** (right-clicking a folder). The entry expands into nested
-category submenus that invoke `gitmap-v25` subcommands against the clicked
+category submenus that invoke `gitmap-v26` subcommands against the clicked
 folder (`%V`).
 
 Installed via:
 
 ```
-gitmap-v25 install ctx              # add the menu (HKCU only — no admin)
-gitmap-v25 install ctx --explain    # bake an "> gitmap-v25 <args>" announce into every
+gitmap-v26 install ctx              # add the menu (HKCU only — no admin)
+gitmap-v26 install ctx --explain    # bake an "> gitmap-v26 <args>" announce into every
                                 # generated entry; users see the resolved
                                 # invocation before it executes. Process-local
                                 # toggle: re-running without --explain
                                 # regenerates plain entries.
-gitmap-v25 uninstall ctx            # remove the menu
+gitmap-v26 uninstall ctx            # remove the menu
 ```
 
 ### 1.1 `--explain` rendering
 
 | Mode     | Where the announce appears                                      |
 | -------- | --------------------------------------------------------------- |
-| Terminal | First line in the spawned terminal: `> gitmap-v25 pull --all`       |
+| Terminal | First line in the spawned terminal: `> gitmap-v26 pull --all`       |
 | Silent   | Prepended to the OS notification body, ahead of stdout/stderr   |
 | Prefill  | Not affected — the user is typing the command themselves        |
 
 Implemented by `ctxExplainPrefixPwsh` / `ctxExplainPrefixSh` /
-`ctxExplainAnnounce` in `gitmap-v25/cmd/installctxexplain.go`, gated by
+`ctxExplainAnnounce` in `gitmap-v26/cmd/installctxexplain.go`, gated by
 the package-local `ctxExplainEnabled` flag set in `runInstallCtx`.
 
 `ctx` is added to the existing install-tool table alongside `vscode-ctx`
@@ -45,47 +45,47 @@ existing two commands is altered.
 
 ## 2. Menu Structure
 
-One nested layout under a top-level `gitmap-v25` cascade. Categories mirror
+One nested layout under a top-level `gitmap-v26` cascade. Categories mirror
 the CLI command groups so users discover commands the same way they do
 on the terminal.
 
 ```
-gitmap-v25 ▸
+gitmap-v26 ▸
 ├─ Scan ▸
-│   ├─ Scan here                       (gitmap-v25 scan)
-│   ├─ Rescan                          (gitmap-v25 rescan)
-│   └─ Find next                       (gitmap-v25 find-next)
+│   ├─ Scan here                       (gitmap-v26 scan)
+│   ├─ Rescan                          (gitmap-v26 rescan)
+│   └─ Find next                       (gitmap-v26 find-next)
 ├─ Clone ▸
-│   ├─ Clone-next here                 (gitmap-v25 clone-next)
-│   ├─ Pull                            (gitmap-v25 pull)
-│   └─ Pull all                        (gitmap-v25 pull-all)
+│   ├─ Clone-next here                 (gitmap-v26 clone-next)
+│   ├─ Pull                            (gitmap-v26 pull)
+│   └─ Pull all                        (gitmap-v26 pull-all)
 ├─ Release ▸
-│   ├─ Release current                 (gitmap-v25 release)
-│   ├─ Release next (bump minor)       (gitmap-v25 release --bump minor)
-│   ├─ Release pull                    (gitmap-v25 release-pull)
-│   ├─ Release pending          [N]    (gitmap-v25 release-pending)
-│   ├─ List releases                   (gitmap-v25 list-releases)
-│   └─ List versions                   (gitmap-v25 list-versions)
+│   ├─ Release current                 (gitmap-v26 release)
+│   ├─ Release next (bump minor)       (gitmap-v26 release --bump minor)
+│   ├─ Release pull                    (gitmap-v26 release-pull)
+│   ├─ Release pending          [N]    (gitmap-v26 release-pending)
+│   ├─ List releases                   (gitmap-v26 list-releases)
+│   └─ List versions                   (gitmap-v26 list-versions)
 ├─ Repos ▸
-│   ├─ Go projects                     (gitmap-v25 go-repos)
-│   ├─ Node projects                   (gitmap-v25 node-repos)
-│   ├─ React projects                  (gitmap-v25 react-repos)
-│   ├─ C++ projects                    (gitmap-v25 cpp-repos)
-│   ├─ C# projects                     (gitmap-v25 csharp-repos)
-│   ├─ Rust projects        [future]   (gitmap-v25 rust-repos)
-│   └─ PHP projects         [future]   (gitmap-v25 php-repos)
+│   ├─ Go projects                     (gitmap-v26 go-repos)
+│   ├─ Node projects                   (gitmap-v26 node-repos)
+│   ├─ React projects                  (gitmap-v26 react-repos)
+│   ├─ C++ projects                    (gitmap-v26 cpp-repos)
+│   ├─ C# projects                     (gitmap-v26 csharp-repos)
+│   ├─ Rust projects        [future]   (gitmap-v26 rust-repos)
+│   └─ PHP projects         [future]   (gitmap-v26 php-repos)
 ├─ Visibility ▸
-│   ├─ Make public                     (gitmap-v25 visibility public)
-│   └─ Make private                    (gitmap-v25 visibility private)
+│   ├─ Make public                     (gitmap-v26 visibility public)
+│   └─ Make private                    (gitmap-v26 visibility private)
 ├─ Tools ▸
-│   ├─ Fix repo                        (gitmap-v25 fix-repo)
-│   ├─ Diff                            (gitmap-v25 diff)
-│   ├─ Logs                            (gitmap-v25 logs)
-│   ├─ History                         (gitmap-v25 history)
-│   └─ Update                          (gitmap-v25 update)
+│   ├─ Fix repo                        (gitmap-v26 fix-repo)
+│   ├─ Diff                            (gitmap-v26 diff)
+│   ├─ Logs                            (gitmap-v26 logs)
+│   ├─ History                         (gitmap-v26 history)
+│   └─ Update                          (gitmap-v26 update)
 ├─ ─────────────                       (separator)
-├─ Open terminal here                  (open pwsh, prefill `gitmap-v25 `)
-└─ Docs                                (gitmap-v25 docs)
+├─ Open terminal here                  (open pwsh, prefill `gitmap-v26 `)
+└─ Docs                                (gitmap-v26 docs)
 ```
 
 Rust/PHP entries are stubbed in the menu only when the underlying
@@ -98,13 +98,13 @@ Use the legacy `MUIVerb` + `SubCommands` cascade (no COM handler). All
 keys live under **HKCU** so install requires no elevation:
 
 ```
-HKCU\Software\Classes\Directory\Background\shell\gitmap-v25
+HKCU\Software\Classes\Directory\Background\shell\gitmap-v26
     (Default)        = (empty)
-    MUIVerb          = "gitmap-v25"
+    MUIVerb          = "gitmap-v26"
     SubCommands      = ""               ; empty => use ExtendedSubCommandsKey
     Icon             = "<gitmap.exe path>,0"
 
-HKCU\Software\Classes\Directory\Background\shell\gitmap-v25\shell\01_scan
+HKCU\Software\Classes\Directory\Background\shell\gitmap-v26\shell\01_scan
     MUIVerb          = "Scan"
     SubCommands      = ""
     HKCU\...\01_scan\shell\01_scan_here
@@ -113,7 +113,7 @@ HKCU\Software\Classes\Directory\Background\shell\gitmap-v25\shell\01_scan
     ...
 ```
 
-Mirror the same tree under `Directory\shell\gitmap-v25` so right-clicking
+Mirror the same tree under `Directory\shell\gitmap-v26` so right-clicking
 the folder **item** (not just background) also works. Generation is
 table-driven from a single `[]ctxEntry` slice — see §4.
 
@@ -123,46 +123,46 @@ table-driven from a single `[]ctxEntry` slice — see §4.
 working directory for every entry. No flag is added unless listed
 below — defaults apply.
 
-| KeyName              | Visible label                  | Exact `gitmap-v25` invocation              | Mode     | Notes                                                                              |
+| KeyName              | Visible label                  | Exact `gitmap-v26` invocation              | Mode     | Notes                                                                              |
 | -------------------- | ------------------------------ | -------------------------------------- | -------- | ---------------------------------------------------------------------------------- |
-| `10_scan/10_scan_here`     | Scan here                | `gitmap-v25 scan`                          | Terminal | Walks current folder with default `--max-depth` and worker count from `git-setup.json`. No flags. |
-| `10_scan/20_rescan`        | Rescan                   | `gitmap-v25 rescan`                        | Terminal | Re-runs the most recent scan against the same root.                               |
-| `10_scan/30_find_next`     | Find next                | `gitmap-v25 find-next`                     | Silent   | Probes for the next available `<base>-vN+1` sibling. No `--scan-folder` (uses cwd); no `--json` (output goes to notification verbatim). |
-| `20_clone/10_clone_next`   | Clone-next here          | `gitmap-v25 clone-next`                    | Terminal | Flattens to base-name folder by default (v2.75.0+). |
-| `20_clone/20_pull`         | Pull                     | `gitmap-v25 pull`                          | Terminal | Fast-forward pull on current repo only. |
-| `20_clone/30_pull_all`     | Pull all (every tracked repo) | `gitmap-v25 pull-all`                 | Terminal | **Power-user batch.** Windows: `Extended` REG_SZ → Shift+right-click only. macOS/Linux: visible but gated by `osascript display dialog` / `zenity`/`kdialog`/`xmessage` confirm. Forwards to `runPull` with `--all` injected. |
-| `30_release/10_release`    | Release current          | `gitmap-v25 release`                       | Terminal | Re-tags `HEAD` at current `constants.Version`. Interactive prompts for missing notes. |
-| `30_release/20_release_next` | Release next (bump minor) | `gitmap-v25 release --bump minor`        | Terminal | Uses `constants.FlagBumpDash` + `constants.BumpMinor` — no string literals in the entry. Patch / major variants intentionally omitted from the menu (rarely used; users type them). |
-| `30_release/30_release_pull` | Release pull           | `gitmap-v25 release-pull`                  | Terminal | `git pull --ff-only` then `release`. Hard-fails on divergent history. |
-| `30_release/40_release_pending` | Release pending     | `gitmap-v25 release-pending`               | Silent   | Prints commits since last release. |
-| `30_release/50_list_releases` | List releases         | `gitmap-v25 list-releases`                 | Silent   | Single-repo view. (`--all-repos` deliberately omitted — would surprise the user clicking inside one folder.) |
-| `30_release/60_list_versions` | List versions         | `gitmap-v25 list-versions`                 | Silent   | Single-repo `RepoVersionHistory` view. |
-| `40_repos/10_go`           | Go projects              | `gitmap-v25 go-repos`                      | Silent   | Filters DB by `go.mod` detection. No `--json` (notification gets human text). |
-| `40_repos/20_node`         | Node projects            | `gitmap-v25 node-repos`                    | Silent   | `package.json` detection. |
-| `40_repos/30_react`        | React projects           | `gitmap-v25 react-repos`                   | Silent   | React dependency in `package.json`. |
-| `40_repos/40_cpp`          | C++ projects             | `gitmap-v25 cpp-repos`                     | Silent   | CMakeLists / `.cpp` detection. |
-| `40_repos/50_csharp`       | C# projects              | `gitmap-v25 csharp-repos`                  | Silent   | `.csproj` / `.sln` detection. |
-| `50_visibility/10_public`  | Make public              | `gitmap-v25 make-public`                   | Terminal | Calls `gh repo edit --visibility public` (or `glab`). Interactive confirm. |
-| `50_visibility/20_private` | Make private             | `gitmap-v25 make-private`                  | Terminal | Calls `gh repo edit --visibility private`. Interactive confirm. |
-| `60_tools/10_fix_repo`     | Fix repo                 | `gitmap-v25 fix-repo`                      | Terminal | Rewrites stale `<base>-vN` tokens to current version. No `--strict` from the menu. |
-| `60_tools/20_diff`         | Diff                     | `gitmap-v25 diff`                          | Terminal | Wraps `git diff` with gitmap-v25's pager. |
-| `60_tools/30_history`      | History                  | `gitmap-v25 history`                       | Terminal | Local `CliInvocation` history; pages with `--limit 50` default. |
-| `60_tools/40_update`       | Update                   | `gitmap-v25 update`                        | Terminal | Self-update — Terminal so the user sees the new-version banner. |
-| `90_terminal`              | Open terminal here       | (no command — prefill prompt)          | Prefill  | Opens shell at folder, writes `gitmap-v25 ` literal so the user can finish typing. |
-| `91_docs`                  | Docs                     | `gitmap-v25 docs`                          | Silent   | Prints help-dashboard URL. |
+| `10_scan/10_scan_here`     | Scan here                | `gitmap-v26 scan`                          | Terminal | Walks current folder with default `--max-depth` and worker count from `git-setup.json`. No flags. |
+| `10_scan/20_rescan`        | Rescan                   | `gitmap-v26 rescan`                        | Terminal | Re-runs the most recent scan against the same root.                               |
+| `10_scan/30_find_next`     | Find next                | `gitmap-v26 find-next`                     | Silent   | Probes for the next available `<base>-vN+1` sibling. No `--scan-folder` (uses cwd); no `--json` (output goes to notification verbatim). |
+| `20_clone/10_clone_next`   | Clone-next here          | `gitmap-v26 clone-next`                    | Terminal | Flattens to base-name folder by default (v2.75.0+). |
+| `20_clone/20_pull`         | Pull                     | `gitmap-v26 pull`                          | Terminal | Fast-forward pull on current repo only. |
+| `20_clone/30_pull_all`     | Pull all (every tracked repo) | `gitmap-v26 pull-all`                 | Terminal | **Power-user batch.** Windows: `Extended` REG_SZ → Shift+right-click only. macOS/Linux: visible but gated by `osascript display dialog` / `zenity`/`kdialog`/`xmessage` confirm. Forwards to `runPull` with `--all` injected. |
+| `30_release/10_release`    | Release current          | `gitmap-v26 release`                       | Terminal | Re-tags `HEAD` at current `constants.Version`. Interactive prompts for missing notes. |
+| `30_release/20_release_next` | Release next (bump minor) | `gitmap-v26 release --bump minor`        | Terminal | Uses `constants.FlagBumpDash` + `constants.BumpMinor` — no string literals in the entry. Patch / major variants intentionally omitted from the menu (rarely used; users type them). |
+| `30_release/30_release_pull` | Release pull           | `gitmap-v26 release-pull`                  | Terminal | `git pull --ff-only` then `release`. Hard-fails on divergent history. |
+| `30_release/40_release_pending` | Release pending     | `gitmap-v26 release-pending`               | Silent   | Prints commits since last release. |
+| `30_release/50_list_releases` | List releases         | `gitmap-v26 list-releases`                 | Silent   | Single-repo view. (`--all-repos` deliberately omitted — would surprise the user clicking inside one folder.) |
+| `30_release/60_list_versions` | List versions         | `gitmap-v26 list-versions`                 | Silent   | Single-repo `RepoVersionHistory` view. |
+| `40_repos/10_go`           | Go projects              | `gitmap-v26 go-repos`                      | Silent   | Filters DB by `go.mod` detection. No `--json` (notification gets human text). |
+| `40_repos/20_node`         | Node projects            | `gitmap-v26 node-repos`                    | Silent   | `package.json` detection. |
+| `40_repos/30_react`        | React projects           | `gitmap-v26 react-repos`                   | Silent   | React dependency in `package.json`. |
+| `40_repos/40_cpp`          | C++ projects             | `gitmap-v26 cpp-repos`                     | Silent   | CMakeLists / `.cpp` detection. |
+| `40_repos/50_csharp`       | C# projects              | `gitmap-v26 csharp-repos`                  | Silent   | `.csproj` / `.sln` detection. |
+| `50_visibility/10_public`  | Make public              | `gitmap-v26 make-public`                   | Terminal | Calls `gh repo edit --visibility public` (or `glab`). Interactive confirm. |
+| `50_visibility/20_private` | Make private             | `gitmap-v26 make-private`                  | Terminal | Calls `gh repo edit --visibility private`. Interactive confirm. |
+| `60_tools/10_fix_repo`     | Fix repo                 | `gitmap-v26 fix-repo`                      | Terminal | Rewrites stale `<base>-vN` tokens to current version. No `--strict` from the menu. |
+| `60_tools/20_diff`         | Diff                     | `gitmap-v26 diff`                          | Terminal | Wraps `git diff` with gitmap-v26's pager. |
+| `60_tools/30_history`      | History                  | `gitmap-v26 history`                       | Terminal | Local `CliInvocation` history; pages with `--limit 50` default. |
+| `60_tools/40_update`       | Update                   | `gitmap-v26 update`                        | Terminal | Self-update — Terminal so the user sees the new-version banner. |
+| `90_terminal`              | Open terminal here       | (no command — prefill prompt)          | Prefill  | Opens shell at folder, writes `gitmap-v26 ` literal so the user can finish typing. |
+| `91_docs`                  | Docs                     | `gitmap-v26 docs`                          | Silent   | Prints help-dashboard URL. |
 
 ### 3.1 Execution-mode templates
 
 | Mode       | Windows                                                                                                                | macOS                                                                                                                              | Linux                                                                                                       |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `Terminal` | `pwsh -NoExit -NoProfile -Command "Set-Location '%V'; & '<exe>' <args>"`                                               | `osascript -e 'tell application "Terminal" to do script "cd \"$1\" && <exe> <args>"' -e '… activate'`                              | `D="${1:-$PWD}"; cd "$D" && x-terminal-emulator -e sh -c "'<exe>' <args>; exec $SHELL" &`                   |
-| `Silent`   | `pwsh -NoProfile -WindowStyle Hidden -Command "Set-Location '%V'; & '<exe>' <args> 2>&1 \| Out-String \| msg.exe * $_"` | `cd "$1" && OUT=$('<exe>' <args> 2>&1); osascript -e "display notification \"$(echo $OUT \| head -c 200)\" with title \"<label>\""` | `D="${1:-$PWD}"; cd "$D"; OUT=$('<exe>' <args> 2>&1); notify-send 'gitmap-v25' "$(echo $OUT \| head -c 200)"`   |
-| `Prefill`  | `pwsh -NoExit -NoProfile -Command "Set-Location '%V'; Write-Host -NoNewline 'gitmap-v25 '"`                                | `osascript -e 'tell application "Terminal" to do script "cd \"$1\" && printf \"gitmap-v25 \""' -e '… activate'`                        | `x-terminal-emulator -e sh -c 'printf "gitmap-v25 "; exec $SHELL'`                                              |
+| `Silent`   | `pwsh -NoProfile -WindowStyle Hidden -Command "Set-Location '%V'; & '<exe>' <args> 2>&1 \| Out-String \| msg.exe * $_"` | `cd "$1" && OUT=$('<exe>' <args> 2>&1); osascript -e "display notification \"$(echo $OUT \| head -c 200)\" with title \"<label>\""` | `D="${1:-$PWD}"; cd "$D"; OUT=$('<exe>' <args> 2>&1); notify-send 'gitmap-v26' "$(echo $OUT \| head -c 200)"`   |
+| `Prefill`  | `pwsh -NoExit -NoProfile -Command "Set-Location '%V'; Write-Host -NoNewline 'gitmap-v26 '"`                                | `osascript -e 'tell application "Terminal" to do script "cd \"$1\" && printf \"gitmap-v26 \""' -e '… activate'`                        | `x-terminal-emulator -e sh -c 'printf "gitmap-v26 "; exec $SHELL'`                                              |
 
 ### 3.2 Constant references (no magic strings)
 
 Every value above resolves through a constant in
-`gitmap-v25/constants/`:
+`gitmap-v26/constants/`:
 
 | Used in entry                          | Constant                                                       |
 | -------------------------------------- | -------------------------------------------------------------- |
@@ -170,16 +170,16 @@ Every value above resolves through a constant in
 | `--scan-folder` (find-next, not used)  | `constants.FindNextFlagScanFolder`                             |
 | `--json` (find-next, intentionally NOT used by menu) | `constants.FindNextFlagJSON`                       |
 | `--all-repos` (list-releases, not used by menu) | `constants.FlagAllRepos`                              |
-| Every `Cmd*`                            | `gitmap-v25/constants/constants_cli.go` + per-domain `constants_*.go` |
+| Every `Cmd*`                            | `gitmap-v26/constants/constants_cli.go` + per-domain `constants_*.go` |
 
 ## 4. Implementation Layout
 
 ```
-gitmap-v25/cmd/installctx.go            // entry point — runInstallCtx / runUninstallCtx
-gitmap-v25/cmd/installctxentries.go     // []ctxEntry table (single source of truth)
-gitmap-v25/cmd/installctxregistry.go    // reg add/delete helpers (table-driven)
-gitmap-v25/cmd/installctxnotify.go      // probe BurntToast/msg.exe at install time
-gitmap-v25/constants/constants_installctx.go  // all literals (tool name, key paths, MUIVerbs, flag names)
+gitmap-v26/cmd/installctx.go            // entry point — runInstallCtx / runUninstallCtx
+gitmap-v26/cmd/installctxentries.go     // []ctxEntry table (single source of truth)
+gitmap-v26/cmd/installctxregistry.go    // reg add/delete helpers (table-driven)
+gitmap-v26/cmd/installctxnotify.go      // probe BurntToast/msg.exe at install time
+gitmap-v26/constants/constants_installctx.go  // all literals (tool name, key paths, MUIVerbs, flag names)
 ```
 
 `ctxEntry` shape:
@@ -190,33 +190,33 @@ type ctxEntry struct {
     MUIVerb  string   // "Release next (bump minor)"
     Args     []string // {"release", "--bump", "minor"}
     Mode     ctxMode  // Silent | Terminal | Prefill
-    Category string   // "Release" — empty = top-level under gitmap-v25
+    Category string   // "Release" — empty = top-level under gitmap-v26
 }
 ```
 
 The same slice drives:
 - install (write keys),
-- uninstall (delete the `gitmap-v25` subtree only, never neighbors),
+- uninstall (delete the `gitmap-v26` subtree only, never neighbors),
 - a unit test that asserts every entry references a real `Cmd*`
   constant from `constants_cli.go` (catches drift when commands are
   renamed).
 
 ### 4.1 Wire-up to the existing install dispatcher
 
-`gitmap-v25/constants/constants_installctx.go`:
+`gitmap-v26/constants/constants_installctx.go`:
 
 ```go
 const ToolCtx = "ctx"
 ```
 
-`gitmap-v25/cmd/install.go::specialInstallHandler`:
+`gitmap-v26/cmd/install.go::specialInstallHandler`:
 
 ```go
 case constants.ToolCtx:
     return func(installOptions) { runInstallCtx() }
 ```
 
-`gitmap-v25/cmd/uninstall.go` mirrors the `vscode-ctx` / `pwsh-ctx` branches.
+`gitmap-v26/cmd/uninstall.go` mirrors the `vscode-ctx` / `pwsh-ctx` branches.
 
 ### 4.2 Tool-table entry
 
@@ -225,25 +225,25 @@ Append to `constants_install.go`:
 | Field           | Value                                                |
 | --------------- | ---------------------------------------------------- |
 | `ToolCtx`       | `"ctx"`                                              |
-| description     | `"Add gitmap-v25 to Windows right-click context menu"`   |
+| description     | `"Add gitmap-v26 to Windows right-click context menu"`   |
 | `allInstallable`| **omit** — `install all` should NOT install `ctx` (it changes Explorer chrome; users opt in explicitly). |
 
 ## 5. Acceptance Criteria
 
-1. `gitmap-v25 install ctx` on Windows writes the full key tree under
-   `HKCU\Software\Classes\Directory\{Background,}\shell\gitmap-v25` and
-   prints `✓ gitmap-v25 context menu installed (X/X registry keys).`.
-2. `gitmap-v25 uninstall ctx` deletes **only** the `gitmap-v25` subtree from
+1. `gitmap-v26 install ctx` on Windows writes the full key tree under
+   `HKCU\Software\Classes\Directory\{Background,}\shell\gitmap-v26` and
+   prints `✓ gitmap-v26 context menu installed (X/X registry keys).`.
+2. `gitmap-v26 uninstall ctx` deletes **only** the `gitmap-v26` subtree from
    both locations and prints a parallel summary. `vscode-ctx` /
    `pwsh-ctx` keys are untouched.
-3. Right-clicking a folder background shows `gitmap-v25 ▸` with all five
+3. Right-clicking a folder background shows `gitmap-v26 ▸` with all five
    category submenus + the separator + Open-terminal + Docs entries.
 4. Each `Terminal`-mode entry opens a non-closing `pwsh` window at the
-   clicked folder and runs `gitmap-v25 <args>`.
+   clicked folder and runs `gitmap-v26 <args>`.
 5. Each `Silent`-mode entry surfaces output via the
    install-time-detected notifier (BurntToast → msg.exe → temp-log).
 6. **Open terminal here** opens `pwsh` at the folder with a literal
-   `gitmap-v25 ` prompt waiting for input (no command executed yet).
+   `gitmap-v26 ` prompt waiting for input (no command executed yet).
 7. On non-Windows, both commands print the same OS-not-supported error
    the existing `vscode-ctx` handler prints, then exit 0 (parity).
 8. A unit test (`installctxentries_test.go`) asserts every `ctxEntry.Args[0]`
@@ -258,7 +258,7 @@ Append to `constants_install.go`:
   above).
 - HKCU only — never write to `HKLM` (would require admin and affect
   other users).
-- Uninstall must use `reg delete /f` scoped to the `gitmap-v25` key only —
+- Uninstall must use `reg delete /f` scoped to the `gitmap-v26` key only —
   never wildcard the parent `shell` key.
 - Use `cliexit.Reportf` for any error print (not bare `fmt.Fprintf`),
   per the `check-bare-stderr-err.sh` CI gate.
@@ -267,13 +267,13 @@ Append to `constants_install.go`:
 
 Because Finder Services and Linux file-manager menus do not support
 arbitrary nested cascades, `flattenCtxMenu()` (in
-`gitmap-v25/cmd/installctxflatten.go`) collapses each `Category ▸ Child`
+`gitmap-v26/cmd/installctxflatten.go`) collapses each `Category ▸ Child`
 into a single labelled `flatCtxEntry`:
 
 ```
-gitmap-v25: Release — Release next (bump minor)
-gitmap-v25: Tools — Fix repo
-gitmap-v25: Open terminal here
+gitmap-v26: Release — Release next (bump minor)
+gitmap-v26: Tools — Fix repo
+gitmap-v26: Open terminal here
 ```
 
 ### 7.1 macOS — `~/Library/Services/<slug>.workflow`
@@ -284,10 +284,10 @@ containing `Contents/Info.plist` (registers the service for
 `Run Shell Script` action). The shell script:
 
 - **Terminal mode** → `osascript` to open Terminal.app at the folder
-  and run `gitmap-v25 <args>`.
+  and run `gitmap-v26 <args>`.
 - **Silent mode** → run inline, surface output via
   `display notification`.
-- **Prefill mode** → open Terminal.app and `printf "gitmap-v25 "` to leave
+- **Prefill mode** → open Terminal.app and `printf "gitmap-v26 "` to leave
   a prompt.
 
 After install, the user runs `pkill -KILL -u $USER cfprefsd` (or logs
@@ -298,8 +298,8 @@ out/in) to refresh Finder. No code-signing or notarization required —
 
 | Manager  | Path                                                  | Format                                   |
 | -------- | ----------------------------------------------------- | ---------------------------------------- |
-| Nautilus | `~/.local/share/nautilus/scripts/gitmap-v25/<label>`      | One executable shell script per entry; filename = menu label. |
-| Dolphin  | `~/.local/share/kio/servicemenus/gitmap-ctx.desktop`  | Single `.desktop` with `Actions=` listing every entry under `X-KDE-Submenu=gitmap-v25` (KDE renders this as a real cascade). |
+| Nautilus | `~/.local/share/nautilus/scripts/gitmap-v26/<label>`      | One executable shell script per entry; filename = menu label. |
+| Dolphin  | `~/.local/share/kio/servicemenus/gitmap-ctx.desktop`  | Single `.desktop` with `Actions=` listing every entry under `X-KDE-Submenu=gitmap-v26` (KDE renders this as a real cascade). |
 | Thunar   | `~/.config/Thunar/uca.xml`                            | Marker-delimited (`<!-- gitmap-ctx-begin --> … end -->`) `<action>` block; uninstall strips the block in place, leaving foreign actions intact. |
 
 All three use `x-terminal-emulator` for Terminal/Prefill modes and
@@ -313,7 +313,7 @@ XFCE — roughly 95% of Linux desktop usage.
 
 ## 8. Cross-References
 
-- Existing pattern: `gitmap-v25/cmd/installctxmenu.go` (`vscode-ctx`,
+- Existing pattern: `gitmap-v26/cmd/installctxmenu.go` (`vscode-ctx`,
   `pwsh-ctx`) — copy the `runRegistryCommands` reporting style.
 - Memory: `mem://features/install-ctx-menu`.
 - CI gate: `.github/scripts/check-bare-stderr-err.sh` — must pass.

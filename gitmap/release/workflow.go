@@ -7,10 +7,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/localdirs"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/verbose"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/localdirs"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/verbose"
 )
 
 // Options holds all parameters for a release operation.

@@ -2,7 +2,7 @@
 
 ## Symptom
 
-`gitmap-v25 release` could complete the tag/asset/metadata flow, create the final
+`gitmap-v26 release` could complete the tag/asset/metadata flow, create the final
 `Release vX.Y.Z` commit on the original branch, and then fail on the last push
 with a non-fast-forward error such as `main -> main (fetch first)`.
 

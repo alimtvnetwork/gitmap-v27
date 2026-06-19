@@ -2,7 +2,7 @@
 # ----------------------------------------------------------------------
 # visibility-change.sh - toggle/set GitHub/GitLab repo visibility
 #
-# Mirrors the Go-native `gitmap-v25 make-public` / `gitmap-v25 make-private`
+# Mirrors the Go-native `gitmap-v26 make-public` / `gitmap-v26 make-private`
 # commands so CI and shell users have a script-only fallback.
 # ----------------------------------------------------------------------
 

@@ -150,7 +150,7 @@ All logs must be structured JSON in production:
 
 ```
 [CRITICAL] gitmap-api: error rate 12.3% (threshold: 5%)
-Dashboard: https://monitoring.example.com/d/gitmap-v25
+Dashboard: https://monitoring.example.com/d/gitmap-v26
 Runbook: https://wiki.example.com/runbooks/high-error-rate
 ```
 

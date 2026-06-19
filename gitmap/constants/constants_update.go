@@ -165,7 +165,7 @@ const (
 
 // Clone-on-missing-path constants.
 const (
-	SourceRepoCloneURL   = "https://github.com/alimtvnetwork/gitmap-v25.git"
+	SourceRepoCloneURL   = "https://github.com/alimtvnetwork/gitmap-v26.git"
 	MsgUpdateCloning     = "\n  ■ Path does not exist. Cloning gitmap source into %s...\n"
 	MsgUpdateCloneOK     = "  ✓ Cloned successfully.\n"
 	ErrUpdateCloneFailed = "  ✗ Clone failed: %v\n"
@@ -182,9 +182,9 @@ const (
 // flow (requires a local source checkout + Go toolchain).
 const (
 	UpdateRemoteInstallerPwsh = "https://raw.githubusercontent.com/" +
-		"alimtvnetwork/gitmap-v25/main/install.ps1"
+		"alimtvnetwork/gitmap-v26/main/install.ps1"
 	UpdateRemoteInstallerBash = "https://raw.githubusercontent.com/" +
-		"alimtvnetwork/gitmap-v25/main/install.sh"
+		"alimtvnetwork/gitmap-v26/main/install.sh"
 
 	FlagSourceRebuild = "--source-rebuild"
 
@@ -208,7 +208,7 @@ const (
 	UpdateProbeTimeoutSec  = 5
 	UpdateProbeRepoBase    = "gitmap"
 	UpdateRepoOwner        = "alimtvnetwork"
-	UpdateCurrentRepoSlug  = "gitmap-v25"
+	UpdateCurrentRepoSlug  = "gitmap-v26"
 
 	UpdateRepoHEADTmpl     = "https://github.com/%s/%s"
 	UpdateRawInstallerTmpl = "https://raw.githubusercontent.com/%s/%s/main/%s"
@@ -263,7 +263,7 @@ try {
 }
 `
 	// UpdatePSDeployDetect format args (in order):
-	//   %[1]s — repo path           (e.g. C:\dev\gitmap-v25)
+	//   %[1]s — repo path           (e.g. C:\dev\gitmap-v26)
 	//   %[2]s — gitmap subdir       (sourceRepoSubdir from manifest)
 	//   %[3]s — app subdir          (appSubdir from manifest, e.g. gitmap-cli)
 	//   %[4]s — binary name         (gitmap.exe)

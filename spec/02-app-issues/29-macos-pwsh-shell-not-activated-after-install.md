@@ -5,7 +5,7 @@
 > **Related specs:**
 > - `spec/02-app-issues/22-installer-path-not-active-after-install.md` — multi-profile contract (this issue extends it)
 > - `spec/04-generic-cli/21-post-install-shell-activation/02-snippets.md` — per-shell snippet bodies
-> - `gitmap-v25/scripts/install.sh`, `install-quick.sh`
+> - `gitmap-v26/scripts/install.sh`, `install-quick.sh`
 
 ---
 
@@ -18,32 +18,32 @@ Install path: /Users/ab_mahin/.local/bin/gitmap-cli
   PATH target: /Users/ab_mahin/.zshrc (added)
   Reload: . /Users/ab_mahin/.zshrc
 
-OK To start using gitmap-v25 right now, run:
+OK To start using gitmap-v26 right now, run:
 
     . /Users/ab_mahin/.zshrc
 
   Or open a new terminal window.
 
 Installed to:
-gitmap-v25 quick installer
+gitmap-v26 quick installer
 ---------------------
 Choose install folder. Press Enter to accept the default.
 Default: /Users/ab_mahin/.local/bin
-Install path: /Users/ab_mahin/.local/bin/gitmap-cli/gitmap-v25   ← prompt fires AGAIN
-App folder on PATH: gitmap-v25 quick installer                   ← garbage label
+Install path: /Users/ab_mahin/.local/bin/gitmap-cli/gitmap-v26   ← prompt fires AGAIN
+App folder on PATH: gitmap-v26 quick installer                   ← garbage label
 ---------------------
 Choose install folder. Press Enter to accept the default.
 Default: /Users/ab_mahin/.local/bin
 Install path: /Users/ab_mahin/.local/bin/gitmap-cli           ← prompt fires a THIRD time
 
-Done! Run 'gitmap-v25 --help' to get started.
+Done! Run 'gitmap-v26 --help' to get started.
 
-PS /Users/ab_mahin/Downloads/core-v8> gitmap-v25 r v1.5.6
-gitmap-v25: The term 'gitmap-v25' is not recognized as a name of a cmdlet, function, ...
-PS /Users/ab_mahin/Downloads/core-v8> gitmap-v25
-gitmap-v25: The term 'gitmap-v25' is not recognized as a name of a cmdlet, function, ...
-PS /Users/ab_mahin/Downloads/core-v8> gitmap-v25 --help
-gitmap-v25: The term 'gitmap-v25' is not recognized as a name of a cmdlet, function, ...
+PS /Users/ab_mahin/Downloads/core-v8> gitmap-v26 r v1.5.6
+gitmap-v26: The term 'gitmap-v26' is not recognized as a name of a cmdlet, function, ...
+PS /Users/ab_mahin/Downloads/core-v8> gitmap-v26
+gitmap-v26: The term 'gitmap-v26' is not recognized as a name of a cmdlet, function, ...
+PS /Users/ab_mahin/Downloads/core-v8> gitmap-v26 --help
+gitmap-v26: The term 'gitmap-v26' is not recognized as a name of a cmdlet, function, ...
 ```
 
 Two distinct failures:
@@ -51,7 +51,7 @@ Two distinct failures:
 1. **Wrong-shell PATH wiring** — install.sh wrote PATH to `.zshrc` /
    `.zprofile`, but the user's **interactive shell is PowerShell 7+
    (`pwsh`) on macOS**. Neither file is sourced by pwsh. Result:
-   `gitmap-v25` is not on PATH in the active session OR in any future pwsh
+   `gitmap-v26` is not on PATH in the active session OR in any future pwsh
    session.
 2. **Prompt fires three times** — the install-quick.sh discovery
    delegation re-runs the script in a child bash, which prompts; the
@@ -65,7 +65,7 @@ Two distinct failures:
 
 ### 2.1 Primary — pwsh on Unix is invisible to install.sh
 
-`gitmap-v25/scripts/install.sh::add_to_path` detects the active shell with:
+`gitmap-v26/scripts/install.sh::add_to_path` detects the active shell with:
 
 ```bash
 shell_name="$(basename "${SHELL:-/bin/bash}")"
@@ -89,7 +89,7 @@ Consequences:
   errors out (or worse, partially succeeds with garbage).
 
 The `print-path-snippet` subcommand DOES support `--shell pwsh` (see
-`gitmap-v25/constants/constants_pathsnippet.go::PathSnippetPwshFmt`), but
+`gitmap-v26/constants/constants_pathsnippet.go::PathSnippetPwshFmt`), but
 install.sh never invokes that branch — it hardcodes
 `snippet_shell="bash"` for everything that isn't fish.
 
@@ -116,7 +116,7 @@ exit cleanly, control returns to the outer `|| true` arm and the
 outer script ALSO runs its prompt + install pass. The user sees the
 prompt 2-3 times and a duplicate install.
 
-The "garbage label" `App folder on PATH: gitmap-v25 quick installer` is
+The "garbage label" `App folder on PATH: gitmap-v26 quick installer` is
 the same issue rendered visually: the second installer's banner
 overlapped with the first installer's `App folder on PATH:` line.
 
@@ -145,9 +145,9 @@ Microsoft repos) made that assumption wrong.
 3. Extend `add_to_path` with a pwsh arm that calls
    `add_path_to_profile_pwsh "${dir}" "${profile}"` — a new sibling
    to `add_path_to_profile` that:
-   - Renders the snippet via `gitmap-v25 setup print-path-snippet
+   - Renders the snippet via `gitmap-v26 setup print-path-snippet
      --shell pwsh --dir <dir> --manager installer`.
-   - Uses the same `# gitmap-v25 shell wrapper v2 ...` marker block, so
+   - Uses the same `# gitmap-v26 shell wrapper v2 ...` marker block, so
      idempotent rewrite via the existing awk pass works unchanged.
 4. When pwsh is the active shell:
    - `PATH_TARGET` becomes the pwsh profile path.
@@ -193,13 +193,13 @@ Manual (macOS, pwsh open in Terminal.app):
 PS> curl -fsSL https://raw.githubusercontent.com/.../install-quick.sh | bash
 # expect: prompt fires ONCE, summary shows "Shell: pwsh", reload line is `. $PROFILE`
 PS> . $PROFILE
-PS> gitmap-v25 --version
+PS> gitmap-v26 --version
 # expect: prints v3.43.1
 ```
 
 Automated regression (CI, future work):
 
-- New test in `gitmap-v25/scripts/install_test.sh` (does not exist yet)
+- New test in `gitmap-v26/scripts/install_test.sh` (does not exist yet)
   that runs `bash install.sh --dir /tmp/x --no-discovery` with
   `PSModulePath=fake` exported and asserts the pwsh profile got the
   marker block.

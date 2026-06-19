@@ -25,7 +25,7 @@ a Go tool that generates Windows resource `.syso` files.
 ## Directory Layout
 
 ```
-gitmap-v25/
+gitmap-v26/
 ├── main.go
 ├── winres/
 │   ├── winres.json      # Metadata manifest
@@ -51,10 +51,10 @@ gitmap-v25/
     "APP": {
       "0000": {
         "identity": {
-          "name": "gitmap-v25",
+          "name": "gitmap-v26",
           "version": "0.0.0.0"
         },
-        "description": "gitmap-v25 - Git repository scanner, mapper, and manager",
+        "description": "gitmap-v26 - Git repository scanner, mapper, and manager",
         "minimum-os": "win7",
         "execution-level": "asInvoker",
         "dpi-awareness": "per-monitor-v2",
@@ -72,12 +72,12 @@ gitmap-v25/
         "info": {
           "0409": {
             "CompanyName": "Riseup Asia LLC",
-            "FileDescription": "gitmap-v25 CLI",
+            "FileDescription": "gitmap-v26 CLI",
             "FileVersion": "",
-            "InternalName": "gitmap-v25",
+            "InternalName": "gitmap-v26",
             "LegalCopyright": "© 2026 Riseup Asia LLC",
             "OriginalFilename": "gitmap.exe",
-            "ProductName": "gitmap-v25",
+            "ProductName": "gitmap-v26",
             "ProductVersion": ""
           }
         }
@@ -111,7 +111,7 @@ go install github.com/tc-hib/go-winres@latest
 ### Generate `.syso` Files
 
 ```bash
-cd gitmap-v25
+cd gitmap-v26
 go-winres make
 ```
 
@@ -159,7 +159,7 @@ In `.github/workflows/release.yml`, add before cross-compilation:
 - name: Generate Windows resources
   run: |
     go install github.com/tc-hib/go-winres@latest
-    cd gitmap-v25 && go-winres make
+    cd gitmap-v26 && go-winres make
 ```
 
 ## Version Stamping at Build Time
@@ -203,10 +203,10 @@ Add to `.gitignore` only if you want to force regeneration every build.
 
 | Context | Before | After |
 |---------|--------|-------|
-| File Explorer | Generic `.exe` icon | Custom gitmap-v25 icon |
+| File Explorer | Generic `.exe` icon | Custom gitmap-v26 icon |
 | Properties → Details | Empty metadata | Version, company, description |
 | Taskbar | Generic icon | Branded icon |
-| Task Manager | `gitmap.exe` | `gitmap-v25` with description |
+| Task Manager | `gitmap.exe` | `gitmap-v26` with description |
 
 ## Cross-References
 

@@ -11,8 +11,8 @@ import {
   type Theme,
 } from "@/lib/theme";
 
-const THEME_CHANGE_EVENT = "gitmap-v25:theme-change";
-const THEME_SOURCE_EVENT = "gitmap-v25:theme-source-change";
+const THEME_CHANGE_EVENT = "gitmap-v26:theme-change";
+const THEME_SOURCE_EVENT = "gitmap-v26:theme-source-change";
 
 export type ThemeSource = "system" | "user";
 

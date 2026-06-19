@@ -23,7 +23,7 @@ const versionArgs = [
 const CloneNextCommandPage = () => {
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">gitmap-v25 clone-next</h1>
+      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">gitmap-v26 clone-next</h1>
       <p className="text-muted-foreground mb-2">
         Clone the next (or a specific) versioned iteration of the current repository into the parent
         directory, using the base name (no version suffix) as the local folder. Reads the remote from
@@ -36,7 +36,7 @@ const CloneNextCommandPage = () => {
       <section className="space-y-8">
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Usage</h2>
-          <CodeBlock code={`gitmap-v25 clone-next <v++|v+1|vN> [flags]`} title="Syntax" />
+          <CodeBlock code={`gitmap-v26 clone-next <v++|v+1|vN> [flags]`} title="Syntax" />
           <p className="text-sm text-muted-foreground mt-2">
             Must be run inside a Git repository with a remote origin configured. The remote URL is
             rewritten by swapping the <code className="docs-inline-code">-vN</code> suffix.
@@ -103,7 +103,7 @@ const CloneNextCommandPage = () => {
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Flatten behavior</h2>
           <p className="text-sm text-muted-foreground mb-3">
             By default, clone-next clones into the <strong>base name</strong> folder (without version suffix).
-            Running <code className="docs-inline-code">gitmap-v25 cn v++</code> inside <code className="docs-inline-code">macro-ahk-v11</code> will:
+            Running <code className="docs-inline-code">gitmap-v26 cn v++</code> inside <code className="docs-inline-code">macro-ahk-v11</code> will:
           </p>
           <ol className="list-decimal list-inside text-sm text-muted-foreground space-y-1 mb-3">
             <li>Clone <code className="docs-inline-code">macro-ahk-v12</code> into <code className="docs-inline-code">macro-ahk/</code></li>
@@ -132,23 +132,23 @@ const CloneNextCommandPage = () => {
             </li>
             <li>
               <strong>cwd IS the target folder (Windows lock):</strong> removal fails because the shell holds a
-              file handle on the cwd. Without <code className="docs-inline-code">-f</code>, gitmap-v25 falls back
+              file handle on the cwd. Without <code className="docs-inline-code">-f</code>, gitmap-v26 falls back
               to a versioned folder name (e.g. <code className="docs-inline-code">macro-ahk-v22/</code>) and
               prints <code className="docs-inline-code">MsgFlattenFallback</code> with a hint to retry with{" "}
               <code className="docs-inline-code">-f</code>.
             </li>
             <li>
-              <strong>cwd IS the target folder + <code className="docs-inline-code">-f</code>:</strong> gitmap-v25{" "}
+              <strong>cwd IS the target folder + <code className="docs-inline-code">-f</code>:</strong> gitmap-v26{" "}
               <code className="docs-inline-code">chdir</code>s to the parent first to release the lock, removes
               the folder, clones, then <code className="docs-inline-code">chdir</code>s back into the new
-              flattened folder. If removal still fails (another process holds the lock), gitmap-v25 aborts with{" "}
+              flattened folder. If removal still fails (another process holds the lock), gitmap-v26 aborts with{" "}
               <code className="docs-inline-code">ErrCloneNextForceFailed</code> and exits 1 — it
               <strong> never silently degrades</strong> to a versioned folder when{" "}
               <code className="docs-inline-code">-f</code> is set.
             </li>
             <li>
               <strong>Target folder is locked by another process:</strong> see the lock-detection example below
-              — gitmap-v25 lists the offending PIDs (e.g. <code className="docs-inline-code">Code.exe</code>,{" "}
+              — gitmap-v26 lists the offending PIDs (e.g. <code className="docs-inline-code">Code.exe</code>,{" "}
               <code className="docs-inline-code">explorer.exe</code>) and offers to terminate them.
             </li>
           </ul>
@@ -178,7 +178,7 @@ const CloneNextCommandPage = () => {
             <li>
               Remote URL rewrite uses{" "}
               <code className="docs-inline-code">strings.Replace(url, currentRepo, targetRepo, 1)</code>.
-              When the origin has no suffix, gitmap-v25 looks for the bare repo name in the URL and produces a
+              When the origin has no suffix, gitmap-v26 looks for the bare repo name in the URL and produces a
               suffixed URL — so the target repo <strong>must already exist on GitHub</strong> (or pass{" "}
               <code className="docs-inline-code">--create-remote</code> with a{" "}
               <code className="docs-inline-code">GITHUB_TOKEN</code> to provision it).
@@ -194,7 +194,7 @@ const CloneNextCommandPage = () => {
             If the version argument cannot be parsed (e.g.{" "}
             <code className="docs-inline-code">cn foo</code>,{" "}
             <code className="docs-inline-code">cn v0</code>,{" "}
-            <code className="docs-inline-code">cn v-1</code>), gitmap-v25 exits with{" "}
+            <code className="docs-inline-code">cn v-1</code>), gitmap-v26 exits with{" "}
             <code className="docs-inline-code">invalid version argument: ... (expected v++, v+1, or vN)</code>{" "}
             and makes no network or filesystem changes.
           </p>
@@ -217,7 +217,7 @@ const CloneNextCommandPage = () => {
             Inside <code className="docs-inline-code">D:\repos\macro-ahk-v11\</code> with origin{" "}
             <code className="docs-inline-code">https://github.com/alimtvnetwork/macro-ahk-v11.git</code>:
           </p>
-          <CodeBlock code={`gitmap-v25 cn v++`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v++`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Resolved rewrite"
@@ -229,7 +229,7 @@ git cmd : git clone https://github.com/alimtvnetwork/macro-ahk-v12.git macro-ahk
           <p className="text-sm text-muted-foreground mt-2">
             Jumping to a specific version uses the same substitution:
           </p>
-          <CodeBlock code={`gitmap-v25 cn v15`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v15`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Resolved rewrite"
@@ -243,7 +243,7 @@ folder  : macro-ahk/`}
             Inside <code className="docs-inline-code">D:\repos\macro-ahk-v11\</code> with origin{" "}
             <code className="docs-inline-code">git@github.com:alimtvnetwork/macro-ahk-v11.git</code>:
           </p>
-          <CodeBlock code={`gitmap-v25 cn v++`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v++`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Resolved rewrite"
@@ -254,11 +254,11 @@ git cmd : git clone git@github.com:alimtvnetwork/macro-ahk-v12.git macro-ahk`}
           />
           <p className="text-sm text-muted-foreground mt-2">
             Use <code className="docs-inline-code">--ssh-key, -K &lt;name&gt;</code> to route the clone
-            through a named key from <code className="docs-inline-code">gitmap-v25 ssh list</code> — gitmap-v25 sets{" "}
+            through a named key from <code className="docs-inline-code">gitmap-v26 ssh list</code> — gitmap-v26 sets{" "}
             <code className="docs-inline-code">GIT_SSH_COMMAND="ssh -i &lt;path&gt; -o IdentitiesOnly=yes"</code>{" "}
             for the duration of the clone:
           </p>
-          <CodeBlock code={`gitmap-v25 cn v++ --ssh-key work`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v++ --ssh-key work`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Resolved rewrite"
@@ -286,7 +286,7 @@ folder  : macro-ahk/`}
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Unsuffixed origin (implicit v1)</h3>
           <p className="text-sm text-muted-foreground mb-2">
-            When the origin has no <code className="docs-inline-code">-vN</code> suffix, gitmap-v25 treats the repo
+            When the origin has no <code className="docs-inline-code">-vN</code> suffix, gitmap-v26 treats the repo
             as v1 and rewrites by appending <code className="docs-inline-code">-vN</code> to the bare name —
             same rule for HTTPS and SSH:
           </p>
@@ -316,10 +316,10 @@ folder  : macro-ahk/`}
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Copy commands</h2>
           <p className="text-sm text-muted-foreground mb-3">
-            Configure any flag combo and copy the exact <code className="docs-inline-code">gitmap-v25</code>{" "}
+            Configure any flag combo and copy the exact <code className="docs-inline-code">gitmap-v26</code>{" "}
             invocation plus the underlying <code className="docs-inline-code">git clone</code> it expands to.
-            Useful for previewing what gitmap-v25 will run before committing to a destructive flatten, or for
-            scripting the same action without gitmap-v25 installed.
+            Useful for previewing what gitmap-v26 will run before committing to a destructive flatten, or for
+            scripting the same action without gitmap-v26 installed.
           </p>
           <CloneNextCommandBuilder />
         </div>
@@ -330,7 +330,7 @@ folder  : macro-ahk/`}
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Examples</h2>
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-4 docs-h3">Increment version by one</h3>
-          <CodeBlock code={`gitmap-v25 cn v++`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v++`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Output"
@@ -342,7 +342,7 @@ Cloning macro-ahk-v12 into macro-ahk (flattened)...
           />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Jump to a specific version with auto-delete</h3>
-          <CodeBlock code={`gitmap-v25 cn v15 --delete`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v15 --delete`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Output"
@@ -358,7 +358,7 @@ Cloning macro-ahk-v12 into macro-ahk (flattened)...
             You're working in <code className="docs-inline-code">D:\repos\macro-ahk\</code> (flattened from v21)
             and want to bump to v22 without ending up in <code className="docs-inline-code">macro-ahk-v22/</code>.
           </p>
-          <CodeBlock code={`gitmap-v25 cn v++ -f`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v++ -f`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Output"
@@ -378,17 +378,17 @@ Cloning macro-ahk-v22 into macro-ahk (flattened)...
   ── ✓ Done — now in macro-ahk ──`}
           />
           <p className="text-sm text-muted-foreground mt-2">
-            Without <code className="docs-inline-code">-f</code>, gitmap-v25 falls back to creating
+            Without <code className="docs-inline-code">-f</code>, gitmap-v26 falls back to creating
             <code className="docs-inline-code">macro-ahk-v22/</code> (the shell holds a file lock on cwd) and
             prints a hint. With <code className="docs-inline-code">-f</code>, the versioned-folder fallback is
-            disabled — if removal still fails, gitmap-v25 aborts with a clear error.
+            disabled — if removal still fails, gitmap-v26 aborts with a clear error.
           </p>
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Use a named SSH key</h3>
-          <CodeBlock code={`gitmap-v25 cn v++ --ssh-key work`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v++ --ssh-key work`} title="Terminal" />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Batch mode — every repo one level deep</h3>
-          <CodeBlock code={`gitmap-v25 cn v++ --all`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v++ --all`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Output"
@@ -402,10 +402,10 @@ Cloning macro-ahk-v22 into macro-ahk (flattened)...
           />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Batch mode — explicit CSV input</h3>
-          <CodeBlock code={`gitmap-v25 cn v++ --csv repos.csv`} title="Terminal" />
+          <CodeBlock code={`gitmap-v26 cn v++ --csv repos.csv`} title="Terminal" />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Create the remote repo if it doesn't exist</h3>
-          <CodeBlock code={`GITHUB_TOKEN=ghp_... gitmap-v25 cn v++ --create-remote`} title="Terminal" />
+          <CodeBlock code={`GITHUB_TOKEN=ghp_... gitmap-v26 cn v++ --create-remote`} title="Terminal" />
         </div>
 
         <hr className="docs-hr" />

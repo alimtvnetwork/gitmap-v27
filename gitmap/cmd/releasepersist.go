@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/release"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/release"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/store"
 )
 
 // persistReleaseToDB saves the release metadata to SQLite if available.

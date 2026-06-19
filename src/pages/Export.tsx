@@ -23,7 +23,7 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v25 export</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 export</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed">
       <div className="text-muted-foreground">Exporting 42 repos...</div>
@@ -59,11 +59,11 @@ const ExportPage = () => (
         <Download className="h-8 w-8 text-primary" />
         <div>
           <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Export</h1>
-          <p className="text-muted-foreground font-mono text-sm">gitmap-v25 export (ex)</p>
+          <p className="text-muted-foreground font-mono text-sm">gitmap-v26 export (ex)</p>
         </div>
       </div>
       <p className="text-muted-foreground mb-8 text-lg">
-        Dump the entire gitmap-v25 database into a single portable JSON file for backup, sharing, or migration.
+        Dump the entire gitmap-v26 database into a single portable JSON file for backup, sharing, or migration.
       </p>
 
       <TerminalPreview />
@@ -87,7 +87,7 @@ const ExportPage = () => (
       {/* Usage */}
       <section className="mb-10">
         <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Usage</h2>
-        <CodeBlock code="gitmap-v25 export [file]" />
+        <CodeBlock code="gitmap-v26 export [file]" />
         <div className="mt-4 space-y-3">
           <div>
             <h3 className="font-mono font-semibold text-foreground mb-1">Arguments</h3>
@@ -119,11 +119,11 @@ const ExportPage = () => (
         <div className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-1">Export to default file:</p>
-            <CodeBlock code={`gitmap-v25 export\ngitmap ex`} />
+            <CodeBlock code={`gitmap-v26 export\ngitmap ex`} />
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Export to custom path:</p>
-            <CodeBlock code="gitmap-v25 export backup-2026-03.json" />
+            <CodeBlock code="gitmap-v26 export backup-2026-03.json" />
           </div>
         </div>
       </section>

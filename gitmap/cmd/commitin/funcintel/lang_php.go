@@ -3,7 +3,7 @@ package funcintel
 import (
 	"regexp"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 var phpFnRe = regexp.MustCompile(`^(?:(?:public|protected|private)\s+)?function\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(`)

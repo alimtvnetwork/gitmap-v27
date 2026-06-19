@@ -11,8 +11,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/clonenext"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/clonenext"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // bulkVisibilityRequest captures a parsed bulk invocation.

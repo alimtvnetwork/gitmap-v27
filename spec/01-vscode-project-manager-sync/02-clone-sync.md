@@ -9,12 +9,12 @@
 
 ## 1. Goal
 
-Every gitmap-v25 command that **lands a fresh repo on disk** must, as part
+Every gitmap-v26 command that **lands a fresh repo on disk** must, as part
 of the same invocation, append (or update) the matching entry in the
 VS Code Project Manager `projects.json` file documented in
 `README.md`. No second command should be required.
 
-Today only `gitmap-v25 code <path>` and `gitmap-v25 as <newname>` write to
+Today only `gitmap-v26 code <path>` and `gitmap-v26 as <newname>` write to
 `projects.json`. The clone family does not — that is the bug this
 spec closes.
 
@@ -22,15 +22,15 @@ spec closes.
 
 | Command                          | Entry point                          | Notes                                                          |
 |----------------------------------|--------------------------------------|----------------------------------------------------------------|
-| `gitmap-v25 clone <url>`             | `cmd/clone.go::executeDirectClone`   | Single direct URL. Already opens VS Code; now also syncs.      |
-| `gitmap-v25 clone <url1> <url2> ...` | `cmd/clone.go::runCloneMulti`        | Each successful per-URL sub-clone is synced individually.      |
-| `gitmap-v25 clone <manifest>`        | `cmd/clone.go::executeClone`         | After the cloner returns, every `Cloned[i]` is synced.         |
-| `gitmap-v25 clone-next vX`           | `cmd/clonenext.go::runCloneNext`     | Single repo, after the flattened clone succeeds.               |
-| `gitmap-v25 clone-from <file>`       | `cmd/clonefrom.go::runCloneFromExecute` | After execute, iterate `results` and sync every status=ok row. |
-| `gitmap-v25 clone-now <file>` / `reclone` | `cmd/clonenow.go::runCloneNowExecute` | Same pattern as clone-from.                                    |
-| `gitmap-v25 clone-pick <url> <paths>`| `cmd/clonepick.go::runClonePickExecute` | Single repo, after Status=ok. `Detail` carries the dest path.  |
-| `gitmap-v25 clone-fix-repo` (cfr)    | routes through `executeDirectClone`  | Inherits the sync automatically — no extra wiring.             |
-| `gitmap-v25 clone-fix-repo-pub` (cfrp) | routes through `executeDirectClone`| Same as cfr — the user-named root cause case.                  |
+| `gitmap-v26 clone <url>`             | `cmd/clone.go::executeDirectClone`   | Single direct URL. Already opens VS Code; now also syncs.      |
+| `gitmap-v26 clone <url1> <url2> ...` | `cmd/clone.go::runCloneMulti`        | Each successful per-URL sub-clone is synced individually.      |
+| `gitmap-v26 clone <manifest>`        | `cmd/clone.go::executeClone`         | After the cloner returns, every `Cloned[i]` is synced.         |
+| `gitmap-v26 clone-next vX`           | `cmd/clonenext.go::runCloneNext`     | Single repo, after the flattened clone succeeds.               |
+| `gitmap-v26 clone-from <file>`       | `cmd/clonefrom.go::runCloneFromExecute` | After execute, iterate `results` and sync every status=ok row. |
+| `gitmap-v26 clone-now <file>` / `reclone` | `cmd/clonenow.go::runCloneNowExecute` | Same pattern as clone-from.                                    |
+| `gitmap-v26 clone-pick <url> <paths>`| `cmd/clonepick.go::runClonePickExecute` | Single repo, after Status=ok. `Detail` carries the dest path.  |
+| `gitmap-v26 clone-fix-repo` (cfr)    | routes through `executeDirectClone`  | Inherits the sync automatically — no extra wiring.             |
+| `gitmap-v26 clone-fix-repo-pub` (cfrp) | routes through `executeDirectClone`| Same as cfr — the user-named root cause case.                  |
 
 Skipped clones (status `skipped` because the destination already
 exists) are NOT synced, because the entry should already exist from a
@@ -45,12 +45,12 @@ folder to point Project Manager at.
 1. **One projects.json transaction per clone command, not per repo.**
    The cmd-side code aggregates every successful clone in a single
    `[]vscodepm.Pair` slice and calls `vscodepm.Sync` exactly once at
-   the end of the command. This matches what `gitmap-v25 scan` already
+   the end of the command. This matches what `gitmap-v26 scan` already
    does and avoids racing the atomic-rename writer in
    `vscodepm/sync.go::writeEntriesAtomic` against itself.
 
 2. **Auto-tags ON by default.** Each pair's `Tags` is populated from
-   `vscodepm.DetectTags(absPath)` — same convention as `gitmap-v25 code`.
+   `vscodepm.DetectTags(absPath)` — same convention as `gitmap-v26 code`.
    Mirrors the existing `--no-auto-tags` semantics; out of scope for
    this spec to add a `--no-auto-tags` flag to clone variants (can be
    added later if requested).
@@ -62,7 +62,7 @@ folder to point Project Manager at.
    clone into a failed exit code.
 
 4. **Opt-out:** every clone command accepts `--no-vscode-sync`
-   (the same flag name `gitmap-v25 scan` already uses; constant
+   (the same flag name `gitmap-v26 scan` already uses; constant
    `constants.FlagNoVSCodeSync`). When set, the helper prints the
    existing `MsgVSCodePMSyncSkipped` message and returns immediately.
 
@@ -97,10 +97,10 @@ variants build the slice from successful results.
 
 - A dedicated `--no-auto-tags` flag on each clone command.
 - DB-side `UpsertVSCodeProject` upsert from clone (kept scoped to
-  `gitmap-v25 scan` and `gitmap-v25 code` for now). The `projects.json`
+  `gitmap-v26 scan` and `gitmap-v26 code` for now). The `projects.json`
   reconciliation is the user-visible behavior; the DB mirror can
   follow in a later patch.
-- Migrating the existing `gitmap-v25 code` `syncCodeEntry` to use the new
+- Migrating the existing `gitmap-v26 code` `syncCodeEntry` to use the new
   helper — the two have slightly different shapes (paths union vs not).
 
 ## 6. Test surface

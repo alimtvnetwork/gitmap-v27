@@ -23,7 +23,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/vscodepm"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/vscodepm"
 )
 
 // TestVSCodePMSyncSkipsMissingRootPaths asserts that buildVSCodePMSyncPairs

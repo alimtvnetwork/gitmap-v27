@@ -1,7 +1,7 @@
 # Self-Update Gold Standard (Generic CLI)
 
 > Canonical, framework-agnostic blueprint for implementing safe, terminal-stable
-> self-update in any CLI. Distilled from the gitmap-v25 reference implementation.
+> self-update in any CLI. Distilled from the gitmap-v26 reference implementation.
 
 This spec is the **single instruction set** for AI assistants and engineers
 adding `tool update` to a new CLI. If your CLI updates itself from a
@@ -172,14 +172,14 @@ invoke manually at any time. Print "Nothing to clean up" when empty.
 
 ---
 
-## 9. Reference Implementation Files (gitmap-v25)
+## 9. Reference Implementation Files (gitmap-v26)
 
 | Concern | File |
 |---|---|
-| Update entrypoint + handoff | `gitmap-v25/cmd/update.go` |
-| Script generation + execution | `gitmap-v25/cmd/updatescript.go` |
+| Update entrypoint + handoff | `gitmap-v26/cmd/update.go` |
+| Script generation + execution | `gitmap-v26/cmd/updatescript.go` |
 | PowerShell pipeline (rename-first) | `run.ps1` (search for `-Update` branch) |
-| Cleanup | `gitmap-v25/cmd/updatecleanup.go` |
-| Helptext example | `gitmap-v25/helptext/update.md` |
+| Cleanup | `gitmap-v26/cmd/updatecleanup.go` |
+| Helptext example | `gitmap-v26/helptext/update.md` |
 
 Use these as the literal template when bootstrapping a new CLI.

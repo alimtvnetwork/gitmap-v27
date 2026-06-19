@@ -18,7 +18,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
 )
 
 // TestProjectReposJSONContract_EmptyIsArrayNotNull is the jq-compat guarantee.
@@ -36,12 +36,12 @@ func canonicalDetectedProject() model.DetectedProject {
 	return model.DetectedProject{
 		ID:               42,
 		RepoID:           7,
-		RepoName:         "gitmap-v25",
+		RepoName:         "gitmap-v26",
 		ProjectTypeID:    1,
 		ProjectType:      "go",
 		ProjectName:      "gitmap",
-		AbsolutePath:     "/home/user/code/gitmap-v25/gitmap",
-		RepoPath:         "/home/user/code/gitmap-v25",
+		AbsolutePath:     "/home/user/code/gitmap-v26/gitmap",
+		RepoPath:         "/home/user/code/gitmap-v26",
 		RelativePath:     "gitmap",
 		PrimaryIndicator: "go.mod",
 		DetectedAt:       "2025-01-01T12:00:00Z",

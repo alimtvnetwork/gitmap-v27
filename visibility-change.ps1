@@ -10,7 +10,7 @@
   Confirmation is prompted only when going private -> public (skip with -Yes).
   Use -DryRun to preview without API calls.
 
-  Mirrors the Go-native `gitmap-v25 make-public` / `gitmap-v25 make-private`
+  Mirrors the Go-native `gitmap-v26 make-public` / `gitmap-v26 make-private`
   commands so CI and shell users have a script-only fallback.
 
 .EXAMPLE

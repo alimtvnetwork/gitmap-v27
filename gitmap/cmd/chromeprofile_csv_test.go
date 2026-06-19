@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/store"
 )
 
 func writeChromeFixtureProfile(t *testing.T) string {

@@ -35,7 +35,7 @@ export const postMortems: PostMortemEntry[] = [
   },
   {
     id: "05",
-    title: "`gitmap-v25 ls` Returns Empty After Scan",
+    title: "`gitmap-v26 ls` Returns Empty After Scan",
     summary: "Database path resolution double-nested the data/ folder. Corrected store package path logic.",
     category: "database",
   },
@@ -110,7 +110,7 @@ export const postMortems: PostMortemEntry[] = [
   {
     id: "15",
     title: "Installer Crashes — Progress Bar & Binary Detection",
-    summary: "PowerShell progress bar crashed terminal during irm | iex. Versioned binary names (e.g., gitmap-v25.54.6-windows-amd64.exe) were not detected. Fixed with $ProgressPreference, regex matching, and top-level try/catch.",
+    summary: "PowerShell progress bar crashed terminal during irm | iex. Versioned binary names (e.g., gitmap-v26.54.6-windows-amd64.exe) were not detected. Fixed with $ProgressPreference, regex matching, and top-level try/catch.",
     version: "v2.55.0",
     category: "general",
   },

@@ -4,7 +4,7 @@ import (
 	"archive/zip"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // chooseDocsExtractTarget peeks into the zip to decide where to extract.

@@ -3,7 +3,7 @@ package funcintel
 import (
 	"regexp"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 var rustFnRe = regexp.MustCompile(`^(?:pub(?:\([^)]*\))?\s+)?fn\s+([a-z_][A-Za-z0-9_]*)\s*[<(]`)

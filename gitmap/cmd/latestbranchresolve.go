@@ -4,8 +4,8 @@ package cmd
 import (
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/gitutil"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/gitutil"
 )
 
 // latestBranchResult holds the resolved display data for the latest branch.

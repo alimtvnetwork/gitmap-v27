@@ -15,7 +15,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
 )
 
 // canonicalEmptyExport builds a deterministic empty-database export.

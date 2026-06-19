@@ -10,7 +10,7 @@ const CreatePreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v25 tr 5 v1.$$ -s 10</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 tr 5 v1.$$ -s 10</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto text-xs">
       <div className="text-blue-400 mb-1">{"  "}→ Starting sequence: 10</div>
@@ -35,7 +35,7 @@ const RemovePreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v25 tr remove v1.10 to v1.14</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 tr remove v1.10 to v1.14</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto text-xs">
       <div className="text-muted-foreground mb-1">{"  "}Remove 5 temp-release branch(es):</div>
@@ -198,25 +198,25 @@ const TempReleasePage = () => (
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Create 10 branches from last 10 commits, starting at sequence 5
-gitmap-v25 tr 10 v1.$$ -s 5
+gitmap-v26 tr 10 v1.$$ -s 5
 
 # Create 1 branch, auto-increment from last temp-release
-gitmap-v25 tr 1 v1.$$
+gitmap-v26 tr 1 v1.$$
 
 # Preview without creating
-gitmap-v25 tr 5 v2.$$$ --dry-run
+gitmap-v26 tr 5 v2.$$$ --dry-run
 
 # List all temp-release branches
-gitmap-v25 tr list
+gitmap-v26 tr list
 
 # Remove a single branch
-gitmap-v25 tr remove v1.05
+gitmap-v26 tr remove v1.05
 
 # Remove a range
-gitmap-v25 tr remove v1.05 to v1.10
+gitmap-v26 tr remove v1.05 to v1.10
 
 # Remove all
-gitmap-v25 tr remove all`} />
+gitmap-v26 tr remove all`} />
       </section>
 
       {/* How It Works */}

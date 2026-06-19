@@ -40,7 +40,7 @@
     .\rv.ps1 -Version v3.36.0
 
 .NOTES
-    Repository: https://github.com/alimtvnetwork/gitmap-v25
+    Repository: https://github.com/alimtvnetwork/gitmap-v26
 #>
 
 param(
@@ -57,7 +57,7 @@ $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
 # --- Repo / asset metadata ---
-$Repo = "alimtvnetwork/gitmap-v25"
+$Repo = "alimtvnetwork/gitmap-v26"
 $BinaryName = "gitmap.exe"
 
 # --- Exit codes (spec 105) ---

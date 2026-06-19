@@ -3,7 +3,7 @@ package group
 import (
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v25/scripts/changelog/internal/gitlog"
+	"github.com/alimtvnetwork/gitmap-v26/scripts/changelog/internal/gitlog"
 )
 
 // TestByPrefixSortsItemsLexicographically pins the deterministic

@@ -7,11 +7,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v25/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/store"
 )
 
-const gitmapModuleMarker = "module github.com/alimtvnetwork/gitmap-v25/gitmap"
+const gitmapModuleMarker = "module github.com/alimtvnetwork/gitmap-v26/gitmap"
 
 // resolveSourceRepo finds the gitmap source repo root.
 // It tries executable path, DB fallback, current directory, then user prompt.

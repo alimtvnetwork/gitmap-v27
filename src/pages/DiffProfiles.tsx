@@ -10,7 +10,7 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v25 diff-profiles default work</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 diff-profiles default work</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed">
       <div className="text-muted-foreground mb-2">Comparing profiles: default ↔ work</div>
@@ -49,7 +49,7 @@ const DiffProfilesPage = () => (
         <GitCompareArrows className="h-8 w-8 text-primary" />
         <div>
           <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Diff Profiles</h1>
-          <p className="text-muted-foreground font-mono text-sm">gitmap-v25 diff-profiles (dp)</p>
+          <p className="text-muted-foreground font-mono text-sm">gitmap-v26 diff-profiles (dp)</p>
         </div>
       </div>
       <p className="text-muted-foreground mb-8 text-lg">
@@ -113,7 +113,7 @@ const DiffProfilesPage = () => (
       {/* Usage */}
       <section className="mb-10">
         <h2 className="text-xl font-heading font-bold text-foreground mb-4 docs-h2">Usage</h2>
-        <CodeBlock code="gitmap-v25 diff-profiles <profileA> <profileB> [--all] [--json]" />
+        <CodeBlock code="gitmap-v26 diff-profiles <profileA> <profileB> [--all] [--json]" />
         <div className="mt-4">
           <h3 className="font-mono font-semibold text-foreground mb-2">Flags</h3>
           <div className="overflow-x-auto">
@@ -157,15 +157,15 @@ const DiffProfilesPage = () => (
         <div className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-1">Compare two profiles:</p>
-            <CodeBlock code="gitmap-v25 diff-profiles default work" />
+            <CodeBlock code="gitmap-v26 diff-profiles default work" />
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">Include identical repos:</p>
-            <CodeBlock code="gitmap-v25 dp default work --all" />
+            <CodeBlock code="gitmap-v26 dp default work --all" />
           </div>
           <div>
             <p className="text-sm text-muted-foreground mb-1">JSON output for automation:</p>
-            <CodeBlock code="gitmap-v25 dp work personal --json" />
+            <CodeBlock code="gitmap-v26 dp work personal --json" />
           </div>
         </div>
       </section>

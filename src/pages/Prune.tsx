@@ -10,7 +10,7 @@ const DryRunPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v25 prune --dry-run</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 prune --dry-run</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto text-xs">
       <div className="text-primary font-bold mb-1">{"  "}Stale release branches (3):</div>
@@ -30,7 +30,7 @@ const DeletePreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v25 prune --confirm</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 prune --confirm</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto text-xs">
       <div className="text-muted-foreground mb-1">{"  "}Pruning stale release branches...</div>
@@ -126,13 +126,13 @@ const PrunePage = () => (
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Preview stale branches
-gitmap-v25 prune --dry-run
+gitmap-v26 prune --dry-run
 
 # Delete without prompting
-gitmap-v25 prune --confirm
+gitmap-v26 prune --confirm
 
 # Delete locally and remotely
-gitmap-v25 prune --confirm --remote`} />
+gitmap-v26 prune --confirm --remote`} />
       </section>
 
       {/* How It Works */}

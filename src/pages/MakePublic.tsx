@@ -40,7 +40,7 @@ const MakePublicPage = () => (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { icon: Globe, title: "Provider auto-detect", desc: "Parses GitHub or GitLab from origin; uses the matching official CLI." },
-            { icon: ShieldCheck, title: "No tokens stored", desc: "Reuses the existing gh / glab auth — gitmap-v25 never touches credentials." },
+            { icon: ShieldCheck, title: "No tokens stored", desc: "Reuses the existing gh / glab auth — gitmap-v26 never touches credentials." },
             { icon: Eye, title: "Verifies after apply", desc: "Re-reads visibility post-edit and exits non-zero if the flip didn't stick." },
           ].map((f) => (
             <div key={f.title} className="rounded-lg border border-border p-4 bg-card">
@@ -54,7 +54,7 @@ const MakePublicPage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v25 make-public [--yes] [--dry-run] [--verbose]`} />
+        <CodeBlock code={`gitmap-v26 make-public [--yes] [--dry-run] [--verbose]`} />
       </section>
 
       <section>
@@ -84,16 +84,16 @@ const MakePublicPage = () => (
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Interactive (will prompt for confirmation)
-gitmap-v25 make-public
+gitmap-v26 make-public
 
 # Non-interactive (CI / scripts)
-gitmap-v25 make-public --yes
+gitmap-v26 make-public --yes
 
 # Preview without touching the provider API
-gitmap-v25 make-public --dry-run
+gitmap-v26 make-public --dry-run
 
 # Debug auth or argv issues
-gitmap-v25 make-public --yes --verbose`} />
+gitmap-v26 make-public --yes --verbose`} />
       </section>
 
       <section>

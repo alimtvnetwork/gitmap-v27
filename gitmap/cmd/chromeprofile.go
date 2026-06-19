@@ -239,34 +239,38 @@ func copyEntry(src, dst string) (int, error) {
 		return 0, nil
 	}
 	if !info.IsDir() {
-		return 1, chromeProfileCopyFile(src, dst)
+		copied, err := chromeProfileCopyFile(src, dst)
+		if !copied || err != nil {
+			return 0, err
+		}
+		return 1, nil
 	}
 	return copyDir(src, dst)
 }
 
 // chromeProfileCopyFile copies a single file from src to dst preserving mode.
-func chromeProfileCopyFile(src, dst string) error {
+func chromeProfileCopyFile(src, dst string) (bool, error) {
 	in, err := os.Open(src) //nolint:gosec // curated entry list
 	if err != nil {
 		if isChromeVolatileLockFile(src) {
 			warnChromeProfileLockSkip(src, dst, err)
-			return nil
+			return false, nil
 		}
-		return newChromeProfileCopyError(src, dst, constants.ChromeProfileCopyOpRead, err)
+		return false, newChromeProfileCopyError(src, dst, constants.ChromeProfileCopyOpRead, err)
 	}
 	defer in.Close()
 	if err := os.MkdirAll(filepath.Dir(dst), constants.DirPermission); err != nil {
-		return newChromeProfileCopyError(src, dst, constants.ChromeProfileCopyOpMkdir, err)
+		return false, newChromeProfileCopyError(src, dst, constants.ChromeProfileCopyOpMkdir, err)
 	}
 	out, err := os.Create(dst) //nolint:gosec // curated entry list
 	if err != nil {
-		return newChromeProfileCopyError(src, dst, constants.ChromeProfileCopyOpWrite, err)
+		return false, newChromeProfileCopyError(src, dst, constants.ChromeProfileCopyOpWrite, err)
 	}
 	defer out.Close()
 	if _, err := io.Copy(out, in); err != nil {
-		return newChromeProfileCopyError(src, dst, constants.ChromeProfileCopyOpWrite, err)
+		return false, newChromeProfileCopyError(src, dst, constants.ChromeProfileCopyOpWrite, err)
 	}
-	return nil
+	return true, nil
 }
 
 // copyDir recursively copies a directory tree.

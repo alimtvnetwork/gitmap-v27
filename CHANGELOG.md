@@ -1,5 +1,14 @@
 # Changelog
 
+## v6.33.0 — (2026-06-19) — CI green: top-level Cmd registry parity for chrome-profile-* + bulk-visibility skip-current semantics
+
+- **`TestTopLevelCmdRegistryMatchesAST` fixed.** Added the 10 new `CmdChromeProfile{Copy,Export,Import,List,Delete}` constants (plus their `cpc`/`cpe`/`cpi`/`cpl`/`cpd` aliases) to `topLevelCmds()` in `gitmap/constants/cmd_constants_test.go` so the AST↔registry parity gate stays green.
+- **`TestParseBulkRequest_TwoArgValid` fixed.** `parseBulkRequest` now returns `StartVer = ver - 1` in both single- and pair-arg branches: `gitmap-v26 3` flips v25, v24, v23 (skip-current). `runBulkVisibility`'s existing `ver < 1` guard keeps unversioned inputs safe.
+- **`TestApplyAllTargets_VersionScopeMatrix/v2_bare_base_rewritten` fixed.** Test had hard-coded `gitmap-v26` for a `current=2` case (violating the digit-capture derive-from-int rule); `want` now correctly reads `gitmap-v2`.
+- **Files:** `gitmap/constants/constants.go` (`6.33.0`), `gitmap/constants/cmd_constants_test.go`, `gitmap/cmd/visibilitybulk.go`, `gitmap/cmd/fixrepo_rewrite_versionscope_test.go`, `src/constants/index.ts` (`v6.33.0`), `README.md` (pin → v6.33.0), `CHANGELOG.md`.
+
+
+
 ## v6.29.0 — (2026-06-07) — `gitmap pull` always logs; bare-pull hint when no targets
 
 - **`gitmap pull` is no longer silent.** Prints `→ gitmap pull (cwd: …)` at startup so users always see something, plus `↳ resolved N repo(s) to pull` after target resolution and `↳ cwd is a git repo — running plain git pull here` when short-circuiting.

@@ -1,57 +1,77 @@
 # gitmap rm
 
-Remove one or more repositories from the gitmap database.
+Remove one or more repositories — **including the on-disk folder** —
+and untrack them in the gitmap database.
 
 ## Usage
 
 ```
-gitmap rm <name-or-path> [<name-or-path> ...]
-gitmap remove <name-or-path> [<name-or-path> ...]
-gitmap del <name-or-path> [<name-or-path> ...]
+gitmap rm     [-y|--yes] <target>[,<target>...] [<target>...]
+gitmap remove [-y|--yes] <target>[,<target>...] [<target>...]
+gitmap del    [-y|--yes] <target>[,<target>...] [<target>...]
 ```
 
 Aliases: `remove`, `del`.
 
-## What it does
+## Target forms
 
-For each target, `gitmap rm` first resolves it as an absolute filesystem
-path (`filepath.Abs`) and deletes the matching row from the gitmap DB.
-If no row matches the path, it falls back to treating the target as a
-repo slug/name and deletes every row with that slug.
+A target may be any of:
 
-**On-disk files are NOT touched.** This command only untracks the repo
-in the gitmap database — `git`, `node_modules`, working trees, and
-remotes are all left alone. To delete the folder too, use your shell
-(`rm -rf <path>`) after `gitmap rm`.
+| Form | Example | Behavior |
+|------|---------|----------|
+| Repo slug | `my-repo` | Exact-match on `Slug` |
+| Path | `./projects/foo`, `.\macro-ahk`, `/abs/path` | `filepath.Abs` → match on `AbsolutePath` |
+| Glob | `macro*`, `gitmap-v?`, `dev-[ab]*` | `filepath.Match` over slug **and** path basename |
+| Comma list | `macro*,gitmap*` | Split on commas, each part expanded independently |
+
+Overlapping targets that resolve to the same repo are de-duplicated.
+
+## Confirmation
+
+By default each matched repo is confirmed with a `[y/N]` prompt that
+shows the slug and absolute folder. Pass `-y` / `--yes` (anywhere in
+the args) to skip every prompt and delete unconditionally.
+
+## What gets deleted
+
+1. The on-disk folder at `AbsolutePath` (`os.RemoveAll`).
+2. The `Repo` row in the gitmap database.
+
+If the folder is missing the DB row is still cleared.
 
 ## Examples
 
 ```
 $ gitmap rm my-repo
-removed 1 repo(s) by name: my-repo
+Delete folder and untrack my-repo
+  /home/me/code/my-repo ? [y/N] y
+removed: my-repo (/home/me/code/my-repo)
 
-$ gitmap remove my-repo
-removed 1 repo(s) by name: my-repo
+$ gitmap rm macro*
+Delete folder and untrack macro-ahk
+  /home/me/code/macro-ahk ? [y/N] y
+removed: macro-ahk (/home/me/code/macro-ahk)
+Delete folder and untrack macro-utils
+  /home/me/code/macro-utils ? [y/N] n
+skip: macro-utils
 
-$ gitmap del my-repo
-removed 1 repo(s) by name: my-repo
+$ gitmap rm macro*,gitmap* -y
+removed: macro-ahk (/home/me/code/macro-ahk)
+removed: macro-utils (/home/me/code/macro-utils)
+removed: gitmap-v26 (/home/me/code/gitmap-v26)
 
-$ gitmap rm ./projects/foo ../bar
-removed 1 repo by path: /home/me/projects/foo
-removed 1 repo by path: /home/me/bar
-
-$ gitmap rm repo-a repo-b /abs/path/repo-c
-removed 1 repo(s) by name: repo-a
-removed 1 repo(s) by name: repo-b
-removed 1 repo by path: /abs/path/repo-c
+$ gitmap del .\macro-ahk
+Delete folder and untrack macro-ahk
+  C:\src\macro-ahk ? [y/N] y
+removed: macro-ahk (C:\src\macro-ahk)
 ```
 
 ## Exit codes
 
 | Code | Meaning |
 |------|---------|
-| 0    | Every target matched and was removed |
-| 1    | At least one target did not match (warning per missing target on stderr) |
+| 0    | Every matched repo was removed (or skipped at the prompt) |
+| 1    | A target matched nothing, or a deletion failed |
 
 ## See also
 

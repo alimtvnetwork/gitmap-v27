@@ -75,8 +75,12 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 	// Dry-run short circuit: nothing was cloned, so the chained
 	// chdir + fix-repo + make-public steps have no target to act on.
 	if dryRun {
+		suffix := ""
+		if makePublic {
+			suffix = " → make-public --yes"
+		}
 		fmt.Printf("  "+constants.MsgCloneDryRunNoop+"\n  would chain: fix-repo --all%s @ %s\n",
-			pubSuffix(makePublic), absPath)
+			suffix, absPath)
 		return
 	}
 

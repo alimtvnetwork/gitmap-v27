@@ -46,9 +46,22 @@ func runChromeProfileCopy(args []string) {
 		fmt.Fprintf(os.Stderr, constants.MsgChromeProfileLockSummary, chromeProfileLockSkipCount)
 	}
 	fmt.Printf(constants.MsgChromeProfileCopyDone, files, time.Since(start).Round(time.Millisecond))
+	registerCopiedChromeProfile(srcProfile.Dir, dstProfile.Dir, args[1])
 	rec := emitChromeSnapshots(dstProfile.Path, args[1])
 	persistChromeProfile(args[1], dstProfile.Path, rec)
 	fmt.Printf(constants.MsgChromeProfileNextSteps, args[1], args[0], args[1])
+}
+
+// registerCopiedChromeProfile makes the destination directory visible
+// in Chrome's profile picker by adding it to `Local State`. Soft-fails
+// with a warning so a locked Local State (Chrome still open) never
+// aborts a copy that already succeeded on disk.
+func registerCopiedChromeProfile(srcDir, dstDir, displayName string) {
+	if err := registerChromeProfileInLocalState(srcDir, dstDir, displayName); err != nil {
+		fmt.Fprintf(os.Stderr, constants.WarnChromeProfileRegister, displayName, err)
+		return
+	}
+	fmt.Printf(constants.MsgChromeProfileRegistered, displayName)
 }
 
 // emitChromeSnapshots writes the JSON + CSV companions for a profile

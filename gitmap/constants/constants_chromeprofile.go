@@ -74,7 +74,14 @@ const (
 	ChromeProfileCopyUnknown  = "(unknown)"
 	ChromeProfileLockFileName = "LOCK"
 	ChromeProfileLockReason   = "runtime-only Chrome lock file; Chrome recreates it"
+	ChromeLocalStateFile      = "Local State"
+	ChromeLocalStateTmpSuffix = ".gitmap.tmp"
 )
+
+// Local State registration messages.
+const (
+	MsgChromeProfileRegistered = "\033[1;92m✓ registered\033[0m  \033[1m%s\033[0m in Chrome's profile picker (Local State)\n"
+	WarnChromeProfileRegister  = "  \033[1;93m⚠\033[0m chrome-profile-copy: could not register %q in Chrome's Local State: %v\n  \033[2;37m(profile files were copied — restart Chrome and add the profile manually if it does not appear)\033[0m\n"
 
 // HelpChromeProfileDelete extends the help block (kept beside its peers).
 const HelpChromeProfileDelete = "  chrome-profile-delete (cpd) <name> [--yes] Remove a profile + its stored artifacts from the gitmap DB"

@@ -41,7 +41,20 @@ const (
 	// Format: absPath, reason, err.
 	WarnCFRFolderTransport      = "clone-fix-repo: warning: %s: %s: %v\n"
 	WarnCFRFolderTransportNoErr = "clone-fix-repo: warning: %s: %s\n"
+
+	// Nested-repo escape (v6.48.0+): when cwd is itself a git repo,
+	// cfr/cfrp walks up to the first non-repo ancestor before
+	// cloning, so the new tree is never nested inside another repo's
+	// git context (which caused `fetch-pack: invalid index-pack
+	// output` on Windows).
+	MsgCFREscapeNested = "  " + ColorCyan + "↑ cfr: cwd is a git repo — escaping to non-repo ancestor" + ColorReset + "\n" +
+		"    " + ColorDim + "from:" + ColorReset + " %s\n" +
+		"    " + ColorDim + "  to:" + ColorReset + " %s\n"
+	WarnCFREscapeChdir = "clone-fix-repo: warning: could not chdir to %s: %v\n"
 )
+
+
+
 
 // Clone-fix-repo flags.
 const (

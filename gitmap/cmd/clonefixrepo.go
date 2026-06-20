@@ -51,6 +51,7 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 	}
 
 	url = applyCloneFixRepoScheme(url, useSSH, useHTTPS)
+	escapeNestedGitRepo()
 
 	// cfr/cfrp DO flatten `-vN` suffixes: the local folder mirrors
 	// the repo base name (e.g. macro-ahk-v50 → macro-ahk) so that

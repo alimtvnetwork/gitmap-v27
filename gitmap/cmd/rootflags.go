@@ -214,7 +214,12 @@ type CloneFlags struct {
 	// URL into `https://host/owner/repo.git` form. Useful in CI/headless
 	// environments where the SSH agent isn't unlocked.
 	UseHTTPS bool
+	// DryRun short-circuits every git clone in this run: the runner
+	// prints the exact command + target path but never invokes git.
+	// Plumbed through cfr/cfrp as well via parseCloneFixRepoArgs.
+	DryRun bool
 }
+
 
 // parseCloneFlags parses flags for the clone command.
 func parseCloneFlags(args []string) CloneFlags {
@@ -251,11 +256,14 @@ func parseCloneFlags(args []string) CloneFlags {
 	httpsFlag := fs.Bool("https", false,
 		"Force every clone URL into `https://host/owner/repo.git` form (auto-converts SSH-shorthand / `ssh://` URLs)")
 	fs.BoolVar(httpsFlag, "ht", false, "Short alias for --https")
+	dryRunFlag := fs.Bool(constants.FlagCloneDryRun, false, constants.FlagDescCloneDryRun)
+	fs.BoolVar(dryRunFlag, constants.FlagCloneDryRunShort, false, "Short alias for --dry-run")
 	// Reorder so `gitmap clone <url> --ssh` works — Go's flag pkg
 	// stops parsing at the first non-flag, which would otherwise
 	// silently drop `--ssh` / `--https` / every other bool flag
 	// when it follows the URL positional.
 	fs.Parse(reorderFlagsBeforeArgs(args))
+
 
 	applyDebugPathsEnv(*debugPathsFlag)
 
@@ -279,8 +287,10 @@ func parseCloneFlags(args []string) CloneFlags {
 		NoVSCodeSync:                    *noVSCodeSyncFlag,
 		UseSSH:                          *sshFlag,
 		UseHTTPS:                        *httpsFlag,
+		DryRun:                          *dryRunFlag,
 	}
 }
+
 
 // resolveCloneSource returns the clone source from positional args.
 func resolveCloneSource(fs *flag.FlagSet) string {

@@ -36,14 +36,19 @@ func runChromeProfileCopy(args []string) {
 	fmt.Fprint(os.Stderr, constants.MsgChromeProfileSkipChrome)
 	fmt.Printf(constants.MsgChromeProfileCopyStart, chromeProfileSummary(srcProfile), chromeProfileSummary(dstProfile), srcProfile.Path, dstProfile.Path)
 	start := time.Now()
+	chromeProfileLockSkipCount = 0
 	files, err := copyChromeProfile(srcProfile.Path, dstProfile.Path)
 	if err != nil {
 		printChromeProfileCopyError(srcProfile, dstProfile, err)
 		os.Exit(constants.ExitChromeProfileCopyFailed)
 	}
+	if chromeProfileLockSkipCount > 0 {
+		fmt.Fprintf(os.Stderr, constants.MsgChromeProfileLockSummary, chromeProfileLockSkipCount)
+	}
 	fmt.Printf(constants.MsgChromeProfileCopyDone, files, time.Since(start).Round(time.Millisecond))
 	rec := emitChromeSnapshots(dstProfile.Path, args[1])
 	persistChromeProfile(args[1], dstProfile.Path, rec)
+	fmt.Printf(constants.MsgChromeProfileNextSteps, args[1], args[0], args[1])
 }
 
 // emitChromeSnapshots writes the JSON + CSV companions for a profile

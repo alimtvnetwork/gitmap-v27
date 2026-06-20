@@ -1,5 +1,14 @@
 # Changelog
 
+## v6.46.0 — (2026-06-20) — Chrome profile copy: colorful professional logs + undo/redo footer
+
+- **Polished log surface for `gitmap cpc`.** Start banner renders a cyan `▸ chrome-profile-copy` header with bold src/dst summaries and dim labels. Completion is a green `✓ copy complete` line with file count + duration in bold. `Artifacts:` block gains a blue header and cyan paths.
+- **LOCK warnings collapsed.** Each volatile Chrome `LOCK` skip is now a single dim one-liner (`· skipped volatile Chrome lock file: <path>`) instead of a 4-line WARN banner per file. A final yellow `⚠ skipped N volatile Chrome lock file(s) (held by Chrome/extension; safe to ignore)` summary prints once before the success line.
+- **Undo / redo footer.** Every successful copy ends with a `Next steps` block listing copy-paste-ready commands: `gitmap chrome-profile-delete <dst> --yes` (undo), `gitmap chrome-profile-copy <src> <dst>` (redo), and `gitmap chrome-profile-list` (verify). Commands are highlighted in cyan so they're easy to grab from terminal output.
+- **Implementation.** Added `chromeProfileLockSkipCount` package-level counter (reset per run) so the summary line prints exactly once. Reworked message constants in `gitmap/constants/constants_chromeprofile.go` to embed ANSI color codes — gitmap's theme filter rewrites them when `--theme=monochrome` is active, so non-color terminals stay clean. The `skipped volatile Chrome lock file` substring is preserved so `TestHandleChromeFileOpenErrorSkipsLockFile` continues to pass.
+- **Files:** `gitmap/cmd/chromeprofile.go`, `gitmap/cmd/chromeprofile_copy.go`, `gitmap/constants/constants_chromeprofile.go`, `gitmap/constants/constants.go` (`6.46.0`), `src/constants/index.ts` (`v6.46.0`), `README.md` (pin → v6.46.0), `CHANGELOG.md`.
+
+
 ## v6.45.0 — (2026-06-19) — Chrome profile copy: drop flaky platform-dependent destination-parent test
 
 - **Removed** `TestCopyEntryReturnsWrappedErrorOnDestinationParentFile` from `gitmap/cmd/chromeprofile_copy_test.go`. The Windows runner's `os.MkdirAll` semantics over a file-as-parent did not consistently surface an `Op = Mkdir` wrapped error, causing the `windows-latest / go build + test` job to fail on the v6.44.0 release.

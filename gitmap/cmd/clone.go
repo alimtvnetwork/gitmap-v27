@@ -243,7 +243,9 @@ func repoNameFromURL(url string) string {
 // alefragnani.project-manager projects.json file. See
 // spec/01-vscode-project-manager-sync/02-clone-sync.md.
 func executeDirectClone(url, folderName string, ghDesktopFlag, noReplace bool, output string, noVSCodeSync bool) {
+	escapeNestedGitRepo()
 	repoName := repoNameFromURL(url)
+
 	if len(folderName) == 0 {
 		// Local folder mirrors the URL verbatim (including any `-vN`
 		// suffix). The previous behavior auto-flattened versioned

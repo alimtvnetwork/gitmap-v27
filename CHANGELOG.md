@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.47.0 — (2026-06-20) — Chrome profile copy: register destination in `Local State` so it appears in Chrome's picker
+
+- **Bug fix.** `gitmap cpc <src> <dst>` copied every curated profile file onto disk but the destination directory never appeared in Chrome's profile picker. Root cause: Chrome enumerates profiles from `<UserData>/Local State` under `profile.info_cache[<dir>]`, not by scanning the User Data folder. A directory that isn't listed there is simply ignored.
+- **Fix.** New helper `registerChromeProfileInLocalState` (in `gitmap/cmd/chromeprofile_register.go`) reads `Local State`, clones the source profile's `info_cache` entry into the destination dir slot (preserving avatar/theme/tile metadata), sets `name` to the destination argument, flips `is_using_default_name`/`is_ephemeral` to `false`, scrubs every signed-in identity field (`gaia_id`, `gaia_name`, `gaia_given_name`, `gaia_picture_file_name`, `user_name`, `hosted_domain`, `managed_user_id`) so the new tile starts signed-out, and appends the dir to `profiles_order` when present. Writes atomically via `*.gitmap.tmp` + rename.
+- **Soft-fail by design.** If `Local State` is unreadable, malformed, or locked (Chrome still running), the registration step prints a yellow warn line directing the user to add the profile manually — it never aborts a copy that already succeeded on disk.
+- **Log surface.** Successful registration prints a green `✓ registered <name> in Chrome's profile picker (Local State)` line between the copy summary and the artifacts block.
+- **New constants.** `ChromeLocalStateFile`, `ChromeLocalStateTmpSuffix`, `MsgChromeProfileRegistered`, `WarnChromeProfileRegister` in `gitmap/constants/constants_chromeprofile.go`.
+- **Files:** `gitmap/cmd/chromeprofile.go`, `gitmap/cmd/chromeprofile_register.go` (new), `gitmap/constants/constants_chromeprofile.go`, `gitmap/constants/constants.go` (`6.47.0`), `src/constants/index.ts` (`v6.47.0`), `README.md` (pin → v6.47.0), `CHANGELOG.md`.
+
+
 ## v6.46.0 — (2026-06-20) — Chrome profile copy: colorful professional logs + undo/redo footer
 
 - **Polished log surface for `gitmap cpc`.** Start banner renders a cyan `▸ chrome-profile-copy` header with bold src/dst summaries and dim labels. Completion is a green `✓ copy complete` line with file count + duration in bold. `Artifacts:` block gains a blue header and cyan paths.

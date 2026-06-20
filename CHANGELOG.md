@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.48.0 — (2026-06-20) — `cfr` / `cfrp` escape nested git repos before cloning
+
+- **Bug fix.** Running `gitmap cfrp <url>` from inside another git repo (e.g. `D:\wp-work\riseup-asia\macro-ahk`) nested the freshly cloned tree under the parent repo's git context and aborted with `fetch-pack: unexpected disconnect` / `fetch-pack: invalid index-pack output` on Windows. The pipeline now walks up from `cwd` to the first non-repo ancestor before cloning (bounded to 32 hops). A colorful cyan banner reports the chdir so the user sees exactly which directory the clone landed in.
+- Honors the rule: "if cwd is a git repo, go to the parent; if that's also a repo, keep going until you find one that isn't."
+- Implementation: `gitmap/cmd/clonefixrepo_escape.go` (`escapeNestedGitRepo`), invoked at the top of `runCloneFixRepoPipeline` right after URL scheme coercion.
+
+
 ## v6.47.0 — (2026-06-20) — Chrome profile copy: register destination in `Local State` so it appears in Chrome's picker
 
 - **Bug fix.** `gitmap cpc <src> <dst>` copied every curated profile file onto disk but the destination directory never appeared in Chrome's profile picker. Root cause: Chrome enumerates profiles from `<UserData>/Local State` under `profile.info_cache[<dir>]`, not by scanning the User Data folder. A directory that isn't listed there is simply ignored.

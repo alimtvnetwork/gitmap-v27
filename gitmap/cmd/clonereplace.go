@@ -95,14 +95,14 @@ func cloneViaTempSwap(url, target string) (cloneReplaceResult, error) {
 	return res, nil
 }
 
-// runCloneCommand executes git clone with stdio inherited.
+// runCloneCommand executes git clone with stdio inherited. Delegates
+// to runCloneCommandPretty so every clone path (clone, cfr, cfrp,
+// temp-swap fallback) shares the same colorful header / spinner /
+// timing / failure-panel formatting and honors --dry-run.
 func runCloneCommand(url, dest string) error {
-	cmd := exec.Command(constants.GitBin, constants.GitClone, url, dest)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	return cmd.Run()
+	return runCloneCommandPretty(url, dest)
 }
+
 
 // emptyDirContents removes every entry inside dir, leaving dir itself in place.
 // This survives a directory handle held by the caller's shell on Windows.

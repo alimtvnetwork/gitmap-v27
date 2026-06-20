@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.49.0 — (2026-06-20) — Unified colorful clone runner: `--dry-run`, spinner, timing, retry-hint failure panel
+
+- **New flag.** `--dry-run` / `-n` on `clone`, `cfr`, and `cfrp` prints the exact `git clone <url> <dest>` command and the absolute target path without invoking git. cfr/cfrp also print the chained pipeline (`fix-repo --all` → optional `make-public --yes`) so the user can preview the full sequence.
+- **Unified formatting.** Every clone invocation (`clone`, `cfr`, `cfrp`, `clone-next`, the temp-swap fallback in clone-replace) now routes through `runCloneCommandPretty` — same cyan header (URL, target, exec line), same green ✓ success line with elapsed time, same red failure panel.
+- **Failure reporting.** On non-zero exit the panel prints the literal command that ran, the actual exit code, the error string, elapsed time, and a list of retry hints tuned to the URL shape (transport flip, `--no-replace`, clean-up `rm -rf`, `--dry-run` preview).
+- **Progress indicator.** TTY-detected braille spinner with live elapsed seconds renders while git is fetching; auto-disabled on non-interactive stderr so CI logs stay clean.
+
 ## v6.48.0 — (2026-06-20) — `cfr` / `cfrp` escape nested git repos before cloning
 
 - **Bug fix.** Running `gitmap cfrp <url>` from inside another git repo (e.g. `D:\wp-work\riseup-asia\macro-ahk`) nested the freshly cloned tree under the parent repo's git context and aborted with `fetch-pack: unexpected disconnect` / `fetch-pack: invalid index-pack output` on Windows. The pipeline now walks up from `cwd` to the first non-repo ancestor before cloning (bounded to 32 hops). A colorful cyan banner reports the chdir so the user sees exactly which directory the clone landed in.

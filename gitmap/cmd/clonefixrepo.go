@@ -72,6 +72,16 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 	requireOnline()
 	executeDirectClone(url, folderName, true, false, "", noVSCodeSync)
 
+	// Dry-run short circuit: nothing was cloned, so the chained
+	// chdir + fix-repo + make-public steps have no target to act on.
+	if dryRun {
+		fmt.Printf("  "+constants.MsgCloneDryRunNoop+"\n  would chain: fix-repo --all%s @ %s\n",
+			pubSuffix(makePublic), absPath)
+		return
+	}
+
+
+
 	if err := os.Chdir(absPath); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrCloneFixRepoChdirFmt, absPath, err)
 		os.Exit(constants.ExitCloneFixRepoChdir)

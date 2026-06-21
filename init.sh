@@ -48,11 +48,24 @@ parse_args() {
 }
 
 run_step() {
-  local label="$1" script="$2"; shift 2
+  # run_step <label> <script> <gitmap-subcmd> <script-args-csv> <gitmap-args-csv>
+  local label="$1" script="$2" sub="$3" sargs_csv="$4" gargs_csv="$5"
+  local -a sargs=() gargs=()
+  IFS='|' read -r -a sargs <<<"$sargs_csv"
+  IFS='|' read -r -a gargs <<<"$gargs_csv"
   echo
-  echo "==> [$label] $script $*"
-  "$SCRIPT_DIR/$script" "$@"
-  return $?
+  if [ -x "$SCRIPT_DIR/$script" ] || [ -f "$SCRIPT_DIR/$script" ]; then
+    echo "==> [$label] $script ${sargs[*]}"
+    "$SCRIPT_DIR/$script" "${sargs[@]}"
+    return $?
+  fi
+  if command -v gitmap >/dev/null 2>&1; then
+    echo "==> [$label] gitmap $sub ${gargs[*]}"
+    gitmap "$sub" "${gargs[@]}"
+    return $?
+  fi
+  echo "==> [$label] SKIP — neither $script nor 'gitmap' binary found on PATH" >&2
+  return 127
 }
 
 write_summary() {
@@ -66,14 +79,22 @@ write_summary() {
 main() {
   parse_args "$@"
 
-  local vis_args=(--visible pub --yes)
-  [ "$DRY_RUN" = "1" ] && vis_args+=(--dry-run)
-  run_step visibility visibility-change.sh "${vis_args[@]}"
+  local vis_sargs="--visible|pub|--yes"
+  local vis_gargs="--yes"
+  if [ "$DRY_RUN" = "1" ]; then
+    vis_sargs="$vis_sargs|--dry-run"
+    vis_gargs="$vis_gargs|--dry-run"
+  fi
+  run_step visibility visibility-change.sh make-public "$vis_sargs" "$vis_gargs"
   local vis_rc=$?
 
-  local fix_args=(--all)
-  [ "$DRY_RUN" = "1" ] && fix_args+=(--dry-run)
-  run_step fix-repo fix-repo.sh "${fix_args[@]}"
+  local fix_sargs="--all"
+  local fix_gargs="--all"
+  if [ "$DRY_RUN" = "1" ]; then
+    fix_sargs="$fix_sargs|--dry-run"
+    fix_gargs="$fix_gargs|--dry-run"
+  fi
+  run_step fix-repo fix-repo.sh fix-repo "$fix_sargs" "$fix_gargs"
   local fix_rc=$?
 
   write_summary "$vis_rc" "$fix_rc"

@@ -44,9 +44,18 @@ const SQLCreateRepo = `CREATE TABLE IF NOT EXISTS Repo (
 	LastInjectedDesktopAt TEXT DEFAULT '',
 	LastInjectedVSCodeAt  TEXT DEFAULT '',
 	LastClonedAt     TEXT DEFAULT '',
+	IdentifiedTransport TEXT NOT NULL DEFAULT '',
 	CreatedAt        TEXT DEFAULT CURRENT_TIMESTAMP,
 	UpdatedAt        TEXT DEFAULT CURRENT_TIMESTAMP
 )`
+
+// SQL: migration 008 — backfill IdentifiedTransport column on
+// existing Repo tables. Idempotent via PRAGMA table_info detect in
+// migrateRepoIdentifiedTransport. Empty string is the sentinel for
+// "unknown — backfill from origin URL on next scan" so we can ship
+// the column without forcing a one-shot scan on upgrade.
+// See spec/04-generic-cli/04-reclone-honors-stored-transport.md.
+const SQLAddRepoIdentifiedTransport = `ALTER TABLE Repo ADD COLUMN IdentifiedTransport TEXT NOT NULL DEFAULT ''`
 
 // SQL: create Group table (v15 singular). "Group" is a SQL reserved word so
 // it MUST be double-quoted everywhere it appears in DDL/DML.

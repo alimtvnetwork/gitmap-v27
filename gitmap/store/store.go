@@ -199,6 +199,7 @@ func (db *DB) Migrate() error {
 	db.migrateRepoScanFolderID()
 	db.migrateRepoInjectTimestamps()
 	db.migrateRepoLastClonedAt()
+	db.migrateRepoIdentifiedTransport()
 	db.migrateVSCodeProjectPaths()
 
 	if err := db.SeedProjectTypes(); err != nil {
@@ -275,6 +276,18 @@ func (db *DB) preV15Phase2EnsureReleaseColumns() {
 func (db *DB) migrateRepoVersionColumns() {
 	db.addColumnIfNotExists(constants.SQLAddCurrentVersionTag)
 	db.addColumnIfNotExists(constants.SQLAddCurrentVersionNum)
+}
+
+// migrateRepoIdentifiedTransport adds the IdentifiedTransport column
+// to existing Repo tables (migration 008). Plan 03 step 2: persist
+// the SSH-vs-HTTPS verdict so reclone-class commands (cfr, cfrp,
+// clone-now) can honor it without re-detecting from disk. Empty
+// string = "unknown, backfill from origin on next scan"; the column
+// is intentionally non-null with a default so older read paths that
+// SELECT * keep working. Idempotent via the detect-then-act pattern
+// in addColumnIfNotExists (catches "duplicate column" benignly).
+func (db *DB) migrateRepoIdentifiedTransport() {
+	db.addColumnIfNotExists(constants.SQLAddRepoIdentifiedTransport)
 }
 
 // migrateRepoScanFolderID adds the nullable ScanFolderId FK column to Repo

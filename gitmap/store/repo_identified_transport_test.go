@@ -4,7 +4,27 @@
 // ("", nil), and a round-trip set→get preserves the value.
 package store
 
-import "testing"
+import (
+	"path/filepath"
+	"testing"
+)
+
+// newTestDB opens a fresh sqlite file under t.TempDir() and runs the
+// full Migrate() pass so the Repo table (with the migration-008
+// IdentifiedTransport column) is present. Per-test isolation — no
+// shared state across tests.
+func newTestDB(t *testing.T) *DB {
+	t.Helper()
+	db, err := OpenAt(filepath.Join(t.TempDir(), "transport.sqlite"))
+	if err != nil {
+		t.Fatalf("OpenAt: %v", err)
+	}
+	t.Cleanup(func() { _ = db.Close() })
+	if err := db.Migrate(); err != nil {
+		t.Fatalf("Migrate: %v", err)
+	}
+	return db
+}
 
 func TestClassifyURLTransport(t *testing.T) {
 	cases := map[string]string{

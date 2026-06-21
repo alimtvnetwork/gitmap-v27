@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
@@ -33,7 +34,7 @@ func runChromeProfileCopy(args []string) {
 		printAvailableChromeProfilesWithDisplay()
 		os.Exit(constants.ExitChromeProfileNotFound)
 	}
-	fmt.Fprint(os.Stderr, constants.MsgChromeProfileSkipChrome)
+	guardChromeClosedOrExit(args[0], args[1])
 	fmt.Printf(constants.MsgChromeProfileCopyStart, chromeProfileSummary(srcProfile), chromeProfileSummary(dstProfile), srcProfile.Path, dstProfile.Path)
 	start := time.Now()
 	chromeProfileLockSkipCount = 0
@@ -62,6 +63,20 @@ func registerCopiedChromeProfile(srcDir, dstDir, displayName string) {
 		return
 	}
 	fmt.Printf(constants.MsgChromeProfileRegistered, displayName)
+}
+
+func guardChromeClosedOrExit(src, dst string) {
+	isRunning, err := isChromeRunning(runtime.GOOS)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, constants.WarnChromeProfileCheckOpen, err)
+		fmt.Fprint(os.Stderr, constants.MsgChromeProfileSkipChrome)
+		return
+	}
+	if !isRunning {
+		return
+	}
+	fmt.Fprintf(os.Stderr, constants.ErrChromeProfileChromeOpen, src, dst)
+	os.Exit(constants.ExitChromeProfileCopyFailed)
 }
 
 // emitChromeSnapshots writes the JSON + CSV companions for a profile

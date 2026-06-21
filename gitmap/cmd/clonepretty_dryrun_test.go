@@ -29,7 +29,7 @@ func TestRunCloneCommandPrettyDryRun(t *testing.T) {
 		url  = "https://github.com/acme/repo-v9.git"
 		dest = "/tmp/gitmap-dryrun-fixture-does-not-exist"
 	)
-	out := captureStdout(t, func() {
+	out := captureClonePrettyStdout(t, func() {
 		if err := runCloneCommandPretty(url, dest); err != nil {
 			t.Fatalf("dry-run returned error: %v", err)
 		}
@@ -61,10 +61,10 @@ func TestRunCloneCommandPrettyDryRunFlagDefaultsOff(t *testing.T) {
 	}
 }
 
-// captureStdout redirects os.Stdout for the duration of fn and
+// captureClonePrettyStdout redirects os.Stdout for the duration of fn and
 // returns whatever was written. Failures during pipe setup fail the
 // test outright — without stdout we cannot assert anything useful.
-func captureStdout(t *testing.T, fn func()) string {
+func captureClonePrettyStdout(t *testing.T, fn func()) string {
 	t.Helper()
 	r, w, err := os.Pipe()
 	if err != nil {

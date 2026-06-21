@@ -92,6 +92,7 @@ var chromeInfoCacheGAIAFields = []string{
 func appendChromeProfileToOrder(profile map[string]any, dstDir string) {
 	order, ok := profile["profiles_order"].([]any)
 	if !ok {
+		profile["profiles_order"] = []any{dstDir}
 		return
 	}
 	for _, v := range order {
@@ -111,9 +112,33 @@ func writeChromeLocalState(path string, root map[string]any) error {
 	if err := os.WriteFile(tmp, out, constants.FilePermission); err != nil {
 		return fmt.Errorf("write %s: %w", tmp, err)
 	}
+	return replaceChromeLocalState(path, tmp)
+}
+
+func replaceChromeLocalState(path, tmp string) error {
+	bak := path + constants.ChromeLocalStateBakSuffix
+	if err := os.Remove(bak); err != nil && !os.IsNotExist(err) {
+		fmt.Fprintf(os.Stderr, constants.WarnChromeProfileBakRm, bak, err)
+	}
+	if err := os.Rename(path, bak); err != nil {
+		return cleanupChromeLocalStateTmp(tmp, err)
+	}
+	return finishChromeLocalStateReplace(path, tmp, bak)
+}
+
+func cleanupChromeLocalStateTmp(tmp string, cause error) error {
+	_ = os.Remove(tmp)
+	return fmt.Errorf("backup Local State: %w", cause)
+}
+
+func finishChromeLocalStateReplace(path, tmp, bak string) error {
 	if err := os.Rename(tmp, path); err != nil {
+		_ = os.Rename(bak, path)
 		_ = os.Remove(tmp)
 		return fmt.Errorf("replace %s: %w", path, err)
+	}
+	if err := os.Remove(bak); err != nil && !os.IsNotExist(err) {
+		fmt.Fprintf(os.Stderr, constants.WarnChromeProfileBakRm, bak, err)
 	}
 	return nil
 }

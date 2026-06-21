@@ -28,25 +28,27 @@ const (
 
 // Chrome profile messages and errors.
 const (
-	MsgChromeProfileCopyStart    = "\n\033[1;96m▸ chrome-profile-copy\033[0m  \033[1m%s\033[0m → \033[1m%s\033[0m\n  \033[2;37msource     \033[0m %s\n  \033[2;37mdestination\033[0m %s\n"
-	MsgChromeProfileCopyDone     = "\n\033[1;92m✓ copy complete\033[0m  \033[1m%d\033[0m files in \033[1m%s\033[0m\n"
-	MsgChromeProfileLockSummary  = "\033[1;93m⚠ skipped %d volatile Chrome lock file(s)\033[0m  \033[2;37m(held by Chrome/extension; safe to ignore)\033[0m\n"
-	MsgChromeProfileNextSteps    = "\n\033[1;94mNext steps\033[0m\n  \033[2;37mundo  \033[0m \033[1;96mgitmap chrome-profile-delete %s --yes\033[0m\n  \033[2;37mredo  \033[0m \033[1;96mgitmap chrome-profile-copy %s %s\033[0m\n  \033[2;37mverify\033[0m \033[1;96mgitmap chrome-profile-list\033[0m\n"
-	MsgChromeProfileExportOk     = "chrome-profile-export: wrote %s (%d bytes)\n"
-	MsgChromeProfileExportCSV    = "chrome-profile-export: csv  %s (%d bytes)\n"
-	MsgChromeProfileArtifactsHd  = "\n\033[1;94mArtifacts\033[0m\n"
-	MsgChromeProfileArtifactRow  = "  \033[2;37m%-5s\033[0m \033[1;96m%s\033[0m\n"
-	MsgChromeProfileArtifactNA   = "(skipped)"
-	MsgChromeProfileDBSynced     = "\033[1;92m✓ db synced\033[0m  profile \033[1m%s\033[0m\n"
-	MsgChromeProfileDBWarn       = "  \033[1;93m⚠\033[0m chrome-profile: db sync failed: %v\n"
-	MsgChromeProfileImportOk     = "chrome-profile-import: imported %s into profile %q\n"
-	MsgChromeProfileImportCSV    = "chrome-profile-import: csv source detected — restoring extension IDs + known preferences (bookmarks omitted)\n"
-	MsgChromeProfileListEmpty    = "chrome-profile-list: no profiles found at %s\n"
-	MsgChromeProfileListHdr      = "Chrome profiles (%s):\n"
-	MsgChromeProfileListDBHdr    = "Tracked in gitmap DB:\n"
-	MsgChromeProfileListDBRow    = "  - %-30s  exports=%d  last=%s\n"
-	MsgChromeProfileSkipChrome   = "  \033[2;37mhint: close Chrome before copying — open sessions may corrupt the destination.\033[0m\n"
-	WarnChromeProfileSkipLock    = "  \033[2;37m· skipped volatile Chrome lock file: %s\033[0m\n"
+	MsgChromeProfileCopyStart   = "\n\033[1;96m▸ chrome-profile-copy\033[0m  \033[1m%s\033[0m → \033[1m%s\033[0m\n  \033[2;37msource     \033[0m %s\n  \033[2;37mdestination\033[0m %s\n"
+	MsgChromeProfileCopyDone    = "\n\033[1;92m✓ copy complete\033[0m  \033[1m%d\033[0m files in \033[1m%s\033[0m\n"
+	MsgChromeProfileLockSummary = "\033[1;93m⚠ skipped %d volatile Chrome lock file(s)\033[0m  \033[2;37m(held by Chrome/extension; safe to ignore)\033[0m\n"
+	MsgChromeProfileNextSteps   = "\n\033[1;94mNext steps\033[0m\n  \033[2;37mundo  \033[0m \033[1;96mgitmap chrome-profile-delete %s --yes\033[0m\n  \033[2;37mredo  \033[0m \033[1;96mgitmap chrome-profile-copy %s %s\033[0m\n  \033[2;37mverify\033[0m \033[1;96mgitmap chrome-profile-list\033[0m\n"
+	MsgChromeProfileExportOk    = "chrome-profile-export: wrote %s (%d bytes)\n"
+	MsgChromeProfileExportCSV   = "chrome-profile-export: csv  %s (%d bytes)\n"
+	MsgChromeProfileArtifactsHd = "\n\033[1;94mArtifacts\033[0m\n"
+	MsgChromeProfileArtifactRow = "  \033[2;37m%-5s\033[0m \033[1;96m%s\033[0m\n"
+	MsgChromeProfileArtifactNA  = "(skipped)"
+	MsgChromeProfileDBSynced    = "\033[1;92m✓ db synced\033[0m  profile \033[1m%s\033[0m\n"
+	MsgChromeProfileDBWarn      = "  \033[1;93m⚠\033[0m chrome-profile: db sync failed: %v\n"
+	MsgChromeProfileImportOk    = "chrome-profile-import: imported %s into profile %q\n"
+	MsgChromeProfileImportCSV   = "chrome-profile-import: csv source detected — restoring extension IDs + known preferences (bookmarks omitted)\n"
+	ErrChromeProfileChromeOpen  = "chrome-profile-copy: ERROR Chrome is still running.\n  Close every Chrome window and tray/background Chrome process, then rerun:\n  gitmap chrome-profile-copy %s %s\n"
+	MsgChromeProfileListEmpty   = "chrome-profile-list: no profiles found at %s\n"
+	MsgChromeProfileListHdr     = "Chrome profiles (%s):\n"
+	MsgChromeProfileListDBHdr   = "Tracked in gitmap DB:\n"
+	MsgChromeProfileListDBRow   = "  - %-30s  exports=%d  last=%s\n"
+	MsgChromeProfileSkipChrome  = "  \033[2;37mhint: close Chrome before copying — open sessions may corrupt the destination.\033[0m\n"
+	WarnChromeProfileSkipLock   = "  \033[2;37m· skipped volatile Chrome lock file: %s\033[0m\n"
+	WarnChromeProfileCheckOpen  = "  \033[1;93m⚠\033[0m chrome-profile-copy: could not check whether Chrome is running: %v\n"
 	MsgChromeProfileDeleteOk    = "chrome-profile-delete: removed profile %q (%d artifacts)\n"
 	MsgChromeProfileDeleteRm    = "  rm %s\n"
 	MsgChromeProfileDeleteAbort = "chrome-profile-delete: aborted — re-run with --yes to confirm\n"
@@ -76,12 +78,31 @@ const (
 	ChromeProfileLockReason   = "runtime-only Chrome lock file; Chrome recreates it"
 	ChromeLocalStateFile      = "Local State"
 	ChromeLocalStateTmpSuffix = ".gitmap.tmp"
+	ChromeLocalStateBakSuffix = ".gitmap.bak"
+	ChromeDefaultProfileDir   = "Default"
+	ChromeProfileDirPrefix    = "Profile "
 )
+
+// Chrome process detection constants.
+const (
+	ChromeProcessTasklist     = "tasklist"
+	ChromeProcessTasklistFlag = "/FI"
+	ChromeProcessTasklistExpr = "IMAGENAME eq chrome.exe"
+	ChromeProcessTasklistNH   = "/NH"
+	ChromeProcessWindowsImage = "chrome.exe"
+	ChromeProcessPgrep        = "pgrep"
+	ChromeProcessPgrepExact   = "-x"
+	ChromeProcessMacName      = "Google Chrome"
+)
+
+// ChromeProcessLinuxNames enumerates common Chromium process names.
+var ChromeProcessLinuxNames = []string{"chrome", "google-chrome", "google-chrome-stable", "chromium", "chromium-browser"}
 
 // Local State registration messages.
 const (
 	MsgChromeProfileRegistered = "\033[1;92m✓ registered\033[0m  \033[1m%s\033[0m in Chrome's profile picker (Local State)\n"
 	WarnChromeProfileRegister  = "  \033[1;93m⚠\033[0m chrome-profile-copy: could not register %q in Chrome's Local State: %v\n  \033[2;37m(profile files were copied — restart Chrome and add the profile manually if it does not appear)\033[0m\n"
+	WarnChromeProfileBakRm     = "  \033[1;93m⚠\033[0m chrome-profile-copy: could not remove Local State backup %s: %v\n"
 	HelpChromeProfileDelete    = "  chrome-profile-delete (cpd) <name> [--yes] Remove a profile + its stored artifacts from the gitmap DB"
 )
 

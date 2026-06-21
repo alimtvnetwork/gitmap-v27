@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
 // chromeUserDataDir returns the platform-specific Chrome User Data
@@ -54,17 +56,47 @@ func availableChromeProfileNames() []string {
 	if err != nil {
 		return nil
 	}
+	stateDirs := chromeLocalStateProfileDirs()
+	return chromeProfileNamesFromEntries(entries, stateDirs)
+}
+
+func chromeProfileNamesFromEntries(entries []os.DirEntry, stateDirs map[string]bool) []string {
 	var out []string
 	for _, e := range entries {
 		if !e.IsDir() {
 			continue
 		}
 		name := e.Name()
-		if name == "Default" || strings.HasPrefix(name, "Profile ") {
+		if isChromeProfileDirectoryName(name, stateDirs) {
 			out = append(out, name)
 		}
 	}
 	return out
+}
+
+func chromeLocalStateProfileDirs() map[string]bool {
+	out := map[string]bool{}
+	state := readChromeLocalState()
+	if state == nil {
+		return out
+	}
+	for dir := range state.Profile.InfoCache {
+		out[dir] = true
+	}
+	return out
+}
+
+func isChromeProfileDirectoryName(name string, stateDirs map[string]bool) bool {
+	if name == "" {
+		return false
+	}
+	if stateDirs[name] {
+		return true
+	}
+	if name == constants.ChromeDefaultProfileDir {
+		return true
+	}
+	return strings.HasPrefix(name, constants.ChromeProfileDirPrefix)
 }
 
 // printAvailableChromeProfiles writes a "did you mean…" stderr block

@@ -38,6 +38,7 @@ gitmap cfrp               <url> [folder] [flags]
 | 🚫 `--no-vscode-sync` | false | Forwarded to the `clone` step — skips writing the resolved folder into VS Code Project Manager `projects.json`. The `fix-repo` and `make-public` steps are unaffected. |
 | 🤐 `--yes` / `-y` | false | Non-interactive: skip the prior-version privatize prompt (see §Behavior step 5) and auto-confirm any chained `make-public` confirmation. |
 | 🔒 `--require-version` | false | Strict mode: fail (exit 4) when the cloned repo identity has no `-vN` suffix instead of skipping the `fix-repo` step. |
+| 👁️ `--dry-run` / `-n` | false | Preview only — prints the exact `git clone <url> <dest>` command, the absolute target path, and the chained `fix-repo --all → make-public --yes` sequence that *would* run, without invoking git, chdir-ing, or touching remote visibility. (v6.49.0+) |
 
 Path canonicalization (Clean + EvalSymlinks for Windows 8.3 short
 names and symlinks, with soft-fail to the cleaned absolute path on
@@ -51,7 +52,8 @@ soft-fail" for the full rule set.
 2. 📂 **cd** — chdirs into the resolved folder.
 3. 🔧 **fix-repo** — re-execs `fix-repo --all`. Skipped (with a notice) when the repo identity has no `-vN` suffix, unless `--require-version` is set.
 4. 🌍 **make-public** — re-execs `make-public --yes` (non-interactive — no confirmation prompt, since the intent is explicit in the command name).
-5. 🤐 **prior-version privatize** (v5.61.0+) — probes v(N-1), v(N-2), … on the same owner; if any are currently public, prompts `Privatize all N prior version(s)? [y/N]`. With `-y`, auto-confirms. Failures on individual slugs are non-fatal.
+
+> **v6.50.0+** — `cfrp` no longer scans sibling `-vN` repos nor prompts to privatize prior versions after `make-public`. Run `gitmap mapri <repo>` explicitly when you want bulk-privatize behavior.
 
 Also (v5.61.0+) — if the user's shell cwd is already inside the
 target folder, `cfrp` chdir's to the parent before re-cloning so the

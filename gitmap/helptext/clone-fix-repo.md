@@ -31,6 +31,7 @@ gitmap cfr           <url> [folder] [flags]
 | 🌐 `--https` / `-https` / `--ht` | false | Force the URL into `https://host/owner/repo.git` form. Converts SSH-shorthand and `ssh://…` URLs. Useful in CI where the SSH agent isn't unlocked. |
 | 🚫 `--no-vscode-sync` | false | Forwarded to the `clone` step — skips writing the resolved folder into VS Code Project Manager `projects.json`. The `fix-repo` step is unaffected. |
 | 🔒 `--require-version` | false | Restore the strict (exit-4) failure mode: fail when the cloned repo identity has no `-vN` suffix instead of skipping the `fix-repo` step. |
+| 👁️ `--dry-run` / `-n` | false | Preview only — prints the exact `git clone <url> <dest>` command, the absolute target path, and the chained `fix-repo --all` step that *would* run, without invoking git or chdir-ing. Useful to confirm transport/URL rewrites and target folder resolution before committing. (v6.49.0+) |
 
 Path canonicalization (Clean + EvalSymlinks for Windows 8.3 short
 names and symlinks, with soft-fail to the cleaned absolute path on

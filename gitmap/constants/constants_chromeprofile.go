@@ -14,6 +14,7 @@ const (
 	CmdChromeProfileImportAlias = "cpi"
 	CmdChromeProfileList        = "chrome-profile-list"
 	CmdChromeProfileListAlias   = "cpl"
+	CmdChromeProfileListAlias2  = "chrome-profiles"
 	CmdChromeProfileDelete      = "chrome-profile-delete"
 	CmdChromeProfileDeleteAlias = "cpd"
 )

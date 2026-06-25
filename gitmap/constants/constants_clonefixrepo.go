@@ -55,7 +55,7 @@ const (
 	// Parallel comma-separated URL fan-out (v6.54.0+). Each URL is
 	// re-execed through the single-URL pipeline so chdir/fix-repo
 	// chaining stays isolated per worker.
-	MsgCloneFixRepoParallelHeader   = ColorCyan + "▶ clone-fix-repo: " + ColorReset + "%d URL(s) across %d worker(s) [" + ColorBold + "%s" + ColorReset + "]\n"
+	MsgCloneFixRepoParallelHeader = ColorCyan + "▶ clone-fix-repo: " + ColorReset + "%d URL(s) across %d worker(s) [%s]\n"
 	MsgCloneFixRepoParallelItem     = ColorDim + "  [%d/%d] start " + ColorReset + "%s\n"
 	MsgCloneFixRepoParallelItemOk   = ColorGreen + "  [%d/%d] ✓ " + ColorReset + "%s " + ColorDim + "(%s)" + ColorReset + "\n"
 	MsgCloneFixRepoParallelItemFail = ColorRed + "  [%d/%d] ✗ " + ColorReset + "%s " + ColorDim + "(%s)" + ColorReset + ": %v\n"

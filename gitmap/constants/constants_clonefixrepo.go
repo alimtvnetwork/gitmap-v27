@@ -51,14 +51,22 @@ const (
 		"    " + ColorDim + "from:" + ColorReset + " %s\n" +
 		"    " + ColorDim + "  to:" + ColorReset + " %s\n"
 	WarnCFREscapeChdir = "clone-fix-repo: warning: could not chdir to %s: %v\n"
+
+	// Parallel comma-separated URL fan-out (v6.54.0+). Each URL is
+	// re-execed through the single-URL pipeline so chdir/fix-repo
+	// chaining stays isolated per worker.
+	MsgCloneFixRepoParallelHeader = ColorCyan + "▶ clone-fix-repo: " + ColorReset + "%d URL(s) across %d worker(s) [%s]\n"
+	MsgCloneFixRepoParallelItem     = ColorDim + "  [%d/%d] start " + ColorReset + "%s\n"
+	MsgCloneFixRepoParallelItemOk   = ColorGreen + "  [%d/%d] ✓ " + ColorReset + "%s " + ColorDim + "(%s)" + ColorReset + "\n"
+	MsgCloneFixRepoParallelItemFail = ColorRed + "  [%d/%d] ✗ " + ColorReset + "%s " + ColorDim + "(%s)" + ColorReset + ": %v\n"
+	MsgCloneFixRepoParallelDoneOk   = ColorGreen + "✔ clone-fix-repo: all %d URL(s) ok" + ColorReset + "\n"
+	MsgCloneFixRepoParallelDoneFail = ColorYellow + "⚠ clone-fix-repo: %d ok, %d failed" + ColorReset + "\n"
 )
-
-
-
 
 // Clone-fix-repo flags.
 const (
-	FlagRequireVersion = "require-version"
+	FlagRequireVersion          = "require-version"
+	CloneFixRepoDefaultParallel = 8
 )
 
 // Clone-fix-repo exit codes.

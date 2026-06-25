@@ -1,5 +1,14 @@
 # Changelog
 
+## v6.54.0 — (2026-06-25) — `cfr`/`cfrp` comma-URL fan-out with `--parallel=N`
+
+- **Parallel cfr/cfrp.** `gitmap cfr url1,url2,url3` (and `cfrp`) now fans the comma-separated URL list across a bounded worker pool (`--parallel=N` / `-p N`, default 8, capped at `len(urls)`). Each worker re-execs the binary with a single URL so the existing chdir → `fix-repo --all` → optional `make-public` chain stays isolated per repo — exit codes, transport persistence, and dry-run semantics are unchanged.
+- **Coherent output.** Per-URL stdout/stderr is captured into a `bytes.Buffer` per worker and flushed atomically under a shared mutex, mirroring the `visibilityparallel.go` (mapub/mapri) pattern so cloning 30 siblings stays line-coherent instead of interleaving mid-line. Per-URL elapsed time is reported in the trailing ✓/✗ line; a summary banner reports `N ok / M failed`.
+- **Forbidden in fan-out.** The optional `folder` positional is ignored when more than one URL is passed — each URL derives its own folder from the repo base name (same rule as single-URL cfr). The `--parallel` flag is stripped before passthrough so workers never recurse into another fan-out.
+- **Files added.** `gitmap/cmd/clonefixrepoparallel.go` (worker pool, comma splitter, `--parallel` extractor, passthrough flag builder).
+- **Files edited.** `gitmap/cmd/clonefixrepo.go` (fan-out dispatch ahead of single-URL pipeline), `gitmap/constants/constants_clonefixrepo.go` (six new `MsgCloneFixRepoParallel*` constants + `CloneFixRepoDefaultParallel = 8`).
+- **VERSION pin.** Bumped `gitmap/constants/constants.go` and `src/constants/index.ts` to `v6.54.0`; refreshed all 12 README pins.
+
 ## v6.53.0 — (2026-06-24) — Bulk visibility: `--except-latest`, parallelism, owner repo-list TTL cache
 
 - **New commands.** `make-all-public-except-latest` / `make-all-private-except-latest` (plus uppercase shorthands `MAPUBXL` / `MAPRIXL`) flip every matched repo **except** the highest `-vN` sibling per base group. Repos without a `-vN` suffix flow through to the normal apply path. Logged drops use the new `MsgBulkExceptDropFmt`.

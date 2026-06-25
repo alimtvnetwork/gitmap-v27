@@ -44,7 +44,26 @@ func runCloneFixRepoPub(args []string) {
 // runCloneFixRepoPipeline is the shared core. `makePublic` controls
 // whether the optional 3rd step (visibility flip) runs.
 func runCloneFixRepoPipeline(args []string, makePublic bool) {
+	// v6.54.0: extract --parallel BEFORE positional parsing so it
+	// never leaks into the URL/folder positionals.
+	parallel, args := extractParallelFlag(args)
 	url, folderName, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun := parseCloneFixRepoArgs(args)
+	// Comma-separated URL fan-out: re-exec the single-URL pipeline
+	// per worker so chdir/fix-repo chaining stays isolated. The
+	// optional `folder` positional is forbidden in this mode — each
+	// URL derives its own folder from the repo base name.
+	if urls := splitCommaURLs(url); len(urls) > 1 {
+		subcmd := constants.CmdCloneFixRepo
+		if makePublic {
+			subcmd = constants.CmdCloneFixRepoPub
+		}
+		passthrough := buildCFRPassthroughFlags(noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun)
+		failed := runCloneFixRepoParallel(urls, subcmd, passthrough, parallel)
+		if failed > 0 {
+			os.Exit(constants.ExitCloneFixRepoChainFailed)
+		}
+		return
+	}
 	SetCloneDryRun(dryRun)
 	if len(url) == 0 {
 		fmt.Fprint(os.Stderr, constants.ErrCloneFixRepoUsage)

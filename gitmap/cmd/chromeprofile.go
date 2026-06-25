@@ -54,10 +54,17 @@ func runChromeProfileCopy(args []string) {
 }
 
 // registerCopiedChromeProfile makes the destination directory visible
-// in Chrome's profile picker by adding it to `Local State`. Soft-fails
-// with a warning so a locked Local State (Chrome still open) never
-// aborts a copy that already succeeded on disk.
+// in Chrome's profile picker by (1) scrubbing the copied Preferences
+// of source signed-in identity + stamping the picker name, and (2)
+// adding the dir to Local State `profile.info_cache` + `profiles_order`.
+// Step (1) is required: Chrome ignores Local State entries whose
+// Preferences still carry the source GAIA fields and silently merges
+// the tile back into the source identity on next launch.
 func registerCopiedChromeProfile(srcDir, dstDir, displayName string) {
+	dstPath := filepath.Join(chromeUserDataDir(), dstDir)
+	if err := patchCopiedChromeProfilePreferences(dstPath, displayName); err != nil {
+		fmt.Fprintf(os.Stderr, constants.WarnChromeProfileRegister, displayName, err)
+	}
 	if err := registerChromeProfileInLocalState(srcDir, dstDir, displayName); err != nil {
 		fmt.Fprintf(os.Stderr, constants.WarnChromeProfileRegister, displayName, err)
 		return

@@ -89,7 +89,7 @@ func runMakeAllVisibility(target, cmdName string, args []string, exceptLatestDef
 			os.Exit(constants.ExitVisOK)
 		}
 	}
-	audit := beginRunAudit(ctx, target, cmdName, patternsRaw, bulkAuditFlags(flags), ownerTotal, matches)
+	audit := beginRunAudit(ctx, target, cmdName, patternsRaw, flags, ownerTotal, matches)
 
 	final := confirmOrAbort(matches, flags.Yes)
 	if len(final) == 0 {

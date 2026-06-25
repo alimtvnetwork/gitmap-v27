@@ -1,5 +1,17 @@
 # Changelog
 
+## v6.53.0 — (2026-06-24) — Bulk visibility: `--except-latest`, parallelism, owner repo-list TTL cache
+
+- **New commands.** `make-all-public-except-latest` / `make-all-private-except-latest` (plus uppercase shorthands `MAPUBXL` / `MAPRIXL`) flip every matched repo **except** the highest `-vN` sibling per base group. Repos without a `-vN` suffix flow through to the normal apply path. Logged drops use the new `MsgBulkExceptDropFmt`.
+- **Parallel apply.** Bulk runs now apply repos concurrently via a bounded worker pool (`--parallel=N`, default 8, max 32, configurable via Setting `bulk_visibility_parallelism`). Per-repo stdout is captured into a `bytes.Buffer` per worker and flushed atomically under a mutex; audit `updateResult` writes share the same mutex so SQLite never sees concurrent writers. Sequential path preserved for `--parallel=1`.
+- **Owner repo-list cache.** New `OwnerRepoListCache` table (schema v28) caches `gh repo list <owner>` / `glab repo list --group <owner>` JSON for 5 minutes by default. Per-invocation override via `--cache-ttl=<seconds>` (0 disables). Persisted default lives in Setting `owner_repo_list_ttl_seconds`. Cache HIT/MISS is logged with cached size + age.
+- **Audit unchanged.** The four new commands reuse the existing `MakeAllVisibilityRun` / `MakeAllVisibilityResult` audit tables and remain fully reversible via `gitmap vu` / `gitmap vr`.
+- **Files added.** `gitmap/cmd/visibilityexceptlatest.go`, `gitmap/cmd/visibilityparallel.go`, `gitmap/cmd/visibilityownerlistcache.go`, `gitmap/store/owner_repo_list_cache.go`, `gitmap/helptext/make-all-{public,private}-except-latest.md`, `gitmap/helptext/MAPUBXL.md`, `gitmap/helptext/MAPRIXL.md`.
+- **Files edited.** `gitmap/cmd/visibilityallbulk.go` (extended flag parser, cache wrapper, except-latest gating, parallel runner wired), `gitmap/cmd/visibilityapplyone.go` (added writer-aware `applyOneRepoTo`), `gitmap/cmd/rootcore.go` (new dispatch entries), `gitmap/constants/constants_cli.go`, `gitmap/constants/constants_visibility.go`, `gitmap/constants/constants_settings.go` (schema v28), `gitmap/store/store.go` (registered `SQLCreateOwnerRepoListCache`).
+- **VERSION pin.** Bumped `gitmap/constants/constants.go` and `src/constants/index.ts` to `v6.53.0`; refreshed all 12 README pins.
+
+
+
 ## v6.52.0 — (2026-06-24) — `chrome-profiles` alias + commit-in resume/idempotency docs
 
 - **New alias.** `gitmap chrome-profiles` now resolves to `chrome-profile-list` (alongside the existing `cpl`). Wired in `gitmap/cmd/roottooling.go` and `constants.CmdChromeProfileListAlias2`.

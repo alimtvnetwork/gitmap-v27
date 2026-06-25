@@ -99,5 +99,9 @@ func toolingDispatchEntries() []dispatchEntry {
 			[]string{constants.CmdChromeProfileDelete, constants.CmdChromeProfileDeleteAlias},
 			func() { runChromeProfileDelete(argsTail()) },
 		},
+		{
+			[]string{constants.CmdChromeProfileMerge, constants.CmdChromeProfileMergeAlias},
+			func() { runChromeProfileMerge(argsTail()) },
+		},
 	}
 }

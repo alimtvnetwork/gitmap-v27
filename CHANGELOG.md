@@ -1,5 +1,16 @@
 # Changelog
 
+## v6.55.0 — 2026-06-25
+
+### Added
+- **`gitmap chrome-profile-merge` / `cpm`** — merge selected slices of a source Chrome profile INTO a destination without clobbering destination values. `--what=all|settings|bookmarks|extensions`, interactive `[k]eep/[o]verwrite/[a]ll/[A]ll/[q]uit` prompts, `--yes` to auto-keep, `--force` to auto-overwrite, `--dry-run` to preview. Helptext: `gitmap/helptext/chrome-profile-merge.md`.
+
+### Fixed
+- **`gitmap cpc` — copied profile now actually appears in Chrome's picker.** Before v6.55.0, registering the destination dir in `Local State` alone was insufficient: Chrome silently merged the new tile back into the source identity on next launch because the destination `Preferences` still carried the source GAIA / signed-in fields. New `patchCopiedChromeProfilePreferences` scrubs `account_info` / `signin` / `google` / `gaia_*` and stamps `profile.name` to the destination slug before the Local State entry is written.
+
+### Changed
+- **User-facing command strings renamed `gitmap-v26 …` → `gitmap …`** in `src/data/commands.ts`, `src/data/postMortems.ts`, and `src/hooks/useTheme.ts` event names. Go import paths are unchanged; only displayed/copyable commands were touched. The two-folder mv/merge/diff examples now use `./gitmap-v1 ./gitmap-v2` so the two slots stay visibly distinct.
+
 ## v6.54.0 — (2026-06-25) — `cfr`/`cfrp` comma-URL fan-out with `--parallel=N`
 
 - **Parallel cfr/cfrp.** `gitmap cfr url1,url2,url3` (and `cfrp`) now fans the comma-separated URL list across a bounded worker pool (`--parallel=N` / `-p N`, default 8, capped at `len(urls)`). Each worker re-execs the binary with a single URL so the existing chdir → `fix-repo --all` → optional `make-public` chain stays isolated per repo — exit codes, transport persistence, and dry-run semantics are unchanged.

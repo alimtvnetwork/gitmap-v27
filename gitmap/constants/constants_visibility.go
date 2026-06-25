@@ -159,6 +159,58 @@ const (
 	ExitVisBulkPartial = 9
 )
 
+// Spec 116 §parallel — bulk wildcard visibility parallelism and TTL
+// cache for the owner-wide repo enumeration.
+const (
+	// DefaultBulkParallelism is the worker count used when --parallel
+	// is not supplied. Tuned to keep provider API rate-limits happy
+	// while still cutting wall-clock by ~6-8x on large owners.
+	DefaultBulkParallelism = 8
+
+	// MaxBulkParallelism caps --parallel to prevent accidental
+	// thundering-herd against gh / glab.
+	MaxBulkParallelism = 32
+
+	// OwnerRepoListCacheTTLSeconds is the default TTL for the
+	// SQLite-backed owner repo-list cache. 5 minutes balances
+	// freshness vs. avoiding repeated `gh repo list` round-trips
+	// when users iterate on patterns. Overridable per-invocation
+	// via --cache-ttl=<seconds> (0 disables the cache).
+	OwnerRepoListCacheTTLSeconds = 300
+
+	// SettingOwnerRepoListCacheTTL is the Setting key consulted
+	// before falling back to the compiled default. Persisted as a
+	// string of seconds.
+	SettingOwnerRepoListCacheTTL = "owner_repo_list_ttl_seconds"
+
+	// SettingBulkParallelism overrides DefaultBulkParallelism when set.
+	SettingBulkParallelism = "bulk_visibility_parallelism"
+
+	// Owner repo-list cache table.
+	TableOwnerRepoListCache = "OwnerRepoListCache"
+	SQLCreateOwnerRepoListCache = `CREATE TABLE IF NOT EXISTS OwnerRepoListCache (
+		Provider   TEXT NOT NULL,
+		Owner      TEXT NOT NULL,
+		NamesJson  TEXT NOT NULL,
+		FetchedAt  TEXT NOT NULL,
+		PRIMARY KEY (Provider, Owner)
+	)`
+
+	// Log lines for cache + parallel surface.
+	MsgBulkCacheHitFmt   = "make-all-*: owner repo list cache HIT (%d repos, age %s)\n"
+	MsgBulkCacheMissFmt  = "make-all-*: owner repo list cache MISS — refreshing from %s\n"
+	MsgBulkParallelFmt   = "make-all-*: applying with parallelism=%d\n"
+	MsgBulkExceptLatest  = "make-all-*: --except-latest active — newest -vN per base group will be preserved\n"
+	MsgBulkExceptDropFmt = "  → except-latest: preserving %s (highest -v%d)\n"
+
+	// Flags.
+	FlagBulkParallel    = "--parallel"
+	FlagBulkCacheTTL    = "--cache-ttl"
+	FlagBulkExceptLatest = "--except-latest"
+	FlagBulkExceptLatestShort = "-XL"
+)
+
+
 // Spec 116 §preflight + §undo-redo — auth-status gate, drift guard,
 // and reverse-loop messages shared by `make-all-*`, `vu`, and `vr`.
 const (

@@ -32,18 +32,25 @@ func runChromeBackup(args []string) {
 		fmt.Fprintf(os.Stderr, "chrome backup: ERROR %v\n", err)
 		os.Exit(1)
 	}
+	manifestPath, mErr := writeChromeManifest(out)
+	if mErr != nil {
+		fmt.Fprintf(os.Stderr, "chrome backup: WARN manifest write failed: %v\n", mErr)
+	}
 	fmt.Printf("\033[1;92m✓ chrome backup\033[0m  %d files → \033[1;96m%s\033[0m\n", n, out)
+	if manifestPath != "" {
+		fmt.Printf("  manifest: \033[2;37m%s\033[0m\n", manifestPath)
+	}
 	fmt.Printf("  restore: \033[1;96mgitmap chrome restore %s\033[0m\n", out)
 }
 
 func runChromeRestore(args []string) {
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "chrome restore: ERROR usage: gitmap chrome restore <tarball> [--into <dir>] [--force|-f] [--yes|-y] [--dry-run]")
+		fmt.Fprintln(os.Stderr, "chrome restore: ERROR usage: gitmap chrome restore <tarball> [--into <dir>] [--force|-f] [--yes|-y] [--dry-run] [--no-verify]")
 		os.Exit(2)
 	}
 	src := args[0]
 	dst := chromeUserDataDir()
-	force, yes, dryRun := false, false, false
+	force, yes, dryRun, skipVerify := false, false, false, false
 	for i := 1; i < len(args); i++ {
 		switch args[i] {
 		case "--into":
@@ -57,6 +64,20 @@ func runChromeRestore(args []string) {
 			yes = true
 		case "--dry-run":
 			dryRun = true
+		case "--no-verify":
+			skipVerify = true
+		}
+	}
+	if !skipVerify {
+		ok, miss, err := verifyChromeManifest(src)
+		switch {
+		case err != nil:
+			fmt.Fprintf(os.Stderr, "chrome restore: WARN checksum verify skipped: %v\n", err)
+		case !ok:
+			fmt.Fprintf(os.Stderr, "chrome restore: ERROR checksum mismatch in %d file(s):\n  - %s\n  rerun with --no-verify to override\n", len(miss), strings.Join(miss, "\n  - "))
+			os.Exit(1)
+		default:
+			fmt.Printf("\033[1;92m✓ checksum verified\033[0m  %s\n", src+chromeManifestSuffix)
 		}
 	}
 	if err := os.MkdirAll(dst, 0o755); err != nil {

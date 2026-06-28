@@ -304,6 +304,19 @@ func topLevelCmds() map[string]string {
 		"CmdOrphans":                       CmdOrphans,
 		"CmdDedupe":                        CmdDedupe,
 		"CmdSize":                          CmdSize,
+		"CmdReleaseNotes":                  CmdReleaseNotes,
+		"CmdReleaseDry":                    CmdReleaseDry,
+		"CmdTagRename":                     CmdTagRename,
+		"CmdRecent":                        CmdRecent,
+		"CmdRecentAlias":                   CmdRecentAlias,
+		"CmdTodo":                          CmdTodo,
+		"CmdOpen":                          CmdOpen,
+		"CmdOpenAlias":                     CmdOpenAlias,
+		"CmdPR":                            CmdPR,
+		"CmdBlameStats":                    CmdBlameStats,
+		"CmdSnapshot":                      CmdSnapshot,
+		"CmdRollback":                      CmdRollback,
+		"CmdGuard":                         CmdGuard,
 	}
 }
 

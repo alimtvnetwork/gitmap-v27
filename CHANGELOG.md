@@ -1,6 +1,12 @@
 # Changelog
 
+## v6.60.0 — 2026-06-28
+
+### Added
+- **Resumable `commit-in` (item #3)** — new `gitmap/cmd/commitin/checkpoint` package writes a per-input `state.json` under `<source>/.gitmap/commit-in/state/<fingerprint>.json` after every processed source commit. A re-run after Ctrl-C / crash now skips already-completed SHAs in O(1) instead of re-walking the SQLite runlog. Crash-safe via `write-tmp + rename`; corrupted state files reset cleanly without failing the run.
+
 ## v6.59.0 — 2026-06-28
+
 
 ### Added
 - **Global `--quiet` / `--no-color` env vars (item #13)** — new `gitmap/uipref` package centralizes `GITMAP_QUIET`, `GITMAP_NO_COLOR`, and the cross-tool `NO_COLOR` convention. Wired into the shared clone spinner first so `cfr` / `cfrp` / `clone` / `clone-next` honor it immediately; remaining decorative call sites (chrome profile copy, history, backup, ssh status) will adopt the same helper.

@@ -11,7 +11,7 @@ const flags = [
 const CloneCommandPage = () => {
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">gitmap-v26 clone</h1>
+      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">gitmap clone</h1>
       <p className="text-muted-foreground mb-2">
         Clone repositories from a structured output file (JSON, CSV, or text), or clone a single
         repository directly from a Git URL.
@@ -23,7 +23,7 @@ const CloneCommandPage = () => {
       <section className="space-y-8">
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Usage</h2>
-          <CodeBlock code={`gitmap-v26 clone <source|json|csv|text|url> [folder] [flags]`} title="Syntax" />
+          <CodeBlock code={`gitmap clone <source|json|csv|text|url> [folder] [flags]`} title="Syntax" />
           <p className="text-sm text-muted-foreground mt-2">
             Shorthands <code className="docs-inline-code">json</code>,{" "}
             <code className="docs-inline-code">csv</code>, and{" "}
@@ -63,7 +63,7 @@ const CloneCommandPage = () => {
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Examples</h2>
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-4 docs-h3">Clone from a direct URL (versioned — auto-flattened)</h3>
-          <CodeBlock code={`gitmap-v26 clone https://github.com/alimtvnetwork/wp-onboarding-v13.git`} title="Terminal" />
+          <CodeBlock code={`gitmap clone https://github.com/alimtvnetwork/wp-onboarding-v13.git`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Output"
@@ -75,10 +75,10 @@ Cloned wp-onboarding-v13 successfully.
           />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Clone URL into a custom folder</h3>
-          <CodeBlock code={`gitmap-v26 clone https://github.com/alimtvnetwork/wp-alim.git "my-project"`} title="Terminal" />
+          <CodeBlock code={`gitmap clone https://github.com/alimtvnetwork/wp-alim.git "my-project"`} title="Terminal" />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Clone from JSON scan output</h3>
-          <CodeBlock code={`gitmap-v26 clone json --target-dir D:\\projects`} title="Terminal" />
+          <CodeBlock code={`gitmap clone json --target-dir D:\\projects`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Output"
@@ -90,7 +90,7 @@ Clone complete: 12 succeeded, 0 failed`}
           />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Safe-pull existing repos</h3>
-          <CodeBlock code={`gitmap-v26 c csv --safe-pull`} title="Terminal" />
+          <CodeBlock code={`gitmap c csv --safe-pull`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Output"
@@ -102,7 +102,7 @@ Clone complete: 8 succeeded, 0 failed`}
           />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Verbose text-file clone</h3>
-          <CodeBlock code={`gitmap-v26 clone text --verbose`} title="Terminal" />
+          <CodeBlock code={`gitmap clone text --verbose`} title="Terminal" />
         </div>
 
         <hr className="docs-hr" />

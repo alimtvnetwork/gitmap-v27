@@ -41,11 +41,8 @@ const HomePage = () => {
         <div className="reveal">
           <div className="flex items-center justify-center gap-3 mb-4">
             <h1 className="text-4xl md:text-6xl font-heading font-bold docs-h1 text-shimmer tracking-tight">
-              gitmap-v26
+              gitmap
             </h1>
-            <span className="rounded-sm border border-border bg-card px-2 py-0.5 text-xs font-mono text-muted-foreground shadow-sm">
-              {VERSION}
-            </span>
           </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed font-sans">
             Scan a folder tree for Git repos, generate structured clone files, and
@@ -80,7 +77,7 @@ const HomePage = () => {
             </div>
 
             <p className="mx-auto mt-6 max-w-2xl text-xs text-muted-foreground font-sans leading-relaxed">
-              Uninstall removes the <code className="font-mono text-foreground">gitmap-v26</code> binary and its PATH entries, then prompts before deleting your data folder
+              Uninstall removes the <code className="font-mono text-foreground">gitmap</code> binary and its PATH entries, then prompts before deleting your data folder
               (<code className="font-mono text-foreground">%APPDATA%\gitmap-v26</code> on Windows, <code className="font-mono text-foreground">~/.config/gitmap-v26</code> on Linux/macOS).
               Pass <code className="font-mono text-foreground">--keep-data</code> to always keep it, or <code className="font-mono text-foreground">-y</code>/<code className="font-mono text-foreground">--yes</code> to skip the prompt.
             </p>

@@ -4,7 +4,7 @@ import TerminalDemo from "@/components/docs/TerminalDemo";
 import { FolderOpen, Search, Terminal, Layers, Zap } from "lucide-react";
 
 const directJumpDemo = [
-  { text: "gitmap-v26 cd myrepo", type: "input" as const, delay: 800 },
+  { text: "gitmap cd myrepo", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  → /home/user/projects/github/user/myrepo", type: "accent" as const },
   { text: "", type: "output" as const },
@@ -13,7 +13,7 @@ const directJumpDemo = [
 ];
 
 const fuzzyDemo = [
-  { text: "gitmap-v26 cd apii", type: "input" as const, delay: 800 },
+  { text: "gitmap cd apii", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: '  ✗ No repo found matching "apii"', type: "output" as const },
   { text: "", type: "output" as const },
@@ -27,7 +27,7 @@ const fuzzyDemo = [
 ];
 
 const pickerDemo = [
-  { text: "gitmap-v26 cd repos", type: "input" as const, delay: 800 },
+  { text: "gitmap cd repos", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  REPOS (42 tracked)", type: "header" as const },
   { text: "  ──────────────────", type: "output" as const },
@@ -55,7 +55,7 @@ const flags = [
 const helpText = `cd (go) — Navigate to a tracked repo directory
 
 Alias:    go
-Usage:    gitmap-v26 cd <repo-name|repos> [flags]
+Usage:    gitmap cd <repo-name|repos> [flags]
 
 Arguments:
   <repo-name>    Exact repo name, slug, or alias to navigate to
@@ -67,13 +67,13 @@ Flags:
   --verbose        Show path resolution details
 
 Prerequisites:
-  • Run 'gitmap-v26 scan' first to populate the database
-  • Run 'gitmap-v26 setup' to install the gcd shell wrapper
+  • Run 'gitmap scan' first to populate the database
+  • Run 'gitmap setup' to install the gcd shell wrapper
 
 Examples:
-  gitmap-v26 cd myrepo              Jump to repo directory
-  gitmap-v26 cd repos               Interactive repo picker
-  gitmap-v26 cd repos --group work  Pick from work group only
+  gitmap cd myrepo              Jump to repo directory
+  gitmap cd repos               Interactive repo picker
+  gitmap cd repos --group work  Pick from work group only
   gcd myrepo                    Shell wrapper (same behavior)
   gcd repos                     Shell wrapper with picker
 
@@ -91,25 +91,25 @@ const CdPage = () => (
     </p>
 
     <h2 className="text-xl font-heading font-semibold mt-8 mb-3 docs-h2">Help Output</h2>
-    <CodeBlock code={helpText} language="bash" title="gitmap-v26 cd --help" />
+    <CodeBlock code={helpText} language="bash" title="gitmap cd --help" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Direct Navigation</h2>
     <p className="text-sm text-muted-foreground mb-3">
       Jump directly to a repo by its name, slug, or alias:
     </p>
-    <TerminalDemo title="gitmap-v26 cd — direct jump" lines={directJumpDemo} autoPlay />
+    <TerminalDemo title="gitmap cd — direct jump" lines={directJumpDemo} autoPlay />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Fuzzy Matching</h2>
     <p className="text-sm text-muted-foreground mb-3">
-      When no exact match is found, gitmap-v26 suggests the closest repos ranked by Levenshtein distance:
+      When no exact match is found, gitmap suggests the closest repos ranked by Levenshtein distance:
     </p>
-    <TerminalDemo title="gitmap-v26 cd — fuzzy suggestion" lines={fuzzyDemo} />
+    <TerminalDemo title="gitmap cd — fuzzy suggestion" lines={fuzzyDemo} />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Interactive Picker</h2>
     <p className="text-sm text-muted-foreground mb-3">
       Use <code className="docs-inline-code">repos</code> as the argument for an fzf-style picker with type-to-filter:
     </p>
-    <TerminalDemo title="gitmap-v26 cd repos — interactive picker" lines={pickerDemo} />
+    <TerminalDemo title="gitmap cd repos — interactive picker" lines={pickerDemo} />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-4 docs-h2">Features</h2>
     <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -146,7 +146,7 @@ const CdPage = () => (
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Shell Wrapper — gcd</h2>
     <p className="text-sm text-muted-foreground mb-3">
-      The <code className="docs-inline-code">gcd</code> function is auto-installed by <code className="docs-inline-code">gitmap-v26 setup</code> into
+      The <code className="docs-inline-code">gcd</code> function is auto-installed by <code className="docs-inline-code">gitmap setup</code> into
       your shell profile. It captures the stdout path and performs the actual <code className="docs-inline-code">cd</code>:
     </p>
     <CodeBlock
@@ -154,11 +154,11 @@ const CdPage = () => (
       title="~/.bashrc (auto-installed)"
       code={`gcd() {
   local dir
-  dir=$(gitmap-v26 cd "$@" 2>/dev/null)
+  dir=$(gitmap cd "$@" 2>/dev/null)
   if [ -n "$dir" ] && [ -d "$dir" ]; then
     cd "$dir" || return
   else
-    gitmap-v26 cd "$@"
+    gitmap cd "$@"
   fi
 }`}
     />
@@ -167,12 +167,12 @@ const CdPage = () => (
     </p>
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Examples</h2>
-    <CodeBlock code="gitmap-v26 cd myrepo" title="Jump to repo by name" />
-    <CodeBlock code="gitmap-v26 go myrepo" title="Using alias 'go'" />
-    <CodeBlock code="gitmap-v26 cd repos" title="Interactive picker" />
-    <CodeBlock code="gitmap-v26 cd repos --group backend" title="Pick from group" />
+    <CodeBlock code="gitmap cd myrepo" title="Jump to repo by name" />
+    <CodeBlock code="gitmap go myrepo" title="Using alias 'go'" />
+    <CodeBlock code="gitmap cd repos" title="Interactive picker" />
+    <CodeBlock code="gitmap cd repos --group backend" title="Pick from group" />
     <CodeBlock code="gcd myrepo" title="Shell wrapper" />
-    <CodeBlock code="gitmap-v26 cd -A api" title="Navigate via alias" />
+    <CodeBlock code="gitmap cd -A api" title="Navigate via alias" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Resolution Order</h2>
     <div className="space-y-2 text-sm text-muted-foreground mb-8">

@@ -58,11 +58,11 @@ const ReplacePage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v26 replace "<old>" "<new>"     # literal text replace
-gitmap-v26 replace -N                   # bump v(K-N)..v(K-1) -> vK
-gitmap-v26 replace --audit              # report-only scan, no writes
-gitmap-v26 replace all                  # bump v1..v(K-1) -> vK
-gitmap-v26 rpl "<old>" "<new>"          # short alias`} />
+        <CodeBlock code={`gitmap replace "<old>" "<new>"     # literal text replace
+gitmap replace -N                   # bump v(K-N)..v(K-1) -> vK
+gitmap replace --audit              # report-only scan, no writes
+gitmap replace all                  # bump v1..v(K-1) -> vK
+gitmap rpl "<old>" "<new>"          # short alias`} />
       </section>
 
       <section>
@@ -92,19 +92,19 @@ gitmap-v26 rpl "<old>" "<new>"          # short alias`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Literal swap, preview only
-gitmap-v26 replace "old-name" "new-name" --dry-run
+gitmap replace "old-name" "new-name" --dry-run
 
 # Bump the previous 3 versions to the current one (reads -vK from origin)
-gitmap-v26 replace -3 -y
+gitmap replace -3 -y
 
 # Bump every prior version
-gitmap-v26 replace all -y
+gitmap replace all -y
 
 # CI audit gate: fail if any legacy URL still appears
-gitmap-v26 replace --audit
+gitmap replace --audit
 
 # Restrict to Go + Markdown only
-gitmap-v26 replace "github.com/old" "github.com/new" --ext .go,.md -y`} />
+gitmap replace "github.com/old" "github.com/new" --ext .go,.md -y`} />
       </section>
 
       <section>

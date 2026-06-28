@@ -69,8 +69,8 @@ const MergeBothPage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v26 merge-both LEFT RIGHT [flags]
-gitmap-v26 mb         LEFT RIGHT [flags]`} />
+        <CodeBlock code={`gitmap merge-both LEFT RIGHT [flags]
+gitmap mb         LEFT RIGHT [flags]`} />
         <p className="text-sm text-muted-foreground mt-2">
           LEFT and RIGHT can each be a folder path or a remote git URL (optionally suffixed with <code>:branch</code>).
         </p>
@@ -130,13 +130,13 @@ gitmap-v26 mb         LEFT RIGHT [flags]`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# Interactive two-way merge between two local folders
-gitmap-v26 merge-both ./gitmap-v26 ./gitmap-v26
+gitmap merge-both ./gitmap ./gitmap-v26
 
 # Non-interactive (newer wins by default) — commits + pushes the URL side
-gitmap-v26 mb ./local https://github.com/owner/repo -y
+gitmap mb ./local https://github.com/owner/repo -y
 
 # Preview a LEFT-wins merge without writing
-gitmap-v26 merge-both ./a ./b -y --prefer-left --dry-run`} />
+gitmap merge-both ./a ./b -y --prefer-left --dry-run`} />
       </section>
 
       <section>

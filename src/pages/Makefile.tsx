@@ -9,7 +9,7 @@ const targets = [
   },
   {
     name: "run",
-    desc: "Build, deploy, and run gitmap-v26 with optional arguments.",
+    desc: "Build, deploy, and run gitmap with optional arguments.",
     example: 'make run ARGS="list --json"',
   },
   {
@@ -81,7 +81,7 @@ const MakefilePage = () => {
           <h2 className="text-xl font-heading font-semibold mb-3 text-foreground">Passing arguments</h2>
           <p className="text-muted-foreground mb-3">
             The <code className="font-mono text-primary">run</code> target forwards
-            everything in <code className="font-mono text-primary">ARGS</code> to gitmap-v26 after building:
+            everything in <code className="font-mono text-primary">ARGS</code> to gitmap after building:
           </p>
           <CodeBlock
             code={`make run ARGS="list --json"\nmake run ARGS="scan ~/projects"\nmake run ARGS="latest-branch --top 5"`}

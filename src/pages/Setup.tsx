@@ -4,7 +4,7 @@ import TerminalDemo from "@/components/docs/TerminalDemo";
 import { Settings, Terminal, KeyRound, CheckCircle, Zap } from "lucide-react";
 
 const setupDemo = [
-  { text: "gitmap-v26 setup", type: "input" as const, delay: 800 },
+  { text: "gitmap setup", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  ✓ Git config: core.longpaths = true", type: "accent" as const },
   { text: "  ✓ Git config: diff.tool = vscode", type: "accent" as const },
@@ -19,7 +19,7 @@ const setupDemo = [
 ];
 
 const dryRunDemo = [
-  { text: "gitmap-v26 setup --dry-run", type: "input" as const, delay: 800 },
+  { text: "gitmap setup --dry-run", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  [dry-run] Would set core.longpaths = true", type: "output" as const },
   { text: "  [dry-run] Would set diff.tool = vscode", type: "output" as const },
@@ -29,14 +29,14 @@ const dryRunDemo = [
   { text: "  No changes made (dry run)", type: "header" as const },
 ];
 
-const helpText = `# gitmap-v26 setup
+const helpText = `# gitmap setup
 
 Apply global Git configuration, install the gcd shell wrapper,
 and set up tab completions.
 
 ## Usage
 
-    gitmap-v26 setup [flags]
+    gitmap setup [flags]
 
 ## Flags
 
@@ -62,7 +62,7 @@ and set up tab completions.
 
 ### Example 1: First-time setup
 
-    gitmap-v26 setup
+    gitmap setup
 
     ✓ Git config: core.longpaths = true
     ✓ Git config: diff.tool = vscode
@@ -72,7 +72,7 @@ and set up tab completions.
 
 ### Example 2: Preview changes
 
-    gitmap-v26 setup --dry-run
+    gitmap setup --dry-run
 
     [dry-run] Would set core.longpaths = true
     [dry-run] Would install gcd shell function
@@ -82,29 +82,29 @@ and set up tab completions.
 
 - cd (go) — Navigate to repos using gcd
 - completion — Manage shell completions separately
-- config — View/edit gitmap-v26 configuration`;
+- config — View/edit gitmap configuration`;
 
-const bashWrapper = `# Installed by gitmap-v26 setup into ~/.bashrc
+const bashWrapper = `# Installed by gitmap setup into ~/.bashrc
 gcd() {
   local dest
-  dest="$(gitmap-v26 cd "$@")"
+  dest="$(gitmap cd "$@")"
   if [ -n "$dest" ] && [ -d "$dest" ]; then
     cd "$dest" || return
   fi
 }`;
 
-const zshWrapper = `# Installed by gitmap-v26 setup into ~/.zshrc
+const zshWrapper = `# Installed by gitmap setup into ~/.zshrc
 gcd() {
   local dest
-  dest="$(gitmap-v26 cd "$@")"
+  dest="$(gitmap cd "$@")"
   if [[ -n "$dest" ]] && [[ -d "$dest" ]]; then
     cd "$dest" || return
   fi
 }`;
 
-const powershellWrapper = `# Installed by gitmap-v26 setup into $PROFILE
+const powershellWrapper = `# Installed by gitmap setup into $PROFILE
 function gcd {
-  $dest = gitmap-v26 cd @args
+  $dest = gitmap cd @args
   if ($dest -and (Test-Path $dest)) {
     Set-Location $dest
   }
@@ -135,7 +135,7 @@ const features = [
   {
     icon: KeyRound,
     title: "Tab Completions",
-    desc: "Auto-installs shell completions for all gitmap-v26 commands, repos, groups, and aliases",
+    desc: "Auto-installs shell completions for all gitmap commands, repos, groups, and aliases",
   },
   {
     icon: CheckCircle,
@@ -151,13 +151,13 @@ const Setup = () => {
         <h1 className="docs-h1">Setup</h1>
         <p className="text-lg text-muted-foreground mb-8 font-body">
           One command to configure Git globals, install the <code className="docs-inline-code">gcd</code> navigation wrapper,
-          and enable shell tab-completions for every gitmap-v26 command.
+          and enable shell tab-completions for every gitmap command.
         </p>
 
         {/* Terminal Preview */}
         <section className="mb-12">
           <h2 className="docs-h2">First-Time Setup</h2>
-          <TerminalDemo lines={setupDemo} title="gitmap-v26 setup" />
+          <TerminalDemo lines={setupDemo} title="gitmap setup" />
         </section>
 
         {/* Features */}
@@ -179,7 +179,7 @@ const Setup = () => {
         {/* Help Output */}
         <section className="mb-12">
           <h2 className="docs-h2">--help Output</h2>
-          <CodeBlock code={helpText} language="markdown" title="gitmap-v26 setup --help" />
+          <CodeBlock code={helpText} language="markdown" title="gitmap setup --help" />
         </section>
 
         {/* Git Config Profile */}
@@ -197,7 +197,7 @@ const Setup = () => {
           <h2 className="docs-h2">Shell Wrapper: gcd</h2>
           <p className="text-muted-foreground mb-4 font-body">
             The <code className="docs-inline-code">gcd</code> function captures the path printed by{" "}
-            <code className="docs-inline-code">gitmap-v26 cd</code> and performs the actual directory change.
+            <code className="docs-inline-code">gitmap cd</code> and performs the actual directory change.
             Setup detects the active shell and installs the appropriate version.
           </p>
 
@@ -210,7 +210,7 @@ const Setup = () => {
           <div className="mt-4 p-3 rounded-lg border border-border bg-muted/30">
             <p className="text-sm text-muted-foreground font-body">
               <strong>Marker-based idempotency:</strong> Each wrapper is preceded by a{" "}
-              <code className="docs-inline-code"># gitmap-v26 cd wrapper</code> comment. Setup checks for this
+              <code className="docs-inline-code"># gitmap cd wrapper</code> comment. Setup checks for this
               marker before writing to avoid duplicate installs.
             </p>
           </div>
@@ -223,7 +223,7 @@ const Setup = () => {
             Use <code className="docs-inline-code">--dry-run</code> to preview all changes without modifying
             any files or Git config.
           </p>
-          <TerminalDemo lines={dryRunDemo} title="gitmap-v26 setup --dry-run" />
+          <TerminalDemo lines={dryRunDemo} title="gitmap setup --dry-run" />
         </section>
 
         {/* Flags Table */}
@@ -268,7 +268,7 @@ const Setup = () => {
             </li>
             <li>
               <a href="/config" className="text-primary hover:underline font-medium">config</a>{" "}
-              — View and edit gitmap-v26 configuration
+              — View and edit gitmap configuration
             </li>
             <li>
               <a href="/commands" className="text-primary hover:underline font-medium">commands</a>{" "}

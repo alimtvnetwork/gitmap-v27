@@ -131,11 +131,11 @@ const InstallGitmapPage = () => {
           />
           <Card className="p-4 mb-4">
             <h3 className="text-sm font-semibold mb-2 docs-h3">In-place update</h3>
-            <CodeBlock code={`gitmap-v26 update`} title="Any platform" language="bash" />
+            <CodeBlock code={`gitmap update`} title="Any platform" language="bash" />
           </Card>
           <Card className="p-4">
             <h3 className="text-sm font-semibold mb-2 docs-h3">Pin to a specific version</h3>
-            <CodeBlock code={`gitmap-v26 self-install --version v3.99.0 --yes`} title="Any platform" language="bash" />
+            <CodeBlock code={`gitmap self-install --version v3.99.0 --yes`} title="Any platform" language="bash" />
             <p className="text-xs text-muted-foreground mt-2">
               <code className="docs-inline-code">--yes</code> skips the install-folder prompt.{" "}
               <code className="docs-inline-code">--shell-mode &lt;mode&gt;</code> controls which profiles get the
@@ -153,9 +153,9 @@ const InstallGitmapPage = () => {
             kicker="Run these in order if anything looks off after install or update."
           />
           <CodeBlock
-            code={`gitmap-v26 version                   # confirms binary on PATH + build info
-gitmap-v26 doctor                    # PATH, profile snippets, deploy folder, DB
-gitmap-v26 setup print-path-snippet  # prints the exact bytes the installer wrote`}
+            code={`gitmap version                   # confirms binary on PATH + build info
+gitmap doctor                    # PATH, profile snippets, deploy folder, DB
+gitmap setup print-path-snippet  # prints the exact bytes the installer wrote`}
             title="Verification"
             language="bash"
           />
@@ -166,7 +166,7 @@ gitmap-v26 setup print-path-snippet  # prints the exact bytes the installer wrot
           <SectionHeader
             icon={Trash2}
             title="Uninstall"
-            kicker="First tries `gitmap-v26 self-uninstall`; falls back to a manual sweep if gitmap-v26 is no longer on PATH."
+            kicker="First tries `gitmap self-uninstall`; falls back to a manual sweep if gitmap is no longer on PATH."
           />
           <PlatformBlock commands={uninstallCmds} />
           <div className="mt-4 overflow-x-auto">
@@ -180,7 +180,7 @@ gitmap-v26 setup print-path-snippet  # prints the exact bytes the installer wrot
               <tbody className="divide-y divide-border">
                 {[
                   ["--yes / -Yes", "Skip the “delete user data?” prompt and assume yes"],
-                  ["--keep-data", "Always keep %APPDATA%\\gitmap-v26 (Windows) / ~/.config/gitmap-v26 (Unix)"],
+                  ["--keep-data", "Always keep %APPDATA%\\gitmap (Windows) / ~/.config/gitmap (Unix)"],
                   ["--dir <path>", "Override the auto-detected deploy root"],
                 ].map(([flag, desc]) => (
                   <tr key={flag} className="hover:bg-muted/30 transition-colors">
@@ -227,7 +227,7 @@ gitmap-v26 setup print-path-snippet  # prints the exact bytes the installer wrot
             Snippet templates live in{" "}
             <code className="docs-inline-code">gitmap-v26/constants/constants_pathsnippet.go</code> so install.sh,
             install.ps1, and{" "}
-            <code className="docs-inline-code">gitmap-v26 setup print-path-snippet</code> emit byte-identical output.
+            <code className="docs-inline-code">gitmap setup print-path-snippet</code> emit byte-identical output.
           </p>
         </section>
       </div>

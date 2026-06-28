@@ -18,7 +18,7 @@ const CommitInExamples = () => (
     <CodeBlock
       language="bash"
       code={`# folder exists, no .git/ yet — commit-in will run \`git init\` for you
-gitmap-v26 commit-in ./my-project https://github.com/me/my-project-archive.git`}
+gitmap commit-in ./my-project https://github.com/me/my-project-archive.git`}
     />
 
     <h3 className="font-semibold text-sm mt-6 mb-2 text-foreground">
@@ -34,7 +34,7 @@ gitmap-v26 commit-in ./my-project https://github.com/me/my-project-archive.git`}
       language="bash"
       code={`# target = ./canonical (auto-init if missing)
 # inputs = local folder + 2 remote forks, walked oldest -> newest
-gitmap-v26 cin ./canonical \\
+gitmap cin ./canonical \\
     ./old-local-checkout,https://github.com/me/old-fork.git,git@github.com:me/new-fork.git`}
     />
 
@@ -47,7 +47,7 @@ gitmap-v26 cin ./canonical \\
     </p>
     <CodeBlock
       language="bash"
-      code={`gitmap-v26 commit-in ./brand-new-canonical \\
+      code={`gitmap commit-in ./brand-new-canonical \\
     https://github.com/me/legacy-v1.git,https://github.com/me/legacy-v2.git`}
     />
 
@@ -66,13 +66,13 @@ gitmap-v26 cin ./canonical \\
     <CodeBlock
       language="bash"
       code={`$ ls ./
-gitmap-v26         <-- TARGET (the one receiving appended commits)
+gitmap         <-- TARGET (the one receiving appended commits)
 gitmap-v26
 gitmap-v26
 gitmap-v26
 ...
 gitmap-v26
-gitmap-v26     <-- newest sibling`}
+gitmap     <-- newest sibling`}
     />
     <p className="text-sm text-muted-foreground mb-2 mt-3">
       Then the keywords expand like this — <em>no manual list needed</em>:
@@ -87,23 +87,23 @@ gitmap-v26     <-- newest sibling`}
         </thead>
         <tbody>
           <tr className="border-t border-border">
-            <td className="px-4 py-2 font-mono text-primary">gitmap-v26 cin ./gitmap-v26 all</td>
-            <td className="px-4 py-2 font-mono text-xs text-muted-foreground">gitmap-v26, gitmap-v26, …, gitmap-v26 (every sibling, oldest first)</td>
+            <td className="px-4 py-2 font-mono text-primary">gitmap cin ./gitmap all</td>
+            <td className="px-4 py-2 font-mono text-xs text-muted-foreground">gitmap-v26, gitmap-v26, …, gitmap (every sibling, oldest first)</td>
           </tr>
           <tr className="border-t border-border">
-            <td className="px-4 py-2 font-mono text-primary">gitmap-v26 cin ./gitmap-v26 -5</td>
+            <td className="px-4 py-2 font-mono text-primary">gitmap cin ./gitmap -5</td>
             <td className="px-4 py-2 font-mono text-xs text-muted-foreground">gitmap-v26, gitmap-v26, gitmap-v26, gitmap-v26, gitmap-v26</td>
           </tr>
           <tr className="border-t border-border">
-            <td className="px-4 py-2 font-mono text-primary">gitmap-v26 cin ./gitmap-v26 -1</td>
-            <td className="px-4 py-2 font-mono text-xs text-muted-foreground">gitmap-v26 (just the newest)</td>
+            <td className="px-4 py-2 font-mono text-primary">gitmap cin ./gitmap -1</td>
+            <td className="px-4 py-2 font-mono text-xs text-muted-foreground">gitmap (just the newest)</td>
           </tr>
         </tbody>
       </table>
     </div>
     <p className="text-sm text-muted-foreground mb-2">
       And remember the TARGET (<code>./gitmap-v26</code>) doesn't have to exist
-      yet — if it's missing, commit-in does <code>mkdir -p ./gitmap-v26 && git init</code>{" "}
+      yet — if it's missing, commit-in does <code>mkdir -p ./gitmap && git init</code>{" "}
       first, then appends every sibling's history into the new repo.
       One command takes you from <em>"I have 19 versioned snapshots"</em> to{" "}
       <em>"I have one git repo with 19 versions of history in author order."</em>
@@ -111,10 +111,10 @@ gitmap-v26     <-- newest sibling`}
     <CodeBlock
       language="bash"
       code={`# Every sibling, save the resolved settings as the default profile
-gitmap-v26 commit-in ./gitmap-v26 all --save-profile Default --set-default
+gitmap commit-in ./gitmap all --save-profile Default --set-default
 
 # Just the last 3 siblings, dry-run, with per-language new-function intel
-gitmap-v26 cin ./gitmap-v26 -3 --dry-run --function-intel on --languages Go,TypeScript`}
+gitmap cin ./gitmap -3 --dry-run --function-intel on --languages Go,TypeScript`}
     />
 
     <h3 className="font-semibold text-sm mt-6 mb-2 text-foreground">
@@ -122,7 +122,7 @@ gitmap-v26 cin ./gitmap-v26 -3 --dry-run --function-intel on --languages Go,Type
     </h3>
     <CodeBlock
       language="bash"
-      code={`gitmap-v26 cin git@github.com:me/canonical.git \\
+      code={`gitmap cin git@github.com:me/canonical.git \\
     https://github.com/me/old-fork.git,https://github.com/me/new-fork.git \\
     --author-name "Jane Doe" --author-email jane@example.com \\
     --message-exclude "StartsWith:Signed-off-by:,Contains:[skip ci]" \\
@@ -134,7 +134,7 @@ gitmap-v26 cin ./gitmap-v26 -3 --dry-run --function-intel on --languages Go,Type
     </h3>
     <CodeBlock
       language="bash"
-      code={`gitmap-v26 cin ./canonical all --default \\
+      code={`gitmap cin ./canonical all --default \\
     --override-messages "Refine implementation,Improve module" \\
     --override-only-weak`}
     />
@@ -142,7 +142,7 @@ gitmap-v26 cin ./gitmap-v26 -3 --dry-run --function-intel on --languages Go,Type
     <h3 className="font-semibold text-sm mt-6 mb-2 text-foreground">
       7 · Headless CI run (fail loudly on any unset value)
     </h3>
-    <CodeBlock language="bash" code={`gitmap-v26 cin ./canonical all --profile CI --no-prompt`} />
+    <CodeBlock language="bash" code={`gitmap cin ./canonical all --profile CI --no-prompt`} />
 
     <h3 className="font-semibold text-sm mt-6 mb-2 text-foreground">
       8 · Mirror tags + auto-create release branches (NEW)
@@ -153,24 +153,24 @@ gitmap-v26 cin ./gitmap-v26 -3 --dry-run --function-intel on --languages Go,Type
       NEW commit SHA produced by the replay (not the original source SHA, which doesn't
       exist in the destination history). If the tag matches the canonical semver shape,
       it ALSO creates a <code>release/&lt;tag&gt;</code> branch at the same new SHA, so
-      it's interchangeable with <code>gitmap-v26 release-branch</code> tooling.
+      it's interchangeable with <code>gitmap release-branch</code> tooling.
     </p>
     <CodeBlock
       language="bash"
       code={`# Default: annotated tags only, auto release branch ON
-gitmap-v26 cin ./canonical https://github.com/me/legacy.git
+gitmap cin ./canonical https://github.com/me/legacy.git
 
 # Mirror EVERY tag including lightweight bookmarks
-gitmap-v26 cin ./canonical ./old --tags All
+gitmap cin ./canonical ./old --tags All
 
 # Mirror tags but skip the auto release branch (you'll cut releases manually)
-gitmap-v26 cin ./canonical ./old --no-release-branch
+gitmap cin ./canonical ./old --no-release-branch
 
 # Custom prefix — branches become 'releases/v1.2.3' instead of 'release/v1.2.3'
-gitmap-v26 cin ./canonical ./old --release-branch-prefix releases/
+gitmap cin ./canonical ./old --release-branch-prefix releases/
 
 # Disable tag mirroring entirely
-gitmap-v26 cin ./canonical ./old --tags None`}
+gitmap cin ./canonical ./old --tags None`}
     />
     <p className="text-sm text-muted-foreground mt-3 mb-2">
       The three-way relationship (old SHA → new SHA → mirrored tag → release branch) is

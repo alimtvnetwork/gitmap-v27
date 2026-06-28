@@ -6,7 +6,7 @@ import { Link2, Zap, Shield, Search } from "lucide-react";
 const helpText = `alias (a) — Assign short names to repositories
 
 Alias:    a
-Usage:    gitmap-v26 alias <subcommand> [args]
+Usage:    gitmap alias <subcommand> [args]
 
 Subcommands:
   set <alias> <slug>    Create or reassign an alias
@@ -20,14 +20,14 @@ Flags:
   -A <alias>            Global flag — resolve target repo by alias
 
 Prerequisites:
-  • Run 'gitmap-v26 scan' first to populate the database
+  • Run 'gitmap scan' first to populate the database
 
 Examples:
-  gitmap-v26 alias set api github/user/api-gateway
-  gitmap-v26 a list
-  gitmap-v26 alias suggest
-  gitmap-v26 pull -A api
-  gitmap-v26 cd -A web
+  gitmap alias set api github/user/api-gateway
+  gitmap a list
+  gitmap alias suggest
+  gitmap pull -A api
+  gitmap cd -A web
 
 See Also:
   cd         Navigate to repo by alias
@@ -35,7 +35,7 @@ See Also:
   scan       Populate database for alias targets`;
 
 const listDemo = [
-  { text: "gitmap-v26 alias list", type: "input" as const, delay: 800 },
+  { text: "gitmap alias list", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  Aliases (4):", type: "header" as const },
   { text: "  ──────────────────────────────────────────────", type: "output" as const },
@@ -48,7 +48,7 @@ const listDemo = [
 ];
 
 const suggestDemo = [
-  { text: "gitmap-v26 alias suggest", type: "input" as const, delay: 800 },
+  { text: "gitmap alias suggest", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  Suggested aliases (3 unaliased repos):", type: "header" as const },
   { text: "", type: "output" as const },
@@ -60,22 +60,22 @@ const suggestDemo = [
 ];
 
 const usageDemo = [
-  { text: "gitmap-v26 pull -A api", type: "input" as const, delay: 800 },
+  { text: "gitmap pull -A api", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  Resolving alias: api → github/user/api-gateway", type: "output" as const },
   { text: "  → /home/user/projects/github/user/api-gateway", type: "accent" as const },
   { text: "", type: "output" as const },
   { text: "  Already up to date.", type: "output" as const },
   { text: "", type: "output" as const },
-  { text: "gitmap-v26 cd -A web", type: "input" as const, delay: 800 },
+  { text: "gitmap cd -A web", type: "input" as const, delay: 800 },
   { text: "  → /home/user/projects/github/user/web-frontend", type: "accent" as const },
 ];
 
 const features = [
   { icon: Link2, title: "Short Names", desc: "Replace long slugs with concise aliases like 'api', 'web', or 'infra'." },
-  { icon: Zap, title: "Run From Anywhere", desc: "Execute any gitmap-v26 command against a repo using -A <alias> without changing directory." },
+  { icon: Zap, title: "Run From Anywhere", desc: "Execute any gitmap command against a repo using -A <alias> without changing directory." },
   { icon: Search, title: "Auto-Suggest", desc: "During scan/rescan, aliases are suggested based on repo name or slug." },
-  { icon: Shield, title: "Conflict-Safe", desc: "Warns and prompts when an alias collision occurs. Cannot shadow gitmap-v26 commands." },
+  { icon: Shield, title: "Conflict-Safe", desc: "Warns and prompts when an alias collision occurs. Cannot shadow gitmap commands." },
 ];
 
 const commandInteraction = [
@@ -104,25 +104,25 @@ const AliasPage = () => (
     </p>
 
     <h2 className="text-xl font-heading font-semibold mt-8 mb-3 docs-h2">Help Output</h2>
-    <CodeBlock code={helpText} language="bash" title="gitmap-v26 alias --help" />
+    <CodeBlock code={helpText} language="bash" title="gitmap alias --help" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Alias List</h2>
     <p className="text-sm text-muted-foreground mb-3">
       View all defined aliases with their target repos:
     </p>
-    <TerminalDemo title="gitmap-v26 alias list" lines={listDemo} autoPlay />
+    <TerminalDemo title="gitmap alias list" lines={listDemo} autoPlay />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Auto-Suggestion</h2>
     <p className="text-sm text-muted-foreground mb-3">
       Interactively suggest aliases for unaliased repos based on name analysis:
     </p>
-    <TerminalDemo title="gitmap-v26 alias suggest" lines={suggestDemo} />
+    <TerminalDemo title="gitmap alias suggest" lines={suggestDemo} />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Using Aliases (-A Flag)</h2>
     <p className="text-sm text-muted-foreground mb-3">
       Any repo-targeting command accepts <code className="docs-inline-code">-A &lt;alias&gt;</code> to resolve the target:
     </p>
-    <TerminalDemo title="gitmap-v26 — alias in action" lines={usageDemo} />
+    <TerminalDemo title="gitmap — alias in action" lines={usageDemo} />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-4 docs-h2">Features</h2>
     <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -136,19 +136,19 @@ const AliasPage = () => (
     </div>
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Subcommands</h2>
-    <CodeBlock code="gitmap-v26 alias set api github/user/api-gateway" title="Create an alias" />
-    <CodeBlock code="gitmap-v26 a set web github/user/web-frontend" title="Using short alias 'a'" />
-    <CodeBlock code="gitmap-v26 alias list" title="List all aliases" />
-    <CodeBlock code="gitmap-v26 alias show api" title="Show alias details" />
-    <CodeBlock code="gitmap-v26 alias remove api" title="Remove an alias" />
-    <CodeBlock code="gitmap-v26 alias suggest" title="Auto-suggest aliases" />
-    <CodeBlock code="gitmap-v26 alias suggest --apply" title="Auto-accept all suggestions" />
+    <CodeBlock code="gitmap alias set api github/user/api-gateway" title="Create an alias" />
+    <CodeBlock code="gitmap a set web github/user/web-frontend" title="Using short alias 'a'" />
+    <CodeBlock code="gitmap alias list" title="List all aliases" />
+    <CodeBlock code="gitmap alias show api" title="Show alias details" />
+    <CodeBlock code="gitmap alias remove api" title="Remove an alias" />
+    <CodeBlock code="gitmap alias suggest" title="Auto-suggest aliases" />
+    <CodeBlock code="gitmap alias suggest --apply" title="Auto-accept all suggestions" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Global -A Flag Examples</h2>
-    <CodeBlock code="gitmap-v26 pull -A api" title="Pull via alias" />
-    <CodeBlock code="gitmap-v26 exec -A web -- npm test" title="Run command in aliased repo" />
-    <CodeBlock code="gitmap-v26 cd -A infra" title="Navigate to aliased repo" />
-    <CodeBlock code="gitmap-v26 status -A api" title="Check status via alias" />
+    <CodeBlock code="gitmap pull -A api" title="Pull via alias" />
+    <CodeBlock code="gitmap exec -A web -- npm test" title="Run command in aliased repo" />
+    <CodeBlock code="gitmap cd -A infra" title="Navigate to aliased repo" />
+    <CodeBlock code="gitmap status -A api" title="Check status via alias" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3 docs-h2">Command Interaction</h2>
     <div className="rounded-lg border border-border overflow-hidden mb-8">
@@ -187,7 +187,7 @@ const AliasPage = () => (
       <div className="rounded-lg border border-border bg-card p-4">
         <h3 className="font-heading font-semibold text-sm mb-1 text-primary">Command Shadowing</h3>
         <p className="text-xs text-muted-foreground">
-          Alias names cannot match gitmap-v26 command names (e.g., <code className="docs-inline-code">scan</code>, <code className="docs-inline-code">pull</code>).
+          Alias names cannot match gitmap command names (e.g., <code className="docs-inline-code">scan</code>, <code className="docs-inline-code">pull</code>).
         </p>
       </div>
       <div className="rounded-lg border border-border bg-card p-4">

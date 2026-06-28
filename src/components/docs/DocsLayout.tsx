@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import CommandPalette from "@/components/docs/CommandPalette";
 import CopyPaletteButton from "@/components/docs/CopyPaletteButton";
-import { VERSION } from "@/constants/index";
+
 import { useTheme } from "@/hooks/useTheme";
 import { DocsTooltip } from "@/components/docs/DocsTooltip";
 
@@ -27,16 +27,7 @@ const DocsLayout = ({ children }: DocsLayoutProps) => {
                 className="docs-focus-ring shrink-0 rounded-sm border border-sidebar-border bg-sidebar-accent/60 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               />
             </DocsTooltip>
-            <span className="shrink-0 text-sm font-mono text-foreground">gitmap-v26 docs</span>
-            <DocsTooltip label={`Current gitmap-v26 version (${VERSION})`}>
-              <span
-                tabIndex={0}
-                aria-label={`gitmap-v26 version ${VERSION}`}
-                className="docs-focus-ring shrink-0 cursor-default rounded-sm border border-border bg-card px-2 py-0.5 text-[11px] font-mono text-muted-foreground shadow-sm"
-              >
-                {VERSION}
-              </span>
-            </DocsTooltip>
+            <span className="shrink-0 text-sm font-mono text-foreground">gitmap docs</span>
             <div
               role="radiogroup"
               aria-label="Color theme"

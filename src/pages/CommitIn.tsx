@@ -54,9 +54,9 @@ const CommitInPage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v26 commit-in <source> <input1,input2,...> [flags]
-gitmap-v26 cin       <source> all                    [flags]
-gitmap-v26 cin       <source> -5                     [flags]`} />
+        <CodeBlock code={`gitmap commit-in <source> <input1,input2,...> [flags]
+gitmap cin       <source> all                    [flags]
+gitmap cin       <source> -5                     [flags]`} />
         <p className="text-sm text-muted-foreground mt-3">
           <code>&lt;source&gt;</code> is the TARGET repo (the one receiving appended commits).
           Auto-init is fixed: URL → <code>git clone</code>; existing repo → reuse; existing
@@ -135,8 +135,8 @@ gitmap-v26 cin       <source> -5                     [flags]`} />
           code={profileJson}
         />
         <p className="text-xs text-muted-foreground mt-3">
-          <strong>Tip:</strong> let gitmap-v26 write the file for you the first time —
-          <code> gitmap-v26 cin ./canonical all --save-profile Default --set-default</code> —
+          <strong>Tip:</strong> let gitmap write the file for you the first time —
+          <code> gitmap cin ./canonical all --save-profile Default --set-default</code> —
           then open the resulting JSON and tweak. Re-saving requires{" "}
           <code>--save-profile-overwrite</code>. Profiles bind by absolute symlink-resolved
           path, NOT by remote URL, so two clones of the same upstream can carry different

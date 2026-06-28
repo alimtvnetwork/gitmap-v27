@@ -3,7 +3,7 @@ import md from "../../spec/01-app/11-desktop-sync.md?raw";
 
 const DesktopSyncSpecPage = () => (
   <SpecPage
-    title="gitmap-v26 desktop-sync (ds = gd)"
+    title="gitmap desktop-sync (ds = gd)"
     subtitle="Register repos with GitHub Desktop. As of v3.37.0 ds is an alias of github-desktop — no scan required."
     sourcePath="spec/01-app/11-desktop-sync.md"
     markdown={md}

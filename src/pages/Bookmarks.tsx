@@ -17,7 +17,7 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 bookmark list</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap bookmark list</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed overflow-x-auto">
       <div className="text-primary font-bold text-xs">
@@ -81,12 +81,12 @@ const BookmarksPage = () => (
     </div>
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Subcommands</h2>
-    <CodeBlock code='gitmap-v26 bookmark save ssh-scan scan --mode ssh' title="Save a command bookmark" />
-    <CodeBlock code='gitmap-v26 bk save scan-projects scan ./projects --mode ssh --open' title="Save with args and multiple flags" />
-    <CodeBlock code="gitmap-v26 bookmark list" title="List all saved bookmarks" />
-    <CodeBlock code="gitmap-v26 bk list --json" title="List as JSON" />
-    <CodeBlock code="gitmap-v26 bookmark run ssh-scan" title="Replay a saved bookmark" />
-    <CodeBlock code="gitmap-v26 bookmark delete ssh-scan" title="Remove a bookmark" />
+    <CodeBlock code='gitmap bookmark save ssh-scan scan --mode ssh' title="Save a command bookmark" />
+    <CodeBlock code='gitmap bk save scan-projects scan ./projects --mode ssh --open' title="Save with args and multiple flags" />
+    <CodeBlock code="gitmap bookmark list" title="List all saved bookmarks" />
+    <CodeBlock code="gitmap bk list --json" title="List as JSON" />
+    <CodeBlock code="gitmap bookmark run ssh-scan" title="Replay a saved bookmark" />
+    <CodeBlock code="gitmap bookmark delete ssh-scan" title="Remove a bookmark" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Replay Behavior</h2>
     <div className="grid md:grid-cols-3 gap-4 mb-8">

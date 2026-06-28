@@ -17,7 +17,7 @@ const flags = [
 const ScanCommandPage = () => {
   return (
     <DocsLayout>
-      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">gitmap-v26 scan</h1>
+      <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">gitmap scan</h1>
       <p className="text-muted-foreground mb-2">
         Scan a directory tree for Git repositories and record them in the local database.
       </p>
@@ -28,7 +28,7 @@ const ScanCommandPage = () => {
       <section className="space-y-8">
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Usage</h2>
-          <CodeBlock code={`gitmap-v26 scan [dir] [flags]`} title="Syntax" />
+          <CodeBlock code={`gitmap scan [dir] [flags]`} title="Syntax" />
         </div>
 
         <hr className="docs-hr" />
@@ -63,7 +63,7 @@ const ScanCommandPage = () => {
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Examples</h2>
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-4 docs-h3">Scan a directory</h3>
-          <CodeBlock code={`gitmap-v26 scan D:\\wp-work`} title="Terminal" />
+          <CodeBlock code={`gitmap scan D:\\wp-work`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Output"
@@ -78,7 +78,7 @@ Found 42 repositories
           />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">JSON output with SSH URLs</h3>
-          <CodeBlock code={`gitmap-v26 scan ~/work --output json --mode ssh`} title="Terminal" />
+          <CodeBlock code={`gitmap scan ~/work --output json --mode ssh`} title="Terminal" />
           <CodeBlock
             language="bash"
             title="Output"
@@ -90,10 +90,10 @@ Found 18 repositories
           />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Register with GitHub Desktop</h3>
-          <CodeBlock code={`gitmap-v26 scan D:\\repos --github-desktop`} title="Terminal" />
+          <CodeBlock code={`gitmap scan D:\\repos --github-desktop`} title="Terminal" />
 
           <h3 className="text-base font-heading font-semibold mb-2 mt-6 docs-h3">Quiet CSV scan</h3>
-          <CodeBlock code={`gitmap-v26 s . --quiet --output csv`} title="Terminal" />
+          <CodeBlock code={`gitmap s . --quiet --output csv`} title="Terminal" />
         </div>
 
         <hr className="docs-hr" />

@@ -153,12 +153,7 @@ const (
 	CmdReplaceAlias         = "rpl"
 	CmdInject               = "inject"
 	CmdInjectAlias          = "inj"
-	// CmdOpen launches GitHub Desktop AND VS Code on the current repo
-	// (cwd-detected via `git remote get-url origin`). Re-injects on
-	// every call so newly cloned/moved repos always show up in both
-	// tools. Help: open.md. Spec: spec/04-generic-cli/31-open.md.
-	CmdOpen      = "open"
-	CmdOpenAlias = "op"
+	// CmdOpen / CmdOpenAlias declared earlier in this file (line 75).
 	// CmdRegoldens runs `go test -run <pattern>` in two passes: pass 1
 	// regenerates golden fixtures with both gate env vars set; pass 2
 	// re-runs the same tests with the env vars unset to verify the

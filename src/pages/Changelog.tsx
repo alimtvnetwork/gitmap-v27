@@ -2,8 +2,14 @@ import DocsLayout from "@/components/docs/DocsLayout";
 import TerminalDemo from "@/components/docs/TerminalDemo";
 import { changelog } from "@/data/changelog";
 import { Tag, ChevronDown, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  classifyChangelogItem,
+  TAG_LABELS,
+  TAG_ORDER,
+  type ChangelogTag,
+} from "@/lib/changelogTags";
 
 const terminalLines = [
   { text: "gitmap list-versions", type: "input" as const, delay: 800 },
@@ -33,6 +39,8 @@ const ChangelogPage = () => {
     new Set(changelog.slice(0, 3).map((e) => e.version))
   );
 
+  const [activeTags, setActiveTags] = useState<Set<ChangelogTag>>(new Set());
+
   const toggle = (version: string) => {
     setExpandedVersions((prev) => {
       const next = new Set(prev);
@@ -41,8 +49,27 @@ const ChangelogPage = () => {
     });
   };
 
+  const toggleTag = (tag: ChangelogTag) =>
+    setActiveTags((prev) => {
+      const next = new Set(prev);
+      next.has(tag) ? next.delete(tag) : next.add(tag);
+      return next;
+    });
+
   const expandAll = () => setExpandedVersions(new Set(changelog.map((e) => e.version)));
   const collapseAll = () => setExpandedVersions(new Set());
+
+  const filteredChangelog = useMemo(() => {
+    if (activeTags.size === 0) return changelog;
+    return changelog
+      .map((entry) => ({
+        ...entry,
+        items: entry.items.filter((item) =>
+          classifyChangelogItem(item).some((t) => activeTags.has(t)),
+        ),
+      }))
+      .filter((entry) => entry.items.length > 0);
+  }, [activeTags]);
 
   return (
     <DocsLayout>
@@ -50,7 +77,7 @@ const ChangelogPage = () => {
         <div>
           <h1 className="text-3xl font-heading font-bold docs-h1">Changelog</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {changelog.length} releases tracked
+            {filteredChangelog.length} of {changelog.length} releases shown
           </p>
         </div>
         <div className="flex gap-2">

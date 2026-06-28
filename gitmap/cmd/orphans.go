@@ -1,6 +1,6 @@
 // Package cmd — `gitmap orphans`: find local clones whose remote no
 // longer exists (HTTP 404 on the origin URL) and offer bulk delete.
-// v6.68.0.
+// v6.71.0 adds parallel remote probing and --format=json|csv export.
 package cmd
 
 import (
@@ -26,32 +26,29 @@ func runOrphans(args []string) {
 	root := fs.String("root", ".", "scan root directory")
 	yes := fs.Bool("y", false, "delete without prompting")
 	dryRun := fs.Bool("dry-run", false, "list only; do not delete")
+	format := fs.String("format", "table", "output format: table|json|csv")
 	if err := fs.Parse(args); err != nil {
 		os.Exit(2)
 	}
-	repos := scanForRepos(*root)
-	var orphans []orphanRepo
-	for _, r := range repos {
+	fmtKind, err := parseHygieneFormat(*format)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
+	}
+	repos := scanForReposParallel(*root)
+	orphans := mapReposParallel(repos, func(r string) (orphanRepo, bool) {
 		remote, ok := originURL(r)
 		if !ok {
-			continue
+			return orphanRepo{}, false
 		}
 		status := remoteStatus(remote)
-		if status == http.StatusNotFound || status == http.StatusGone {
-			orphans = append(orphans, orphanRepo{path: r, remote: remote, status: status})
+		if status != http.StatusNotFound && status != http.StatusGone {
+			return orphanRepo{}, false
 		}
-	}
-	if len(orphans) == 0 {
-		fmt.Fprintln(os.Stdout, "\n  no orphaned clones found\n")
-
-		return
-	}
-	fmt.Fprintf(os.Stdout, "\n  \033[36m%d orphan(s)\033[0m (remote returns 404/410)\n\n", len(orphans))
-	for _, o := range orphans {
-		fmt.Fprintf(os.Stdout, "  \033[31m%d\033[0m  %s  -> %s\n", o.status, o.path, o.remote)
-	}
-	fmt.Fprintln(os.Stdout, "")
-	if *dryRun {
+		return orphanRepo{path: r, remote: remote, status: status}, true
+	})
+	emitOrphans(orphans, fmtKind)
+	if fmtKind != hygieneFormatTable || *dryRun || len(orphans) == 0 {
 		return
 	}
 	if !*yes && !confirmYesNo(fmt.Sprintf("delete %d orphan(s)?", len(orphans))) {
@@ -64,6 +61,40 @@ func runOrphans(args []string) {
 			continue
 		}
 		fmt.Fprintf(os.Stdout, "  \033[32mdeleted\033[0m %s\n", o.path)
+	}
+}
+
+// emitOrphans dispatches to the requested output format.
+func emitOrphans(orphans []orphanRepo, f hygieneFormat) {
+	switch f {
+	case hygieneFormatJSON:
+		type row struct {
+			Path   string `json:"path"`
+			Remote string `json:"remote"`
+			Status int    `json:"status"`
+		}
+		out := make([]row, 0, len(orphans))
+		for _, o := range orphans {
+			out = append(out, row{Path: o.path, Remote: o.remote, Status: o.status})
+		}
+		emitJSON(out)
+	case hygieneFormatCSV:
+		rows := make([][]string, 0, len(orphans))
+		for _, o := range orphans {
+			rows = append(rows, []string{o.path, o.remote, fmt.Sprintf("%d", o.status)})
+		}
+		emitCSV([]string{"path", "remote", "status"}, rows)
+	default:
+		if len(orphans) == 0 {
+			fmt.Fprintln(os.Stdout, "\n  no orphaned clones found\n")
+
+			return
+		}
+		fmt.Fprintf(os.Stdout, "\n  \033[36m%d orphan(s)\033[0m (remote returns 404/410)\n\n", len(orphans))
+		for _, o := range orphans {
+			fmt.Fprintf(os.Stdout, "  \033[31m%d\033[0m  %s  -> %s\n", o.status, o.path, o.remote)
+		}
+		fmt.Fprintln(os.Stdout, "")
 	}
 }
 
@@ -128,4 +159,3 @@ func confirmYesNo(prompt string) bool {
 
 	return resp == "y" || resp == "yes"
 }
-

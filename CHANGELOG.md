@@ -1,5 +1,22 @@
 # Changelog
 
+## v6.69.0 — 2026-06-28 — Chrome umbrella: backup / restore / diff / export-bookmarks / which
+
+### Added
+- **`gitmap chrome backup`** — snapshot every Chrome profile to a tar.gz under `.gitmap/chrome/backup/` (`--out` for custom path). Skips volatile `LOCK`/`lockfile` entries.
+- **`gitmap chrome restore <tarball>`** — restore a snapshot into the User Data dir (`--into` for custom root). Path-traversal guarded.
+- **`gitmap chrome diff <A> <B>`** — extensions + bookmark-URL set diff (only-A / only-B) between two profiles.
+- **`gitmap chrome export-bookmarks <profile> [--format md|html|json] [--out <file>]`** — export bookmarks tree, defaults to Markdown on stdout.
+- **`gitmap chrome which`** — print active Chrome profile dir + display name from `Local State` (`last_used` + `last_active_profiles`).
+
+### Internal
+- New umbrella dispatcher `gitmap/cmd/chrome.go` plus per-subcommand files (`chrome_backup.go`, `chrome_diff.go`, `chrome_bookmarks.go`, `chrome_which.go`).
+- Constants `CmdChrome` + `SubCmdChrome*` added to `constants_chromeprofile.go`; parity test updated.
+- Help: `gitmap/helptext/chrome.md`.
+- Version pinned to **v6.69.0** across `README.md`, `gitmap/constants/constants.go`, `src/constants/index.ts`.
+
+
+
 ## v6.68.0 — 2026-06-28 — Repo hygiene: stale, orphans, dedupe, size
 
 ### Added

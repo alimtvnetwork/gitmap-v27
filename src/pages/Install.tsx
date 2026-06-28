@@ -5,7 +5,7 @@ import InstallHelpSection from "@/components/docs/InstallHelpSection";
 import { Download, Trash2, Database, Wrench, FolderDown, Monitor, Terminal, Shield, FileText, AlertTriangle } from "lucide-react";
 
 const terminalLines = [
-  { text: "gitmap-v26 install --list", type: "input" as const, delay: 800 },
+  { text: "gitmap install --list", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  Core Tools:", type: "header" as const },
   { text: "  vscode              Visual Studio Code editor", type: "output" as const },
@@ -19,7 +19,7 @@ const terminalLines = [
   { text: "  redis               Redis in-memory key-value store", type: "output" as const },
   { text: "  mongodb             MongoDB document database", type: "output" as const },
   { text: "", type: "output" as const },
-  { text: "gitmap-v26 install node", type: "input" as const, delay: 1000 },
+  { text: "gitmap install node", type: "input" as const, delay: 1000 },
   { text: "", type: "output" as const },
   { text: "  Checking if node is installed...", type: "output" as const },
   { text: "  node is not installed.", type: "output" as const },
@@ -84,7 +84,7 @@ const coreTools: [string, string][] = [
   ["powershell", "PowerShell shell"],
   ["chocolatey", "Chocolatey package manager"],
   ["winget", "Winget package manager"],
-  ["scripts", "Clone gitmap-v26 scripts to local folder"],
+  ["scripts", "Clone gitmap scripts to local folder"],
 ];
 
 const dbTools: [string, string][] = [
@@ -155,14 +155,14 @@ const InstallPage = () => {
 
         {/* Terminal Demo */}
         <div className="mb-10">
-          <TerminalDemo title="gitmap-v26 — install tools" lines={terminalLines} autoPlay />
+          <TerminalDemo title="gitmap — install tools" lines={terminalLines} autoPlay />
         </div>
 
         {/* Usage */}
         <section className="mb-10">
           <h2 className="text-xl font-heading font-semibold mb-3">Usage</h2>
-          <CodeBlock code={`gitmap-v26 install <tool> [flags]
-gitmap-v26 uninstall <tool> [flags]`} />
+          <CodeBlock code={`gitmap install <tool> [flags]
+gitmap uninstall <tool> [flags]`} />
         </section>
 
         <InstallHelpSection />
@@ -260,7 +260,7 @@ gitmap-v26 uninstall <tool> [flags]`} />
           </div>
 
           <h3 className="font-mono font-semibold text-sm mb-2">Error Log Format</h3>
-          <CodeBlock code={`gitmap-v26 install error log
+          <CodeBlock code={`gitmap install error log
 ========================
 
 Tool:            npp
@@ -321,7 +321,7 @@ Installing notepadplusplus...`} />
             <span className="flex items-center gap-2"><FolderDown className="h-5 w-5" /> Install Scripts</span>
           </h2>
           <p className="text-muted-foreground text-sm mb-4">
-            Clone all gitmap-v26 utility scripts to a local folder with <code className="text-primary">gitmap-v26 install scripts</code>.
+            Clone all gitmap utility scripts to a local folder with <code className="text-primary">gitmap install scripts</code>.
             The scripts are shallow-cloned from the repository and copied to a platform-specific directory.
           </p>
 
@@ -392,9 +392,9 @@ Installing notepadplusplus...`} />
 
           {/* Example */}
           <div className="mt-4">
-            <CodeBlock code={`$ gitmap-v26 install scripts
+            <CodeBlock code={`$ gitmap install scripts
   → Scripts target: /home/alim/Desktop/gitmap-scripts
-  Cloning gitmap-v26 repo for scripts...
+  Cloning gitmap repo for scripts...
   ✓ Copied: install.ps1
   ✓ Copied: install.sh
   ✓ Copied: run.ps1
@@ -438,7 +438,7 @@ Installing notepadplusplus...`} />
         <section className="mb-10">
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">Package Managers</h2>
           <p className="text-muted-foreground text-sm mb-4">
-            gitmap-v26 auto-detects the best manager for your platform, or use <code className="text-primary">--manager</code> to override.
+            gitmap auto-detects the best manager for your platform, or use <code className="text-primary">--manager</code> to override.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm border border-border rounded-lg overflow-hidden">

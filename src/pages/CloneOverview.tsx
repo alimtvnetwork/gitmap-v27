@@ -2,7 +2,7 @@ import DocsLayout from "@/components/docs/DocsLayout";
 import CodeBlock from "@/components/docs/CodeBlock";
 
 const fileFormats = [
-  { fmt: "JSON", path: ".gitmap/output/gitmap.json", shorthand: "json", note: "Default — produced by `gitmap-v26 scan`. Hierarchical groups + per-repo metadata." },
+  { fmt: "JSON", path: ".gitmap/output/gitmap.json", shorthand: "json", note: "Default — produced by `gitmap scan`. Hierarchical groups + per-repo metadata." },
   { fmt: "CSV",  path: ".gitmap/output/gitmap.csv",  shorthand: "csv",  note: "Spreadsheet-friendly. One row per repo, headers in row 1." },
   { fmt: "Text", path: ".gitmap/output/gitmap.txt",  shorthand: "text", note: "One URL per line. Easiest to hand-edit and pipe in from other tools." },
 ];
@@ -18,7 +18,7 @@ const CloneOverviewPage = () => {
     <DocsLayout>
       <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Clone Overview</h1>
       <p className="text-muted-foreground mb-2">
-        <code className="docs-inline-code">gitmap-v26 clone</code> serves two distinct workflows: cloning many repos from a
+        <code className="docs-inline-code">gitmap clone</code> serves two distinct workflows: cloning many repos from a
         scan-output file, or cloning a single repo from a direct Git URL. Both modes share the same flags, manifest
         normalization, and Windows path canonicalization.
       </p>
@@ -33,7 +33,7 @@ const CloneOverviewPage = () => {
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">1. File-based clone (bulk)</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Run <code className="docs-inline-code">gitmap-v26 scan</code> first to produce a manifest, then feed it to
+            Run <code className="docs-inline-code">gitmap scan</code> first to produce a manifest, then feed it to
             <code className="docs-inline-code">clone</code>. Useful for onboarding a new machine, mirroring an org,
             or rebuilding a workspace after a re-image.
           </p>
@@ -61,8 +61,8 @@ const CloneOverviewPage = () => {
             </table>
           </div>
 
-          <CodeBlock code={`gitmap-v26 scan
-gitmap-v26 clone json --safe-pull`} title="Typical bulk workflow" />
+          <CodeBlock code={`gitmap scan
+gitmap clone json --safe-pull`} title="Typical bulk workflow" />
           <p className="text-sm text-muted-foreground mt-3">
             <code className="docs-inline-code">--safe-pull</code> turns existing folders into <em>pull</em> operations
             instead of skipping them, with retry + lockfile diagnostics. Combine with
@@ -102,9 +102,9 @@ gitmap-v26 clone json --safe-pull`} title="Typical bulk workflow" />
             </table>
           </div>
 
-          <CodeBlock code={`gitmap-v26 clone https://github.com/org/wp-onboarding-v13.git
-gitmap-v26 clone https://github.com/org/wp-alim.git "my-project"
-gitmap-v26 clone git@github.com:org/private-svc.git --ssh-key work`} title="URL workflow" />
+          <CodeBlock code={`gitmap clone https://github.com/org/wp-onboarding-v13.git
+gitmap clone https://github.com/org/wp-alim.git "my-project"
+gitmap clone git@github.com:org/private-svc.git --ssh-key work`} title="URL workflow" />
         </div>
 
         <hr className="docs-hr" />
@@ -129,7 +129,7 @@ gitmap-v26 clone git@github.com:org/private-svc.git --ssh-key work`} title="URL 
             <code className="docs-inline-code"> GITMAP_DEBUG_PATHS=1</code>) to print before/after path transforms on
             stderr.
           </p>
-          <CodeBlock code={`gitmap-v26 clone https://github.com/org/wp-alim.git --debug-paths`} title="Diagnose a sync mismatch" />
+          <CodeBlock code={`gitmap clone https://github.com/org/wp-alim.git --debug-paths`} title="Diagnose a sync mismatch" />
         </div>
 
         <hr className="docs-hr" />

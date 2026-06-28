@@ -6,7 +6,7 @@ const GettingStartedPage = () => {
     <DocsLayout>
       <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Getting Started</h1>
       <p className="text-muted-foreground mb-8">
-        Get up and running with gitmap-v26 in under 5 minutes.
+        Get up and running with gitmap in under 5 minutes.
       </p>
 
       <section className="space-y-8">
@@ -43,9 +43,9 @@ const GettingStartedPage = () => {
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">2. Run your first scan</h2>
           <p className="text-muted-foreground mb-3">
-            Point gitmap-v26 at a directory containing Git repositories:
+            Point gitmap at a directory containing Git repositories:
           </p>
-          <CodeBlock code={`gitmap-v26 scan ~/projects`} title="Terminal" />
+          <CodeBlock code={`gitmap scan ~/projects`} title="Terminal" />
           <p className="text-sm text-muted-foreground mt-2">
             This generates <code className="docs-inline-code">.gitmap/output/</code> containing CSV, JSON,
             folder structure, and clone scripts.
@@ -60,7 +60,7 @@ const GettingStartedPage = () => {
             Copy the output files and restore the exact folder structure:
           </p>
           <CodeBlock
-            code={`gitmap-v26 clone json --target-dir ./projects`}
+            code={`gitmap clone json --target-dir ./projects`}
             title="Terminal"
           />
           <p className="text-sm text-muted-foreground mt-2">
@@ -75,7 +75,7 @@ const GettingStartedPage = () => {
         <div>
           <h2 className="text-xl font-heading font-semibold mb-3 docs-h2">4. Set up shell navigation</h2>
           <p className="text-muted-foreground mb-3">
-            Run <code className="docs-inline-code">gitmap-v26 setup</code> to auto-install the <code className="docs-inline-code">gcd</code> wrapper function. After restarting your terminal:
+            Run <code className="docs-inline-code">gitmap setup</code> to auto-install the <code className="docs-inline-code">gcd</code> wrapper function. After restarting your terminal:
           </p>
           <CodeBlock
             code={`gcd myrepo          # jumps to repo directory\ngcd repos           # interactive picker\ngcd repos --group backend`}
@@ -93,7 +93,7 @@ const GettingStartedPage = () => {
           <p className="text-muted-foreground mb-3">
             Start a live dashboard to watch all tracked repos:
           </p>
-          <CodeBlock code={`gitmap-v26 watch --interval 15`} title="Terminal" />
+          <CodeBlock code={`gitmap watch --interval 15`} title="Terminal" />
           <p className="text-sm text-muted-foreground mt-2">
             The dashboard auto-refreshes, showing dirty/clean status, ahead/behind counts, and stash entries.
           </p>

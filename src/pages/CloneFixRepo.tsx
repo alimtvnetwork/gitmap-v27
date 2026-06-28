@@ -22,8 +22,8 @@ const CloneFixRepoPage = () => (
         </div>
         <p className="text-lg text-muted-foreground">
           Clone a repository, then immediately run <code>fix-repo --all</code> inside the new
-          folder. One-shot replacement for the manual sequence: <code>gitmap-v26 clone</code>{" "}
-          → <code>cd</code> → <code>gitmap-v26 fix-repo --all</code>.
+          folder. One-shot replacement for the manual sequence: <code>gitmap clone</code>{" "}
+          → <code>cd</code> → <code>gitmap fix-repo --all</code>.
         </p>
       </div>
 
@@ -32,7 +32,7 @@ const CloneFixRepoPage = () => (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { icon: GitBranch, title: "Clones first", desc: "Versioned URLs auto-flatten (e.g. myrepo-v13 -> myrepo/). Optional folder name." },
-            { icon: Wrench, title: "Then fix-repo --all", desc: "Re-execs the same gitmap-v26 binary with fix-repo --all in the cloned folder." },
+            { icon: Wrench, title: "Then fix-repo --all", desc: "Re-execs the same gitmap binary with fix-repo --all in the cloned folder." },
             { icon: Globe, title: "Public variant", desc: "Use clone-fix-repo-pub (cfrp) to also run make-public --yes at the end." },
           ].map((f) => (
             <div key={f.title} className="rounded-lg border border-border p-4 bg-card">
@@ -46,12 +46,12 @@ const CloneFixRepoPage = () => (
 
       <section>
         <h2 className="text-xl font-semibold mb-3">Usage</h2>
-        <CodeBlock code={`gitmap-v26 clone-fix-repo <url> [folder]
-gitmap-v26 cfr <url> [folder]                        # short alias
+        <CodeBlock code={`gitmap clone-fix-repo <url> [folder]
+gitmap cfr <url> [folder]                        # short alias
 
 # Public variant (clone + fix-repo --all + make-public --yes)
-gitmap-v26 clone-fix-repo-pub <url> [folder]
-gitmap-v26 cfrp <url> [folder]`} />
+gitmap clone-fix-repo-pub <url> [folder]
+gitmap cfrp <url> [folder]`} />
       </section>
 
       <section>
@@ -82,13 +82,13 @@ gitmap-v26 cfrp <url> [folder]`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">Examples</h2>
         <CodeBlock code={`# HTTPS clone + fix
-gitmap-v26 clone-fix-repo https://github.com/acme/myrepo-v13.git
+gitmap clone-fix-repo https://github.com/acme/myrepo-v13.git
 
 # SSH clone with explicit folder name
-gitmap-v26 cfr git@github.com:acme/myrepo-v13.git myrepo-fresh
+gitmap cfr git@github.com:acme/myrepo-v13.git myrepo-fresh
 
 # Public-publish in one go (clone + fix + make-public)
-gitmap-v26 cfrp https://github.com/acme/myrepo-v13.git`} />
+gitmap cfrp https://github.com/acme/myrepo-v13.git`} />
       </section>
 
       <section>

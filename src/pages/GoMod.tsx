@@ -55,23 +55,23 @@ const GoModPage = () => {
       <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Usage</h2>
 
       <CodeBlock
-        code="gitmap-v26 gomod github.com/new/module"
+        code="gitmap gomod github.com/new/module"
         title="Rename module path in all files"
       />
       <CodeBlock
-        code='gitmap-v26 gm github.com/new/module --ext "*.go,*.md"'
+        code='gitmap gm github.com/new/module --ext "*.go,*.md"'
         title="Only replace in .go and .md files"
       />
       <CodeBlock
-        code="gitmap-v26 gomod github.com/new/module --dry-run"
+        code="gitmap gomod github.com/new/module --dry-run"
         title="Preview changes without modifying anything"
       />
       <CodeBlock
-        code="gitmap-v26 gomod github.com/new/module --no-merge"
+        code="gitmap gomod github.com/new/module --no-merge"
         title="Commit on feature branch but don't merge back"
       />
       <CodeBlock
-        code="gitmap-v26 gomod github.com/new/module --no-tidy --verbose"
+        code="gitmap gomod github.com/new/module --no-tidy --verbose"
         title="Skip go mod tidy and print each file"
       />
 
@@ -118,7 +118,7 @@ const GoModPage = () => {
             <span className="w-3 h-3 rounded-full bg-green-500/80" />
           </div>
           <span className="text-xs font-mono text-muted-foreground ml-2">
-            gitmap-v26 gomod
+            gitmap gomod
           </span>
         </div>
         <div className="bg-terminal p-4 font-mono text-sm leading-relaxed">
@@ -156,7 +156,7 @@ const GoModPage = () => {
             <span className="w-3 h-3 rounded-full bg-green-500/80" />
           </div>
           <span className="text-xs font-mono text-muted-foreground ml-2">
-            gitmap-v26 gomod --dry-run
+            gitmap gomod --dry-run
           </span>
         </div>
         <div className="bg-terminal p-4 font-mono text-sm leading-relaxed">

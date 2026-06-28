@@ -30,7 +30,7 @@ const fileLayout = [
 ];
 
 const demoLines = [
-  { text: "gitmap-v26 dashboard", type: "input" as const, delay: 800 },
+  { text: "gitmap dashboard", type: "input" as const, delay: 800 },
   { text: "Collecting repository data...", type: "output" as const },
   { text: "Wrote .gitmap/output/dashboard.json (482 commits, 7 authors)", type: "accent" as const },
   { text: "Wrote .gitmap/output/dashboard.html", type: "accent" as const },
@@ -38,7 +38,7 @@ const demoLines = [
 ];
 
 const demoLimitLines = [
-  { text: "gitmap-v26 db --limit 100 --open", type: "input" as const, delay: 800 },
+  { text: "gitmap db --limit 100 --open", type: "input" as const, delay: 800 },
   { text: "Collecting repository data...", type: "output" as const },
   { text: "Wrote .gitmap/output/dashboard.json (100 commits, 5 authors)", type: "accent" as const },
   { text: "Wrote .gitmap/output/dashboard.html", type: "accent" as const },
@@ -47,7 +47,7 @@ const demoLimitLines = [
 ];
 
 const demoFilterLines = [
-  { text: "gitmap-v26 dashboard --since 2025-01-01 --no-merges --out-dir ./report", type: "input" as const, delay: 800 },
+  { text: "gitmap dashboard --since 2025-01-01 --no-merges --out-dir ./report", type: "input" as const, delay: 800 },
   { text: "Collecting repository data...", type: "output" as const },
   { text: "Wrote ./report/dashboard.json (63 commits, 4 authors)", type: "accent" as const },
   { text: "Wrote ./report/dashboard.html", type: "accent" as const },
@@ -82,9 +82,9 @@ const DashboardPage = () => (
     </div>
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Usage</h2>
-    <CodeBlock code="gitmap-v26 dashboard [flags]" title="Basic usage" />
-    <CodeBlock code="gitmap-v26 db --limit 100 --open" title="Alias with flags" />
-    <CodeBlock code="gitmap-v26 dashboard --since 2025-01-01 --no-merges --out-dir ./report" title="Filtered output" />
+    <CodeBlock code="gitmap dashboard [flags]" title="Basic usage" />
+    <CodeBlock code="gitmap db --limit 100 --open" title="Alias with flags" />
+    <CodeBlock code="gitmap dashboard --since 2025-01-01 --no-merges --out-dir ./report" title="Filtered output" />
 
     <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Flags</h2>
     <div className="rounded-lg border border-border overflow-hidden">

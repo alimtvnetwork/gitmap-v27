@@ -6,7 +6,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const terminalLines = [
-  { text: "gitmap-v26 list-versions", type: "input" as const, delay: 800 },
+  { text: "gitmap list-versions", type: "input" as const, delay: 800 },
   { text: "", type: "output" as const },
   { text: "  VERSION    CHANGES  HIGHLIGHTS", type: "header" as const },
   { text: "  ───────    ───────  ──────────", type: "output" as const },
@@ -19,7 +19,7 @@ const terminalLines = [
   { text: "", type: "output" as const },
   { text: "  6 versions shown · 50 total changes", type: "accent" as const },
   { text: "", type: "output" as const },
-  { text: "gitmap-v26 changelog v2.52.0", type: "input" as const, delay: 1000 },
+  { text: "gitmap changelog v2.52.0", type: "input" as const, delay: 1000 },
   { text: "", type: "output" as const },
   { text: "  ## v2.52.0", type: "header" as const },
   { text: "  • Lock detection for clone-next via handle.exe/lsof", type: "output" as const },
@@ -86,7 +86,7 @@ const ChangelogPage = () => {
       </div>
 
       <div className="mb-8">
-        <TerminalDemo title="gitmap-v26 — version history" lines={terminalLines} autoPlay />
+        <TerminalDemo title="gitmap — version history" lines={terminalLines} autoPlay />
       </div>
 
       <div className="relative">

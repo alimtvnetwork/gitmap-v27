@@ -10,7 +10,7 @@ const TerminalPreview = () => (
         <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
         <span className="w-3 h-3 rounded-full bg-green-500/80" />
       </div>
-      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap-v26 profile list</span>
+      <span className="text-xs font-mono text-muted-foreground ml-2">gitmap profile list</span>
     </div>
     <div className="bg-terminal p-4 font-mono text-sm leading-relaxed">
       <div className="text-primary font-bold text-xs mb-1">
@@ -27,37 +27,37 @@ const TerminalPreview = () => (
 const subcommands = [
   {
     name: "create",
-    usage: "gitmap-v26 profile create <name>",
+    usage: "gitmap profile create <name>",
     description: "Create a new profile with its own empty database.",
-    example: "gitmap-v26 profile create work\ngitmap pf create personal",
+    example: "gitmap profile create work\ngitmap pf create personal",
     output: "✓ Profile 'work' created",
   },
   {
     name: "list",
-    usage: "gitmap-v26 profile list",
+    usage: "gitmap profile list",
     description: "Show all profiles with repo counts and active marker.",
-    example: "gitmap-v26 pf list",
+    example: "gitmap pf list",
     output: null,
   },
   {
     name: "switch",
-    usage: "gitmap-v26 profile switch <name>",
+    usage: "gitmap profile switch <name>",
     description: "Switch to a different profile. All subsequent commands use the new profile's database.",
-    example: "gitmap-v26 profile switch work\ngitmap pf switch personal",
+    example: "gitmap profile switch work\ngitmap pf switch personal",
     output: "✓ Switched to profile 'work'",
   },
   {
     name: "show",
-    usage: "gitmap-v26 profile show",
+    usage: "gitmap profile show",
     description: "Display the currently active profile name and metadata.",
-    example: "gitmap-v26 pf show",
+    example: "gitmap pf show",
     output: "Active profile: work\nRepos: 18\nCreated: 2025-03-01",
   },
   {
     name: "delete",
-    usage: "gitmap-v26 profile delete <name>",
+    usage: "gitmap profile delete <name>",
     description: "Delete a profile and its database file. Cannot delete 'default' or the active profile.",
-    example: "gitmap-v26 profile delete personal",
+    example: "gitmap profile delete personal",
     output: "✓ Profile 'personal' deleted",
   },
 ];
@@ -76,7 +76,7 @@ const ProfilePage = () => (
         <UserCircle className="h-8 w-8 text-primary" />
         <div>
           <h1 className="text-3xl font-heading font-bold text-foreground docs-h1">Profile</h1>
-          <p className="text-muted-foreground font-mono text-sm">gitmap-v26 profile (pf)</p>
+          <p className="text-muted-foreground font-mono text-sm">gitmap profile (pf)</p>
         </div>
       </div>
       <p className="text-muted-foreground mb-8 text-lg">

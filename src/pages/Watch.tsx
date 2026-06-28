@@ -59,7 +59,7 @@ const TerminalPreview = () => {
             <span className="w-3 h-3 rounded-full bg-green-500/80" />
           </div>
           <span className="text-xs font-mono text-muted-foreground ml-2">
-            gitmap-v26 watch
+            gitmap watch
           </span>
         </div>
         <button
@@ -82,12 +82,12 @@ const TerminalPreview = () => {
         {/* Banner */}
         <div className="text-primary">
           <div>╔══════════════════════════════════════╗</div>
-          <div>║          gitmap-v26 watch{"                "}║</div>
+          <div>║          gitmap watch{"                "}║</div>
           <div>╚══════════════════════════════════════╝</div>
         </div>
 
         <div className="text-muted-foreground mt-2 text-xs">
-          gitmap-v26 watch — refreshing every 30s (Ctrl+C to stop)
+          gitmap watch — refreshing every 30s (Ctrl+C to stop)
         </div>
         <div className="text-muted-foreground text-xs mb-3">
           Last updated: {timeStr}
@@ -187,21 +187,21 @@ const WatchPage = () => {
       {/* Usage */}
       <h2 className="text-xl font-heading font-semibold mt-10 mb-3">Usage</h2>
 
-      <CodeBlock code="gitmap-v26 watch" title="Basic — refresh every 30s" />
+      <CodeBlock code="gitmap watch" title="Basic — refresh every 30s" />
       <CodeBlock
-        code="gitmap-v26 watch --interval 10"
+        code="gitmap watch --interval 10"
         title="Custom refresh interval"
       />
       <CodeBlock
-        code="gitmap-v26 watch --group work"
+        code="gitmap watch --group work"
         title="Filter by group"
       />
       <CodeBlock
-        code="gitmap-v26 watch --no-fetch"
+        code="gitmap watch --no-fetch"
         title="Skip git fetch (local refs only)"
       />
       <CodeBlock
-        code="gitmap-v26 watch --json"
+        code="gitmap watch --json"
         title="Single JSON snapshot and exit"
       />
 
@@ -244,7 +244,7 @@ const WatchPage = () => {
         watch prints a single snapshot and exits:
       </p>
       <CodeBlock
-        title="gitmap-v26 watch --json"
+        title="gitmap watch --json"
         code={`[
   {
     "repo": "api-gateway",

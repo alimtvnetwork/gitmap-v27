@@ -41,7 +41,7 @@ const issues: Issue[] = [
     symptom: "Error: scan path does not exist: D:\\repos",
     cause: "The positional [dir] argument points to a folder that has not been created or is on an unmounted drive.",
     fix: "Pass an existing absolute path, or omit it to scan the current directory.",
-    fixCommand: `gitmap-v26 scan "C:\\Users\\you\\projects"\n# or just\ngitmap scan`,
+    fixCommand: `gitmap scan "C:\\Users\\you\\projects"\n# or just\ngitmap scan`,
     related: [
       { label: "scan reference", href: "/scan-command" },
       { label: "doctor", href: "/doctor" },
@@ -54,7 +54,7 @@ const issues: Issue[] = [
     symptom: "Output file written somewhere other than expected.",
     cause: "--out-file is an exact path and overrides --output-path. Passing both leads to confusion.",
     fix: "Pick one: --out-file <exact-path> for a specific file, or --output-path <dir> for a directory.",
-    fixCommand: `gitmap-v26 scan --out-file ./.gitmap/output/custom.json --output json`,
+    fixCommand: `gitmap scan --out-file ./.gitmap/output/custom.json --output json`,
   },
   {
     id: "clone-target-missing",
@@ -84,7 +84,7 @@ const issues: Issue[] = [
     symptom: "Doctor warns: config.json not found (using defaults)",
     cause: "Either no config has been created, or you are running from a directory without a ./data/ folder.",
     fix: "Pass --config explicitly, or create the file in the default location.",
-    fixCommand: `gitmap-v26 scan --config "C:\\Users\\you\\.gitmap\\config.json"`,
+    fixCommand: `gitmap scan --config "C:\\Users\\you\\.gitmap\\config.json"`,
     related: [{ label: "Configuration", href: "/config" }],
   },
   {
@@ -94,7 +94,7 @@ const issues: Issue[] = [
     symptom: "Doctor: config.json is not valid JSON",
     cause: "Trailing commas, unquoted keys, or a corrupted edit.",
     fix: "Validate the file, then re-save. Run doctor to confirm.",
-    fixCommand: `gitmap-v26 doctor`,
+    fixCommand: `gitmap doctor`,
   },
   {
     id: "setup-config-missing",
@@ -103,7 +103,7 @@ const issues: Issue[] = [
     symptom: "Doctor: git-setup.json not found (setup will fail without --config)",
     cause: "First-time setup needs git-setup.json next to the binary or supplied explicitly.",
     fix: "Point setup at the file using --config.",
-    fixCommand: `gitmap-v26 setup --config ./data/git-setup.json`,
+    fixCommand: `gitmap setup --config ./data/git-setup.json`,
     related: [{ label: "Setup", href: "/setup" }],
   },
   {
@@ -125,7 +125,7 @@ const issues: Issue[] = [
     symptom: "Error: ssh key 'work' not registered",
     cause: "The named key passed via --ssh-key / -K has not been registered with gitmap.",
     fix: "List, then register the key.",
-    fixCommand: `gitmap-v26 ssh list\ngitmap ssh add work ~/.ssh/id_ed25519_work`,
+    fixCommand: `gitmap ssh list\ngitmap ssh add work ~/.ssh/id_ed25519_work`,
     related: [{ label: "SSH keys", href: "/ssh" }],
   },
   {
@@ -135,7 +135,7 @@ const issues: Issue[] = [
     symptom: "fatal: Could not read from remote repository. Permission denied (publickey).",
     cause: "Either ssh-agent has no key loaded, or the wrong key is selected for this remote.",
     fix: "Switch the scan/clone to a named key, or add the key to ssh-agent.",
-    fixCommand: `gitmap-v26 clone-next v++ --ssh-key work\n# or\nssh-add ~/.ssh/id_ed25519`,
+    fixCommand: `gitmap clone-next v++ --ssh-key work\n# or\nssh-add ~/.ssh/id_ed25519`,
   },
   {
     id: "https-mode-needed",
@@ -144,7 +144,7 @@ const issues: Issue[] = [
     symptom: "ssh: connect to host github.com port 22: Connection refused",
     cause: "Output was generated with --mode ssh on a network that blocks port 22.",
     fix: "Re-scan with --mode https, then re-clone.",
-    fixCommand: `gitmap-v26 scan ~/projects --mode https --output json\ngitmap clone json`,
+    fixCommand: `gitmap scan ~/projects --mode https --output json\ngitmap clone json`,
   },
   {
     id: "create-remote-no-token",
@@ -173,9 +173,9 @@ const issues: Issue[] = [
     category: "locks",
     title: "clone-next falls back to versioned folder instead of flattening",
     symptom: "→ Falling back to versioned folder macro-ahk-v22 (current folder is locked by this shell)",
-    cause: "Your shell is cwd'd into the target folder, so Windows holds a file lock and gitmap-v26 can't replace it.",
+    cause: "Your shell is cwd'd into the target folder, so Windows holds a file lock and gitmap can't replace it.",
     fix: "Pass -f to force a chdir-to-parent + flatten, or 'cd ..' first.",
-    fixCommand: `gitmap-v26 cn v+1 -f`,
+    fixCommand: `gitmap cn v+1 -f`,
     altLabel: "Manual alternative",
     altCommand: `cd ..\ngitmap cn v+1`,
     related: [{ label: "clone-next reference", href: "/clone-next-command" }],
@@ -187,16 +187,16 @@ const issues: Issue[] = [
     symptom: "Error: --force could not remove macro-ahk: unlinkat: access denied",
     cause: "An editor, file explorer, or watcher (not your shell) has an open handle on the folder.",
     fix: "Close the holder (VS Code, Explorer preview pane), then retry. The lock-detector can name PIDs.",
-    fixCommand: `gitmap-v26 cn v+1 --delete --verbose`,
+    fixCommand: `gitmap cn v+1 --delete --verbose`,
   },
   {
     id: "stale-lockfile",
     category: "locks",
-    title: "Stale gitmap-v26 lock file",
-    symptom: "Doctor: Lock file exists — another gitmap-v26 may be running (or stale)",
-    cause: "A previous gitmap-v26 process exited without releasing its advisory lock.",
-    fix: "If no other gitmap-v26 is running, run doctor — it will surface the path; remove it manually only if needed.",
-    fixCommand: `gitmap-v26 doctor`,
+    title: "Stale gitmap lock file",
+    symptom: "Doctor: Lock file exists — another gitmap may be running (or stale)",
+    cause: "A previous gitmap process exited without releasing its advisory lock.",
+    fix: "If no other gitmap is running, run doctor — it will surface the path; remove it manually only if needed.",
+    fixCommand: `gitmap doctor`,
   },
 
   // ── git ───────────────────────────────────────
@@ -216,7 +216,7 @@ const issues: Issue[] = [
     symptom: "Error: invalid version argument: foo (expected v++, v+1, or vN)",
     cause: "Only v++, v+1, or vN (positive integer) are accepted.",
     fix: "Use a valid form.",
-    fixCommand: `gitmap-v26 cn v++\ngitmap cn v15`,
+    fixCommand: `gitmap cn v++\ngitmap cn v15`,
   },
   {
     id: "clone-source-missing",
@@ -225,18 +225,18 @@ const issues: Issue[] = [
     symptom: "Error: source file not found: .gitmap/output/gitmap.json",
     cause: "You haven't scanned yet, or you're running from a different directory than where output was written.",
     fix: "Run scan first, or pass an explicit path.",
-    fixCommand: `gitmap-v26 scan ~/projects --output json\ngitmap clone json`,
+    fixCommand: `gitmap scan ~/projects --output json\ngitmap clone json`,
   },
 
   // ── build ─────────────────────────────────────
   {
     id: "not-on-path",
     category: "build",
-    title: "gitmap-v26 not found on PATH",
+    title: "gitmap not found on PATH",
     symptom: "bash: gitmap-v26: command not found",
     cause: "Deploy directory is not on PATH, or the deployed binary differs from the active one.",
     fix: "Auto-sync the PATH binary from the deployed copy.",
-    fixCommand: `gitmap-v26 doctor --fix-path`,
+    fixCommand: `gitmap doctor --fix-path`,
     related: [{ label: "Doctor", href: "/doctor" }],
   },
   {
@@ -246,17 +246,17 @@ const issues: Issue[] = [
     symptom: "Doctor: PATH binary version mismatch (PATH: 3.50.0, Source: 3.52.0)",
     cause: "You rebuilt the source but the PATH binary was not refreshed.",
     fix: "Run the auto-fixer, or rebuild from source.",
-    fixCommand: `gitmap-v26 doctor --fix-path\n# or full rebuild\n.\\run.ps1`,
+    fixCommand: `gitmap doctor --fix-path\n# or full rebuild\n.\\run.ps1`,
     fixLanguage: "powershell",
   },
   {
     id: "wrapper-not-loaded",
     category: "build",
-    title: "gitmap-v26 cd prints path but doesn't change directory",
-    symptom: "Doctor: Shell wrapper not loaded — gitmap-v26 cd prints path but cannot change directory",
-    cause: "The shell function wrapper that intercepts 'gitmap-v26 cd' has not been sourced.",
+    title: "gitmap cd prints path but doesn't change directory",
+    symptom: "Doctor: Shell wrapper not loaded — gitmap cd prints path but cannot change directory",
+    cause: "The shell function wrapper that intercepts 'gitmap cd' has not been sourced.",
     fix: "Run setup, then reload your shell profile.",
-    fixCommand: `gitmap-v26 setup\n# bash\nsource ~/.bashrc\n# zsh\nsource ~/.zshrc\n# PowerShell\n. $PROFILE`,
+    fixCommand: `gitmap setup\n# bash\nsource ~/.bashrc\n# zsh\nsource ~/.zshrc\n# PowerShell\n. $PROFILE`,
   },
 ];
 
@@ -341,9 +341,9 @@ const Troubleshooting = () => {
     <DocsLayout>
       <h1 className="text-3xl font-heading font-bold mb-2 docs-h1">Troubleshooting</h1>
       <p className="text-muted-foreground mb-6">
-        Common gitmap-v26 errors grouped by category, each with the symptom, root cause, and the exact
+        Common gitmap errors grouped by category, each with the symptom, root cause, and the exact
         flag or command to fix it. When in doubt, start with{" "}
-        <code className="docs-inline-code">gitmap-v26 doctor</code>.
+        <code className="docs-inline-code">gitmap doctor</code>.
       </p>
 
       <DiagnosticChecklist />
@@ -477,7 +477,7 @@ const Troubleshooting = () => {
         <h2 className="font-heading font-semibold text-foreground mb-2">Still stuck?</h2>
         <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
           <li>
-            Run <code className="docs-inline-code">gitmap-v26 doctor</code> for a full health snapshot.
+            Run <code className="docs-inline-code">gitmap doctor</code> for a full health snapshot.
           </li>
           <li>
             Re-run the failing command with <code className="docs-inline-code">--verbose</code> to
@@ -594,19 +594,19 @@ const DiagnosticChecklist = () => {
       icon: Stethoscope,
       title: "Run a full health check",
       body: "Surfaces PATH, config, lock, network, and version-mismatch issues in one pass. Most problems are diagnosed (and named) here.",
-      command: "gitmap-v26 doctor",
+      command: "gitmap doctor",
     },
     {
       icon: Wrench,
       title: "Apply the auto-fixer if doctor flagged PATH",
-      body: "If you see 'PATH binary version mismatch' or 'gitmap-v26 not found on PATH', let doctor sync the active binary from the deployed copy.",
-      command: "gitmap-v26 doctor --fix-path",
+      body: "If you see 'PATH binary version mismatch' or 'gitmap not found on PATH', let doctor sync the active binary from the deployed copy.",
+      command: "gitmap doctor --fix-path",
     },
     {
       icon: Terminal,
       title: "Re-run the failing command with --verbose",
       body: "Verbose mode prints every git invocation, resolved paths, and timing — and writes a timestamped debug log next to the output.",
-      command: "gitmap-v26 <your-failing-command> --verbose",
+      command: "gitmap <your-failing-command> --verbose",
     },
     {
       icon: FileText,

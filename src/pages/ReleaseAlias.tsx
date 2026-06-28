@@ -9,7 +9,7 @@ const aliasFlags = [
 const releaseAliasFlags = [
   { flag: "--pull", def: "false", desc: "Run git pull --ff-only inside the target repo before releasing" },
   { flag: "--no-stash", def: "false", desc: "Abort if the working tree is dirty (skip the auto-stash safety net)" },
-  { flag: "--dry-run", def: "false", desc: "Forwarded to gitmap-v26 release — preview the pipeline without tagging" },
+  { flag: "--dry-run", def: "false", desc: "Forwarded to gitmap release — preview the pipeline without tagging" },
 ];
 
 const ReleaseAliasPage = () => (
@@ -21,7 +21,7 @@ const ReleaseAliasPage = () => (
           <h1 className="text-3xl font-bold tracking-tight">as · release-alias · release-alias-pull</h1>
         </div>
         <p className="text-lg text-muted-foreground">
-          Register a Git repo under a short name with <code>gitmap-v26 as</code>, then release it from
+          Register a Git repo under a short name with <code>gitmap as</code>, then release it from
           anywhere on disk with <code>release-alias</code> (alias <code>ra</code>) or the
           pull-then-release shortcut <code>release-alias-pull</code> (alias <code>rap</code>).
           Auto-stash protects in-flight work; the stash label is{" "}
@@ -65,36 +65,36 @@ const ReleaseAliasPage = () => (
         <h2 className="text-xl font-semibold mb-3">Typical workflow</h2>
         <CodeBlock code={`# 1. Inside the repo, register a short name (folder basename if omitted)
 cd ~/work/my-api
-gitmap-v26 as my-api
+gitmap as my-api
 
 # 2. From anywhere on disk, release by alias
-gitmap-v26 release-alias my-api v1.4.0
-gitmap-v26 ra            my-api v1.4.0          # short alias
+gitmap release-alias my-api v1.4.0
+gitmap ra            my-api v1.4.0          # short alias
 
 # 3. Or pull --ff-only first, then release in one shot
-gitmap-v26 release-alias-pull my-api v1.4.0
-gitmap-v26 rap                my-api v1.4.0     # short alias
+gitmap release-alias-pull my-api v1.4.0
+gitmap rap                my-api v1.4.0     # short alias
 
 # Preview without tagging
-gitmap-v26 ra  my-api v1.4.0 --dry-run
-gitmap-v26 rap my-api v1.4.0 --dry-run
+gitmap ra  my-api v1.4.0 --dry-run
+gitmap rap my-api v1.4.0 --dry-run
 
 # Strict mode: refuse to auto-stash a dirty tree
-gitmap-v26 ra my-api v1.4.0 --no-stash`} />
+gitmap ra my-api v1.4.0 --no-stash`} />
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold mb-3">gitmap-v26 as — register an alias</h2>
-        <CodeBlock code={`gitmap-v26 as [alias-name] [--force]
+        <h2 className="text-xl font-semibold mb-3">gitmap as — register an alias</h2>
+        <CodeBlock code={`gitmap as [alias-name] [--force]
 
-gitmap-v26 as                  # alias = folder basename
-gitmap-v26 as backend          # explicit alias
-gitmap-v26 as backend -f       # overwrite an existing 'backend' alias`} />
+gitmap as                  # alias = folder basename
+gitmap as backend          # explicit alias
+gitmap as backend -f       # overwrite an existing 'backend' alias`} />
         <FlagTable flags={aliasFlags} />
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold mb-3">gitmap-v26 release-alias — flags</h2>
+        <h2 className="text-xl font-semibold mb-3">gitmap release-alias — flags</h2>
         <p className="text-sm text-muted-foreground mb-3">
           <code>release-alias-pull</code> accepts the same flags except <code>--pull</code>, which
           is always on.
@@ -105,7 +105,7 @@ gitmap-v26 as backend -f       # overwrite an existing 'backend' alias`} />
       <section>
         <h2 className="text-xl font-semibold mb-3">Auto-stash safety net</h2>
         <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-          <li>If the working tree is dirty, gitmap-v26 stashes with the label <code>alias-version-unixts</code> before chdir + release.</li>
+          <li>If the working tree is dirty, gitmap stashes with the label <code>alias-version-unixts</code> before chdir + release.</li>
           <li>After the release pipeline returns, only the stash whose label matches is popped — concurrent <code>ra</code> calls in the same repo never clobber each other.</li>
           <li><code>--no-stash</code> opts out: a dirty tree aborts the release with a clear error instead of stashing.</li>
           <li>If the release pipeline fails, the labelled stash is left in place so you can recover with <code>git stash list</code> + <code>git stash apply</code>.</li>
@@ -118,10 +118,10 @@ gitmap-v26 as backend -f       # overwrite an existing 'backend' alias`} />
           Where aliases live
         </h2>
         <p className="text-sm text-muted-foreground">
-          Aliases are stored in the gitmap-v26 SQLite database next to the binary, in the{" "}
-          <code>Alias</code> table. When VS Code Project Manager is detected, <code>gitmap-v26 as</code>{" "}
+          Aliases are stored in the gitmap SQLite database next to the binary, in the{" "}
+          <code>Alias</code> table. When VS Code Project Manager is detected, <code>gitmap as</code>{" "}
           also mirrors the alias into <code>projects.json</code> so the Project Manager sidebar and
-          gitmap-v26 stay in sync. Run <code>gitmap-v26 alias list</code> to see every registered alias.
+          gitmap stay in sync. Run <code>gitmap alias list</code> to see every registered alias.
         </p>
       </section>
 

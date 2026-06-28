@@ -17,7 +17,7 @@ export const sections: SpecSection[] = [
   {
     folder: "01-app",
     title: "Application Specifications",
-    description: "Feature specs, command designs, and refactor documentation for the gitmap-v26 CLI.",
+    description: "Feature specs, command designs, and refactor documentation for the gitmap CLI.",
     iconName: "file-text",
     color: "text-primary",
     entries: [

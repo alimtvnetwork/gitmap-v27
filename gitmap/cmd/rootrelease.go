@@ -21,6 +21,7 @@ func releaseDispatchEntries() []dispatchEntry {
 		},
 		{[]string{constants.CmdReleaseBranch, constants.CmdReleaseBranchAlias}, func() { runReleaseBranch(argsTail()) }},
 		{[]string{constants.CmdReleasePending, constants.CmdReleasePendingAlias}, func() { runReleasePending(argsTail()) }},
+		{[]string{constants.CmdReleaseUndo, constants.CmdReleaseUndoAlias}, func() { runReleaseUndo(argsTail()) }},
 		{[]string{constants.CmdChangelog, constants.CmdChangelogAlias}, func() { runChangelog(argsTail()) }},
 		{[]string{constants.CmdChangelogMD}, func() { runChangelog([]string{constants.FlagOpenValue}) }},
 		{[]string{constants.CmdClearReleaseJSON, constants.CmdClearReleaseJSONAlias}, func() { runClearReleaseJSON(argsTail()) }},

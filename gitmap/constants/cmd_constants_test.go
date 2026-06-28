@@ -46,6 +46,8 @@ func topLevelCmds() map[string]string {
 		"CmdReleaseBranchAlias":    CmdReleaseBranchAlias,
 		"CmdReleasePending":        CmdReleasePending,
 		"CmdReleasePendingAlias":   CmdReleasePendingAlias,
+		"CmdReleaseUndo":           CmdReleaseUndo,
+		"CmdReleaseUndoAlias":      CmdReleaseUndoAlias,
 		"CmdChangelog":             CmdChangelog,
 		"CmdChangelogAlias":        CmdChangelogAlias,
 		"CmdDoctor":                CmdDoctor,

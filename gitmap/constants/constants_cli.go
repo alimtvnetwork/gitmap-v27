@@ -47,6 +47,8 @@ const (
 	CmdReleaseBranchAlias  = "rb"
 	CmdReleasePending      = "release-pending"
 	CmdReleasePendingAlias = "rp"
+	CmdReleaseUndo         = "release-undo"
+	CmdReleaseUndoAlias    = "ru"
 	CmdChangelog           = "changelog"
 	CmdChangelogAlias      = "cl"
 	CmdChangelogMD         = "changelog.md" // gitmap:cmd skip

@@ -1,5 +1,10 @@
 # Changelog
 
+## v6.65.0 — 2026-06-28
+
+### Added
+- **`gitmap release-undo` (alias `ru`)** — reverse a prior release in one shot. Deletes the local tag, deletes the remote tag (skip via `--keep-remote`), and removes `.gitmap/release/vX.Y.Z.json`. Defaults to the newest release when no version is given. Supports `--dry-run` and `-y`. Emits a copy-friendly green summary line for pasting into task-completion reports.
+
 ## v6.64.0 — 2026-06-28 — Routine release bump
 
 ## v6.63.0 — 2026-06-28

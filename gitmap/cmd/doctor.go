@@ -57,6 +57,9 @@ func defaultDoctorChecks() []DoctorCheck {
 		probePATH(),
 		probeSQLite(),
 		probeDisk(),
+		probeConfigPaths(),
+		probeGitHubToken(),
+		probeGitHubAPI(),
 	}
 }
 

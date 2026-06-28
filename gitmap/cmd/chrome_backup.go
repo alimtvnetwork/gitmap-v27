@@ -27,15 +27,17 @@ func runChromeBackup(args []string) {
 		fmt.Fprintf(os.Stderr, "chrome backup: ERROR mkdir: %v\n", err)
 		os.Exit(1)
 	}
-	n, err := writeChromeBackup(chromeUserDataDir(), out)
+	srcRoot := chromeUserDataDir()
+	n, err := writeChromeBackup(srcRoot, out)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "chrome backup: ERROR %v\n", err)
 		os.Exit(1)
 	}
-	manifestPath, mErr := writeChromeManifest(out)
+	manifestPath, mErr := writeChromeManifestWithSource(out, srcRoot)
 	if mErr != nil {
 		fmt.Fprintf(os.Stderr, "chrome backup: WARN manifest write failed: %v\n", mErr)
 	}
+
 	fmt.Printf("\033[1;92m✓ chrome backup\033[0m  %d files → \033[1;96m%s\033[0m\n", n, out)
 	if manifestPath != "" {
 		fmt.Printf("  manifest: \033[2;37m%s\033[0m\n", manifestPath)

@@ -84,6 +84,7 @@ import MakeAllPublicPage from "./pages/MakeAllPublic";
 import MakeAllPrivatePage from "./pages/MakeAllPrivate";
 import CommitInPage from "./pages/CommitIn";
 import ChromeProfileSpecPage from "./pages/ChromeProfileSpec";
+import CommandPalette from "./components/docs/CommandPalette";
 
 const queryClient = new QueryClient();
 
@@ -97,6 +98,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <CommandPalette />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/commands" element={<Commands />} />

@@ -72,7 +72,7 @@ func probeBinary(name, bin, arg, hint string) DoctorCheck {
 			if err != nil {
 				return false, err.Error()
 			}
-			return true, firstLine(string(out))
+			return true, firstDoctorLine(string(out))
 		},
 	}
 }
@@ -165,7 +165,7 @@ func emitDoctorLine(w io.Writer, c DoctorCheck, ok bool, detail string) {
 	}
 }
 
-func firstLine(s string) string {
+func firstDoctorLine(s string) string {
 	for i, r := range s {
 		if r == '\n' {
 			return s[:i]

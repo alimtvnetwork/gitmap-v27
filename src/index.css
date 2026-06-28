@@ -468,6 +468,17 @@
     animation: shimmer-pan 6s linear infinite;
   }
 
+  .version-standalone {
+    color: hsl(var(--foreground)) !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+    padding: 0 !important;
+    line-height: 1;
+  }
+
   /* Card lift + sheen sweep. */
   .card-lift {
     @apply transition-all duration-300 ease-out;

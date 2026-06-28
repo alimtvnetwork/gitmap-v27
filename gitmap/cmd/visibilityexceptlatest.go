@@ -1,7 +1,13 @@
-// Package cmd — visibilityexceptlatest.go: filters a matched repo set
-// so the newest `-vN` sibling per base group is preserved (i.e. removed
-// from the apply set). Repos that don't carry a `-vN` suffix are left
-// untouched.
+// Package cmd — visibilityexceptlatest.go: splits a matched repo set
+// so the newest `-vN` sibling per base group is held out for the
+// INVERTED visibility flip. Repos that don't carry a `-vN` suffix are
+// left in the main (target-visibility) bucket untouched.
+//
+// Behavior (v6.65.0+):
+//   --except-latest no longer just "preserves" the latest version —
+//   it flips it to the opposite of the requested target. Example:
+//     make-all-public  --except-latest → all → public, latest → PRIVATE
+//     make-all-private --except-latest → all → private, latest → PUBLIC
 //
 // Spec: spec/01-app/116-bulk-visibility-mapub-mapri.md §except-latest.
 package cmd
@@ -16,16 +22,14 @@ import (
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/visibility"
 )
 
-// versionSuffixRE captures the trailing `-v<digits>` segment. Anchored
-// at the end so multi-segment names like `proj-v1-fix-v2` match only
-// the final `-v2`.
+// versionSuffixRE captures the trailing `-v<digits>` segment.
 var versionSuffixRE = regexp.MustCompile(`(?i)^(.*)-v(\d+)$`)
 
-// filterExceptLatest removes the highest -vN entry per base from
-// `in`. Bases with only one versioned entry collapse to "no peers"
-// and are left intact (nothing to preserve over). Unversioned repos
-// are passed through untouched. Each drop is logged via `w`.
-func filterExceptLatest(in []visibility.MatchedRepo, w io.Writer) []visibility.MatchedRepo {
+// splitExceptLatest separates `in` into (rest, latest). `latest` holds
+// the highest -vN entry per base group (groups with a single versioned
+// entry are NOT split out — there is nothing meaningful to invert).
+// Unversioned repos always land in `rest`. Each split is logged via w.
+func splitExceptLatest(in []visibility.MatchedRepo, w io.Writer, invertedTarget string) ([]visibility.MatchedRepo, []visibility.MatchedRepo) {
 	type peak struct {
 		idx int
 		ver int
@@ -43,25 +47,27 @@ func filterExceptLatest(in []visibility.MatchedRepo, w io.Writer) []visibility.M
 		}
 	}
 
-	drop := map[int]int{}
+	pick := map[int]int{}
 	for base, p := range peaks {
 		if counts[base] < 2 {
 			continue
 		}
-		drop[p.idx] = p.ver
+		pick[p.idx] = p.ver
 	}
 
-	out := make([]visibility.MatchedRepo, 0, len(in))
+	rest := make([]visibility.MatchedRepo, 0, len(in))
+	latest := make([]visibility.MatchedRepo, 0, len(pick))
 	for i, m := range in {
-		if v, ok := drop[i]; ok {
-			fmt.Fprintf(w, constants.MsgBulkExceptDropFmt, m.RepoName, v)
+		if v, ok := pick[i]; ok {
+			fmt.Fprintf(w, constants.MsgBulkExceptInvertFmt, m.RepoName, v, invertedTarget)
+			latest = append(latest, m)
 
 			continue
 		}
-		out = append(out, m)
+		rest = append(rest, m)
 	}
 
-	return out
+	return rest, latest
 }
 
 // parseVersionedName returns (base, version, true) when `name` ends
@@ -77,4 +83,18 @@ func parseVersionedName(name string) (string, int, bool) {
 	}
 
 	return m[1], v, true
+}
+
+// invertVisibility returns the opposite of constants.VisibilityPublic /
+// VisibilityPrivate. Any other input passes through unchanged so the
+// caller's downstream provider call still surfaces a clean error.
+func invertVisibility(target string) string {
+	switch target {
+	case constants.VisibilityPublic:
+		return constants.VisibilityPrivate
+	case constants.VisibilityPrivate:
+		return constants.VisibilityPublic
+	}
+
+	return target
 }

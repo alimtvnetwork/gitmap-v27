@@ -9,22 +9,9 @@ import (
 )
 
 func runReleaseNotes(args []string) {
-	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "release-notes: ERROR usage: gitmap release-notes <vN..vM>")
-		os.Exit(2)
-	}
-	rng := args[0]
-	if !strings.Contains(rng, "..") {
-		fmt.Fprintln(os.Stderr, "release-notes: ERROR range must be <tagA>..<tagB>")
-		os.Exit(2)
-	}
-	out, err := exec.Command("git", "log", "--pretty=format:- %s (%h)", rng).CombinedOutput()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "release-notes: ERROR git log: %v\n%s", err, out)
-		os.Exit(1)
-	}
-	parts := strings.Split(rng, "..")
-	fmt.Printf("## %s — auto-generated from %s\n\n%s\n", parts[1], rng, string(out))
+	// Delegates to the flag-aware implementation in release_notes_opts.go,
+	// which still accepts the legacy bare-range positional form.
+	runReleaseNotesV2(args)
 }
 
 func runReleaseDry(args []string) {

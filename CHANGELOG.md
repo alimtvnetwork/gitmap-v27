@@ -1,5 +1,17 @@
 # Changelog
 
+## v6.62.0 — 2026-06-28
+
+### Verified
+- **`hd` / `help-dashboard`**: confirmed end-to-end — extracts bundled `docs-site.zip` (auto-downloads from GitHub release when missing), serves the static `dist/` over HTTP at `--port` (default), opens the user's default browser via `openURL`, and falls back to `npm run dev` or the hosted docs URL when assets are unavailable. Help file `gitmap/helptext/help-dashboard.md` present; listed in `CompactUtilities` group, `rootusage.go`, and `llmdocsgroups.go`.
+- **Help coverage**: every recent command (`rm`, `del`, `backup`, `cpc`, `cpm`, `chrome-profile-*`, `make-last-public`, `make-last-private`, `ssh status`) has a matching `gitmap/helptext/<id>.md` file — `TestEveryCmdIDHasHelpFile` passes.
+- **UI parity**: `src/constants/index.ts` `VERSION` pinned to the new tag; React docs surface mirrors the same command catalogue as the CLI help groups.
+
+### Changed
+- **File-size CI lint**: converted to non-blocking baseline warning (item #16) so the pre-existing >200-line legacy files no longer block CI while new code is still held to the 200-line ceiling.
+
+
+
 ## v6.61.0 — 2026-06-28
 
 ### Added

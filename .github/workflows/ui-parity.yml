@@ -26,8 +26,10 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Install Playwright
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright + diff deps
+        run: |
+          npx playwright install --with-deps chromium
+          npm install --no-save pixelmatch pngjs
       - name: Serve and snapshot
         run: |
           npx vite preview --port 4173 &

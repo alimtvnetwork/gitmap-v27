@@ -298,6 +298,11 @@ func topLevelCmds() map[string]string {
 		"CmdMakeLastPrivate":               CmdMakeLastPrivate,
 		"CmdMLPUB":                         CmdMLPUB,
 		"CmdMLPRI":                         CmdMLPRI,
+		"CmdStale":                         CmdStale,
+		"CmdStaleAlias":                    CmdStaleAlias,
+		"CmdOrphans":                       CmdOrphans,
+		"CmdDedupe":                        CmdDedupe,
+		"CmdSize":                          CmdSize,
 	}
 }
 

@@ -1,5 +1,31 @@
 # Changelog
 
+## v6.70.0 — 2026-06-28 — Release tools, workflow shortcuts, safety net
+
+### Added — Release
+- **`gitmap release-notes <vN..vM>`** — auto-generate changelog block from commit messages via `git log --pretty`.
+- **`gitmap release-dry [tag]`** — full rehearsal: `go build`, optional local tag, recent log; never pushes; prints undo recipe.
+- **`gitmap tag-rename <old> <new>`** — local + origin tag rename (create new, delete old, push both refs).
+
+### Added — Workflow
+- **`gitmap recent` (`r`)** — last 10 repos from the navigation helper history; `--print` for fzf piping.
+- **`gitmap todo`** — grep `TODO|FIXME|XXX` across tracked files with per-hit `git blame` author.
+- **`gitmap open` (`o`)** — open current repo's GitHub URL; `--issues`/`--prs`/`--actions` jump flags.
+- **`gitmap pr [owner]`** — list open PRs across an owner's repos in one table; honors `GITHUB_TOKEN`.
+- **`gitmap blame-stats [root]`** — top contributors per file via `git blame --line-porcelain`.
+
+### Added — Safety
+- **`gitmap snapshot [root]`** — tar.gz snapshot of working tree to `.gitmap/snapshot/snap-<UTC-ts>.tar.gz` (includes untracked).
+- **`gitmap rollback [tarball]`** — restore latest (or named) snapshot.
+- **`gitmap guard [root]`** — install `.git/hooks/pre-commit` blocking secrets, files >10MB, `-vN` drift.
+
+### Internal
+- Constants `CmdReleaseNotes` / `CmdReleaseDry` / `CmdTagRename` / `CmdRecent(+Alias)` / `CmdTodo` / `CmdOpen(+Alias)` / `CmdPR` / `CmdBlameStats` / `CmdSnapshot` / `CmdRollback` / `CmdGuard` added; parity test updated.
+- New files: `release_tools.go`, `workflow_recent_todo.go`, `workflow_open_pr.go`, `safety_snapshot.go`, plus 11 helptext markdown files.
+- Version pinned to **v6.70.0** across `README.md`, `gitmap/constants/constants.go`, `src/constants/index.ts`.
+
+
+
 ## v6.69.0 — 2026-06-28 — Chrome umbrella: backup / restore / diff / export-bookmarks / which
 
 ### Added

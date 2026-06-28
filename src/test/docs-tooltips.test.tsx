@@ -114,23 +114,10 @@ describe("docs tooltip wiring — CodeBlock toolbar", () => {
   }
 });
 
-describe("docs tooltip wiring — version badge (non-icon trigger)", () => {
-  beforeEach(() => cleanup());
+// Version badge was removed from the header (per branding cleanup —
+// header shows "gitmap docs" only, no version chip). The previous
+// test asserting a tooltip on the badge no longer applies.
 
-  it("surfaces a tooltip for the version badge on focus", async () => {
-    renderDocsChrome();
-    // The version badge has aria-label="gitmap-v26 version <X>" (no icon
-    // but it is a focus-able decorative chip — the audit lists it
-    // as needing a tooltip alongside the icon-only controls).
-    const badge = screen.getByLabelText(/gitmap-v26 version /i);
-    badge.focus();
-    const tips = await screen.findAllByRole("tooltip");
-    const matched = tips.some((t) =>
-      (t.textContent ?? "").toLowerCase().includes("gitmap-v26 version"),
-    );
-    expect(matched).toBe(true);
-  });
-});
 
 // Pointer-event sanity check: also verify userEvent.hover() opens
 // the tooltip in jsdom for at least one well-known trigger. If

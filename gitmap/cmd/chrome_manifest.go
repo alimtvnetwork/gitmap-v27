@@ -11,9 +11,11 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 )
+
 
 // chromeManifestSuffix is appended to the tarball path to form the
 // manifest filename. Kept centralized so backup + restore agree.

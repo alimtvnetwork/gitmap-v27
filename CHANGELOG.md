@@ -1,5 +1,21 @@
 # Changelog
 
+## v6.61.0 — 2026-06-28
+
+### Added
+- **Shared transport classifier** (#15): new `gitmap/transport` package centralizes HTTPS/SSH/SCP URL classification so mapper, probe, clone-from, and reclone share one rule set.
+- **Parallel sibling probe** (#5): `probe.ProbeSiblingsParallel` fans `<base>-vN` ls-remote checks across a worker pool (default 8) — drops `clone-next` discovery from O(N) round-trips to O(N/8).
+- **Uniform `--json` envelope** (#12): new `gitmap/jsonenv` package emits `{schema, version, command, ok, data, error}` so external tooling can dispatch by command without sniffing keys. Inner per-command payloads unchanged.
+- **Dynamic tab-completion** (#14): `gitmap/completion/dynamic.go` adds context-aware suggestions for repo paths (cd/clone/reclone) and Chrome profiles (cpc/cpm) on top of the static command list.
+- **Chrome VSS snapshot on Windows** (#8): `gitmap/cmd/chromeprofile_vss_windows.go` creates a VSS shadow copy so `cpc` can read Chrome files while the browser is open. Graceful fallback to the existing skip-list path on non-admin / non-NTFS / non-Windows.
+- **Changelog regen from `.gitmap/release/`** (#18): `cmd.RegenChangelog` enumerates per-release JSONs and emits a semver-sorted skeleton — eliminates hand-edit drift between release files and `CHANGELOG.md`.
+
+### Deferred
+- **#6 `zombiezen.com/go/sqlite` migration**: deferred — requires touching every store call site + revalidating the `SetMaxOpenConns(1)` rule. Tracked separately.
+- **#19 Per-command live examples on docs site**: deferred — needs docs-side route + content pipeline; the helptext examples already cover the binary-side surface.
+
+
+
 ## v6.60.0 — 2026-06-28
 
 ### Added

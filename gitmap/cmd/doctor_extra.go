@@ -3,17 +3,14 @@
 package cmd
 
 import (
-	"net"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
 )
 
-const (
-	doctorGitHubAPIURL    = "https://api.github.com"
-	doctorHTTPTimeoutSecs = 5
-)
+const doctorHTTPTimeoutSecs = 5
 
 // doctorGitHubEndpoints is the list of hosts gh-api probes.
 // Adding a URL here automatically extends the report.

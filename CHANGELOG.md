@@ -1,5 +1,11 @@
 # Changelog
 
+## v6.73.0 — 2026-06-28 — Better `chrome export-bookmarks` errors + `--root`/`--folder` docs
+
+### Added
+- **Actionable error messages** for `gitmap chrome export-bookmarks` (`gitmap/cmd/chrome_bookmarks.go`): distinguishes missing/unreadable `Bookmarks` file, unknown `--root` (lists available roots), unmatched `--folder` (lists top-level folders + syntax hint), and empty `--match`/`--title` results.
+- **Documented `--root` / `--folder` examples** for md, html, and json exports in `gitmap/helptext/chrome.md` and the README "Data, Profiles & Bookmarks" section.
+
 ## v6.72.0 — 2026-06-28 — Doctor `--json`/`--fix`, bookmark filters, chrome backup checksums
 
 ### Added

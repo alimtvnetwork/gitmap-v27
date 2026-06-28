@@ -77,6 +77,20 @@ func runCloneNext(args []string) {
 		exitWith(1)
 	}
 
+	// v6.65.0+: if cwd is a SUB-directory of the repo (not the repo
+	// root itself), walk up to the repo's working-tree root so that
+	// `parentDir` / flattening / removal target the correct folder.
+	// Previously running `gitmap cn v+1` from inside `repo/src/` would
+	// resolve parentDir=`repo/` and clone into `repo/<base>` — wrong.
+	if root, rootErr := gitutil.RepoRoot(cwd); rootErr == nil && root != "" && root != cwd {
+		if chErr := os.Chdir(root); chErr != nil {
+			fmt.Fprintf(os.Stderr, constants.ErrCloneNextCwd, chErr)
+			exitWith(1)
+		}
+		cwd = root
+		fmt.Printf("cn: escaped to repo root: %s\n", root)
+	}
+
 	remoteURL, err := gitutil.RemoteURL(cwd)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrCloneNextNoRemote, err)

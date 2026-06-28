@@ -64,14 +64,36 @@ func runChromeExportBookmarks(args []string) {
 		}
 	}
 	roots := loadBookmarkRoots(profile.Path)
-	roots = filterBookmarkRoots(roots, rootName, folderPath)
-	if match != "" || title != "" {
-		roots = filterBookmarksByTitle(roots, match, title)
-	}
 	if len(roots) == 0 {
-		fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR no bookmarks matched --root=%q --folder=%q --match=%q --title=%q\n", rootName, folderPath, match, title)
+		fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR no Bookmarks file found or it is empty/unreadable at %q\n  hint: open Chrome with this profile once so it writes %s\n", profile.Path, filepath.Join(profile.Path, "Bookmarks"))
 		os.Exit(1)
 	}
+	available := availableRootNames(roots)
+	if rootName != "" {
+		filtered := filterBookmarkRoots(roots, rootName, "")
+		if len(filtered) == 0 {
+			fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR --root=%q did not match any top-level root\n  available roots: %s\n", rootName, strings.Join(available, ", "))
+			os.Exit(1)
+		}
+		roots = filtered
+	}
+	if folderPath != "" {
+		filtered := filterBookmarkRoots(roots, "", folderPath)
+		if len(filtered) == 0 {
+			fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR --folder=%q not found under root=%q\n  available top-level folders: %s\n  hint: paths are slash-delimited and case-insensitive (e.g. --folder \"Work/Docs\")\n", folderPath, fallback(rootName, "<all>"), strings.Join(topLevelFolderNames(roots), ", "))
+			os.Exit(1)
+		}
+		roots = filtered
+	}
+	if match != "" || title != "" {
+		filtered := filterBookmarksByTitle(roots, match, title)
+		if len(filtered) == 0 {
+			fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR no bookmarks matched --match=%q --title=%q within the selected subtree\n  hint: --match is a case-insensitive substring; --title is an exact title match\n", match, title)
+			os.Exit(1)
+		}
+		roots = filtered
+	}
+
 	body, err := renderBookmarks(roots, format)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR %v\n", err)
@@ -230,3 +252,30 @@ func fallback(a, b string) string {
 	}
 	return b
 }
+
+func availableRootNames(roots []bookmarkItem) []string {
+	out := make([]string, 0, len(roots))
+	for _, r := range roots {
+		out = append(out, r.Folder)
+	}
+	if len(out) == 0 {
+		return []string{"(none)"}
+	}
+	return out
+}
+
+func topLevelFolderNames(roots []bookmarkItem) []string {
+	out := []string{}
+	for _, r := range roots {
+		for _, c := range r.Children {
+			if c.URL == "" {
+				out = append(out, fallback(c.Title, c.Folder))
+			}
+		}
+	}
+	if len(out) == 0 {
+		return []string{"(none)"}
+	}
+	return out
+}
+

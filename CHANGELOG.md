@@ -1,5 +1,18 @@
 # Changelog
 
+## v6.71.0 — 2026-06-28 — Parallel hygiene scans, JSON/CSV exports, integration tests
+
+### Added
+- **Parallel scanning** for `gitmap stale`, `dedupe`, `size`, `orphans`: directory probes and per-repo `git` calls now fan out across up to 8 workers via shared `scanForReposParallel` / `mapReposParallel` helpers (`gitmap/cmd/hygiene_parallel.go`).
+- **`--format=table|json|csv`** flag on all four hygiene commands. JSON emits structured arrays (RFC3339 timestamps, byte counts, tree SHAs); CSV emits a header row + standard encoding/csv quoting. Table remains the default.
+- **Integration tests** (`gitmap/cmd/hygiene_integration_test.go`) spin up real git repos in `t.TempDir()` and exercise `scanForReposParallel`, `lastCommitTime`, `headTreeSHA`, `dirSize`, `originURL`, `gitURLToHTTPS`, plus the JSON/CSV emitters. Skip cleanly when `git` is absent.
+
+### Notes
+- `orphans --format=json|csv` is read-only (no delete prompt) to keep machine-readable output stable for piping into other tools.
+- Version pinned to **v6.71.0** across `README.md`, `gitmap/constants/constants.go`, `src/constants/index.ts`.
+
+
+
 ## v6.70.0 — 2026-06-28 — Release tools, workflow shortcuts, safety net
 
 ### Added — Release

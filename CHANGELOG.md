@@ -1,5 +1,20 @@
 # Changelog
 
+## v6.66.0 — 2026-06-28 — Doctor, self-update, structured logs, range undo, checkpointed cfrp, pure-Go SQLite scaffold
+
+### Added
+- **`gitmap doctor`** — single command that probes git, ssh, chrome, PATH, sqlite, and disk; prints fix recipes for each failed check and exits non-zero so CI can gate on it. Helptext in `gitmap/helptext/doctor.md`.
+- **`gitmap self-update`** — hits the GitHub release API for the newest tag, compares against `constants.Version`, and re-runs `gitmap self-install --version <tag> -y` when newer. Flags: `--dry-run`, `--force`. Helptext in `gitmap/helptext/self-update.md`.
+- **`release-undo --range vX.Y.A..vX.Y.B`** — roll back multiple contiguous patch releases in one shot. Endpoints must share major.minor to prevent accidental mass-deletion; failures stop the run with earlier successes intact (idempotent).
+- **`cfrp` checkpoint resume** — every batch writes `.gitmap/cfrp/<batch-id>/state.json` after each successful clone; re-running with the same batch id skips entries already in `done` (mirrors `commit-in`'s state.json contract). Helpers in `gitmap/cmd/clonefixrepocheckpoint.go`.
+- **Structured logging** via `gitmap/logging` — `--log-json` emits NDJSON with `schema=gitmap.log.v1` plus ts, level, command, message, and fields. Re-uses the existing jsonenv version stamp so log shippers can dispatch by schema.
+- **Per-command runnable-examples gate** — `gitmap/helptext/examples_golden_test.go` fails CI when any command markdown file is missing an `## Examples` section with a fenced code block (#19).
+- **Pure-Go SQLite scaffold** at `gitmap/db/zombiezen` (#6) — incremental migration off mattn/go-sqlite3 behind the `purego_sqlite` build tag. Open returns `ErrNotEnabled` until step 3 of the migration plan lands.
+
+### Changed
+- **`src/data/commands.ts`** — added `doctor`, `self-update`, and `release-undo --range` to the docs UI; introduced a `GlobalFlags` block documenting `--log-json`, `--quiet`, `--no-color`, and `--json`.
+- **Version pinned to v6.66.0** across `README.md` (12 install-script + asset URLs), `gitmap/constants/constants.go`, and `src/constants/index.ts`.
+
 ## v6.65.0 — 2026-06-28
 
 ### Added

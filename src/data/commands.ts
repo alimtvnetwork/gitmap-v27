@@ -1988,4 +1988,43 @@ export const commands: CommandDef[] = [
       { command: "gitmap del old-repo --disk -y", description: "Remove from DB and delete folder" },
     ],
   },
+  {
+    category: "maintenance",
+    name: "doctor", description: "One-shot health check for every external dependency gitmap touches (git, ssh, chrome, PATH, sqlite, disk). Prints targeted fix recipes for each failed probe and exits non-zero when anything is broken — drop it in CI as a pre-flight gate.",
+    usage: "gitmap doctor [--json]",
+    examples: [
+      { command: "gitmap doctor", description: "Human-readable report" },
+      { command: "gitmap doctor --json | jq '.data.checks[] | select(.ok==false)'", description: "Machine-readable, filter to failed probes" },
+    ],
+  },
+  {
+    category: "maintenance",
+    name: "self-update", description: "Probe the GitHub release feed for the newest tag and re-run `gitmap self-install` non-interactively when a newer version is available. Honors --dry-run and --force.",
+    usage: "gitmap self-update [--dry-run] [--force]",
+    flags: [
+      { flag: "--dry-run", description: "Print the would-be install command without touching disk" },
+      { flag: "--force", description: "Re-install even when already on latest" },
+    ],
+    examples: [
+      { command: "gitmap self-update" },
+      { command: "gitmap self-update --dry-run" },
+    ],
+  },
+  {
+    category: "release",
+    name: "release-undo --range", description: "Roll back several contiguous release tags at once. Endpoints must share major.minor (e.g. v6.60.0..v6.65.0) to prevent accidental mass-deletion. Each version is processed via the single-tag pipeline, so failures stop the run with earlier successes intact.",
+    usage: "gitmap release-undo --range vX.Y.A..vX.Y.B [--keep-remote] [--keep-sidecar] [-y] [--dry-run]",
+    examples: [
+      { command: "gitmap release-undo --range v6.60.0..v6.65.0 --dry-run", description: "Preview the rollback list" },
+      { command: "gitmap ru --range v6.60.0..v6.62.0 -y", description: "Roll back three tags non-interactively" },
+    ],
+  },
+];
+
+// Global flags applied by every command via the shared root parser.
+export const GlobalFlags: CommandFlag[] = [
+  { flag: "--log-json", description: "Emit structured NDJSON logs (schema gitmap.log.v1) to stderr — pipe into jq, Loki, or any log shipper." },
+  { flag: "--quiet", description: "Suppress non-error output." },
+  { flag: "--no-color", description: "Disable ANSI colors." },
+  { flag: "--json", description: "Emit a single jsonenv envelope (schema gitmap.v1) to stdout." },
 ];

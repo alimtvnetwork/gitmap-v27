@@ -1,6 +1,14 @@
 # Changelog
 
+## v6.59.0 — 2026-06-28
+
+### Added
+- **Global `--quiet` / `--no-color` env vars (item #13)** — new `gitmap/uipref` package centralizes `GITMAP_QUIET`, `GITMAP_NO_COLOR`, and the cross-tool `NO_COLOR` convention. Wired into the shared clone spinner first so `cfr` / `cfrp` / `clone` / `clone-next` honor it immediately; remaining decorative call sites (chrome profile copy, history, backup, ssh status) will adopt the same helper.
+- **CI `-race` enforcement (item #17)** — new `.github/workflows/race-detector.yml` runs `go test -race` on the concurrency-hot packages (`cmd/...`, `cloneconcurrency`, `visibility`, `store`, `uipref`) on every push and PR.
+- **File-size CI lint (item #16)** — new `.github/scripts/file-size-check.sh` fails CI when any tracked `*.go` / `*.ps1` source file exceeds 200 lines (test files / golden fixtures excluded). Runs as a step inside the race-detector workflow.
+
 ## v6.58.0 — 2026-06-28
+
 
 ### Added
 - **`cpc --register-only` (`-r`)** — refresh the destination profile's Chrome `Local State` entry without recopying files. Useful when the picker entry was lost but the on-disk profile is intact.

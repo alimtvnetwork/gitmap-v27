@@ -51,13 +51,15 @@ func runChromeRestore(args []string) {
 		os.Exit(2)
 	}
 	src := args[0]
-	dst := chromeUserDataDir()
+	dst := ""
+	intoSet := false
 	force, yes, dryRun, skipVerify := false, false, false, false
 	for i := 1; i < len(args); i++ {
 		switch args[i] {
 		case "--into":
 			if i+1 < len(args) {
 				dst = args[i+1]
+				intoSet = true
 				i++
 			}
 		case "--force", "-f":
@@ -70,6 +72,15 @@ func runChromeRestore(args []string) {
 			skipVerify = true
 		}
 	}
+	if !intoSet {
+		if recorded := readChromeManifestSource(src); recorded != "" {
+			dst = recorded
+			fmt.Printf("\033[2;37m• restoring to recorded source profile: %s\033[0m\n", dst)
+		} else {
+			dst = chromeUserDataDir()
+		}
+	}
+
 	if !skipVerify {
 		ok, miss, err := verifyChromeManifest(src)
 		switch {

@@ -34,6 +34,18 @@ func RemoteURL(repoPath string) (string, error) {
 	return strings.TrimSpace(out), nil
 }
 
+// RepoRoot returns the absolute path of the working-tree root for the
+// repo containing `startPath`. Returns the underlying git error when
+// startPath is not inside a git working tree.
+func RepoRoot(startPath string) (string, error) {
+	out, err := runGit(startPath, constants.GitRevParse, "--show-toplevel")
+	if err != nil {
+		return "", err
+	}
+
+	return strings.TrimSpace(out), nil
+}
+
 // Branch source labels describe how a repo's branch was determined.
 const (
 	BranchSourceHEAD           = "HEAD"

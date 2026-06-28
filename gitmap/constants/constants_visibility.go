@@ -216,8 +216,9 @@ const (
 	MsgBulkCacheHitFmt   = "make-all-*: owner repo list cache HIT (%d repos, age %s)\n"
 	MsgBulkCacheMissFmt  = "make-all-*: owner repo list cache MISS — refreshing from %s\n"
 	MsgBulkParallelFmt   = "make-all-*: applying with parallelism=%d\n"
-	MsgBulkExceptLatest  = "make-all-*: --except-latest active — newest -vN per base group will be preserved\n"
-	MsgBulkExceptDropFmt = "  → except-latest: preserving %s (highest -v%d)\n"
+	MsgBulkExceptLatest    = "make-all-*: --except-latest active — newest -vN per base group will be flipped to the OPPOSITE visibility\n"
+	MsgBulkExceptInvertFmt = "  → except-latest: %s (highest -v%d) will be set to %s\n"
+	MsgBulkInvertHeaderFmt = "\nmake-all-*: applying INVERTED visibility=%s to %d latest-version repo(s) on %s\n"
 
 	// Fuzzy fallback surface.
 	MsgBulkFuzzyAutoFixFmt = "make-all-*: auto-fix retry with pattern %q\n"

@@ -11,7 +11,7 @@
 //   - ResolveOwnerOnly           → visibilityresolveowner.go
 //   - listOwnerReposCached       → visibilityownerlistcache.go
 //   - visibility.ParsePatternList / MatchOwnerRepos → gitmap/visibility
-//   - filterExceptLatest         → visibilityexceptlatest.go
+//   - splitExceptLatest          → visibilityexceptlatest.go
 //   - renderMatchedTable / promptConfirmOrExclude → visibilitybulkprompt.go
 //   - applyBulkLoopParallel      → visibilityparallel.go
 //
@@ -81,31 +81,67 @@ func runMakeAllVisibility(target, cmdName string, args []string, exceptLatestDef
 	}
 
 	matches, ownerTotal := matchOrExitEmpty(ctx, patterns, flags)
+	var latestInvert []visibility.MatchedRepo
+	inverted := invertVisibility(target)
 	if flags.ExceptLatest {
 		fmt.Fprint(os.Stdout, constants.MsgBulkExceptLatest)
-		matches = filterExceptLatest(matches, os.Stdout)
-		if len(matches) == 0 {
+		matches, latestInvert = splitExceptLatest(matches, os.Stdout, inverted)
+		if len(matches) == 0 && len(latestInvert) == 0 {
 			fmt.Fprint(os.Stderr, constants.MsgBulkNoMatches)
 			os.Exit(constants.ExitVisOK)
 		}
 	}
-	audit := beginRunAudit(ctx, target, cmdName, patternsRaw, flags, ownerTotal, matches)
+	combined := append(append([]visibility.MatchedRepo{}, matches...), latestInvert...)
+	audit := beginRunAudit(ctx, target, cmdName, patternsRaw, flags, ownerTotal, combined)
 
-	final := confirmOrAbort(matches, flags.Yes)
+	final := confirmOrAbort(combined, flags.Yes)
 	if len(final) == 0 {
-		excluded := audit.markExcluded(matches, nil)
+		excluded := audit.markExcluded(combined, nil)
 		audit.finalize(excluded, 0, 0, 0, constants.ExitVisConfirmReq)
 		fmt.Fprint(os.Stderr, constants.MsgBulkAborted)
 		os.Exit(constants.ExitVisConfirmReq)
 	}
-	excludedCount := audit.markExcluded(matches, final)
+	excludedCount := audit.markExcluded(combined, final)
+	mainFinal, invertFinal := partitionByName(final, latestInvert)
 
-	fmt.Fprintf(os.Stdout, constants.MsgBulkApplyHeaderFmt, target, len(final), ctx.Owner)
-	changed, skipped, failed := applyBulkLoopParallel(ctx, target, final, flags, audit)
+	changed, skipped, failed := 0, 0, 0
+	if len(mainFinal) > 0 {
+		fmt.Fprintf(os.Stdout, constants.MsgBulkApplyHeaderFmt, target, len(mainFinal), ctx.Owner)
+		c, s, f := applyBulkLoopParallel(ctx, target, mainFinal, flags, audit)
+		changed, skipped, failed = changed+c, skipped+s, failed+f
+	}
+	if len(invertFinal) > 0 {
+		fmt.Fprintf(os.Stdout, constants.MsgBulkInvertHeaderFmt, inverted, len(invertFinal), ctx.Owner)
+		c, s, f := applyBulkLoopParallel(ctx, inverted, invertFinal, flags, audit)
+		changed, skipped, failed = changed+c, skipped+s, failed+f
+	}
 	fmt.Fprintf(os.Stdout, constants.MsgBulkSummaryFmt, changed, skipped, failed, len(final))
 	exit := bulkExitCode(changed, failed)
 	audit.finalize(excludedCount, changed, skipped, failed, exit)
 	os.Exit(exit)
+}
+
+// partitionByName splits `final` into (mainSet, invertSet) using the
+// names present in `invertSource` as the membership test for invertSet.
+func partitionByName(final, invertSource []visibility.MatchedRepo) ([]visibility.MatchedRepo, []visibility.MatchedRepo) {
+	if len(invertSource) == 0 {
+		return final, nil
+	}
+	isInvert := make(map[string]bool, len(invertSource))
+	for _, m := range invertSource {
+		isInvert[m.RepoName] = true
+	}
+	main := make([]visibility.MatchedRepo, 0, len(final))
+	inv := make([]visibility.MatchedRepo, 0, len(invertSource))
+	for _, m := range final {
+		if isInvert[m.RepoName] {
+			inv = append(inv, m)
+		} else {
+			main = append(main, m)
+		}
+	}
+
+	return main, inv
 }
 
 

@@ -43,9 +43,9 @@ const HomePage = () => {
             <h1 className="text-4xl md:text-6xl font-heading font-bold docs-h1 text-shimmer tracking-tight">
               gitmap
             </h1>
-            <span className="version-standalone mt-2 block font-mono text-base md:text-lg font-bold">
+            <p className="version-text mt-2 font-mono text-sm md:text-base font-bold">
               {VERSION}
-            </span>
+            </p>
           </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed font-sans">
             Scan a folder tree for Git repos, generate structured clone files, and

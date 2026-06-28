@@ -1,94 +1,30 @@
 # gitmap doctor
 
-Diagnose PATH, deployment, and version issues with the gitmap installation.
-
-## Alias
-
-None
+One-shot health check for every external dependency gitmap relies on.
 
 ## Usage
 
-    gitmap doctor [--fix-path]
+```
+gitmap doctor [--json]
+```
 
-## Flags
+## What it checks
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| --fix-path | false | Attempt to fix PATH issues automatically |
+| Probe   | Pass means                                            | Fix hint on fail                                       |
+|---------|-------------------------------------------------------|--------------------------------------------------------|
+| git     | `git --version` runs                                  | Install git from https://git-scm.com/downloads         |
+| ssh     | `ssh -V` runs                                         | Enable OpenSSH client (Windows optional feature)       |
+| chrome  | Chrome binary located on disk                         | Install Chrome from https://www.google.com/chrome/     |
+| PATH    | `gitmap` resolves on PATH                             | Run `gitmap self-install`                              |
+| sqlite  | pure-Go driver embedded                               | Ensure `.gitmap/` is writable                          |
+| disk    | cwd is writable                                       | Free disk space (gitmap needs ~50MB headroom)          |
 
-## Prerequisites
-
-- None
+Each failed probe prints a fix recipe inline. Exit code is non-zero
+when any probe fails, so CI pipelines can gate on it.
 
 ## Examples
 
-### Example 1: Run full diagnostics
-
-    gitmap doctor
-
-**Output:**
-
-    ■ Checking system...
-    ✓ Git installed (v2.43.0)
-    ✓ Go installed (go1.22.1)
-    ✓ GitHub CLI (gh) installed (v2.44.1)
-    ■ Checking binary...
-    ✓ Binary at E:\bin-run\gitmap.exe
-    ✗ Stale binary found at C:\old\gitmap.exe
-    ■ Checking database...
-    ✓ Database OK (42 repos, 3 groups)
-    ■ Result: 1 issue found
-      → Run 'gitmap doctor --fix-path' to resolve
-
-### Example 2: Fix PATH issues automatically
-
-    gitmap doctor --fix-path
-
-**Output:**
-
-    ■ Checking system...
-    ✓ Git installed (v2.43.0)
-    ✓ Go installed (go1.22.1)
-    ■ Checking binary...
-    ✓ Binary at E:\bin-run\gitmap.exe
-    ✓ Fixed: removed stale binary at C:\old\gitmap.exe
-    ■ Checking database...
-    ✓ Database OK (42 repos, 3 groups)
-    ✓ All checks passed.
-
-### Example 3: Clean installation
-
-    gitmap doctor
-
-**Output:**
-
-    ■ Checking system...
-    ✓ Git installed (v2.43.0)
-    ✓ Go installed (go1.22.1)
-    ■ Checking binary...
-    ✓ Binary at E:\bin-run\gitmap.exe
-    ■ Checking database...
-    ✓ Database OK (42 repos, 3 groups)
-    ■ Checking directories...
-    ✓ No legacy directories (.release/, gitmap-output/, .deployed/)
-    ✓ All checks passed. No issues found.
-
-Legacy directories (`.release/`, `gitmap-output/`, `.deployed/`) are automatically
-merged into `.gitmap/` and removed at CLI startup. The doctor check confirms
-cleanup succeeded.
-
-## See Also
-
-- [setup](setup.md) — Run first-time configuration
-- [update](update.md) — Update gitmap to the latest version
-- [version](version.md) — Check current version
-
-## Scripting (JSON)
-
-Discover this command from a script using the machine-readable help payload:
-
-```bash
-gitmap help --json --filter doctor
 ```
-
-The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).
+gitmap doctor
+gitmap doctor --json | jq '.data.checks[] | select(.ok==false)'
+```

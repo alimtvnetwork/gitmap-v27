@@ -40,6 +40,7 @@ func toolingDispatchEntries() []dispatchEntry {
 		{[]string{constants.CmdZipGroup, constants.CmdZipGroupShort}, func() { runZipGroup(argsTail()) }},
 		{[]string{constants.CmdAlias, constants.CmdAliasShort}, func() { runAlias(argsTail()) }},
 		{[]string{constants.CmdSSH}, func() { runSSH(argsTail()) }},
+		{[]string{constants.CmdBackup}, func() { runBackup(argsTail()) }},
 		{[]string{constants.CmdPrune, constants.CmdPruneAlias}, func() { runPrune(argsTail()) }},
 		{[]string{constants.CmdTempRelease, constants.CmdTempReleaseShort}, func() { runTempRelease(argsTail()) }},
 		{[]string{constants.CmdTask, constants.CmdTaskAlias}, func() { runTask(argsTail()) }},

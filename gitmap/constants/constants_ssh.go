@@ -15,7 +15,26 @@ const (
 	SubCmdSSHDelete  = "delete"
 	SubCmdSSHDeleteS = "rm"
 	SubCmdSSHConfig  = "config"
+	SubCmdSSHStatus  = "status"
+	SubCmdSSHStatusS = "st"
 )
+
+// SSH status output strings (v6.57.0).
+const (
+	MsgSSHStatusHeader       = "\n\033[36mgitmap ssh status\033[0m\n"
+	MsgSSHStatusAgentRunning = "  \033[32m✓\033[0m ssh-agent reachable (SSH_AUTH_SOCK=%s)\n"
+	MsgSSHStatusAgentMissing = "  \033[33m!\033[0m ssh-agent NOT reachable — run `ssh-agent` and `ssh-add <key>`\n"
+	MsgSSHStatusKeysHeader   = "  loaded keys (%d):\n"
+	MsgSSHStatusKeyLine      = "    • %s\n"
+	MsgSSHStatusKeysNone     = "    (none — `ssh-add ~/.ssh/id_ed25519` to load)\n"
+	MsgSSHStatusProbeHeader  = "  reachability:\n"
+	MsgSSHStatusProbeOK      = "    \033[32m✓\033[0m %s — authenticated as %s\n"
+	MsgSSHStatusProbeFail    = "    \033[31m✗\033[0m %s — %s\n"
+	MsgSSHStatusFooter       = "\n  next: `gitmap ssh ls` for stored keys, `gitmap ssh cp <name>` to copy a public key.\n\n"
+)
+
+
+
 
 // SSH copy messages.
 const (

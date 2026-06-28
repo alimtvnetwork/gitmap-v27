@@ -1,5 +1,33 @@
 # Changelog
 
+## v6.57.0 — 2026-06-28
+
+Tracking-list progress on the "20 improvements" follow-ups. Each
+item below is independently usable; remaining items (resumable
+commit-in, VSS snapshot, zombiezen migration, doctor extensions,
+JSON-everywhere) will land in subsequent minors.
+
+### Added — bounded backup retention (suggestion #2)
+- **`gitmap backup ls`**: grouped per-repo summary of every snapshot
+  under `.gitmap/backup/<repo>/v<N>/fix-repo/<UTC-ts>/`, with count
+  and total bytes.
+- **`gitmap backup prune --keep=N`**: keep newest N snapshots per
+  repo, delete the rest.
+- **`gitmap backup prune --older-than=DAYS`**: drop snapshots older
+  than DAYS. Combinable with `--keep`.
+- **`gitmap backup prune --dry-run`**: print every delete it would
+  do without touching disk.
+- Refuses to run with no flag — accidental `gitmap backup prune` is
+  a no-op, not a wipe.
+
+### Added — SSH health surface (suggestion #11)
+- **`gitmap ssh status`** (alias `gitmap ssh st`): one-screen report
+  covering `SSH_AUTH_SOCK` reachability, loaded identities from
+  `ssh-add -l`, and batch-mode `ssh -T git@<host>` probes against
+  github.com / gitlab.com / bitbucket.org. Classifies the well-known
+  "successfully authenticated" / "does not provide shell access"
+  responses as success. Always exits 0 — diagnostic, not gating.
+
 ## v6.56.0 — 2026-06-28
 
 ### Added

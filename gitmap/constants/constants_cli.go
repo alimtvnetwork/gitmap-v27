@@ -51,6 +51,12 @@ const (
 	CmdChangelogAlias      = "cl"
 	CmdChangelogMD         = "changelog.md" // gitmap:cmd skip
 	CmdDoctor              = "doctor"
+	CmdBackup              = "backup"
+	// `gitmap backup <subcommand>` lists or prunes the on-disk backup
+	// tree at `.gitmap/backup/<repo>/v<N>/fix-repo/<UTC-ts>/`. v6.57.0.
+	SubCmdBackupLs    = "ls"     // gitmap:cmd skip
+	SubCmdBackupList  = "list"   // gitmap:cmd skip
+	SubCmdBackupPrune = "prune"  // gitmap:cmd skip
 	CmdLatestBranch        = "latest-branch"
 	CmdLatestBranchAlias   = "lb"
 	// `gitmap branch <subcommand>` namespaces general branch-management

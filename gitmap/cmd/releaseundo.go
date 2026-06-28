@@ -143,6 +143,15 @@ func latestReleaseJSONVersion() (string, bool) {
 	if len(versions) == 0 {
 		return "", false
 	}
-	sort.Slice(versions, func(i, j int) bool { return versions[i].Less(versions[j]) })
+	sort.Slice(versions, func(i, j int) bool {
+		a, b := versions[i], versions[j]
+		if a.Major != b.Major {
+			return a.Major < b.Major
+		}
+		if a.Minor != b.Minor {
+			return a.Minor < b.Minor
+		}
+		return a.Patch < b.Patch
+	})
 	return versions[len(versions)-1].String(), true
 }

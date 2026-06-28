@@ -196,12 +196,36 @@ const (
 		PRIMARY KEY (Provider, Owner)
 	)`
 
+	// Owner repo-name index — one row per repo with BaseName +
+	// VersionNumber pre-parsed so make-last-* / fuzzy fallback can
+	// query without re-walking the JSON blob. Populated alongside
+	// the cache write.
+	TableOwnerRepoNameIndex = "OwnerRepoNameIndex"
+	SQLCreateOwnerRepoNameIndex = `CREATE TABLE IF NOT EXISTS OwnerRepoNameIndex (
+		Provider       TEXT NOT NULL,
+		Owner          TEXT NOT NULL,
+		RepoName       TEXT NOT NULL,
+		BaseName       TEXT NOT NULL,
+		VersionNumber  INTEGER NOT NULL DEFAULT -1,
+		FetchedAt      TEXT NOT NULL,
+		PRIMARY KEY (Provider, Owner, RepoName)
+	)`
+
 	// Log lines for cache + parallel surface.
 	MsgBulkCacheHitFmt   = "make-all-*: owner repo list cache HIT (%d repos, age %s)\n"
 	MsgBulkCacheMissFmt  = "make-all-*: owner repo list cache MISS — refreshing from %s\n"
 	MsgBulkParallelFmt   = "make-all-*: applying with parallelism=%d\n"
 	MsgBulkExceptLatest  = "make-all-*: --except-latest active — newest -vN per base group will be preserved\n"
 	MsgBulkExceptDropFmt = "  → except-latest: preserving %s (highest -v%d)\n"
+
+	// Fuzzy fallback surface.
+	MsgBulkFuzzyAutoFixFmt = "make-all-*: auto-fix retry with pattern %q\n"
+	MsgBulkFuzzyHintHeader = "make-all-*: did you mean one of these?\n"
+
+	// make-last-* surface.
+	MsgMakeLastResolvedFmt = "make-last-*: %s → %s (highest -v%d under base %q)\n"
+	ErrMakeLastNoBaseFmt   = "Error: no repo matches base %q under %s (operation: make-last-resolve, reason: cache empty or no -vN siblings) — try `gitmap make-all-public %s %s*` to inspect candidates.\n"
+	ErrMakeLastMissingArg  = "Error: usage: gitmap %s <owner-or-url> <base>\n"
 
 	// Flags.
 	FlagBulkParallel    = "--parallel"

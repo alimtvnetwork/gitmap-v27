@@ -1,5 +1,27 @@
 # Changelog
 
+## v6.56.0 — 2026-06-28
+
+### Added
+- **`make-last-public` / `make-last-private` (aliases `MLPUB` / `MLPRI`)**
+  flip exactly one repo: the highest `-vN` sibling under `<base>` for
+  the given owner. Accepts `<owner-or-url> <base>` plus `-Y/--yes`.
+  Resolves via the new `OwnerRepoNameIndex` table (cache HIT) and
+  falls back to a forced refresh when the index is cold.
+- **Fuzzy fallback for `make-all-*`**: when the literal pattern
+  matches zero repos, gitmap silently retries `<base>-<N>` as
+  `<base>-v<N>` (covers the `macro-ahk-51` → `macro-ahk-v51` typo)
+  and surfaces up to 5 near-miss repo names (Levenshtein ≤ 3) on
+  stderr when the auto-fix still finds nothing.
+- **`OwnerRepoNameIndex` SQLite table** pre-parses every cached repo
+  name into `BaseName` + `VersionNumber` columns so `make-last-*` and
+  highest-vN lookups run as a single indexed query. Populated
+  transparently on every `make-all-*` cache refresh.
+
+### Changed
+- `visibilityownerlistcache.writeOwnerRepoListCache` now writes both
+  the JSON blob and the parsed name index in one logical step.
+
 ## v6.55.0 — 2026-06-25
 
 ### Added

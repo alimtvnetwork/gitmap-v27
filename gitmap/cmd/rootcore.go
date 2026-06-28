@@ -62,6 +62,14 @@ func coreDispatchEntries() []dispatchEntry {
 			func() { runMakeAllPrivateExceptLatest(argsTail()) },
 		},
 		{
+			[]string{constants.CmdMakeLastPublic, constants.CmdMLPUB},
+			func() { runMakeLastPublic(argsTail()) },
+		},
+		{
+			[]string{constants.CmdMakeLastPrivate, constants.CmdMLPRI},
+			func() { runMakeLastPrivate(argsTail()) },
+		},
+		{
 			[]string{constants.CmdVisibilityUndo, constants.CmdVisibilityUndoAlias},
 			func() { runVisibilityUndo(argsTail()) },
 		},

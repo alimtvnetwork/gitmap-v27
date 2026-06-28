@@ -87,7 +87,13 @@ func writeOwnerRepoListCache(db *store.DB, provider, owner string, names []strin
 	if err != nil {
 		return
 	}
-	if err := db.UpsertOwnerRepoListCache(provider, owner, string(raw), time.Now()); err != nil {
+	now := time.Now()
+	if err := db.UpsertOwnerRepoListCache(provider, owner, string(raw), now); err != nil {
 		fmt.Fprintf(os.Stderr, "make-all-*: cache write failed: %v\n", err)
+	}
+	if err := db.EnsureOwnerRepoNameIndex(); err == nil {
+		if err := db.UpsertOwnerRepoNameIndex(provider, owner, names, now); err != nil {
+			fmt.Fprintf(os.Stderr, "make-all-*: name-index write failed: %v\n", err)
+		}
 	}
 }

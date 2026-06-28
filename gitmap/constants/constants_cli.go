@@ -196,6 +196,16 @@ const (
 	CmdMakeAllPrivateExceptLatest = "make-all-private-except-latest"
 	CmdMAPUBXL                    = "MAPUBXL"
 	CmdMAPRIXL                    = "MAPRIXL"
+	// CmdMakeLastPublic / CmdMakeLastPrivate flip exactly one repo:
+	// the highest `-vN` sibling under `<base>` for the given owner.
+	// When `<base>` itself doesn't end in `-vN` we resolve via the
+	// OwnerRepoNameIndex; if `<base>` is already an exact repo name
+	// we apply directly. Honors -Y / --yes. Spec follow-up to
+	// spec/01-app/116-bulk-visibility-mapub-mapri.md.
+	CmdMakeLastPublic  = "make-last-public"
+	CmdMakeLastPrivate = "make-last-private"
+	CmdMLPUB           = "MLPUB"
+	CmdMLPRI           = "MLPRI"
 	// CmdVisibilityUndo reverses the most recent successful bulk
 	// `make-all-public` / `make-all-private` (or prior undo) by
 	// reading the persisted MakeAllVisibilityResult rows and

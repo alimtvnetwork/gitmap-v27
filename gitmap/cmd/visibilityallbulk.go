@@ -165,13 +165,47 @@ func matchOrExitEmpty(ctx ownerContext, patterns []visibility.Pattern, flags bul
 	}
 
 	matches := visibility.MatchOwnerRepos(names, patterns)
+	if len(matches) == 0 {
+		patterns, matches = fuzzyFallback(patterns, names)
+	}
 	fmt.Fprint(os.Stdout, renderMatchedTable(ctx.Owner, len(names), matches))
 	if len(matches) == 0 {
+		printNearMissHints(patterns, names)
 		fmt.Fprint(os.Stderr, constants.MsgBulkNoMatches)
 		os.Exit(constants.ExitVisOK)
 	}
 
 	return matches, len(names)
+}
+
+// fuzzyFallback runs visibility.AutoFixVDigitPatterns and, if it
+// added any patterns, re-runs MatchOwnerRepos. Emits a stdout note
+// so the user sees exactly which token was auto-fixed.
+func fuzzyFallback(patterns []visibility.Pattern, names []string) ([]visibility.Pattern, []visibility.MatchedRepo) {
+	extra := visibility.AutoFixVDigitPatterns(patterns, names)
+	if len(extra) == 0 {
+		return patterns, nil
+	}
+	for _, p := range extra {
+		fmt.Fprintf(os.Stdout, constants.MsgBulkFuzzyAutoFixFmt, p.Raw)
+	}
+	merged := append(patterns, extra...)
+
+	return merged, visibility.MatchOwnerRepos(names, merged)
+}
+
+// printNearMissHints surfaces up to 5 close repo names so users can
+// retry with the right token. Stderr-only; no prompt to keep this
+// non-interactive path scriptable.
+func printNearMissHints(patterns []visibility.Pattern, names []string) {
+	hints := visibility.NearMisses(patterns, names, 3, 5)
+	if len(hints) == 0 {
+		return
+	}
+	fmt.Fprint(os.Stderr, constants.MsgBulkFuzzyHintHeader)
+	for _, h := range hints {
+		fmt.Fprintf(os.Stderr, "  - %s\n", h)
+	}
 }
 
 // confirmOrAbort runs the interactive prompt unless -Y was passed.

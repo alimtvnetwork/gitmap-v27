@@ -283,7 +283,19 @@ func topLevelCmds() map[string]string {
 		"CmdChromeProfileList":        CmdChromeProfileList,
 		"CmdChromeProfileListAlias":   CmdChromeProfileListAlias,
 		"CmdChromeProfileDelete":      CmdChromeProfileDelete,
-		"CmdChromeProfileDeleteAlias": CmdChromeProfileDeleteAlias,
+		"CmdChromeProfileDeleteAlias":      CmdChromeProfileDeleteAlias,
+		"CmdChromeProfileListAlias2":       CmdChromeProfileListAlias2,
+		"CmdChromeProfileMerge":            CmdChromeProfileMerge,
+		"CmdChromeProfileMergeAlias":       CmdChromeProfileMergeAlias,
+		"CmdBackup":                        CmdBackup,
+		"CmdMakeAllPublicExceptLatest":     CmdMakeAllPublicExceptLatest,
+		"CmdMakeAllPrivateExceptLatest":    CmdMakeAllPrivateExceptLatest,
+		"CmdMAPUBXL":                       CmdMAPUBXL,
+		"CmdMAPRIXL":                       CmdMAPRIXL,
+		"CmdMakeLastPublic":                CmdMakeLastPublic,
+		"CmdMakeLastPrivate":               CmdMakeLastPrivate,
+		"CmdMLPUB":                         CmdMLPUB,
+		"CmdMLPRI":                         CmdMLPRI,
 	}
 }
 

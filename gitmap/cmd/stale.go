@@ -27,25 +27,60 @@ func runStale(args []string) {
 	root := fs.String("root", ".", "scan root directory")
 	archive := fs.Bool("archive", false, "move stale repos into .gitmap/archive/")
 	dryRun := fs.Bool("dry-run", false, "preview archive moves without touching disk")
+	format := fs.String("format", "table", "output format: table|json|csv")
 	if err := fs.Parse(args); err != nil {
 		os.Exit(2)
 	}
-	repos := scanForRepos(*root)
-	cutoff := time.Now().AddDate(0, 0, -*days)
-	var stale []staleRepo
-	for _, r := range repos {
-		t, ok := lastCommitTime(r)
-		if !ok {
-			continue
-		}
-		if t.Before(cutoff) {
-			stale = append(stale, staleRepo{path: r, last: t})
-		}
+	fmtKind, err := parseHygieneFormat(*format)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(2)
 	}
-	sort.Slice(stale, func(i, j int) bool { return stale[i].last.Before(stale[j].last) })
-	printStaleTable(stale, *days)
+	repos := scanForReposParallel(*root)
+	cutoff := time.Now().AddDate(0, 0, -*days)
+	probed := mapReposParallel(repos, func(r string) (staleRepo, bool) {
+		t, ok := lastCommitTime(r)
+		if !ok || !t.Before(cutoff) {
+			return staleRepo{}, false
+		}
+		return staleRepo{path: r, last: t}, true
+	})
+	sort.Slice(probed, func(i, j int) bool { return probed[i].last.Before(probed[j].last) })
+	emitStale(probed, *days, fmtKind)
 	if *archive {
-		archiveStaleRepos(stale, *dryRun)
+		archiveStaleRepos(probed, *dryRun)
+	}
+}
+
+// emitStale dispatches to the requested output format.
+func emitStale(stale []staleRepo, days int, f hygieneFormat) {
+	switch f {
+	case hygieneFormatJSON:
+		type row struct {
+			Path     string `json:"path"`
+			LastUTC  string `json:"last_commit_utc"`
+			AgeDays  int    `json:"age_days"`
+		}
+		rows := make([]row, 0, len(stale))
+		now := time.Now()
+		for _, s := range stale {
+			rows = append(rows, row{
+				Path:    s.path,
+				LastUTC: s.last.UTC().Format(time.RFC3339),
+				AgeDays: int(now.Sub(s.last).Hours() / 24),
+			})
+		}
+		emitJSON(rows)
+	case hygieneFormatCSV:
+		now := time.Now()
+		rows := make([][]string, 0, len(stale))
+		for _, s := range stale {
+			age := int(now.Sub(s.last).Hours() / 24)
+			rows = append(rows, []string{s.path, s.last.UTC().Format(time.RFC3339), fmt.Sprintf("%d", age)})
+		}
+		emitCSV([]string{"path", "last_commit_utc", "age_days"}, rows)
+	default:
+		printStaleTable(stale, days)
 	}
 }
 

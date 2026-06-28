@@ -310,8 +310,6 @@ func topLevelCmds() map[string]string {
 		"CmdRecent":                        CmdRecent,
 		"CmdRecentAlias":                   CmdRecentAlias,
 		"CmdTodo":                          CmdTodo,
-		"CmdOpen":                          CmdOpen,
-		"CmdOpenAlias":                     CmdOpenAlias,
 		"CmdPR":                            CmdPR,
 		"CmdBlameStats":                    CmdBlameStats,
 		"CmdSnapshot":                      CmdSnapshot,

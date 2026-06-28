@@ -75,7 +75,7 @@ func emitSize(sizes []repoSize, f hygieneFormat) {
 // printSizeReport renders the size table sorted desc.
 func printSizeReport(sizes []repoSize) {
 	if len(sizes) == 0 {
-		fmt.Fprintln(os.Stdout, "\n  no repos found\n")
+		fmt.Fprint(os.Stdout, "\n  no repos found\n\n")
 
 		return
 	}

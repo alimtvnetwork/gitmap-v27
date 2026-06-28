@@ -86,7 +86,7 @@ func emitOrphans(orphans []orphanRepo, f hygieneFormat) {
 		emitCSV([]string{"path", "remote", "status"}, rows)
 	default:
 		if len(orphans) == 0 {
-			fmt.Fprintln(os.Stdout, "\n  no orphaned clones found\n")
+			fmt.Fprint(os.Stdout, "\n  no orphaned clones found\n\n")
 
 			return
 		}

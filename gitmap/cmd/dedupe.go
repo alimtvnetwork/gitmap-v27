@@ -104,7 +104,7 @@ func emitDedupe(dupes map[string][]string, f hygieneFormat) {
 // printDedupeReport renders the duplicate-group table.
 func printDedupeReport(dupes map[string][]string) {
 	if len(dupes) == 0 {
-		fmt.Fprintln(os.Stdout, "\n  no duplicate repos found\n")
+		fmt.Fprint(os.Stdout, "\n  no duplicate repos found\n\n")
 
 		return
 	}

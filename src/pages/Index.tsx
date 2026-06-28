@@ -43,7 +43,7 @@ const HomePage = () => {
             <h1 className="text-4xl md:text-6xl font-heading font-bold docs-h1 text-shimmer tracking-tight">
               gitmap
             </h1>
-            <p className="version-text mt-2 font-mono text-sm md:text-base font-bold">
+            <p className="mx-auto mt-2 w-fit bg-transparent p-0 font-mono text-sm font-bold leading-tight text-foreground md:text-base">
               {VERSION}
             </p>
           </div>

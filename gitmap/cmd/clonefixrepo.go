@@ -117,11 +117,10 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 	maybeRunFixRepoStep(absPath, requireVersion)
 	if makePublic {
 		runChainedGitmapStep([]string{constants.CmdMakePublic, "--" + constants.FlagVisYes})
-		// v6.50.0: prior-version privatize scan removed from cfrp.
-		// It surprised users by re-scanning ≤15 sibling versions and
-		// prompting for bulk visibility flips that were never asked
-		// for. Use `gitmap mapri <repo>` explicitly when desired.
-		_ = autoYes
+		// v6.63.0: re-enabled per user request. After publishing vN,
+		// scan v(N-1)..v(N-5) and privatize any that are still public.
+		// `-y` auto-confirms; otherwise we prompt.
+		runCFRPPriorVersionPrivatize(absPath, autoYes)
 	}
 
 	fmt.Printf(constants.MsgCloneFixRepoDone, absPath)

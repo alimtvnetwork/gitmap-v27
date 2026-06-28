@@ -1,5 +1,15 @@
 # Changelog
 
+## v6.72.0 — 2026-06-28 — Doctor `--json`/`--fix`, bookmark filters, chrome backup checksums
+
+### Added
+- **`gitmap doctor --json` / `--fix`** (`gitmap/cmd/doctor_run.go`): machine-readable probe output and auto-creation of missing config folders with actionable next-step hints.
+- **Extended doctor network probes**: tests `api.github.com`, `github.com`, `codeload`, `uploads`, and `objects.githubusercontent.com` with consolidated "X/5 reachable" reporting (`gitmap/cmd/doctor_extra.go`).
+- **`gitmap release-notes`** flags `--since <date>`, `--since-tag <tag>`, and `--format flat|grouped|markdown|json` with conventional-commit classification (`gitmap/cmd/release_notes_opts.go`).
+- **Chrome backup checksum manifests**: SHA256 sidecars generated on backup and auto-verified before restore (skip with `--no-verify`); pure parser for `Local State` with unit coverage (`gitmap/cmd/chrome_manifest.go`, `chrome_localstate.go`, `chrome_manifest_test.go`).
+- **`chrome export-bookmarks`** filters `--match <substring>` and `--title <exact>` preserve folder hierarchy while pruning (`gitmap/cmd/chrome_bookmarks_filter.go`).
+- **`chrome restore`** safety: `--force` required to overwrite, `y/N` confirmation (bypass `--yes`), `--dry-run` preview.
+
 ## v6.71.0 — 2026-06-28 — Parallel hygiene scans, JSON/CSV exports, integration tests
 
 ### Added

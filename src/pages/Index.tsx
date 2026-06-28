@@ -41,11 +41,8 @@ const HomePage = () => {
         <div className="reveal">
           <div className="flex items-center justify-center gap-3 mb-4">
             <h1 className="text-4xl md:text-6xl font-heading font-bold docs-h1 text-shimmer tracking-tight">
-              gitmap-v26
+              gitmap
             </h1>
-            <span className="rounded-sm border border-border bg-card px-2 py-0.5 text-xs font-mono text-muted-foreground shadow-sm">
-              {VERSION}
-            </span>
           </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed font-sans">
             Scan a folder tree for Git repos, generate structured clone files, and

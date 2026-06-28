@@ -19,7 +19,7 @@ type bookmarkItem struct {
 
 func runChromeExportBookmarks(args []string) {
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "chrome export-bookmarks: ERROR usage: gitmap chrome export-bookmarks <profile> [--format md|html|json] [--out <file>] [--root <bookmark_bar|other|synced>] [--folder <path/to/folder>]")
+		fmt.Fprintln(os.Stderr, "chrome export-bookmarks: ERROR usage: gitmap chrome export-bookmarks <profile> [--format md|html|json] [--out <file>] [--root <bookmark_bar|other|synced>] [--folder <path/to/folder>] [--match <substr>] [--title <exact>]")
 		os.Exit(2)
 	}
 	profile, ok := resolveChromeProfile(args[0])
@@ -28,7 +28,7 @@ func runChromeExportBookmarks(args []string) {
 		printAvailableChromeProfilesWithDisplay()
 		os.Exit(1)
 	}
-	format, outPath, rootName, folderPath := "md", "", "", ""
+	format, outPath, rootName, folderPath, match, title := "md", "", "", "", "", ""
 	for i := 1; i < len(args); i++ {
 		switch args[i] {
 		case "--format", "-f":
@@ -51,12 +51,25 @@ func runChromeExportBookmarks(args []string) {
 				folderPath = args[i+1]
 				i++
 			}
+		case "--match":
+			if i+1 < len(args) {
+				match = args[i+1]
+				i++
+			}
+		case "--title":
+			if i+1 < len(args) {
+				title = args[i+1]
+				i++
+			}
 		}
 	}
 	roots := loadBookmarkRoots(profile.Path)
 	roots = filterBookmarkRoots(roots, rootName, folderPath)
+	if match != "" || title != "" {
+		roots = filterBookmarksByTitle(roots, match, title)
+	}
 	if len(roots) == 0 {
-		fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR no bookmarks matched --root=%q --folder=%q\n", rootName, folderPath)
+		fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR no bookmarks matched --root=%q --folder=%q --match=%q --title=%q\n", rootName, folderPath, match, title)
 		os.Exit(1)
 	}
 	body, err := renderBookmarks(roots, format)

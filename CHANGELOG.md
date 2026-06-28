@@ -1,5 +1,7 @@
 # Changelog
 
+## v6.64.0 — 2026-06-28 — Routine release bump
+
 ## v6.63.0 — 2026-06-28
 
 ### Restored

@@ -45,7 +45,7 @@ func RunSelfUpdate(opts SelfUpdateOptions) int {
 		fmt.Fprintf(opts.Stdout, "[dry-run] would install %s via `gitmap self-install --version %s`\n", latest, latest)
 		return 0
 	}
-	return runSelfInstall(opts.Stdout, latest)
+	return execSelfInstallTag(opts.Stdout, latest)
 }
 
 func fetchLatestReleaseTag(c *http.Client) (string, error) {
@@ -72,7 +72,7 @@ func fetchLatestReleaseTag(c *http.Client) (string, error) {
 	return body.TagName, nil
 }
 
-func runSelfInstall(w io.Writer, tag string) int {
+func execSelfInstallTag(w io.Writer, tag string) int {
 	cmd := exec.Command("gitmap", "self-install", "--version", tag, "-y")
 	cmd.Stdout = w
 	cmd.Stderr = w
@@ -89,7 +89,7 @@ func runSelfInstall(w io.Writer, tag string) int {
 // malformed tags so the command degrades gracefully.
 func isNewer(tagA, tagB string) bool {
 	a, b := strings.TrimPrefix(tagA, "v"), strings.TrimPrefix(tagB, "v")
-	pa, pb := splitSemver(a), splitSemver(b)
+	pa, pb := splitSemverTriple(a), splitSemverTriple(b)
 	for i := 0; i < 3; i++ {
 		if pa[i] != pb[i] {
 			return pa[i] > pb[i]
@@ -98,7 +98,7 @@ func isNewer(tagA, tagB string) bool {
 	return false
 }
 
-func splitSemver(s string) [3]int {
+func splitSemverTriple(s string) [3]int {
 	var out [3]int
 	parts := strings.SplitN(s, ".", 3)
 	for i, p := range parts {

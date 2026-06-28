@@ -80,7 +80,7 @@ func formatHandoffLogLine(phase, event string,
 	b.WriteString(time.Now().UTC().Format(time.RFC3339))
 	fmt.Fprintf(&b, " pid=%d ppid=%d goos=%s phase=%s event=%s",
 		os.Getpid(), os.Getppid(), runtime.GOOS, phase, event)
-	for _, k := range sortedKeys(fields) {
+	for _, k := range sortedStringMapKeys(fields) {
 		fmt.Fprintf(&b, " %s=%s", k, escapeHandoffLogValue(fields[k]))
 	}
 	b.WriteByte('\n')
@@ -88,9 +88,9 @@ func formatHandoffLogLine(phase, event string,
 	return b.String()
 }
 
-// sortedKeys returns the field keys in stable order so log lines from
+// sortedStringMapKeys returns the field keys in stable order so log lines from
 // different processes diff cleanly.
-func sortedKeys(m map[string]string) []string {
+func sortedStringMapKeys(m map[string]string) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		keys = append(keys, k)

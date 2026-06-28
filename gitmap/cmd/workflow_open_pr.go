@@ -1,5 +1,6 @@
-// Package cmd — workflow_open_pr.go: `gitmap open` opens the current
-// repo's GitHub URL in the browser; `gitmap pr` lists open PRs.
+// Package cmd — workflow_open_pr.go: `gitmap pr` lists open PRs and
+// `gitmap blame-stats` aggregates per-author line counts. The `open`
+// command itself lives in open.go.
 package cmd
 
 import (
@@ -8,44 +9,8 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"runtime"
 	"strings"
 )
-
-func runOpen(args []string) {
-	owner, repo, err := currentRepoOwnerRepo()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "open: ERROR %v\n", err)
-		os.Exit(1)
-	}
-	sub := ""
-	if len(args) > 0 {
-		switch args[0] {
-		case "--issues", "-i":
-			sub = "/issues"
-		case "--prs", "-p":
-			sub = "/pulls"
-		case "--actions", "-a":
-			sub = "/actions"
-		}
-	}
-	url := fmt.Sprintf("https://github.com/%s/%s%s", owner, repo, sub)
-	fmt.Printf("\033[1;96m▸ open\033[0m %s\n", url)
-	openBrowser(url)
-}
-
-func openBrowser(url string) {
-	var cmd *exec.Cmd
-	switch runtime.GOOS {
-	case "windows":
-		cmd = exec.Command("rundll32", "url.dll,FileProtocolHandler", url)
-	case "darwin":
-		cmd = exec.Command("open", url)
-	default:
-		cmd = exec.Command("xdg-open", url)
-	}
-	_ = cmd.Start()
-}
 
 func currentRepoOwnerRepo() (string, string, error) {
 	out, err := exec.Command("git", "config", "--get", "remote.origin.url").Output()

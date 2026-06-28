@@ -19,7 +19,7 @@ type bookmarkItem struct {
 
 func runChromeExportBookmarks(args []string) {
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "chrome export-bookmarks: ERROR usage: gitmap chrome export-bookmarks <profile> [--format md|html|json] [--out <file>]")
+		fmt.Fprintln(os.Stderr, "chrome export-bookmarks: ERROR usage: gitmap chrome export-bookmarks <profile> [--format md|html|json] [--out <file>] [--root <bookmark_bar|other|synced>] [--folder <path/to/folder>]")
 		os.Exit(2)
 	}
 	profile, ok := resolveChromeProfile(args[0])
@@ -28,7 +28,7 @@ func runChromeExportBookmarks(args []string) {
 		printAvailableChromeProfilesWithDisplay()
 		os.Exit(1)
 	}
-	format, outPath := "md", ""
+	format, outPath, rootName, folderPath := "md", "", "", ""
 	for i := 1; i < len(args); i++ {
 		switch args[i] {
 		case "--format", "-f":
@@ -41,9 +41,24 @@ func runChromeExportBookmarks(args []string) {
 				outPath = args[i+1]
 				i++
 			}
+		case "--root", "-r":
+			if i+1 < len(args) {
+				rootName = args[i+1]
+				i++
+			}
+		case "--folder":
+			if i+1 < len(args) {
+				folderPath = args[i+1]
+				i++
+			}
 		}
 	}
 	roots := loadBookmarkRoots(profile.Path)
+	roots = filterBookmarkRoots(roots, rootName, folderPath)
+	if len(roots) == 0 {
+		fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR no bookmarks matched --root=%q --folder=%q\n", rootName, folderPath)
+		os.Exit(1)
+	}
 	body, err := renderBookmarks(roots, format)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "chrome export-bookmarks: ERROR %v\n", err)
@@ -58,6 +73,59 @@ func runChromeExportBookmarks(args []string) {
 		os.Exit(1)
 	}
 	fmt.Printf("\033[1;92m✓ wrote\033[0m %s (%d bytes)\n", outPath, len(body))
+}
+
+// filterBookmarkRoots narrows the tree to a top-level root (bookmark_bar,
+// other, synced) and/or a slash-delimited folder subtree. Matching is
+// case-insensitive on folder names. Empty filters are no-ops.
+func filterBookmarkRoots(roots []bookmarkItem, rootName, folderPath string) []bookmarkItem {
+	out := roots
+	if rootName != "" {
+		filtered := make([]bookmarkItem, 0, 1)
+		for _, r := range roots {
+			if strings.EqualFold(r.Folder, rootName) {
+				filtered = append(filtered, r)
+			}
+		}
+		out = filtered
+	}
+	if folderPath == "" {
+		return out
+	}
+	parts := []string{}
+	for _, p := range strings.Split(folderPath, "/") {
+		if p != "" {
+			parts = append(parts, p)
+		}
+	}
+	matched := []bookmarkItem{}
+	for _, r := range out {
+		if sub, ok := findBookmarkFolder(r, parts); ok {
+			matched = append(matched, sub)
+		}
+	}
+	return matched
+}
+
+// findBookmarkFolder walks `parts` (case-insensitive) into the tree and
+// returns the matching subtree.
+func findBookmarkFolder(node bookmarkItem, parts []string) (bookmarkItem, bool) {
+	if len(parts) == 0 {
+		return node, true
+	}
+	for _, c := range node.Children {
+		if c.URL != "" {
+			continue
+		}
+		name := c.Title
+		if name == "" {
+			name = c.Folder
+		}
+		if strings.EqualFold(name, parts[0]) {
+			return findBookmarkFolder(c, parts[1:])
+		}
+	}
+	return bookmarkItem{}, false
 }
 
 func loadBookmarkRoots(profile string) []bookmarkItem {

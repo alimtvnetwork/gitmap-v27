@@ -44,6 +44,9 @@ export const Categories: CommandCategory[] = [
   { key: "data", label: "Data & Profiles", description: "Export, import, bookmark, and manage profiles", icon: "💾" },
   { key: "tools", label: "Tools & Setup", description: "Setup, diagnostics, updates, SSH, and shell completions", icon: "🔧" },
   { key: "movemerge", label: "Move & Merge", description: "Move folders or merge file trees across local and remote endpoints", icon: "🔀" },
+  { key: "chrome", label: "Chrome Profiles", description: "Copy, merge, export, import, list, and delete Chrome browser profiles", icon: "🌐" },
+  { key: "visibility-bulk", label: "Bulk Visibility", description: "Flip many repos public/private at once with audit trail", icon: "🔐" },
+  { key: "maintenance", label: "Maintenance & Backups", description: "Backups, SSH health, doctor, changelog regen, and file deletion", icon: "🧹" },
 ];
 
 export const commands: CommandDef[] = [

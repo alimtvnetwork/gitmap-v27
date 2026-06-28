@@ -59,6 +59,12 @@ const (
 	SubCmdBackupLs    = "ls"     // gitmap:cmd skip
 	SubCmdBackupList  = "list"   // gitmap:cmd skip
 	SubCmdBackupPrune = "prune"  // gitmap:cmd skip
+	// Repo hygiene commands (v6.68.0).
+	CmdStale        = "stale"
+	CmdStaleAlias   = "st"
+	CmdOrphans      = "orphans"
+	CmdDedupe       = "dedupe"
+	CmdSize         = "size"
 	CmdLatestBranch        = "latest-branch"
 	CmdLatestBranchAlias   = "lb"
 	// `gitmap branch <subcommand>` namespaces general branch-management

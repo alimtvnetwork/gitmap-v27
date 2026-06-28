@@ -38,20 +38,51 @@ func runChromeBackup(args []string) {
 
 func runChromeRestore(args []string) {
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "chrome restore: ERROR missing <tarball>")
+		fmt.Fprintln(os.Stderr, "chrome restore: ERROR usage: gitmap chrome restore <tarball> [--into <dir>] [--force|-f] [--yes|-y] [--dry-run]")
 		os.Exit(2)
 	}
 	src := args[0]
 	dst := chromeUserDataDir()
+	force, yes, dryRun := false, false, false
 	for i := 1; i < len(args); i++ {
-		if args[i] == "--into" && i+1 < len(args) {
-			dst = args[i+1]
-			i++
+		switch args[i] {
+		case "--into":
+			if i+1 < len(args) {
+				dst = args[i+1]
+				i++
+			}
+		case "--force", "-f":
+			force = true
+		case "--yes", "-y":
+			yes = true
+		case "--dry-run":
+			dryRun = true
 		}
 	}
 	if err := os.MkdirAll(dst, 0o755); err != nil {
 		fmt.Fprintf(os.Stderr, "chrome restore: ERROR mkdir: %v\n", err)
 		os.Exit(1)
+	}
+	existing := countChromeProfileFiles(dst)
+	if existing > 0 && !force {
+		fmt.Fprintf(os.Stderr, "chrome restore: REFUSED %s already contains %d file(s); pass --force to overwrite\n", dst, existing)
+		os.Exit(1)
+	}
+	if existing > 0 && force && !yes {
+		fmt.Fprintf(os.Stderr, "\033[1;31m! chrome restore --force\033[0m will overwrite %d existing file(s) under %s\n", existing, dst)
+		if !confirmYesNo("proceed?") {
+			fmt.Fprintln(os.Stderr, "chrome restore: aborted")
+			os.Exit(1)
+		}
+	}
+	if dryRun {
+		n, err := previewChromeBackup(src)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "chrome restore: ERROR %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("\033[1;93m✓ chrome restore (dry-run)\033[0m  %d file(s) would land in \033[1;96m%s\033[0m\n", n, dst)
+		return
 	}
 	n, err := readChromeBackup(src, dst)
 	if err != nil {
@@ -59,6 +90,48 @@ func runChromeRestore(args []string) {
 		os.Exit(1)
 	}
 	fmt.Printf("\033[1;92m✓ chrome restore\033[0m  %d files → \033[1;96m%s\033[0m\n", n, dst)
+}
+
+// countChromeProfileFiles returns the number of regular files already
+// living under dst (used to decide whether --force is required).
+func countChromeProfileFiles(dst string) int {
+	n := 0
+	_ = filepath.Walk(dst, func(_ string, info os.FileInfo, err error) error {
+		if err == nil && info != nil && info.Mode().IsRegular() {
+			n++
+		}
+		return nil
+	})
+	return n
+}
+
+// previewChromeBackup walks the tarball without writing and returns the
+// number of regular file entries that would be restored.
+func previewChromeBackup(src string) (int, error) {
+	f, err := os.Open(src) //nolint:gosec
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+	gz, err := gzip.NewReader(f)
+	if err != nil {
+		return 0, err
+	}
+	defer gz.Close()
+	tr := tar.NewReader(gz)
+	n := 0
+	for {
+		hdr, err := tr.Next()
+		if err == io.EOF {
+			return n, nil
+		}
+		if err != nil {
+			return n, err
+		}
+		if !hdr.FileInfo().IsDir() {
+			n++
+		}
+	}
 }
 
 func chromeBackupDefaultPath() string {

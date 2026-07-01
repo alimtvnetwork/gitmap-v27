@@ -56,8 +56,15 @@ func utilityDispatchEntries() []dispatchEntry {
 func runHelpDispatch() {
 	if len(os.Args) >= 3 && !isFlagToken(os.Args[2]) {
 		topic := os.Args[2]
-		if topic == constants.CmdRmAlias || topic == constants.CmdRmAlias2 {
+		switch topic {
+		case constants.CmdRmAlias, constants.CmdRmAlias2:
 			topic = constants.CmdRm
+		case constants.CmdStaleAlias:
+			topic = constants.CmdStale
+		case constants.CmdRecentAlias:
+			topic = constants.CmdRecent
+		case constants.CmdPRAlias:
+			topic = constants.CmdPR
 		}
 		if _, err := helptext.ReadRaw(topic); err == nil {
 			_, mode := ParsePrettyFlag(os.Args[3:])

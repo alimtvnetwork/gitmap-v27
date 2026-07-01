@@ -56,32 +56,32 @@ const (
 	CmdBackup              = "backup"
 	// `gitmap backup <subcommand>` lists or prunes the on-disk backup
 	// tree at `.gitmap/backup/<repo>/v<N>/fix-repo/<UTC-ts>/`. v6.57.0.
-	SubCmdBackupLs    = "ls"     // gitmap:cmd skip
-	SubCmdBackupList  = "list"   // gitmap:cmd skip
-	SubCmdBackupPrune = "prune"  // gitmap:cmd skip
+	SubCmdBackupLs    = "ls"    // gitmap:cmd skip
+	SubCmdBackupList  = "list"  // gitmap:cmd skip
+	SubCmdBackupPrune = "prune" // gitmap:cmd skip
 	// Repo hygiene commands (v6.68.0).
-	CmdStale        = "stale"
-	CmdStaleAlias   = "sta"
-	CmdOrphans      = "orphans"
-	CmdDedupe       = "dedupe"
-	CmdSize         = "size"
+	CmdStale      = "stale"
+	CmdStaleAlias = "sta"
+	CmdOrphans    = "orphans"
+	CmdDedupe     = "dedupe"
+	CmdSize       = "size"
 	// Release tooling + workflow + safety (v6.69.0+).
-	CmdReleaseNotes = "release-notes"
-	CmdReleaseDry   = "release-dry"
-	CmdTagRename    = "tag-rename"
-	CmdRecent       = "recent"
-	CmdRecentAlias  = "rct"
-	CmdTodo         = "todo"
-	CmdOpen         = "open"
-	CmdOpenAlias    = "o"
-	CmdPR           = "pull-requests"
-	CmdPRAlias      = "prs"
-	CmdBlameStats   = "blame-stats"
-	CmdSnapshot     = "snapshot"
-	CmdRollback     = "rollback"
-	CmdGuard        = "guard"
-	CmdLatestBranch        = "latest-branch"
-	CmdLatestBranchAlias   = "lb"
+	CmdReleaseNotes      = "release-notes"
+	CmdReleaseDry        = "release-dry"
+	CmdTagRename         = "tag-rename"
+	CmdRecent            = "recent"
+	CmdRecentAlias       = "rct"
+	CmdTodo              = "todo"
+	CmdOpen              = "open"
+	CmdOpenAlias         = "o"
+	CmdPR                = "pull-requests"
+	CmdPRAlias           = "prs"
+	CmdBlameStats        = "blame-stats"
+	CmdSnapshot          = "snapshot"
+	CmdRollback          = "rollback"
+	CmdGuard             = "guard"
+	CmdLatestBranch      = "latest-branch"
+	CmdLatestBranchAlias = "lb"
 	// `gitmap branch <subcommand>` namespaces general branch-management
 	// helpers. First subcommand: `default` / `def` — checkout the repo's
 	// default branch (origin/HEAD or constants.DefaultBranch fallback).

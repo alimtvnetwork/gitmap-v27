@@ -25,11 +25,11 @@ const (
 // Chrome umbrella command (v6.69.0) + subcommands.
 const (
 	CmdChrome                 = "chrome"
-	SubCmdChromeBackup        = "backup"          // gitmap:cmd skip
-	SubCmdChromeRestore       = "restore"         // gitmap:cmd skip
-	SubCmdChromeDiff          = "diff"            // gitmap:cmd skip
+	SubCmdChromeBackup        = "backup"           // gitmap:cmd skip
+	SubCmdChromeRestore       = "restore"          // gitmap:cmd skip
+	SubCmdChromeDiff          = "diff"             // gitmap:cmd skip
 	SubCmdChromeExportBookmrk = "export-bookmarks" // gitmap:cmd skip
-	SubCmdChromeWhich         = "which"           // gitmap:cmd skip
+	SubCmdChromeWhich         = "which"            // gitmap:cmd skip
 )
 
 // Chrome profile merge knobs.

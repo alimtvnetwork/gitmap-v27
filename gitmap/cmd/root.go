@@ -85,8 +85,16 @@ func Run() {
 	}
 
 	command := os.Args[1]
+	// Ensure any bytes buffered in the theme/glyphs pipe wrappers
+	// reach the real fds before the process exits. Without this the
+	// last stdout line (e.g. `gitmap version`'s "gitmap vX.Y.Z") can
+	// be lost on Windows when the forwarder goroutine is scheduled
+	// out before the runtime tears the process down.
+	defer glyphs.Drain()
+	defer theme.Drain()
 	dispatch(command)
 }
+
 
 // dispatch routes to the correct subcommand handler with audit tracking.
 func dispatch(command string) {

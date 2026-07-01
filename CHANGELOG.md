@@ -1,5 +1,10 @@
 # Changelog
 
+## v6.74.0 — 2026-07-01 — Release bump
+
+### Changed
+- Version bump to v6.74.0; pinned across README, Go/TS constants, and CHANGELOG.
+
 ## v6.73.0 — 2026-06-28 — Better `chrome export-bookmarks` errors + `--root`/`--folder` docs
 
 ### Added

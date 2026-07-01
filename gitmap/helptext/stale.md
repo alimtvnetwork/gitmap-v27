@@ -1,4 +1,4 @@
-# `gitmap stale` (alias: `st`)
+# `gitmap stale` (alias: `sta`)
 
 List local repositories with no commits in the last N days. Optionally
 move stale repos to `.gitmap/archive/<UTC-timestamp>/`.
@@ -16,7 +16,7 @@ move stale repos to `.gitmap/archive/<UTC-timestamp>/`.
 
 ```
 gitmap stale
-gitmap st --days=180
+gitmap sta --days=180
 gitmap stale --days=365 --archive --dry-run
 gitmap stale --days=365 --archive
 ```

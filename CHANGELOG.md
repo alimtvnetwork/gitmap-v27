@@ -37,10 +37,10 @@
 - **`gitmap tag-rename <old> <new>`** — local + origin tag rename (create new, delete old, push both refs).
 
 ### Added — Workflow
-- **`gitmap recent` (`r`)** — last 10 repos from the navigation helper history; `--print` for fzf piping.
+- **`gitmap recent` (`rct`)** — last 10 repos from the navigation helper history; `--print` for fzf piping.
 - **`gitmap todo`** — grep `TODO|FIXME|XXX` across tracked files with per-hit `git blame` author.
 - **`gitmap open` (`o`)** — open current repo's GitHub URL; `--issues`/`--prs`/`--actions` jump flags.
-- **`gitmap pr [owner]`** — list open PRs across an owner's repos in one table; honors `GITHUB_TOKEN`.
+- **`gitmap pull-requests` (`prs`)** — list open PRs across an owner's repos in one table; honors `GITHUB_TOKEN`.
 - **`gitmap blame-stats [root]`** — top contributors per file via `git blame --line-porcelain`.
 
 ### Added — Safety
@@ -49,7 +49,7 @@
 - **`gitmap guard [root]`** — install `.git/hooks/pre-commit` blocking secrets, files >10MB, `-vN` drift.
 
 ### Internal
-- Constants `CmdReleaseNotes` / `CmdReleaseDry` / `CmdTagRename` / `CmdRecent(+Alias)` / `CmdTodo` / `CmdOpen(+Alias)` / `CmdPR` / `CmdBlameStats` / `CmdSnapshot` / `CmdRollback` / `CmdGuard` added; parity test updated.
+- Constants `CmdReleaseNotes` / `CmdReleaseDry` / `CmdTagRename` / `CmdRecent(+Alias)` / `CmdTodo` / `CmdOpen(+Alias)` / `CmdPR(+Alias)` / `CmdBlameStats` / `CmdSnapshot` / `CmdRollback` / `CmdGuard` added; parity test updated.
 - New files: `release_tools.go`, `workflow_recent_todo.go`, `workflow_open_pr.go`, `safety_snapshot.go`, plus 11 helptext markdown files.
 - Version pinned to **v6.70.0** across `README.md`, `gitmap/constants/constants.go`, `src/constants/index.ts`.
 

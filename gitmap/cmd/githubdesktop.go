@@ -50,7 +50,7 @@ func resolveGHDesktopTarget(cwd string, args []string) string {
 // isGitRepo reports whether dir contains a .git directory or file (worktrees
 // use a .git file). Returns false on any stat error.
 func isGitRepo(dir string) bool {
-	_, err := os.Stat(filepath.Join(dir, constants.ExtGit[1:]))
+	_, err := os.Stat(filepath.Join(dir, constants.ExtGit))
 
 	return err == nil
 }

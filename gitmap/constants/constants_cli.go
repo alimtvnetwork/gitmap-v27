@@ -61,7 +61,7 @@ const (
 	SubCmdBackupPrune = "prune"  // gitmap:cmd skip
 	// Repo hygiene commands (v6.68.0).
 	CmdStale        = "stale"
-	CmdStaleAlias   = "st"
+	CmdStaleAlias   = "sta"
 	CmdOrphans      = "orphans"
 	CmdDedupe       = "dedupe"
 	CmdSize         = "size"
@@ -70,11 +70,12 @@ const (
 	CmdReleaseDry   = "release-dry"
 	CmdTagRename    = "tag-rename"
 	CmdRecent       = "recent"
-	CmdRecentAlias  = "r"
+	CmdRecentAlias  = "rct"
 	CmdTodo         = "todo"
 	CmdOpen         = "open"
 	CmdOpenAlias    = "o"
-	CmdPR           = "pr"
+	CmdPR           = "pull-requests"
+	CmdPRAlias      = "prs"
 	CmdBlameStats   = "blame-stats"
 	CmdSnapshot     = "snapshot"
 	CmdRollback     = "rollback"

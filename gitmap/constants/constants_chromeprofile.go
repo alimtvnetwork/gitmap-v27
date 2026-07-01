@@ -21,6 +21,7 @@ const (
 	CmdChromeProfileMergeAlias  = "cpm"
 )
 
+// gitmap:cmd top-level
 // Chrome umbrella command (v6.69.0) + subcommands.
 const (
 	CmdChrome                 = "chrome"

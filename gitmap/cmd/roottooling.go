@@ -51,7 +51,7 @@ func toolingDispatchEntries() []dispatchEntry {
 		{[]string{constants.CmdRecent, constants.CmdRecentAlias}, func() { runRecent(argsTail()) }},
 		{[]string{constants.CmdTodo}, func() { runTodo(argsTail()) }},
 		{[]string{constants.CmdOpen, constants.CmdOpenAlias}, func() { runOpen(argsTail()) }},
-		{[]string{constants.CmdPR}, func() { runPR(argsTail()) }},
+		{[]string{constants.CmdPR, constants.CmdPRAlias}, func() { runPR(argsTail()) }},
 		{[]string{constants.CmdBlameStats}, func() { runBlameStats(argsTail()) }},
 		{[]string{constants.CmdSnapshot}, func() { runSnapshot(argsTail()) }},
 		{[]string{constants.CmdRollback}, func() { runRollback(argsTail()) }},

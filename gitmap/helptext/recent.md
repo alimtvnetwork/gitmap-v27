@@ -6,6 +6,6 @@ Show the last 10 repos visited via the navigation helper. Pipe `--print` to fzf 
 
 ```bash
 gitmap recent
-gitmap r
+gitmap rct
 cd "$(gitmap recent --print | fzf)"
 ```

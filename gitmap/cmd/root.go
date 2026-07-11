@@ -84,16 +84,26 @@ func Run() {
 		os.Args = append(os.Args[:2], cleaned...)
 	}
 
-	command := os.Args[1]
-	// Ensure any bytes buffered in the theme/glyphs pipe wrappers
-	// reach the real fds before the process exits. Without this the
-	// last stdout line (e.g. `gitmap version`'s "gitmap vX.Y.Z") can
-	// be lost on Windows when the forwarder goroutine is scheduled
-	// out before the runtime tears the process down.
-	defer glyphs.Drain()
+	runDispatch(os.Args[1])
+}
+
+// runDispatch is the single entry point every CLI invocation flows
+// through so the theme/glyphs pipe drainers are guaranteed to run
+// before the process returns. Centralizing the deferred Drain calls
+// here prevents future entry points from re-introducing the Windows
+// "last stdout line is lost" bug (the version-mismatch smoke failure
+// fixed in v6.74.0). Any new dispatch surface MUST call runDispatch
+// rather than dispatch directly.
+func runDispatch(command string) {
+	// Order matters: glyphs wraps stdout AFTER theme, so drain
+	// glyphs first (outermost writer) then theme (inner writer).
+	// Defer order runs LIFO, so declaring theme first + glyphs
+	// second yields the correct outer→inner drain sequence.
 	defer theme.Drain()
+	defer glyphs.Drain()
 	dispatch(command)
 }
+
 
 
 // dispatch routes to the correct subcommand handler with audit tracking.

@@ -1236,10 +1236,17 @@ jobs:
           go-version-file: gitmap/go.mod
           cache-dependency-path: gitmap/go.sum
 
+      - name: CHANGELOG version-sync (constants.go ↔ CHANGELOG.md)
+        if: needs.sha-check.outputs.already-built != 'true'
+        shell: bash
+        run: bash .github/scripts/check-changelog-version-sync.sh
+
       - name: Run installer smoke (source mode)
         if: needs.sha-check.outputs.already-built != 'true'
         shell: bash
         run: bash .github/scripts/smoke-installer.sh source
+
+
 
 
   installer-smoke-windows:

@@ -1625,6 +1625,57 @@ export const commands: CommandDef[] = [
   },
   {
     category: "tools",
+    name: "fix-auth", alias: "fa",
+    description: "One-shot fix for 'Permission denied to <wrong-user>' SSH push failures — generates a per-account ed25519 key, pins the current repo to it via core.sshCommand (IdentitiesOnly=yes), and copies the public key to your clipboard.",
+    usage: "gitmap fix-auth --user <github-username> [--email <addr>] [-y] [-f]",
+    flags: [
+      { flag: "--user, -u <name>", description: "GitHub username (required); first positional arg also accepted" },
+      { flag: "--email, -e <addr>", description: "Email comment on the key (default: git config user.email)" },
+      { flag: "--yes, -y", description: "Skip overwrite confirmation prompt" },
+      { flag: "--force, -f", description: "Regenerate the key even if it already exists" },
+    ],
+    examples: [
+      { command: "gitmap fix-auth --user aukgit --email me@example.com", description: "Full fix inside the broken repo" },
+      { command: "gitmap fa aukgit", description: "Positional alias — reuse existing key or generate" },
+      { command: "gitmap fix-auth -u aukgit -f -y", description: "Force-rotate the per-account key without prompt" },
+    ],
+    seeAlso: [
+      { name: "whoami", description: "Diagnose which identity/key Git & SSH will use" },
+      { name: "ssh-bind", description: "Pin an existing key to the current repo" },
+      { name: "ssh", description: "General SSH key generation and DB" },
+    ],
+  },
+  {
+    category: "tools",
+    name: "whoami", alias: "who",
+    description: "Print local vs global git identity, origin transport, the SSH principal GitHub sees, the offered key, and the list of ~/.ssh candidate keys — with copy-paste fix hints.",
+    usage: "gitmap whoami",
+    examples: [
+      { command: "gitmap whoami", description: "Diagnose why the wrong GitHub account is being used" },
+      { command: "gitmap who", description: "Short alias" },
+    ],
+    seeAlso: [
+      { name: "fix-auth", description: "One-shot generate + pin + clipboard" },
+      { name: "ssh-bind", description: "Pin an existing key to the current repo" },
+    ],
+  },
+  {
+    category: "tools",
+    name: "ssh-bind", alias: "sb",
+    description: "Pin an existing SSH private key to the current repo via core.sshCommand with IdentitiesOnly=yes — stops the agent from silently offering the wrong-account default key.",
+    usage: "gitmap ssh-bind <key-filename-or-path>",
+    examples: [
+      { command: "gitmap ssh-bind id_ed25519_aukgit", description: "Bare filename resolved under ~/.ssh/" },
+      { command: "gitmap sb ~/.ssh/id_rsa_work", description: "Tilde-relative path" },
+      { command: "gitmap sb /etc/ssh/deploy_key_aukgit", description: "Absolute path" },
+    ],
+    seeAlso: [
+      { name: "fix-auth", description: "Generate a per-account key AND bind it in one step" },
+      { name: "whoami", description: "List candidate keys and detect the current mismatch" },
+    ],
+  },
+  {
+    category: "tools",
     name: "gomod", alias: "gm", description: "Rename Go module path across the entire repo with branch safety",
     usage: "gitmap gomod <new-module-path> [--ext *.go,*.md] [--dry-run] [--no-merge] [--no-tidy] [--verbose]",
     flags: [

@@ -19,8 +19,19 @@ func applyCloneAssumeYesEnv(isAssumeYes bool) {
 
 func cloneEnvWithSSHAcceptNew() []string {
 	cmd := withSSHAcceptNew(os.Getenv(constants.EnvGitSSHCommand))
-	entry := constants.EnvGitSSHCommand + constants.EnvAssignmentSeparator + cmd
-	return append(os.Environ(), entry)
+	return envWithOverride(constants.EnvGitSSHCommand, cmd)
+}
+
+func envWithOverride(key, value string) []string {
+	prefix := key + constants.EnvAssignmentSeparator
+	out := make([]string, 0, len(os.Environ())+1)
+	for _, entry := range os.Environ() {
+		if strings.HasPrefix(entry, prefix) {
+			continue
+		}
+		out = append(out, entry)
+	}
+	return append(out, prefix+value)
 }
 
 func withSSHAcceptNew(existing string) string {

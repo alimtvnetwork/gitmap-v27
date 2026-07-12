@@ -284,6 +284,11 @@ const (
 
 // vscode-pm-sync flag names + descriptions.
 const (
+	FlagCloneYes      = "yes"
+	FlagCloneYesShort = "y"
+	FlagDescCloneYes  = "Auto-accept new SSH host keys for SSH clone URLs " +
+		"(sets StrictHostKeyChecking=accept-new; changed keys still fail)"
+
 	FlagVSCodePMSyncDryRun     = "dry-run"
 	FlagDescVSCodePMSyncDryRun = "Preview projects.json changes without writing"
 	// FlagVSCodePMSyncProjectsJSON overrides the resolved

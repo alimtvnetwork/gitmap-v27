@@ -185,8 +185,8 @@ func extractSSHHost(url string) string {
 	return ""
 }
 
-// firstLine returns everything up to the first newline in s.
-func firstLine(s string) string {
+// whoamiFirstLine returns everything up to the first newline in s.
+func whoamiFirstLine(s string) string {
 	if i := strings.IndexByte(s, '\n'); i >= 0 {
 		return s[:i]
 	}

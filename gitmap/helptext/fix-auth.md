@@ -53,34 +53,42 @@ omitted (`gitmap fix-auth aukgit`).
 
 ### Full fix for the wrong-account push failure
 
-    $ cd path/to/broken-repo
-    $ gitmap fix-auth --user aukgit --email me@example.com
-    Generating public/private ed25519 key pair.
-    ✓ pinned repo → ssh -i ~/.ssh/id_ed25519_aukgit -F /dev/null -o IdentitiesOnly=yes
+```
+$ cd path/to/broken-repo
+$ gitmap fix-auth --user aukgit --email me@example.com
+Generating public/private ed25519 key pair.
+✓ pinned repo → ssh -i ~/.ssh/id_ed25519_aukgit -F /dev/null -o IdentitiesOnly=yes
 
-    === PUBLIC KEY (add this to GitHub) ===
-    ssh-ed25519 AAAA... me@example.com
-    =======================================
-      ✓ Public key copied to clipboard (95 bytes)
+=== PUBLIC KEY (add this to GitHub) ===
+ssh-ed25519 AAAA... me@example.com
+=======================================
+  ✓ Public key copied to clipboard (95 bytes)
 
-    Next steps for aukgit:
-      1. Open https://github.com/settings/ssh/new
-      2. Paste the key above, save.
-      3. Run:  git push
+Next steps for aukgit:
+  1. Open https://github.com/settings/ssh/new
+  2. Paste the key above, save.
+  3. Run:  git push
+```
 
 ### Reuse an existing per-account key (just re-pin the repo)
 
-    $ gitmap fix-auth -u aukgit
-    • key already exists, reusing: /home/me/.ssh/id_ed25519_aukgit
-    ✓ pinned repo → ssh -i ~/.ssh/id_ed25519_aukgit ...
+```
+$ gitmap fix-auth -u aukgit
+• key already exists, reusing: /home/me/.ssh/id_ed25519_aukgit
+✓ pinned repo → ssh -i ~/.ssh/id_ed25519_aukgit ...
+```
 
 ### Force-regenerate (rotate the key)
 
-    $ gitmap fix-auth --user aukgit --force --yes
+```
+$ gitmap fix-auth --user aukgit --force --yes
+```
 
 ### Positional form
 
-    $ gitmap fa aukgit
+```
+$ gitmap fa aukgit
+```
 
 ## See Also
 

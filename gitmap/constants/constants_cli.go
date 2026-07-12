@@ -133,6 +133,9 @@ const (
 	CmdDoPendingAlias        = "dp"         // gitmap:cmd skip
 	CmdLLMDocs               = "llm-docs"
 	CmdLLMDocsAlias          = "ld"
+	CmdWhoAmI                = "whoami"
+	CmdWhoAmIAlias           = "who"
+
 	CmdSetSourceRepo         = "set-source-repo" // gitmap:cmd skip
 	CmdSelfInstall           = "self-install"
 	CmdSelfUninstall         = "self-uninstall"

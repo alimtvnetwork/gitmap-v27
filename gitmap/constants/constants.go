@@ -33,8 +33,10 @@ const (
 
 // URL prefixes.
 const (
-	PrefixHTTPS = "https://"
-	PrefixSSH   = "git@"
+	PrefixHTTP      = "http://"
+	PrefixHTTPS     = "https://"
+	PrefixSSH       = "git@"
+	PrefixSSHScheme = "ssh://"
 )
 
 // File extensions.

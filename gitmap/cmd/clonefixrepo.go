@@ -65,6 +65,8 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 		return
 	}
 	SetCloneDryRun(dryRun)
+	SetCloneAssumeYes(autoYes)
+	applyCloneAssumeYesEnv(autoYes)
 	if len(url) == 0 {
 		fmt.Fprint(os.Stderr, constants.ErrCloneFixRepoUsage)
 		os.Exit(constants.ExitCloneFixRepoBadFlag)

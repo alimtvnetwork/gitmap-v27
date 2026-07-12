@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/cloneconcurrency"
-	
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/cloner"
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/desktop"
@@ -51,6 +50,7 @@ func runClone(args []string) {
 	}
 	initCloneVerbose(cf.Verbose)
 	SetCloneDryRun(cf.DryRun)
+	SetCloneAssumeYes(cf.AssumeYes)
 	setCmdFaithfulVerify(cf.VerifyCmdFaithful)
 	setCmdFaithfulExitOnMismatch(cf.VerifyCmdFaithfulExitOnMismatch)
 	setCmdPrintArgv(cf.PrintCloneArgv)
@@ -67,6 +67,7 @@ func runClone(args []string) {
 
 	requireOnline()
 	applySSHKey(cf.SSHKeyName)
+	applyCloneAssumeYesEnv(cf.AssumeYes)
 	cf = applyURLSchemeFlags(cf)
 
 	// Multi-URL form: any positional arg containing a comma, OR 2+ positional
@@ -345,11 +346,7 @@ func upsertDirectClone(url, repoName, folderName, absPath string) {
 		RelativePath: folderName,
 		AbsolutePath: absPath,
 	}
-	if strings.HasPrefix(url, constants.PrefixSSH) {
-		rec.SSHUrl = url
-	} else {
-		rec.HTTPSUrl = url
-	}
+	populateDirectCloneURLs(&rec, url)
 
 	db, err := openDB()
 	if err != nil {

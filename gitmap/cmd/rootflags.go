@@ -218,6 +218,9 @@ type CloneFlags struct {
 	// prints the exact command + target path but never invokes git.
 	// Plumbed through cfr/cfrp as well via parseCloneFixRepoArgs.
 	DryRun bool
+	// AssumeYes skips the SSH first-connect host-key prompt by asking
+	// OpenSSH to accept new host keys. Changed host keys still fail.
+	AssumeYes bool
 }
 
 
@@ -258,6 +261,8 @@ func parseCloneFlags(args []string) CloneFlags {
 	fs.BoolVar(httpsFlag, "ht", false, "Short alias for --https")
 	dryRunFlag := fs.Bool(constants.FlagCloneDryRun, false, constants.FlagDescCloneDryRun)
 	fs.BoolVar(dryRunFlag, constants.FlagCloneDryRunShort, false, "Short alias for --dry-run")
+	yesFlag := fs.Bool(constants.FlagCloneYes, false, constants.FlagDescCloneYes)
+	fs.BoolVar(yesFlag, constants.FlagCloneYesShort, false, constants.FlagDescCloneYes)
 	// Reorder so `gitmap clone <url> --ssh` works — Go's flag pkg
 	// stops parsing at the first non-flag, which would otherwise
 	// silently drop `--ssh` / `--https` / every other bool flag
@@ -288,6 +293,7 @@ func parseCloneFlags(args []string) CloneFlags {
 		UseSSH:                          *sshFlag,
 		UseHTTPS:                        *httpsFlag,
 		DryRun:                          *dryRunFlag,
+		AssumeYes:                       *yesFlag,
 	}
 }
 

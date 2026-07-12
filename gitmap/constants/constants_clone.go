@@ -43,6 +43,14 @@ const (
 	ShorthandText = "text"
 )
 
+// Clone confirmation / transport flags.
+const (
+	FlagCloneYes      = "yes"
+	FlagCloneYesShort = "y"
+	FlagDescCloneYes  = "Auto-accept new SSH host keys for SSH clone URLs " +
+		"(sets StrictHostKeyChecking=accept-new; changed keys still fail)"
+)
+
 // Multi-URL clone messages (spec/01-app/104-clone-multi.md).
 const (
 	MsgCloneInvalidURLFmt    = "  ⚠ Skipping invalid URL: %s\n"

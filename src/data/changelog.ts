@@ -8,6 +8,18 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: "v6.75.0",
+    date: "2026-07-12",
+    subtitle: "`fix-auth`: one-shot cure for the wrong-account SSH push failure",
+    items: [
+      "Added: `gitmap fix-auth` (alias `fa`) — cross-platform Go port of the PowerShell/Bash 'wrong GitHub account push failure' recipe. Generates `~/.ssh/id_ed25519_<user>`, pins the current repo via `git config core.sshCommand \"ssh -i <key> -F /dev/null -o IdentitiesOnly=yes\"`, and copies the public key to the OS clipboard (`clip`/`pbcopy`/`wl-copy`/`xclip`/`xsel`). New file `gitmap/cmd/fixauth.go`. Constants `CmdFixAuth` / `CmdFixAuthAlias` in `gitmap/constants/constants_cli.go`. Dispatch in `gitmap/cmd/rootutility.go`.",
+      "Added: help text `gitmap/helptext/fix-auth.md`, `whoami.md`, `ssh-bind.md` — embedded via `go:embed *.md`; discoverable through `gitmap help <topic>` and the `--json` help payload.",
+      "Added: docs-site command entries for `fix-auth`, `whoami`, and `ssh-bind` in `src/data/commands.ts` (`tools` category) with usage, flags, examples, and see-also links.",
+      "Pinned: README pinned-version block + version matrix moved to **v6.75.0**. Synced `gitmap/constants/constants.go` (`Version = \"6.75.0\"`) and `src/constants/index.ts` (`VERSION = \"v6.75.0\"`).",
+    ],
+  },
+  {
+
     version: "v6.0.0",
     date: "2026-05-26",
     subtitle: "Breaking: `commit-transfer` merge default flips to `true`",

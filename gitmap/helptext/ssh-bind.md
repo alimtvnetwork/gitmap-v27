@@ -32,14 +32,16 @@ keys first, which is the actual cause of the "Permission denied to
 
 ## Examples
 
-    $ gitmap ssh-bind id_ed25519_aukgit
-    ✓ pinned SSH key for this repo: /home/me/.ssh/id_ed25519_aukgit
-      core.sshCommand = ssh -i ~/.ssh/id_ed25519_aukgit -F /dev/null -o IdentitiesOnly=yes
-      test with: git push
+```
+$ gitmap ssh-bind id_ed25519_aukgit
+✓ pinned SSH key for this repo: /home/me/.ssh/id_ed25519_aukgit
+  core.sshCommand = ssh -i ~/.ssh/id_ed25519_aukgit -F /dev/null -o IdentitiesOnly=yes
+  test with: git push
 
-    $ gitmap sb ~/.ssh/id_rsa_work
+$ gitmap sb ~/.ssh/id_rsa_work
 
-    $ gitmap sb /etc/ssh/deploy_key_aukgit
+$ gitmap sb /etc/ssh/deploy_key_aukgit
+```
 
 ## See Also
 

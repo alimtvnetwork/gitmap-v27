@@ -1,5 +1,17 @@
 # Changelog
 
+## v6.75.0 — 2026-07-12 — `fix-auth`: one-shot cure for the wrong-account SSH push failure
+
+### Added
+- **`gitmap fix-auth`** (alias `fa`) — cross-platform Go port of the PowerShell/Bash "wrong GitHub account push failure" recipe. Generates `~/.ssh/id_ed25519_<user>`, pins the current repo via `git config core.sshCommand "ssh -i <key> -F /dev/null -o IdentitiesOnly=yes"`, and copies the public key to the OS clipboard (`clip`/`pbcopy`/`wl-copy`/`xclip`/`xsel`). New file: `gitmap/cmd/fixauth.go`. Constants: `CmdFixAuth` / `CmdFixAuthAlias` in `gitmap/constants/constants_cli.go`. Dispatch in `gitmap/cmd/rootutility.go`.
+- **Help text** `gitmap/helptext/fix-auth.md`, `whoami.md`, `ssh-bind.md` — embedded via `go:embed *.md`; discoverable through `gitmap help <topic>` and the `--json` help payload.
+- **Docs-site command entries** for `fix-auth`, `whoami`, and `ssh-bind` in `src/data/commands.ts` (`tools` category) with usage, flags, examples, and see-also links.
+
+### Changed
+- Pinned: README pinned-version block + version matrix moved to **v6.75.0**. Synced `gitmap/constants/constants.go` (`Version = "6.75.0"`) and `src/constants/index.ts` (`VERSION = "v6.75.0"`).
+
+
+
 ## v6.74.0 — 2026-07-01 — Release bump
 
 ### Changed

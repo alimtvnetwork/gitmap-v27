@@ -30,12 +30,12 @@ import (
 
 // bulkFlags holds the parsed CLI flags for a bulk visibility run.
 type bulkFlags struct {
-	Yes           bool
-	Verbose       bool
-	ExceptLatest  bool
-	Parallel      int
-	CacheTTLSecs  int
-	CacheTTLSet   bool
+	Yes          bool
+	Verbose      bool
+	ExceptLatest bool
+	Parallel     int
+	CacheTTLSecs int
+	CacheTTLSet  bool
 }
 
 // runMakeAllPublic / runMakeAllPrivate are the dispatcher entry points.
@@ -143,7 +143,6 @@ func partitionByName(final, invertSource []visibility.MatchedRepo) ([]visibility
 
 	return main, inv
 }
-
 
 // parseBulkArgs splits owner / pattern-list / flags. Accepts the
 // legacy -Y/-y/--yes/--verbose plus the new --parallel=N, --cache-ttl=N,

@@ -13,10 +13,10 @@ func TestDecideDriftAction(t *testing.T) {
 	pub := constants.VisibilityPublic
 	pri := constants.VisibilityPrivate
 	cases := []struct {
-		name             string
+		name              string
 		current, expected string
-		force            bool
-		want             driftAction
+		force             bool
+		want              driftAction
 	}{
 		{"no drift, no force → proceed", pub, pub, false, driftActionProceed},
 		{"drift, no force → skip", pri, pub, false, driftActionSkip},

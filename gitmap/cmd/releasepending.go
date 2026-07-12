@@ -66,8 +66,6 @@ func rejectVersionArgOnPending(args []string) {
 	}
 }
 
-
-
 // parseReleasePendingFlags parses flags for the release-pending command.
 func parseReleasePendingFlags(args []string) (assets, notes string, draft, dryRun, verbose, noCommit, yes bool) {
 	fs := flag.NewFlagSet(constants.CmdReleasePending, flag.ExitOnError)

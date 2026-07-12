@@ -16,8 +16,8 @@ import (
 
 // DoctorCheck is a single named probe.
 type DoctorCheck struct {
-	Name   string
-	Run    func() (ok bool, detail string)
+	Name    string
+	Run     func() (ok bool, detail string)
 	FixHint string
 }
 

@@ -262,7 +262,6 @@ func runGitClone(url, dest string) bool {
 	return runCloneCommandPretty(url, dest) == nil
 }
 
-
 // registerCloneNextDesktop registers the cloned repo with GitHub Desktop.
 func registerCloneNextDesktop(name, absPath string) {
 	records := []model.ScanRecord{{

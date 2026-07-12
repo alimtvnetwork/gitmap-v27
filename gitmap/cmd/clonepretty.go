@@ -22,8 +22,8 @@ import (
 // `git clone` runs. Defaults to off so existing callers/tests keep
 // their byte-for-byte legacy behavior unless the flag is opted in.
 var (
-	cloneDryRunFlag bool
-	cloneSpinnerOff bool
+	cloneDryRunFlag  bool
+	cloneSpinnerOff  bool
 	isCloneAssumeYes bool
 )
 
@@ -117,7 +117,7 @@ func printClonePrettyFailure(url, dest string, runErr error, elapsed time.Durati
 // constants_clone_pretty.go stays a single %s slot.
 func buildClonePrettyHints(url, dest string) string {
 	hints := []string{
-		fmt.Sprintf("  • clean up: " + constants.ColorCyan + "rm -rf %q" + constants.ColorReset, dest),
+		fmt.Sprintf("  • clean up: "+constants.ColorCyan+"rm -rf %q"+constants.ColorReset, dest),
 		"  • retry without replace:    " + constants.ColorCyan + "gitmap clone " + url + " --no-replace" + constants.ColorReset,
 	}
 	if strings.HasPrefix(strings.ToLower(url), "https://") {

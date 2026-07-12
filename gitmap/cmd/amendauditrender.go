@@ -23,17 +23,17 @@ import (
 // or renaming here is a consumer-facing break and the schema contract
 // test fails on drift in either direction.
 const (
-	amendAuditKeyID              = "id"
-	amendAuditKeyTimestamp       = "timestamp"
-	amendAuditKeyBranch          = "branch"
-	amendAuditKeyFromCommit      = "fromCommit"
-	amendAuditKeyToCommit        = "toCommit"
-	amendAuditKeyTotalCommits    = "totalCommits"
-	amendAuditKeyPreviousAuthor  = "previousAuthor"
-	amendAuditKeyNewAuthor       = "newAuthor"
-	amendAuditKeyMode            = "mode"
-	amendAuditKeyForcePushed     = "forcePushed"
-	amendAuditKeyCommits         = "commits"
+	amendAuditKeyID             = "id"
+	amendAuditKeyTimestamp      = "timestamp"
+	amendAuditKeyBranch         = "branch"
+	amendAuditKeyFromCommit     = "fromCommit"
+	amendAuditKeyToCommit       = "toCommit"
+	amendAuditKeyTotalCommits   = "totalCommits"
+	amendAuditKeyPreviousAuthor = "previousAuthor"
+	amendAuditKeyNewAuthor      = "newAuthor"
+	amendAuditKeyMode           = "mode"
+	amendAuditKeyForcePushed    = "forcePushed"
+	amendAuditKeyCommits        = "commits"
 )
 
 // encodeAmendAuditJSON writes a single AmendmentRecord as stable

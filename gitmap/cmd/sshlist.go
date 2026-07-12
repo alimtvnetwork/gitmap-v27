@@ -8,7 +8,6 @@ import (
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
 )
 
-
 // runSSHList displays all stored SSH keys as an aligned table or JSON.
 func runSSHList(args ...string) {
 	jsonOut := hasFlagInArgs(args, constants.FlagSSHJSON)

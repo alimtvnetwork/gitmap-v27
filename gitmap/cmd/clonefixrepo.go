@@ -109,8 +109,6 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 		return
 	}
 
-
-
 	if err := os.Chdir(absPath); err != nil {
 		fmt.Fprintf(os.Stderr, constants.ErrCloneFixRepoChdirFmt, absPath, err)
 		os.Exit(constants.ExitCloneFixRepoChdir)
@@ -247,7 +245,6 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, boo
 
 	return url, folder, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun
 }
-
 
 // resolveCloneTargetFolder mirrors the folder-naming logic in
 // executeDirectClone so we know which directory to cd into after

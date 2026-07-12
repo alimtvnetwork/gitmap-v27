@@ -46,11 +46,11 @@ const (
 
 // SSH environment and option constants used by git clone wrappers.
 const (
-	EnvGitSSHCommand            = "GIT_SSH_COMMAND"
-	SSHOptionFlag               = "-o"
-	SSHStrictHostKeyChecking    = "StrictHostKeyChecking"
-	SSHStrictHostKeyAcceptNew   = "StrictHostKeyChecking=accept-new"
-	EnvAssignmentSeparator      = "="
+	EnvGitSSHCommand          = "GIT_SSH_COMMAND"
+	SSHOptionFlag             = "-o"
+	SSHStrictHostKeyChecking  = "StrictHostKeyChecking"
+	SSHStrictHostKeyAcceptNew = "StrictHostKeyChecking=accept-new"
+	EnvAssignmentSeparator    = "="
 )
 
 // Git arguments for latest-branch operations.

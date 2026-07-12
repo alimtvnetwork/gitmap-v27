@@ -29,22 +29,22 @@ const (
 
 // fix-repo backup user-facing strings.
 const (
-	FixRepoBackupMsgFmt        = "fix-repo: backed up %d file(s) → %s\n"
-	FixRepoBackupErrFmt        = "fix-repo: backup failed for %s: %v\n"
+	FixRepoBackupMsgFmt         = "fix-repo: backed up %d file(s) → %s\n"
+	FixRepoBackupErrFmt         = "fix-repo: backup failed for %s: %v\n"
 	FixRepoBackupManifestErrFmt = "fix-repo: failed to write backup manifest: %v\n"
 )
 
 // `gitmap undo` user-facing strings.
 const (
-	UndoMsgNoSnapshotsFmt      = "undo: no snapshots found under %s\n"
-	UndoMsgListHeaderFmt       = "undo: snapshots under %s (%d total)\n"
-	UndoMsgListRowFmt          = "  %s %s  (%d files)\n"
-	UndoMsgRestoreHeaderFmt    = "undo: restoring snapshot %s — %d file(s) [mode: %s]\n"
-	UndoMsgRestoreRowFmt       = "  [%s] %s\n"
-	UndoMsgRestoreSummaryFmt   = "undo: restored %d file(s), %d failure(s)\n"
-	UndoMsgRestoreErrFmt       = "undo: restore failed for %s: %v\n"
-	UndoErrNoSnapshotFmt       = "undo: no snapshot to restore under %s\n"
-	UndoErrBadFlagFmt          = "undo: unknown flag %q\n"
-	UndoErrManifestMissingFmt  = "undo: manifest unreadable at %s: %v\n"
-	UndoErrManifestBadFmt      = "undo: manifest malformed at %s: %v\n"
+	UndoMsgNoSnapshotsFmt     = "undo: no snapshots found under %s\n"
+	UndoMsgListHeaderFmt      = "undo: snapshots under %s (%d total)\n"
+	UndoMsgListRowFmt         = "  %s %s  (%d files)\n"
+	UndoMsgRestoreHeaderFmt   = "undo: restoring snapshot %s — %d file(s) [mode: %s]\n"
+	UndoMsgRestoreRowFmt      = "  [%s] %s\n"
+	UndoMsgRestoreSummaryFmt  = "undo: restored %d file(s), %d failure(s)\n"
+	UndoMsgRestoreErrFmt      = "undo: restore failed for %s: %v\n"
+	UndoErrNoSnapshotFmt      = "undo: no snapshot to restore under %s\n"
+	UndoErrBadFlagFmt         = "undo: unknown flag %q\n"
+	UndoErrManifestMissingFmt = "undo: manifest unreadable at %s: %v\n"
+	UndoErrManifestBadFmt     = "undo: manifest malformed at %s: %v\n"
 )

@@ -12,7 +12,6 @@ import (
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
 )
 
-
 // runVersionHistory handles the "version-history" subcommand.
 func runVersionHistory(args []string) {
 	checkHelp("version-history", args)

@@ -49,7 +49,7 @@ const OSDarwin = "darwin"
 // gitmap:cmd top-level
 // OS file-explorer commands.
 const (
-	CmdExplorer     = "explorer" // gitmap:cmd skip
+	CmdExplorer = "explorer" // gitmap:cmd skip
 	// CmdOpen lives in constants_cli.go (canonical CLI ID location).
 	CmdXdgOpen      = "xdg-open" // gitmap:cmd skip
 	CmdWindowsShell = "cmd"      // gitmap:cmd skip

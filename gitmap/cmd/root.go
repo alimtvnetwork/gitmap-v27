@@ -104,8 +104,6 @@ func runDispatch(command string) {
 	dispatch(command)
 }
 
-
-
 // dispatch routes to the correct subcommand handler with audit tracking.
 func dispatch(command string) {
 	auditID, auditStart, shouldAudit := beginCommandAudit(command, os.Args[2:])

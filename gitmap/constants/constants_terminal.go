@@ -19,8 +19,8 @@ const (
 
 	// Accent palette — used sparingly to break up long success runs
 	// (e.g. release pipeline output) so each phase is visually distinct.
-	ColorMagenta = "\033[1;95m" // bright bold magenta — release/version highlights
-	ColorBlue    = "\033[1;94m" // bright bold blue — info banners
+	ColorMagenta = "\033[1;95m"            // bright bold magenta — release/version highlights
+	ColorBlue    = "\033[1;94m"            // bright bold blue — info banners
 	ColorOrange  = "\033[38;5;208m\033[1m" // 256-color bold orange — upload/transfer accents
 )
 

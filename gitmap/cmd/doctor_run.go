@@ -1,7 +1,7 @@
 // Package cmd — doctor_run.go: flag-aware entry point for `gitmap doctor`.
 //
-//   --json   emit machine-readable JSON instead of the colorized text report
-//   --fix    attempt safe auto-fixes (create .gitmap/, suggest exact recipes)
+//	--json   emit machine-readable JSON instead of the colorized text report
+//	--fix    attempt safe auto-fixes (create .gitmap/, suggest exact recipes)
 //
 // Exit status: 0 when every probe passes, 1 otherwise.
 package cmd

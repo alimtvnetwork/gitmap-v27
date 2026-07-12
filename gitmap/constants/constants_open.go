@@ -12,8 +12,8 @@ const HelpCmdOpen = "  open (op)                              Open current repo 
 
 // Open command messages.
 const (
-	MsgOpenStart        = "Opening %q (%s) in GitHub Desktop and VS Code...\n"
-	MsgOpenDone         = "  ✓ open: %q ready in both tools\n"
-	WarnOpenNotGitRepo  = "open: WARN current folder is not inside a git repo with origin remote — proceeding with Desktop + VS Code only\n"
-	ErrOpenResolveCwd   = "open: ERROR cannot determine current directory: %v\n"
+	MsgOpenStart       = "Opening %q (%s) in GitHub Desktop and VS Code...\n"
+	MsgOpenDone        = "  ✓ open: %q ready in both tools\n"
+	WarnOpenNotGitRepo = "open: WARN current folder is not inside a git repo with origin remote — proceeding with Desktop + VS Code only\n"
+	ErrOpenResolveCwd  = "open: ERROR cannot determine current directory: %v\n"
 )

@@ -15,13 +15,13 @@ import (
 
 // ReleaseUndoRangeOptions configures a multi-tag undo.
 type ReleaseUndoRangeOptions struct {
-	Range        string // e.g. "v6.60.0..v6.65.0"
-	KeepRemote   bool
-	KeepSidecar  bool
-	Yes          bool
-	DryRun       bool
-	Stdout       io.Writer
-	UndoOne      func(version string) error // injected for testability
+	Range       string // e.g. "v6.60.0..v6.65.0"
+	KeepRemote  bool
+	KeepSidecar bool
+	Yes         bool
+	DryRun      bool
+	Stdout      io.Writer
+	UndoOne     func(version string) error // injected for testability
 }
 
 // RunReleaseUndoRange parses the range and undoes each version in order.

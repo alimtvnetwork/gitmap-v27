@@ -278,4 +278,3 @@ func topLevelFolderNames(roots []bookmarkItem) []string {
 	}
 	return out
 }
-

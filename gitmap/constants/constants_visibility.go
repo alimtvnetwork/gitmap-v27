@@ -188,7 +188,7 @@ const (
 	SettingBulkParallelism = "bulk_visibility_parallelism"
 
 	// Owner repo-list cache table.
-	TableOwnerRepoListCache = "OwnerRepoListCache"
+	TableOwnerRepoListCache     = "OwnerRepoListCache"
 	SQLCreateOwnerRepoListCache = `CREATE TABLE IF NOT EXISTS OwnerRepoListCache (
 		Provider   TEXT NOT NULL,
 		Owner      TEXT NOT NULL,
@@ -201,7 +201,7 @@ const (
 	// VersionNumber pre-parsed so make-last-* / fuzzy fallback can
 	// query without re-walking the JSON blob. Populated alongside
 	// the cache write.
-	TableOwnerRepoNameIndex = "OwnerRepoNameIndex"
+	TableOwnerRepoNameIndex     = "OwnerRepoNameIndex"
 	SQLCreateOwnerRepoNameIndex = `CREATE TABLE IF NOT EXISTS OwnerRepoNameIndex (
 		Provider       TEXT NOT NULL,
 		Owner          TEXT NOT NULL,
@@ -213,9 +213,9 @@ const (
 	)`
 
 	// Log lines for cache + parallel surface.
-	MsgBulkCacheHitFmt   = "make-all-*: owner repo list cache HIT (%d repos, age %s)\n"
-	MsgBulkCacheMissFmt  = "make-all-*: owner repo list cache MISS — refreshing from %s\n"
-	MsgBulkParallelFmt   = "make-all-*: applying with parallelism=%d\n"
+	MsgBulkCacheHitFmt     = "make-all-*: owner repo list cache HIT (%d repos, age %s)\n"
+	MsgBulkCacheMissFmt    = "make-all-*: owner repo list cache MISS — refreshing from %s\n"
+	MsgBulkParallelFmt     = "make-all-*: applying with parallelism=%d\n"
 	MsgBulkExceptLatest    = "make-all-*: --except-latest active — newest -vN per base group will be flipped to the OPPOSITE visibility\n"
 	MsgBulkExceptInvertFmt = "  → except-latest: %s (highest -v%d) will be set to %s\n"
 	MsgBulkInvertHeaderFmt = "\nmake-all-*: applying INVERTED visibility=%s to %d latest-version repo(s) on %s\n"
@@ -230,12 +230,11 @@ const (
 	ErrMakeLastMissingArg  = "Error: usage: gitmap %s <owner-or-url> <base>\n"
 
 	// Flags.
-	FlagBulkParallel    = "--parallel"
-	FlagBulkCacheTTL    = "--cache-ttl"
-	FlagBulkExceptLatest = "--except-latest"
+	FlagBulkParallel          = "--parallel"
+	FlagBulkCacheTTL          = "--cache-ttl"
+	FlagBulkExceptLatest      = "--except-latest"
 	FlagBulkExceptLatestShort = "-XL"
 )
-
 
 // Spec 116 §preflight + §undo-redo — auth-status gate, drift guard,
 // and reverse-loop messages shared by `make-all-*`, `vu`, and `vr`.
@@ -247,9 +246,3 @@ const (
 	MsgUndoReverseHeaderFmt   = "%s: reversing run #%d (%s/%s) — %d repo(s)\n"
 	UndoPatternsRawFmt        = "%s:source-run=%d"
 )
-
-
-
-
-
-

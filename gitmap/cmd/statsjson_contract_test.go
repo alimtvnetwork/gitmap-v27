@@ -82,7 +82,6 @@ func TestStatsJSONContract_EmptyCommandsArray(t *testing.T) {
 // the safer pin. The key-order test below covers the structural
 // contract without locking in float-printing artifacts.
 
-
 // TestStatsJSONContract_KeyOrder asserts the top-level object's key
 // order matches the schema registry declaration.
 func TestStatsJSONContract_KeyOrder(t *testing.T) {

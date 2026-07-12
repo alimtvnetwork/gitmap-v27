@@ -223,7 +223,6 @@ type CloneFlags struct {
 	IsAssumeYes bool
 }
 
-
 // parseCloneFlags parses flags for the clone command.
 func parseCloneFlags(args []string) CloneFlags {
 	fs := flag.NewFlagSet(constants.CmdClone, flag.ExitOnError)
@@ -269,7 +268,6 @@ func parseCloneFlags(args []string) CloneFlags {
 	// when it follows the URL positional.
 	fs.Parse(reorderFlagsBeforeArgs(args))
 
-
 	applyDebugPathsEnv(*debugPathsFlag)
 
 	return CloneFlags{
@@ -296,7 +294,6 @@ func parseCloneFlags(args []string) CloneFlags {
 		IsAssumeYes:                     *yesFlag,
 	}
 }
-
 
 // resolveCloneSource returns the clone source from positional args.
 func resolveCloneSource(fs *flag.FlagSet) string {

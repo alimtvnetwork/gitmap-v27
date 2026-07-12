@@ -12,7 +12,6 @@ import (
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 )
 
-
 // cloneReplaceResult describes how the replace flow finished.
 type cloneReplaceResult struct {
 	Strategy string // "direct", "temp-swap", or "" when target was empty.
@@ -102,7 +101,6 @@ func cloneViaTempSwap(url, target string) (cloneReplaceResult, error) {
 func runCloneCommand(url, dest string) error {
 	return runCloneCommandPretty(url, dest)
 }
-
 
 // emptyDirContents removes every entry inside dir, leaving dir itself in place.
 // This survives a directory handle held by the caller's shell on Windows.

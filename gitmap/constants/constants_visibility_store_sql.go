@@ -43,10 +43,10 @@ const SQLUpdateMakeAllVisibilityRunCounts = `UPDATE MakeAllVisibilityRun
 
 // Error format strings — Code Red standard (operation + reason).
 const (
-	ErrMakeAllRunInsertFmt    = "Error: insert MakeAllVisibilityRun failed: %v (operation: SQLInsertMakeAllVisibilityRun, reason: %s)"
-	ErrMakeAllResultInsertFmt = "Error: insert MakeAllVisibilityResult failed: %v (operation: SQLInsertMakeAllVisibilityResult, reason: %s)"
-	ErrMakeAllResultUpdateFmt = "Error: update MakeAllVisibilityResult failed: %v (operation: SQLUpdateMakeAllVisibilityResult, reason: %s)"
-	ErrMakeAllRunFinalizeFmt  = "Error: finalize MakeAllVisibilityRun failed: %v (operation: SQLUpdateMakeAllVisibilityRunCounts, reason: %s)"
+	ErrMakeAllRunInsertFmt     = "Error: insert MakeAllVisibilityRun failed: %v (operation: SQLInsertMakeAllVisibilityRun, reason: %s)"
+	ErrMakeAllResultInsertFmt  = "Error: insert MakeAllVisibilityResult failed: %v (operation: SQLInsertMakeAllVisibilityResult, reason: %s)"
+	ErrMakeAllResultUpdateFmt  = "Error: update MakeAllVisibilityResult failed: %v (operation: SQLUpdateMakeAllVisibilityResult, reason: %s)"
+	ErrMakeAllRunFinalizeFmt   = "Error: finalize MakeAllVisibilityRun failed: %v (operation: SQLUpdateMakeAllVisibilityRunCounts, reason: %s)"
 	ErrMakeAllResultExcludeFmt = "Error: exclude MakeAllVisibilityResult rows failed: %v (operation: SQLUpdateMakeAllVisibilityResultExcluded, reason: %s)"
 )
 
@@ -99,9 +99,9 @@ const SQLSelectRunByID = `SELECT
 	WHERE MakeAllVisibilityRunId = ?`
 
 const (
-	ErrUndoBadRunFlagFmt = "Error: invalid --run value %q: %v (operation: parse-run-flag, reason: %s)"
+	ErrUndoBadRunFlagFmt  = "Error: invalid --run value %q: %v (operation: parse-run-flag, reason: %s)"
 	ErrUndoRunNotFoundFmt = "Error: run id %d not found in MakeAllVisibilityRun (operation: SQLSelectRunByID, reason: no row)"
-	ErrRedoNoRunFound = "Error: no undoable VisibilityUndo run found (operation: visibility-redo, reason: MakeAllVisibilityRun has no VisibilityUndo row with OkCount>0)"
+	ErrRedoNoRunFound     = "Error: no undoable VisibilityUndo run found (operation: visibility-redo, reason: MakeAllVisibilityRun has no VisibilityUndo row with OkCount>0)"
 )
 
 // SQLSelectRecentRuns — newest-first list for `visibility-history`.
@@ -125,19 +125,19 @@ const SQLSelectRecentRunsBase = `SELECT
 // SQL fragments composed by BuildRecentRunsQuery. Centralized so
 // the per-clause SQL never sits inline in store code (no magic strings).
 const (
-	SQLWhereCommandKindEq = " CommandKind = ?"
-	SQLWhereStartedAtGTE  = " StartedAt >= ?"
+	SQLWhereCommandKindEq  = " CommandKind = ?"
+	SQLWhereStartedAtGTE   = " StartedAt >= ?"
 	SQLOrderRunIDDescLimit = " ORDER BY MakeAllVisibilityRunId DESC LIMIT ?"
 	SQLKeywordWHERE        = " WHERE"
 	SQLKeywordAND          = " AND"
 )
 
 const (
-	ErrHistorySelectFmt  = "Error: select recent runs failed: %v (operation: SQLSelectRecentRuns, reason: %s)"
-	MsgVisHistoryEmpty   = "visibility-history: no make-all-* runs recorded yet\n"
-	MsgVisHistoryHeader  = "ID    Kind             Owner                 Matched  Ok  Skip Fail Excl Exit  Started\n"
-	MsgVisHistoryRowFmt  = "%-5d %-16s %-21s %7d %3d %4d %4d %4d %4d  %s\n"
-	HistoryDefaultLimit  = 20
+	ErrHistorySelectFmt = "Error: select recent runs failed: %v (operation: SQLSelectRecentRuns, reason: %s)"
+	MsgVisHistoryEmpty  = "visibility-history: no make-all-* runs recorded yet\n"
+	MsgVisHistoryHeader = "ID    Kind             Owner                 Matched  Ok  Skip Fail Excl Exit  Started\n"
+	MsgVisHistoryRowFmt = "%-5d %-16s %-21s %7d %3d %4d %4d %4d %4d  %s\n"
+	HistoryDefaultLimit = 20
 )
 
 // Dry-run messaging for `vu` / `vr` --dry-run.

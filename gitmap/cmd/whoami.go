@@ -28,8 +28,44 @@ func runWhoAmI(_ []string) {
 	printWhoAmIIdentity()
 	url := printWhoAmITransport()
 	printWhoAmIAuth(url)
+	printWhoAmISSHKeys()
 	printWhoAmIFixHints(url)
 }
+
+// printWhoAmISSHKeys lists private keys in ~/.ssh so the user can
+// pick the right one to bind via `gitmap ssh-bind <key>`. Public
+// keys (.pub) and known_hosts/config files are excluded.
+func printWhoAmISSHKeys() {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return
+	}
+	dir := home + string(os.PathSeparator) + ".ssh"
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		fmt.Println("\n── SSH keys (~/.ssh) ──\n  (none — directory missing)")
+
+		return
+	}
+	fmt.Println("\n── SSH keys (~/.ssh) ──")
+	found := false
+	for _, e := range entries {
+		if e.IsDir() {
+			continue
+		}
+		name := e.Name()
+		if strings.HasSuffix(name, ".pub") || name == "known_hosts" || name == "config" || strings.HasPrefix(name, "known_hosts") {
+			continue
+		}
+		fmt.Printf("  %s\n", name)
+		found = true
+	}
+	if !found {
+		fmt.Println("  (no private keys found)")
+		fmt.Println("  generate one: ssh-keygen -t ed25519 -C \"you@example.com\" -f ~/.ssh/id_ed25519_<label>")
+	}
+}
+
 
 // printWhoAmIIdentity prints local vs global user.name/email so the
 // user can see exactly which identity gets stamped on new commits.

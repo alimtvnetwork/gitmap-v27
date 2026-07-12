@@ -158,7 +158,7 @@ func probeSSHIdentity(url string) string {
 		return "(no response — ssh key rejected or ssh missing)"
 	}
 
-	return firstLine(msg)
+	return whoamiFirstLine(msg)
 }
 
 // extractSSHHost pulls the host out of `git@host:owner/repo` or

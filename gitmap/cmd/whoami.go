@@ -158,7 +158,7 @@ func probeSSHIdentity(url string) string {
 		return "(no response — ssh key rejected or ssh missing)"
 	}
 
-	return firstLine(msg)
+	return whoamiFirstLine(msg)
 }
 
 // extractSSHHost pulls the host out of `git@host:owner/repo` or
@@ -185,8 +185,8 @@ func extractSSHHost(url string) string {
 	return ""
 }
 
-// firstLine returns everything up to the first newline in s.
-func firstLine(s string) string {
+// whoamiFirstLine returns everything up to the first newline in s.
+func whoamiFirstLine(s string) string {
 	if i := strings.IndexByte(s, '\n'); i >= 0 {
 		return s[:i]
 	}

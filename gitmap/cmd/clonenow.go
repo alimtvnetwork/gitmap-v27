@@ -139,6 +139,8 @@ func parseCloneNowFlags(args []string) cloneNowFlags {
 		constants.FlagDescCloneNowScanRoot)
 	fs.BoolVar(&cfg.assumeYes, constants.FlagCloneNowYes, false,
 		constants.FlagDescCloneNowYes)
+	fs.BoolVar(&cfg.assumeYes, constants.FlagCloneYesShort, false,
+		constants.FlagDescCloneNowYes)
 	fs.BoolVar(&cfg.noSummary, constants.FlagCloneNowNoSummary, false,
 		constants.FlagDescCloneNowNoSummary)
 	fs.BoolVar(&cfg.noVSCodeSync, constants.FlagNoVSCodeSync, false,

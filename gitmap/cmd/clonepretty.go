@@ -24,7 +24,7 @@ import (
 var (
 	cloneDryRunFlag bool
 	cloneSpinnerOff bool
-	cloneAssumeYes  bool
+	isCloneAssumeYes bool
 )
 
 // SetCloneDryRun toggles the dry-run short circuit for every
@@ -39,7 +39,7 @@ func IsCloneDryRun() bool { return cloneDryRunFlag }
 
 // SetCloneAssumeYes toggles auto-accept-new-host-key behavior for SSH
 // clone commands when the user passes -y / --yes.
-func SetCloneAssumeYes(on bool) { cloneAssumeYes = on }
+func SetCloneAssumeYes(on bool) { isCloneAssumeYes = on }
 
 // SetCloneSpinnerOff disables the inline spinner. Useful in tests
 // or CI where carriage-return updates clutter captured output.
@@ -82,7 +82,7 @@ func newCloneCommand(url, dest string) *exec.Cmd {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	if cloneAssumeYes && isSSHCloneURL(url) {
+	if isCloneAssumeYes && isSSHCloneURL(url) {
 		cmd.Env = cloneEnvWithSSHAcceptNew()
 	}
 

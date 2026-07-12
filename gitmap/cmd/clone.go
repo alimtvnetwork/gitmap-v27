@@ -50,7 +50,7 @@ func runClone(args []string) {
 	}
 	initCloneVerbose(cf.Verbose)
 	SetCloneDryRun(cf.DryRun)
-	SetCloneAssumeYes(cf.AssumeYes)
+	SetCloneAssumeYes(cf.IsAssumeYes)
 	setCmdFaithfulVerify(cf.VerifyCmdFaithful)
 	setCmdFaithfulExitOnMismatch(cf.VerifyCmdFaithfulExitOnMismatch)
 	setCmdPrintArgv(cf.PrintCloneArgv)
@@ -67,7 +67,7 @@ func runClone(args []string) {
 
 	requireOnline()
 	applySSHKey(cf.SSHKeyName)
-	applyCloneAssumeYesEnv(cf.AssumeYes)
+	applyCloneAssumeYesEnv(cf.IsAssumeYes)
 	cf = applyURLSchemeFlags(cf)
 
 	// Multi-URL form: any positional arg containing a comma, OR 2+ positional

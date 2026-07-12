@@ -220,7 +220,7 @@ type CloneFlags struct {
 	DryRun bool
 	// AssumeYes skips the SSH first-connect host-key prompt by asking
 	// OpenSSH to accept new host keys. Changed host keys still fail.
-	AssumeYes bool
+	IsAssumeYes bool
 }
 
 
@@ -293,7 +293,7 @@ func parseCloneFlags(args []string) CloneFlags {
 		UseSSH:                          *sshFlag,
 		UseHTTPS:                        *httpsFlag,
 		DryRun:                          *dryRunFlag,
-		AssumeYes:                       *yesFlag,
+		IsAssumeYes:                     *yesFlag,
 	}
 }
 

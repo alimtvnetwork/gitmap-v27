@@ -49,6 +49,7 @@ const (
 	FlagCloneYesShort = "y"
 	FlagDescCloneYes  = "Auto-accept new SSH host keys for SSH clone URLs " +
 		"(sets StrictHostKeyChecking=accept-new; changed keys still fail)"
+	ErrCloneSSHEnvFmt = "clone: failed to configure SSH host-key acceptance: %v\n"
 )
 
 // Multi-URL clone messages (spec/01-app/104-clone-multi.md).

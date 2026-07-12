@@ -19,7 +19,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	
+
 	"time"
 
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
@@ -284,4 +284,3 @@ func humanBytes(n int64) string {
 
 	return fmt.Sprintf("%.1f EB", f)
 }
-

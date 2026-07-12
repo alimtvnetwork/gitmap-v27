@@ -33,16 +33,12 @@ const (
 	MsgSSHStatusFooter       = "\n  next: `gitmap ssh ls` for stored keys, `gitmap ssh cp <name>` to copy a public key.\n\n"
 )
 
-
-
-
 // SSH copy messages.
 const (
 	MsgSSHCopied       = "\n  📋 Public key copied to clipboard ✅  (%d bytes) — paste it into your Git provider 🚀\n"
 	MsgSSHCopyFallback = "\n  ⚠️  Clipboard tool not available — key printed above; copy it manually 📎\n"
 	ErrSSHClipboard    = "\n  ❌ Clipboard write failed via %s: %v — copy the key above manually 📎\n"
 )
-
 
 // SshKey table (v15: singular + SshKeyId PK; abbreviation per v15: Ssh, not SSH).
 const TableSshKey = "SshKey"

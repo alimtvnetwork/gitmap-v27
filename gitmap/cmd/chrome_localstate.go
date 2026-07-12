@@ -7,9 +7,9 @@ import "encoding/json"
 
 // ChromeLocalState is the slice of Chrome's Local State JSON gitmap reads.
 type ChromeLocalState struct {
-	LastUsed     string
-	LastActive   []string
-	Profiles     map[string]ChromeProfileEntry // dir name → entry
+	LastUsed   string
+	LastActive []string
+	Profiles   map[string]ChromeProfileEntry // dir name → entry
 }
 
 // ChromeProfileEntry mirrors profile.info_cache[<dir>] fields gitmap surfaces.

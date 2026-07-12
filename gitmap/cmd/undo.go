@@ -27,9 +27,9 @@ import (
 
 // undoOptions captures parsed CLI flags.
 type undoOptions struct {
-	isList    bool
-	isDryRun  bool
-	snapshot  string
+	isList   bool
+	isDryRun bool
+	snapshot string
 }
 
 // runUndo is the CLI dispatcher.

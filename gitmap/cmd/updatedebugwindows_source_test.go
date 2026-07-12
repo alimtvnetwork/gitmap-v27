@@ -112,8 +112,6 @@ func parseUpdateDebugWindows(t *testing.T) *ast.File {
 	return file
 }
 
-
-
 // hasFsutilImport reports whether the parsed file imports the canonical
 // fsutil package path. Strips the surrounding quotes from the import
 // literal before comparing because go/ast keeps them on the Path.Value.

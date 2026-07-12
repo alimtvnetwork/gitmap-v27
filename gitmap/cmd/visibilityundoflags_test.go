@@ -57,9 +57,9 @@ func TestMatchesFromResultsPreservesNameAndPattern(t *testing.T) {
 
 func TestBulkExitCodeMatrix(t *testing.T) {
 	cases := []struct {
-		name             string
-		changed, failed  int
-		want             int
+		name            string
+		changed, failed int
+		want            int
 	}{
 		{"all-ok", 5, 0, constants.ExitVisOK},
 		{"all-failed", 0, 3, constants.ExitVisAuthFailed},

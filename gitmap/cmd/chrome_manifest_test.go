@@ -34,7 +34,7 @@ func writeTestTarball(t *testing.T, dir string, files map[string]string) string 
 func TestBuildAndVerifyChromeManifestRoundTrip(t *testing.T) {
 	dir := t.TempDir()
 	tar1 := writeTestTarball(t, dir, map[string]string{
-		"Default/Bookmarks": `{"v":1}`,
+		"Default/Bookmarks":   `{"v":1}`,
 		"Default/Preferences": `{"profile":{}}`,
 	})
 	if _, err := writeChromeManifest(tar1); err != nil {

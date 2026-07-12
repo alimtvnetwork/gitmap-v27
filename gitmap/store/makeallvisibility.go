@@ -5,11 +5,11 @@
 //
 // Call sequence from runMakeAllVisibility:
 //
-//   1. InsertMakeAllVisibilityRun(run)                   → runID
-//   2. InsertMakeAllVisibilityPendingResults(runID, ms)  → []resultID
-//   3. (optional) MarkMakeAllVisibilityResultsExcluded(ids)
-//   4. UpdateMakeAllVisibilityResult(id, status, ...)    × N
-//   5. FinalizeMakeAllVisibilityRun(runID, counts, exitCode)
+//  1. InsertMakeAllVisibilityRun(run)                   → runID
+//  2. InsertMakeAllVisibilityPendingResults(runID, ms)  → []resultID
+//  3. (optional) MarkMakeAllVisibilityResultsExcluded(ids)
+//  4. UpdateMakeAllVisibilityResult(id, status, ...)    × N
+//  5. FinalizeMakeAllVisibilityRun(runID, counts, exitCode)
 //
 // Spec: spec/01-app/116-bulk-visibility-mapub-mapri.md §plan steps 17-18.
 package store

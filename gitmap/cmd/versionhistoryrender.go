@@ -21,14 +21,14 @@ import (
 
 // versionHistory wire keys. Names + order are the contract.
 const (
-	vhKeyFromVersionTag  = "fromVersionTag"
-	vhKeyFromVersionNum  = "fromVersionNum"
-	vhKeyToVersionTag    = "toVersionTag"
-	vhKeyToVersionNum    = "toVersionNum"
-	vhKeyFlattenedPath   = "flattenedPath"
-	vhKeyCreatedAt       = "createdAt"
-	vhKeyID              = "id"
-	vhKeyRepoID          = "repoId"
+	vhKeyFromVersionTag = "fromVersionTag"
+	vhKeyFromVersionNum = "fromVersionNum"
+	vhKeyToVersionTag   = "toVersionTag"
+	vhKeyToVersionNum   = "toVersionNum"
+	vhKeyFlattenedPath  = "flattenedPath"
+	vhKeyCreatedAt      = "createdAt"
+	vhKeyID             = "id"
+	vhKeyRepoID         = "repoId"
 )
 
 // encodeVersionHistoryJSON writes version-history records as stable JSON.

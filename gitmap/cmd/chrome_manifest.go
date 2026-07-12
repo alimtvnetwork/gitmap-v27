@@ -16,7 +16,6 @@ import (
 	"strings"
 )
 
-
 // chromeManifestSuffix is appended to the tarball path to form the
 // manifest filename. Kept centralized so backup + restore agree.
 const chromeManifestSuffix = ".sha256.txt"
@@ -133,7 +132,6 @@ func readChromeManifestSource(tarballPath string) string {
 	}
 	return ""
 }
-
 
 // verifyChromeManifest re-hashes the tarball and diffs it against the
 // sidecar manifest. Returns (matched, mismatched-names, error). When the

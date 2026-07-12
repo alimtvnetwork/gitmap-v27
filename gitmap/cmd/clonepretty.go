@@ -22,8 +22,9 @@ import (
 // `git clone` runs. Defaults to off so existing callers/tests keep
 // their byte-for-byte legacy behavior unless the flag is opted in.
 var (
-	cloneDryRunFlag bool
-	cloneSpinnerOff bool
+	cloneDryRunFlag  bool
+	cloneSpinnerOff  bool
+	isCloneAssumeYes bool
 )
 
 // SetCloneDryRun toggles the dry-run short circuit for every
@@ -35,6 +36,10 @@ func SetCloneDryRun(on bool) { cloneDryRunFlag = on }
 // outside runCloneCommand (e.g. cfr's chained fix-repo step) can
 // branch on it to suppress destructive follow-ups in dry-run mode.
 func IsCloneDryRun() bool { return cloneDryRunFlag }
+
+// SetCloneAssumeYes toggles auto-accept-new-host-key behavior for SSH
+// clone commands when the user passes -y / --yes.
+func SetCloneAssumeYes(on bool) { isCloneAssumeYes = on }
 
 // SetCloneSpinnerOff disables the inline spinner. Useful in tests
 // or CI where carriage-return updates clutter captured output.
@@ -50,11 +55,9 @@ func runCloneCommandPretty(url, dest string) error {
 		fmt.Println(constants.MsgCloneDryRunNoop)
 		return nil
 	}
-	stopSpinner := startCloneSpinner(constants.MsgCloneSpinnerLabel)
+	stopSpinner := startCloneSpinnerForURL(url)
 	start := time.Now()
-	cmd := exec.Command(constants.GitBin, constants.GitClone, url, dest)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	cmd := newCloneCommand(url, dest)
 	runErr := cmd.Run()
 	stopSpinner()
 	elapsed := time.Since(start).Truncate(time.Millisecond)
@@ -64,6 +67,26 @@ func runCloneCommandPretty(url, dest string) error {
 	}
 	fmt.Printf(constants.MsgClonePrettyOK, dest, elapsed)
 	return nil
+}
+
+func startCloneSpinnerForURL(url string) func() {
+	if isSSHCloneURL(url) {
+		return func() {}
+	}
+
+	return startCloneSpinner(constants.MsgCloneSpinnerLabel)
+}
+
+func newCloneCommand(url, dest string) *exec.Cmd {
+	cmd := exec.Command(constants.GitBin, constants.GitClone, url, dest)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if isCloneAssumeYes && isSSHCloneURL(url) {
+		cmd.Env = cloneEnvWithSSHAcceptNew()
+	}
+
+	return cmd
 }
 
 // printClonePrettyHeader emits the cyan banner shared by every
@@ -94,7 +117,7 @@ func printClonePrettyFailure(url, dest string, runErr error, elapsed time.Durati
 // constants_clone_pretty.go stays a single %s slot.
 func buildClonePrettyHints(url, dest string) string {
 	hints := []string{
-		fmt.Sprintf("  • clean up: " + constants.ColorCyan + "rm -rf %q" + constants.ColorReset, dest),
+		fmt.Sprintf("  • clean up: "+constants.ColorCyan+"rm -rf %q"+constants.ColorReset, dest),
 		"  • retry without replace:    " + constants.ColorCyan + "gitmap clone " + url + " --no-replace" + constants.ColorReset,
 	}
 	if strings.HasPrefix(strings.ToLower(url), "https://") {
@@ -103,6 +126,7 @@ func buildClonePrettyHints(url, dest string) string {
 	if strings.HasPrefix(strings.ToLower(url), "git@") ||
 		strings.HasPrefix(strings.ToLower(url), "ssh://") {
 		hints = append(hints, "  • switch transport (HTTPS): "+constants.ColorCyan+"gitmap clone "+url+" --https"+constants.ColorReset)
+		hints = append(hints, "  • accept new SSH host key: "+constants.ColorCyan+"gitmap clone "+url+" -y"+constants.ColorReset)
 	}
 	hints = append(hints,
 		"  • preview without cloning:  "+constants.ColorCyan+"gitmap clone "+url+" --dry-run"+constants.ColorReset)

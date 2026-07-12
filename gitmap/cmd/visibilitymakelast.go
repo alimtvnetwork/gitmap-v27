@@ -26,8 +26,12 @@ import (
 	"github.com/alimtvnetwork/gitmap-v26/gitmap/visibility"
 )
 
-func runMakeLastPublic(args []string)  { runMakeLast(constants.VisibilityPublic, constants.CmdMakeLastPublic, args) }
-func runMakeLastPrivate(args []string) { runMakeLast(constants.VisibilityPrivate, constants.CmdMakeLastPrivate, args) }
+func runMakeLastPublic(args []string) {
+	runMakeLast(constants.VisibilityPublic, constants.CmdMakeLastPublic, args)
+}
+func runMakeLastPrivate(args []string) {
+	runMakeLast(constants.VisibilityPrivate, constants.CmdMakeLastPrivate, args)
+}
 
 func runMakeLast(target, cmdName string, args []string) {
 	checkHelp(cmdName, args)

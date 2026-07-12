@@ -300,7 +300,7 @@ func (db *DB) migrateRepoScanFolderID() {
 }
 
 // migrateRepoInjectTimestamps adds LastInjectedDesktopAt + LastInjectedVSCodeAt
-// to existing Repo rows (schema v25). Both default to '' so the inject /
+// to existing Repo rows (schema v25). Both default to ” so the inject /
 // open idempotency check treats legacy rows as "never injected".
 func (db *DB) migrateRepoInjectTimestamps() {
 	db.addColumnIfNotExists(constants.SQLAddRepoLastInjectedDesktopAt)
@@ -309,7 +309,7 @@ func (db *DB) migrateRepoInjectTimestamps() {
 
 // migrateRepoLastClonedAt adds LastClonedAt (schema v26). Powers the
 // `gitmap release` auto-cd-into-most-recent-clone fallback. Defaults
-// to '' so legacy rows are treated as "never cloned by gitmap".
+// to ” so legacy rows are treated as "never cloned by gitmap".
 func (db *DB) migrateRepoLastClonedAt() {
 	db.addColumnIfNotExists(constants.SQLAddRepoLastClonedAt)
 }

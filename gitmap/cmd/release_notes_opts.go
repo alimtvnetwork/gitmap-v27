@@ -1,9 +1,10 @@
 // Package cmd — release-notes flag parsing & grouped formatting.
 //
 // Supports:
-//   --since <date|ref>   git log --since= window (e.g. "2 weeks ago", "2025-01-01")
-//   --since-tag <tag>    shorthand for <tag>..HEAD
-//   --format <fmt>       flat | grouped | markdown | json
+//
+//	--since <date|ref>   git log --since= window (e.g. "2 weeks ago", "2025-01-01")
+//	--since-tag <tag>    shorthand for <tag>..HEAD
+//	--format <fmt>       flat | grouped | markdown | json
 //
 // A bare positional <tagA>..<tagB> is still accepted for back-compat.
 package cmd

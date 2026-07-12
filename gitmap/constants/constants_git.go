@@ -3,6 +3,7 @@ package constants
 // Git commands and arguments.
 const (
 	GitBin             = "git"
+	SSHBin             = "ssh"
 	GitClone           = "clone"
 	GitPull            = "pull"
 	GitRebase          = "rebase"
@@ -41,6 +42,15 @@ const (
 	// master, occasionally trunk/develop) instead of guessing.
 	GitSymbolicRef           = "symbolic-ref"
 	GitRefsRemotesOriginHEAD = "refs/remotes/origin/HEAD"
+)
+
+// SSH environment and option constants used by git clone wrappers.
+const (
+	EnvGitSSHCommand          = "GIT_SSH_COMMAND"
+	SSHOptionFlag             = "-o"
+	SSHStrictHostKeyChecking  = "StrictHostKeyChecking"
+	SSHStrictHostKeyAcceptNew = "StrictHostKeyChecking=accept-new"
+	EnvAssignmentSeparator    = "="
 )
 
 // Git arguments for latest-branch operations.

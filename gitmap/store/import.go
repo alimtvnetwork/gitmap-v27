@@ -38,7 +38,7 @@ func (db *DB) importRepos(repos []model.ScanRecord) error {
 		_, err := db.conn.Exec(constants.SQLUpsertRepo,
 			r.Slug, r.RepoName, r.HTTPSUrl, r.SSHUrl,
 			r.Branch, r.RelativePath, r.AbsolutePath,
-			r.CloneInstruction, r.Notes)
+			r.CloneInstruction, r.Notes, r.Transport)
 		if err != nil {
 			return err
 		}

@@ -118,12 +118,12 @@ func TestHandleChromeFileCopyErrorSkipsLockFile(t *testing.T) {
 
 func TestIsChromeVolatileLockFileDetectsExactBasename(t *testing.T) {
 	cases := map[string]bool{
-		"LOCK":              true,
-		"a/b/LOCK":          true,
-		"LOCK.txt":          false,
-		"locked":            false,
-		"prefix-LOCK":       false,
-		"LOCK/child":        false,
+		"LOCK":        true,
+		"a/b/LOCK":    true,
+		"LOCK.txt":    false,
+		"locked":      false,
+		"prefix-LOCK": false,
+		"LOCK/child":  false,
 	}
 	for in, want := range cases {
 		if got := isChromeVolatileLockFile(filepath.FromSlash(in)); got != want {

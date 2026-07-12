@@ -61,6 +61,20 @@ func TestRunCloneCommandPrettyDryRunFlagDefaultsOff(t *testing.T) {
 	}
 }
 
+func TestWithSSHAcceptNewAddsOption(t *testing.T) {
+	got := withSSHAcceptNew("ssh -i ~/.ssh/id_ed25519")
+	if !strings.Contains(got, constants.SSHStrictHostKeyAcceptNew) {
+		t.Fatalf("missing accept-new option in %q", got)
+	}
+}
+
+func TestWithSSHAcceptNewKeepsExplicitStrictHostKey(t *testing.T) {
+	existing := "ssh -o StrictHostKeyChecking=no"
+	if got := withSSHAcceptNew(existing); got != existing {
+		t.Fatalf("withSSHAcceptNew() = %q, want %q", got, existing)
+	}
+}
+
 // captureClonePrettyStdout redirects os.Stdout for the duration of fn and
 // returns whatever was written. Failures during pipe setup fail the
 // test outright — without stdout we cannot assert anything useful.

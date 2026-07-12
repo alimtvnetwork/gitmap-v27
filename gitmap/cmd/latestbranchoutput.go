@@ -80,4 +80,3 @@ func printTerminalTopRow(item gitutil.RemoteBranchInfo) {
 		gitutil.TruncSha(item.Sha),
 		item.Subject)
 }
-

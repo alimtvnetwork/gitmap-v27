@@ -2,8 +2,8 @@
 // the bulk wildcard visibility audit trail (spec/01-app/116, plan
 // steps 15-16). Two tables:
 //
-//   MakeAllVisibilityRun     — one row per `make-all-*` invocation.
-//   MakeAllVisibilityResult  — one row per (Run, repo) pair.
+//	MakeAllVisibilityRun     — one row per `make-all-*` invocation.
+//	MakeAllVisibilityResult  — one row per (Run, repo) pair.
 //
 // Result rows are written in three phases by the apply loop:
 //

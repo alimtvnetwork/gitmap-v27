@@ -28,7 +28,7 @@ func newTestDB(t *testing.T) *DB {
 
 func TestClassifyURLTransport(t *testing.T) {
 	cases := map[string]string{
-		"":                                "",
+		"":                                 "",
 		"https://github.com/acme/repo.git": RepoTransportHTTPS,
 		"http://gitlab.local/x.git":        RepoTransportHTTPS,
 		"git@github.com:acme/repo.git":     RepoTransportSSH,

@@ -5,12 +5,12 @@ import "github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
 // ctxEntry describes a single right-click menu item (or category).
 // A category is an entry with empty Args and non-nil Children.
 type ctxEntry struct {
-	KeyName  string // numeric prefix preserves menu order, e.g. "10_release_next"
-	MUIVerb  string // visible label
-	Args     []string
-	Mode     constants.CtxMode
-	Exe      string // override executable; empty => use the gitmap binary
-	Icon     string // Windows: per-entry Icon registry value. Empty => no Icon written.
+	KeyName string // numeric prefix preserves menu order, e.g. "10_release_next"
+	MUIVerb string // visible label
+	Args    []string
+	Mode    constants.CtxMode
+	Exe     string // override executable; empty => use the gitmap binary
+	Icon    string // Windows: per-entry Icon registry value. Empty => no Icon written.
 	//                  Supports the constants.CtxIconExeToken ("{exe}") placeholder,
 	//                  which is substituted with the resolved gitmap binary path at
 	//                  registry-write time (see leafCommands / categoryCommands).

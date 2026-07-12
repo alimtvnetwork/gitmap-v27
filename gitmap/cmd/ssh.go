@@ -53,7 +53,6 @@ func dispatchSSH(sub string, args []string) {
 		return
 	}
 
-
 	// Not a subcommand — treat all args as flags for generate.
 	runSSHGenerate(append([]string{sub}, args...))
 }

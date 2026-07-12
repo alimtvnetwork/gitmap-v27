@@ -137,6 +137,8 @@ const (
 	CmdWhoAmIAlias           = "who"
 	CmdSSHBind               = "ssh-bind"
 	CmdSSHBindAlias          = "sb"
+	CmdFixAuth               = "fix-auth"
+	CmdFixAuthAlias          = "fa"
 
 
 	CmdSetSourceRepo         = "set-source-repo" // gitmap:cmd skip

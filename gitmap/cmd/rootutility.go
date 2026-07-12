@@ -50,6 +50,7 @@ func utilityDispatchEntries() []dispatchEntry {
 		{[]string{constants.CmdReinstall}, func() { runReinstall(argsTail()) }},
 		{[]string{constants.CmdWhoAmI, constants.CmdWhoAmIAlias}, func() { checkHelp("whoami", argsTail()); runWhoAmI(argsTail()) }},
 		{[]string{constants.CmdSSHBind, constants.CmdSSHBindAlias}, func() { checkHelp("ssh-bind", argsTail()); runSSHBind(argsTail()) }},
+		{[]string{constants.CmdFixAuth, constants.CmdFixAuthAlias}, func() { checkHelp("fix-auth", argsTail()); runFixAuth(argsTail()) }},
 
 	}
 }

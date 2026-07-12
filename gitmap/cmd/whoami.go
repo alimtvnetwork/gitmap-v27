@@ -211,7 +211,9 @@ func printWhoAmIFixHints(url string) {
 		fmt.Println("    git remote set-url origin https://<correct-user>@github.com/<owner>/<repo>.git")
 	case "SSH":
 		fmt.Println("  Force this repo to use a specific key (no global change):")
-		fmt.Println("    git config core.sshCommand \"ssh -i ~/.ssh/<your_key> -F /dev/null\"")
+		fmt.Println("    gitmap ssh-bind <key-filename>     # e.g. id_ed25519_aukgit")
+		fmt.Println("    (equivalent to: git config core.sshCommand \"ssh -i ~/.ssh/<key> -F /dev/null\")")
+
 		fmt.Println("  Or switch to HTTPS: gitmap push --https")
 	}
 	fmt.Println()

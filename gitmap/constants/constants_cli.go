@@ -135,6 +135,9 @@ const (
 	CmdLLMDocsAlias          = "ld"
 	CmdWhoAmI                = "whoami"
 	CmdWhoAmIAlias           = "who"
+	CmdSSHBind               = "ssh-bind"
+	CmdSSHBindAlias          = "sb"
+
 
 	CmdSetSourceRepo         = "set-source-repo" // gitmap:cmd skip
 	CmdSelfInstall           = "self-install"

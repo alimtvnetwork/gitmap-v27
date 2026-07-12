@@ -49,6 +49,8 @@ func utilityDispatchEntries() []dispatchEntry {
 		{[]string{constants.CmdLFSCommon, constants.CmdLFSCommonAlias}, func() { runLFSCommon(argsTail()) }},
 		{[]string{constants.CmdReinstall}, func() { runReinstall(argsTail()) }},
 		{[]string{constants.CmdWhoAmI, constants.CmdWhoAmIAlias}, func() { checkHelp("whoami", argsTail()); runWhoAmI(argsTail()) }},
+		{[]string{constants.CmdSSHBind, constants.CmdSSHBindAlias}, func() { checkHelp("ssh-bind", argsTail()); runSSHBind(argsTail()) }},
+
 	}
 }
 

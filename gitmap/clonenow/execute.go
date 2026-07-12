@@ -133,6 +133,9 @@ func runGitClone(r Row, url, dest, cwd string) (string, bool) {
 	args := buildGitArgs(r, url, dest)
 	cmd := exec.Command(constants.GitBin, args...)
 	cmd.Dir = cwd
+	if isSSHCloneURL(url) {
+		return runInteractiveGitClone(cmd)
+	}
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return trimGitError(string(out), err), false

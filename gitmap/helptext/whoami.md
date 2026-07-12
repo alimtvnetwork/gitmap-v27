@@ -31,20 +31,22 @@ Alias: `who`
 
 ## Examples
 
-    $ gitmap whoami
-    identity (local):   Ali Karim <me@example.com>
-    identity (global):  Ali Karim <me@example.com>
-    origin:             git@github.com:aukgit/alim.karim.profile.git  (ssh)
-    ssh principal:      karim-mum-v1        ← WRONG account
-    ssh key offered:    ~/.ssh/id_ed25519
+```
+$ gitmap whoami
+identity (local):   Ali Karim <me@example.com>
+identity (global):  Ali Karim <me@example.com>
+origin:             git@github.com:aukgit/alim.karim.profile.git  (ssh)
+ssh principal:      karim-mum-v1        ← WRONG account
+ssh key offered:    ~/.ssh/id_ed25519
 
-    available keys in ~/.ssh:
-      id_ed25519
-      id_ed25519_aukgit
-      id_rsa_work
+available keys in ~/.ssh:
+  id_ed25519
+  id_ed25519_aukgit
+  id_rsa_work
 
-    fix:  gitmap fix-auth --user aukgit
-      or: gitmap ssh-bind id_ed25519_aukgit
+fix:  gitmap fix-auth --user aukgit
+  or: gitmap ssh-bind id_ed25519_aukgit
+```
 
 ## See Also
 

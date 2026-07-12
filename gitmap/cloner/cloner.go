@@ -185,6 +185,9 @@ func runClone(rec model.ScanRecord, dest string) model.CloneResult {
 	args = append(args, url, dest)
 
 	cmd := exec.Command(constants.GitBin, args...)
+	if isSSHCloneURL(url) {
+		return runInteractiveClone(cmd, rec, url, dest, strategy)
+	}
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		msg := fmt.Sprintf(

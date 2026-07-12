@@ -1,0 +1,17 @@
+{
+  "version": "6.75.0",
+  "branch": "release/v6.75.0",
+  "sourceBranch": "main",
+  "tag": "v6.75.0",
+  "assets": [],
+  "changelog": [
+    "Added: `gitmap fix-auth` (alias `fa`) — cross-platform Go port of the PowerShell/Bash 'wrong GitHub account push failure' recipe. Generates `~/.ssh/id_ed25519_<user>`, pins the current repo via `git config core.sshCommand \"ssh -i <key> -F /dev/null -o IdentitiesOnly=yes\"`, and copies the public key to the OS clipboard. New file: `gitmap/cmd/fixauth.go`. Constants: `CmdFixAuth` / `CmdFixAuthAlias` in `gitmap/constants/constants_cli.go`. Dispatch registered in `gitmap/cmd/rootutility.go`.",
+    "Added: help text `gitmap/helptext/fix-auth.md`, `gitmap/helptext/whoami.md`, `gitmap/helptext/ssh-bind.md` — embedded via `go:embed *.md`, discoverable through `gitmap help fix-auth` / `whoami` / `ssh-bind` and the `--json` help payload.",
+    "Added: docs-site command entries for `fix-auth`, `whoami`, and `ssh-bind` in `src/data/commands.ts` under the `tools` category, with usage, flags, examples, and see-also links.",
+    "Pinned: README pinned-version block + version matrix moved to **v6.75.0**. Synced `gitmap/constants/constants.go` (`Version = \"6.75.0\"`) and `src/constants/index.ts` (`VERSION = \"v6.75.0\"`)."
+  ],
+  "isDraft": false,
+  "isPreRelease": false,
+  "createdAt": "2026-07-12T00:00:00Z",
+  "isLatest": true
+}

@@ -118,30 +118,32 @@ const (
 
 // SQL: repo operations (v15: Repo table, RepoId PK).
 const (
-	SQLUpsertRepo = `INSERT INTO Repo (Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+	SQLUpsertRepo = `INSERT INTO Repo (Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes, IdentifiedTransport)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 		ON CONFLICT(AbsolutePath) DO UPDATE SET
 			Slug=excluded.Slug, RepoName=excluded.RepoName, HttpsUrl=excluded.HttpsUrl,
 			SshUrl=excluded.SshUrl, Branch=excluded.Branch, RelativePath=excluded.RelativePath,
-			CloneInstruction=excluded.CloneInstruction, Notes=excluded.Notes, UpdatedAt=CURRENT_TIMESTAMP`
+			CloneInstruction=excluded.CloneInstruction, Notes=excluded.Notes,
+			IdentifiedTransport=excluded.IdentifiedTransport, UpdatedAt=CURRENT_TIMESTAMP`
 
-	SQLSelectAllRepos = "SELECT RepoId, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes FROM Repo ORDER BY Slug"
+	SQLSelectAllRepos = "SELECT RepoId, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes, IdentifiedTransport FROM Repo ORDER BY Slug"
 
-	SQLSelectRepoBySlug = "SELECT RepoId, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes FROM Repo WHERE Slug = ?"
+	SQLSelectRepoBySlug = "SELECT RepoId, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes, IdentifiedTransport FROM Repo WHERE Slug = ?"
 
-	SQLSelectRepoByPath = "SELECT RepoId, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes FROM Repo WHERE AbsolutePath = ?"
+	SQLSelectRepoByPath = "SELECT RepoId, Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes, IdentifiedTransport FROM Repo WHERE AbsolutePath = ?"
 
 	SQLDeleteRepoByPath = "DELETE FROM Repo WHERE AbsolutePath = ?"
 	SQLDeleteRepoBySlug = "DELETE FROM Repo WHERE Slug = ?"
 )
 
 // SQL: upsert by AbsolutePath (spec requirement).
-const SQLUpsertRepoByPath = `INSERT INTO Repo (Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+const SQLUpsertRepoByPath = `INSERT INTO Repo (Slug, RepoName, HttpsUrl, SshUrl, Branch, RelativePath, AbsolutePath, CloneInstruction, Notes, IdentifiedTransport)
+	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	ON CONFLICT(AbsolutePath) DO UPDATE SET
 		Slug=excluded.Slug, RepoName=excluded.RepoName, HttpsUrl=excluded.HttpsUrl,
 		SshUrl=excluded.SshUrl, Branch=excluded.Branch, RelativePath=excluded.RelativePath,
-		CloneInstruction=excluded.CloneInstruction, Notes=excluded.Notes, UpdatedAt=CURRENT_TIMESTAMP`
+		CloneInstruction=excluded.CloneInstruction, Notes=excluded.Notes,
+		IdentifiedTransport=excluded.IdentifiedTransport, UpdatedAt=CURRENT_TIMESTAMP`
 
 // SQL: create unique index on AbsolutePath for upsert-by-path (v15: IdxRepo_AbsolutePath).
 const SQLCreateAbsPathIndex = "CREATE UNIQUE INDEX IF NOT EXISTS IdxRepo_AbsolutePath ON Repo(AbsolutePath)"

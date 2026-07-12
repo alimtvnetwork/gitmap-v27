@@ -99,6 +99,7 @@ func runCloneNow(args []string) {
 
 		return
 	}
+	applyCloneAssumeYesEnv(cfg.assumeYes)
 	printRecloneExecuteSummary(plan, cfg)
 	confirmCloneNowExistingDestsOrExit(plan, cfg)
 	runCloneNowExecute(plan, cfg)

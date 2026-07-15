@@ -1442,6 +1442,26 @@ export const commands: CommandDef[] = [
   },
   {
     category: "tools",
+    name: "sync", alias: "sy", description: "Union-merge curated defaults for .gitignore, .gitattributes, .prettierignore, and .prettierrc into the current directory without gitmap marker blocks. Existing content is preserved; only missing lines/keys are appended. Use this when the target file is hand-maintained.",
+    usage: "gitmap sync <ignore|attributes|prettier-ignore|prettier-rc|all> [--dry-run] [--force]",
+    flags: [
+      { flag: "--dry-run, -n", description: "Print planned additions without touching disk" },
+      { flag: "--force, -f", description: "For prettier-rc only: overwrite conflicting keys instead of preserving them" },
+    ],
+    examples: [
+      { command: "gitmap sync ignore", description: "Append missing curated ignore entries to a hand-written .gitignore" },
+      { command: "gitmap sync all --dry-run", description: "Preview additions for all four targets in one pass" },
+      { command: "gitmap sync prettier-rc --force", description: "Reset prettier keys (printWidth, semi, etc.) to curated defaults" },
+      { command: "gitmap sy attributes", description: "Short alias — union-merge line-ending + LFS defaults" },
+    ],
+    seeAlso: [
+      { name: "add ignore", description: "Marker-block managed .gitignore (rewritten on each run)" },
+      { name: "add attributes", description: "Marker-block managed .gitattributes" },
+      { name: "templates init", description: "Scaffold from scratch when the file doesn't exist yet" },
+    ],
+  },
+  {
+    category: "tools",
     name: "templates list", alias: "tpl tl", description: "List every available template with its KIND, LANG, SOURCE (user/embed), and PATH",
     usage: "gitmap templates list",
     flags: [],

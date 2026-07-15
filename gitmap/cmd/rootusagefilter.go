@@ -69,7 +69,7 @@ func allHelpRows() []helpRow {
 		constants.HelpAddIgnore, constants.HelpAddAttributes,
 		constants.HelpAddLFSInstall, constants.HelpTemplatesInit,
 		constants.HelpTemplatesList, constants.HelpTemplatesShow,
-		constants.HelpTemplatesDiff)
+		constants.HelpTemplatesDiff, constants.HelpSync)
 	addGroup(&rows, constants.HelpGroupUtilities,
 		constants.HelpSetup, constants.HelpDoctor, constants.HelpUpdate,
 		constants.HelpUpdateCleanup, constants.HelpVersion, constants.HelpCompletion,

@@ -185,7 +185,7 @@ Examples:
 
 // dispatchSync routes `gitmap sync <target>` subcommands.
 func dispatchSync(command string) bool {
-	if command != constants_CmdSync() && command != constants_CmdSyncAlias() {
+	if command != constants.CmdSync && command != constants.CmdSyncAlias {
 		return false
 	}
 	if len(os.Args) < 3 {

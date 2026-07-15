@@ -29,6 +29,7 @@ const (
 	HelpTemplatesList  = "  templates list (tpl tl)    List every available template (kind, lang, source: user/embed, path)"
 	HelpTemplatesShow  = "  templates show (tpl ts)    Print one template (overlay > embed) to stdout, audit-trail header included"
 	HelpTemplatesDiff  = "  templates diff (tpl td)    Preview what add ignore/add attributes would change; exit codes mirror diff(1)"
+	HelpSync           = "  sync (sy) <target>         Union-merge curated defaults into .gitignore/.gitattributes/.prettierignore/.prettierrc without markers"
 
 	HelpGroupHint    = "  Run any command with --help or -h for detailed usage and examples."
 	HelpGroupExample = "  Quick start:"

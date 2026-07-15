@@ -139,6 +139,8 @@ const (
 	CmdSSHBindAlias          = "sb"
 	CmdFixAuth               = "fix-auth"
 	CmdFixAuthAlias          = "fa"
+	CmdSync                  = "sync"
+	CmdSyncAlias             = "sy"
 
 
 	CmdSetSourceRepo         = "set-source-repo" // gitmap:cmd skip

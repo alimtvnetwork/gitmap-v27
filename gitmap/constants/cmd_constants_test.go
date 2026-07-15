@@ -189,6 +189,8 @@ func topLevelCmds() map[string]string {
 		"CmdSSHBindAlias":          CmdSSHBindAlias,
 		"CmdFixAuth":               CmdFixAuth,
 		"CmdFixAuthAlias":          CmdFixAuthAlias,
+		"CmdSync":                  CmdSync,
+		"CmdSyncAlias":             CmdSyncAlias,
 		"CmdWhoAmI":                CmdWhoAmI,
 		"CmdWhoAmIAlias":           CmdWhoAmIAlias,
 		"CmdStartupAdd":            CmdStartupAdd,

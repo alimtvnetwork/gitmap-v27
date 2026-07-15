@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 
@@ -96,14 +97,14 @@ func resolveBinaryDir() string {
 	return filepath.Dir(resolved)
 }
 
-// serveStatic serves pre-built dist/ files over HTTP.
+// serveStatic serves pre-built dist/ files over HTTP with SPA fallback.
 func serveStatic(distDir string, port int) {
 	fmt.Printf(constants.MsgHDServingStatic, distDir, port)
 	openBrowser(port)
 
 	server := &http.Server{
 		Addr:              fmt.Sprintf(":%d", port),
-		Handler:           http.FileServer(http.Dir(distDir)),
+		Handler:           spaHandler(distDir),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 
@@ -116,6 +117,32 @@ func serveStatic(distDir string, port int) {
 	}
 
 	fmt.Print(constants.MsgHDStopped)
+}
+
+// spaHandler serves static files from distDir and falls back to
+// index.html for unknown routes so client-side routers (React Router,
+// TanStack Router) resolve deep links. Also forces text/html on the
+// fallback because Windows' MIME registry can be broken and cause
+// browsers to download index.html instead of rendering it.
+func spaHandler(distDir string) http.Handler {
+	fs := http.FileServer(http.Dir(distDir))
+	indexPath := distDir + "/index.html"
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Serve the exact file if it exists on disk.
+		requested := distDir + r.URL.Path
+		if info, err := os.Stat(requested); err == nil && !info.IsDir() {
+			// Explicit HTML content type for .html assets (Windows fix).
+			if strings.HasSuffix(r.URL.Path, ".html") {
+				w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			}
+			fs.ServeHTTP(w, r)
+			return
+		}
+		// Fallback to SPA index.
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Cache-Control", "no-cache")
+		http.ServeFile(w, r, indexPath)
+	})
 }
 
 // serveDev runs npm install + npm run dev as a fallback.

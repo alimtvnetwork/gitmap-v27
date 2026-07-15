@@ -158,6 +158,11 @@ func dispatch(command string) {
 
 		return
 	}
+	if dispatchCommons(command) {
+		finishCommandAudit(shouldAudit, auditID, auditStart, 0, "", 0)
+
+		return
+	}
 	if dispatchTemplates(command) {
 		finishCommandAudit(shouldAudit, auditID, auditStart, 0, "", 0)
 

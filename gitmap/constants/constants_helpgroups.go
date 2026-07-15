@@ -30,6 +30,7 @@ const (
 	HelpTemplatesShow  = "  templates show (tpl ts)    Print one template (overlay > embed) to stdout, audit-trail header included"
 	HelpTemplatesDiff  = "  templates diff (tpl td)    Preview what add ignore/add attributes would change; exit codes mirror diff(1)"
 	HelpSync           = "  sync (sy) <target>         Union-merge curated defaults: ignore | attributes | lfs-install | prettier-ignore | prettier-rc | all  [--dry-run] [--force]"
+	HelpCommons        = "  commons (co)               Shortcut for 'sync all' — add/dedupe curated .gitignore, .gitattributes, .prettierignore, .prettierrc + git lfs install  [--dry-run]"
 
 	HelpGroupHint    = "  Run any command with --help or -h for detailed usage and examples."
 	HelpGroupExample = "  Quick start:"

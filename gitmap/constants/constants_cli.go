@@ -141,6 +141,11 @@ const (
 	CmdFixAuthAlias          = "fa"
 	CmdSync                  = "sync"
 	CmdSyncAlias             = "sy"
+	// CmdCommons (v6.76.0) is a shortcut for `gitmap sync all` — adds
+	// or dedupe-merges the curated .gitignore, .gitattributes,
+	// .prettierignore, .prettierrc baselines + `git lfs install`.
+	CmdCommons      = "commons"
+	CmdCommonsAlias = "co"
 
 
 	CmdSetSourceRepo         = "set-source-repo" // gitmap:cmd skip

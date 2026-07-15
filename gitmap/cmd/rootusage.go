@@ -279,4 +279,5 @@ func printGroupTemplates() {
 	fmt.Println(constants.HelpTemplatesShow)
 	fmt.Println(constants.HelpTemplatesDiff)
 	fmt.Println(constants.HelpSync)
+	fmt.Println(constants.HelpCommons)
 }

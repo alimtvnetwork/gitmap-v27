@@ -1452,7 +1452,7 @@ export const commands: CommandDef[] = [
       { command: "gitmap sync ignore", description: "Append missing curated ignore entries to a hand-written .gitignore" },
       { command: "gitmap sync all --dry-run", description: "Preview additions for all four targets in one pass" },
       { command: "gitmap sync prettier-rc --force", description: "Reset prettier keys (printWidth, semi, etc.) to curated defaults" },
-      { command: "gitmap sy attributes", description: "Short alias — union-merge line-ending + LFS defaults" },
+      { command: "gitmap sy attributes", description: "Short alias, union-merges line-ending + LFS defaults" },
     ],
     seeAlso: [
       { name: "add ignore", description: "Marker-block managed .gitignore (rewritten on each run)" },

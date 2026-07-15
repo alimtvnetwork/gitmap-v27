@@ -17,6 +17,7 @@ func printUsage() {
 		printGroupScanning()
 		printGroupNavigation()
 		printGroupEnvTools()
+		printGroupTemplates()
 	})
 	printSuperCategory("WORK WITH REPOS", func() {
 		printGroupCloning()

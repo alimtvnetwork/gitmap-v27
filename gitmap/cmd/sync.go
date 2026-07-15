@@ -366,3 +366,15 @@ func jsonEqual(a, b any) bool {
 	bb, _ := json.Marshal(b)
 	return string(ab) == string(bb)
 }
+
+// runSyncLFSInstall delegates to `gitmap add lfs-install`. Kept as a
+// thin wrapper so the sync surface stays a single dispatch table while
+// the LFS logic (marker block, templates.Merge, git-lfs probe) lives
+// once in addlfsinstall.go.
+func runSyncLFSInstall(dry bool) {
+	args := []string{}
+	if dry {
+		args = append(args, "--dry-run")
+	}
+	runAddLFSInstall(args)
+}

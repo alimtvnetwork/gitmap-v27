@@ -1440,8 +1440,8 @@ export const commands: CommandDef[] = [
       { name: "lfs-common", description: "Per-pattern `git lfs track` (no template)" },
     ],
   },
-
-
+  {
+    category: "tools",
     name: "templates list", alias: "tpl tl", description: "List every available template with its KIND, LANG, SOURCE (user/embed), and PATH",
     usage: "gitmap templates list",
     flags: [],

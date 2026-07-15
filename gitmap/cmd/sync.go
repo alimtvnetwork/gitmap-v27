@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 // Curated defaults sourced from the user-approved baseline (see helptext/sync.md).
@@ -160,25 +160,32 @@ var defaultPrettierrcBaseline = map[string]any{
 const syncUsage = `Usage: gitmap sync <target> [flags]
 
 Targets:
-  ignore         Union-merge curated defaults into ./.gitignore
-  attributes    Union-merge curated defaults into ./.gitattributes
+  ignore            Union-merge curated defaults into ./.gitignore
+  attributes       Union-merge curated defaults into ./.gitattributes
+  lfs-install      Run 'git lfs install --local' and merge lfs/common .gitattributes block
+                   (delegates to 'gitmap add lfs-install'; supports --dry-run)
   prettier-ignore  Union-merge curated defaults into ./.prettierignore
   prettier-rc      Merge curated JSON defaults into ./.prettierrc (existing keys win)
-  all           Run every target above in sequence
+  all              Run every target above in sequence
 
 Flags:
-  --dry-run   Print planned additions without touching disk
-  --force     Overwrite conflicting JSON values in .prettierrc
+  --dry-run, -n    Print planned additions without touching disk
+  --force,   -f    Overwrite conflicting JSON values in .prettierrc
 
 Behavior:
   - Line-based targets (ignore/attributes/prettier-ignore) append MISSING lines
     only; existing entries are preserved verbatim. Safe to re-run.
+  - lfs-install delegates to the same code path as 'gitmap add lfs-install'
+    (marker-block managed, idempotent). Requires git-lfs on PATH.
   - .prettierrc is JSON key-union: missing keys are added; existing keys stay
     unless --force is passed.
   - Alias: gitmap sy <target>
 
 Examples:
   gitmap sync ignore
+  gitmap sync attributes --dry-run
+  gitmap sync lfs-install
+  gitmap sync lfs-install --dry-run
   gitmap sync all --dry-run
   gitmap sync prettier-rc --force
 `
@@ -200,6 +207,8 @@ func dispatchSync(command string) bool {
 		runSyncLines(".gitignore", defaultGitignoreBaseline, dry)
 	case "attributes":
 		runSyncLines(".gitattributes", defaultGitattributesBaseline, dry)
+	case "lfs-install":
+		runSyncLFSInstall(dry)
 	case "prettier-ignore":
 		runSyncLines(".prettierignore", defaultPrettierignoreBaseline, dry)
 	case "prettier-rc":
@@ -207,6 +216,7 @@ func dispatchSync(command string) bool {
 	case "all":
 		runSyncLines(".gitignore", defaultGitignoreBaseline, dry)
 		runSyncLines(".gitattributes", defaultGitattributesBaseline, dry)
+		runSyncLFSInstall(dry)
 		runSyncLines(".prettierignore", defaultPrettierignoreBaseline, dry)
 		runSyncPrettierRC(dry, force)
 	default:

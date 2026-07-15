@@ -9,7 +9,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 // writeEntriesAtomic encodes entries to a sibling .tmp then renames.

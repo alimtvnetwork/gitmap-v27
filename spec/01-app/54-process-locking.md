@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Prevent multiple gitmap-v26 instances from writing to the same SQLite
+Prevent multiple gitmap-v27 instances from writing to the same SQLite
 database simultaneously, which can cause corruption or lock errors.
 
 ## Mechanism
@@ -25,7 +25,7 @@ PID of the owning process.
 ## Output
 
 ```
-  ⚠ Another gitmap-v26 process is running (PID 12345).
+  ⚠ Another gitmap-v27 process is running (PID 12345).
   If this is incorrect, delete: /path/to/data/gitmap.lock
 ```
 

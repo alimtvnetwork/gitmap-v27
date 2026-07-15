@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 func TestCopyEntryMissingSourceIsSilent(t *testing.T) {

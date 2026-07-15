@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/cmd/commitin/profile"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/cmd/commitin/profile"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 // applyExclusions filters `files` against the resolved Exclusion list.

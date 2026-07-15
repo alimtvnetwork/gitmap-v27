@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/release"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/release"
 )
 
 // initRollbackRepo creates a temporary git repo with an initial commit,

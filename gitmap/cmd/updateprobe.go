@@ -10,10 +10,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
-// repoSlugRe matches "<base>-v<N>" e.g. "gitmap-v26".
+// repoSlugRe matches "<base>-v<N>" e.g. "gitmap-v27".
 var repoSlugRe = regexp.MustCompile(`^([a-z][a-z0-9_-]*?)-v(\d+)$`)
 
 // probeResult records a single sibling HEAD response.
@@ -53,7 +53,7 @@ func resolveLatestRepoSlug(httpClient *http.Client) (string, string, error) {
 	return "", "", fmt.Errorf("no resolution")
 }
 
-// parseCurrentRepoSlug splits "gitmap-v26" into ("gitmap", 23).
+// parseCurrentRepoSlug splits "gitmap-v27" into ("gitmap", 23).
 func parseCurrentRepoSlug(slug string) (string, int, error) {
 	m := repoSlugRe.FindStringSubmatch(slug)
 	if m == nil {

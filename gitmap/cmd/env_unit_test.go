@@ -3,7 +3,7 @@ package cmd
 import (
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/model"
 )
 
 func TestEnvNamePatternValidates(t *testing.T) {

@@ -12,11 +12,11 @@ building, the scan pipeline adds a project detection phase.
 
 | Command              | Alias | Description                        |
 |----------------------|-------|------------------------------------|
-| `gitmap-v26 go-repos`    | `gr`  | List repos containing Go projects  |
-| `gitmap-v26 node-repos`  | `nr`  | List repos containing Node projects|
-| `gitmap-v26 react-repos` | `rr`  | List repos containing React projects|
-| `gitmap-v26 cpp-repos`   | `cr`  | List repos containing C++ projects |
-| `gitmap-v26 csharp-repos`| `sr`  | List repos containing C# projects  |
+| `gitmap-v27 go-repos`    | `gr`  | List repos containing Go projects  |
+| `gitmap-v27 node-repos`  | `nr`  | List repos containing Node projects|
+| `gitmap-v27 react-repos` | `rr`  | List repos containing React projects|
+| `gitmap-v27 cpp-repos`   | `cr`  | List repos containing C++ projects |
+| `gitmap-v27 csharp-repos`| `sr`  | List repos containing C# projects  |
 
 ---
 
@@ -48,4 +48,4 @@ Terminal output for each detected project:
 ## Query Command Data Source
 
 Query commands read from the SQLite database. If the database does
-not exist, print: `"No database found. Run 'gitmap-v26 scan' first."`
+not exist, print: `"No database found. Run 'gitmap-v27 scan' first."`

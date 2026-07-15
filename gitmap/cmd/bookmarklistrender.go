@@ -9,8 +9,8 @@ package cmd
 import (
 	"io"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/stablejson"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/stablejson"
 )
 
 // bookmark-list wire keys. Names + order are the contract.

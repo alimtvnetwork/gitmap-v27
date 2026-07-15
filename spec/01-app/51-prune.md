@@ -8,7 +8,7 @@ merged or tagged. This prevents branch clutter after releases accumulate.
 ## Command
 
 ```
-gitmap-v26 prune [flags]
+gitmap-v27 prune [flags]
 ```
 
 | Alias | Short |

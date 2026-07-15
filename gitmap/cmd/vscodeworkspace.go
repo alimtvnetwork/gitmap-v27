@@ -22,11 +22,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/store"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/vscodepm"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/vscodeworkspace"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/store"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/vscodepm"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/vscodeworkspace"
 )
 
 // vscodeWorkspaceFlags carries the parsed CLI flags for one run.

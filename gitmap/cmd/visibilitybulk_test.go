@@ -49,7 +49,7 @@ func TestExtractBaseAndVersionFromArg_UnversionedURL(t *testing.T) {
 }
 
 func TestParseBulkRequest_TwoArgValid(t *testing.T) {
-	req, ok := parseBulkRequest([]string{"gitmap-v26", "3"})
+	req, ok := parseBulkRequest([]string{"gitmap-v27", "3"})
 	if !ok {
 		t.Fatal("expected ok=true for valid two-arg request")
 	}

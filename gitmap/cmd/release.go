@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/config"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/release"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/config"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/release"
 )
 
 // runRelease handles the 'release' command.

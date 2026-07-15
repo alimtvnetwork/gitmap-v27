@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"sort"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 // ResolveCLI returns the absolute path to the GitHub Desktop CLI shim, or

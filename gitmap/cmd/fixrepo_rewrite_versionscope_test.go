@@ -37,7 +37,7 @@ func TestApplyAllTargets_VersionScopeMatrix(t *testing.T) {
 			current: 2,
 			targets: []int{1},
 			in:      "url=https://github.com/x/gitmap plus otherpkg-v9 token",
-			want:    "url=https://github.com/x/gitmap-v2 plus otherpkg-v9 token",
+			want:    "url=https://github.com/x/gitmap-v27 plus otherpkg-v9 token",
 		},
 		{
 			// v3: bare base preserved even with v1 in targets.

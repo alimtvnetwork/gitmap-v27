@@ -18,8 +18,8 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/stablejson"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/stablejson"
 )
 
 // export top-level wire keys. Names + order are the contract.

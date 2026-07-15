@@ -45,45 +45,45 @@ in place and URLs are cloned into a folder named after the repo.
 
 ### Example 1: Move one local folder into another
 
-    gitmap mv ./gitmap-v26 ./gitmap-v26
+    gitmap mv ./gitmap-v27 ./gitmap-v27
 
 **Output:**
 
-    [mv] resolving LEFT : ./gitmap-v26 (folder)
-    [mv] resolving RIGHT : ./gitmap-v26 (folder)
+    [mv] resolving LEFT : ./gitmap-v27 (folder)
+    [mv] resolving RIGHT : ./gitmap-v27 (folder)
     [mv] copying files LEFT -> RIGHT (excluding .git/) ...
     [mv]   copied 142 files
-    [mv] deleting LEFT (./gitmap-v26) ...
+    [mv] deleting LEFT (./gitmap-v27) ...
     [mv]   deleted
     [mv] done
 
 ### Example 2: Move a local folder into a remote repo (clone + push)
 
-    gitmap mv ./gitmap-v26 https://github.com/owner/gitmap-v26
+    gitmap mv ./gitmap-v27 https://github.com/owner/gitmap-v27
 
 **Output:**
 
-    [mv] resolving RIGHT : https://github.com/owner/gitmap-v26
-    [mv]   -> mapped to working folder: /work/gitmap-v26
+    [mv] resolving RIGHT : https://github.com/owner/gitmap-v27
+    [mv]   -> mapped to working folder: /work/gitmap-v27
     [mv]   -> folder does not exist; cloning
     [mv]   -> clone OK
     [mv] copying files LEFT -> RIGHT (excluding .git/) ...
     [mv]   copied 142 files
-    [mv] committing in https://github.com/owner/gitmap-v26 ...
-    [mv]   commit a1b2c3d "gitmap mv from ./gitmap-v26"
-    [mv] pushing https://github.com/owner/gitmap-v26 ...
+    [mv] committing in https://github.com/owner/gitmap-v27 ...
+    [mv]   commit a1b2c3d "gitmap mv from ./gitmap-v27"
+    [mv] pushing https://github.com/owner/gitmap-v27 ...
     [mv]   push OK
     [mv] done
 
 ### Example 3: Preview without writing anything
 
-    gitmap mv ./gitmap-v26 ./gitmap-v26 --dry-run
+    gitmap mv ./gitmap-v27 ./gitmap-v27 --dry-run
 
 **Output:**
 
     [mv] copying files LEFT -> RIGHT (excluding .git/) ...
     [mv]   copied 142 files
-    [mv] deleting LEFT (./gitmap-v26) ...
+    [mv] deleting LEFT (./gitmap-v27) ...
     [mv]   deleted
     [mv] done
 

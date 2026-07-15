@@ -30,7 +30,7 @@ package vscodepm
 import (
 	"fmt"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 // MergeMode picks the tag-merge strategy used by SyncMode / SyncAtMode.

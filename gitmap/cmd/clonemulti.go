@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/clonenext"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/clonenext"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 // urlListSeparators are the characters that split a single positional

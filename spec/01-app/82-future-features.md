@@ -11,12 +11,12 @@ before specification and implementation.
 
 **Status**: Pending discussion
 
-A remote repository or REST API endpoint where gitmap-v26 can sync
+A remote repository or REST API endpoint where gitmap-v27 can sync
 repo metadata, task definitions, and configuration. This enables:
 
 - Multi-machine synchronization of scan results and groups.
 - Team-shared repo registries.
-- Remote backup of gitmap-v26 database.
+- Remote backup of gitmap-v27 database.
 - Cloud-based task management and monitoring.
 
 ### Open Questions
@@ -31,10 +31,10 @@ repo metadata, task definitions, and configuration. This enables:
 
 **Status**: Pending discussion
 
-Extend `gitmap-v26 install` with REST URL support for remote install plans:
+Extend `gitmap-v27 install` with REST URL support for remote install plans:
 
 ```bash
-gitmap-v26 install --from https://company.com/dev-setup.json
+gitmap-v27 install --from https://company.com/dev-setup.json
 ```
 
 ### Capabilities

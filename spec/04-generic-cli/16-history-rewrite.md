@@ -1,7 +1,7 @@
 # History Rewrite: `history-purge` & `history-pin`
 
 > Status: Spec, v4.15.0. Implementation lives in
-> `gitmap-v26/cmd/historyrewrite*.go`. Research backing this spec:
+> `gitmap-v27/cmd/historyrewrite*.go`. Research backing this spec:
 > `spec/15-research/git-history-rewrite-remove-and-pin-file.md`.
 
 Two CLI commands wrap `git filter-repo` in a **mirror-clone sandbox**
@@ -15,11 +15,11 @@ so the user's working repository is never rewritten in place.
 ## 1. Synopsis
 
 ```
-gitmap-v26 history-purge <path> [<path> ...] [flags]
-gitmap-v26 hp            <path> [<path> ...] [flags]
+gitmap-v27 history-purge <path> [<path> ...] [flags]
+gitmap-v27 hp            <path> [<path> ...] [flags]
 
-gitmap-v26 history-pin   <path> [<path> ...] [flags]
-gitmap-v26 hpin          <path> [<path> ...] [flags]
+gitmap-v27 history-pin   <path> [<path> ...] [flags]
+gitmap-v27 hpin          <path> [<path> ...] [flags]
 ```
 
 Multiple paths may be passed as separate args, joined by `,`, or
@@ -27,9 +27,9 @@ joined by `, ` (comma-space). Quoting is irrelevant — the parser
 normalizes all three forms:
 
 ```
-gitmap-v26 hp secret.env build/cache.bin
-gitmap-v26 hp "secret.env, build/cache.bin"
-gitmap-v26 hp secret.env,build/cache.bin
+gitmap-v27 hp secret.env build/cache.bin
+gitmap-v27 hp "secret.env, build/cache.bin"
+gitmap-v27 hp secret.env,build/cache.bin
 ```
 
 Folders and files are both accepted. Folder paths are passed to
@@ -159,11 +159,11 @@ dependency.
 scenarios on `ubuntu-latest`:
 
 - **purge-secret**: build a temp git repo with 5 commits incl.
-  `secret.env`, run `gitmap-v26 hp secret.env --yes --no-push`, assert
+  `secret.env`, run `gitmap-v27 hp secret.env --yes --no-push`, assert
   `git log --all -- secret.env` is empty and `git count-objects -v`
   shrunk.
 - **pin-current**: build a temp git repo where `X` has 3 historical
-  states, run `gitmap-v26 hpin X --yes --no-push`, assert the verification
+  states, run `gitmap-v27 hpin X --yes --no-push`, assert the verification
   loop produces exactly one sha256.
 
 The workflow installs `git-filter-repo` via `pip install

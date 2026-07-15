@@ -35,7 +35,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/model"
 )
 
 // expectedRequiredKeyTypes maps each required JSON key to the JSON

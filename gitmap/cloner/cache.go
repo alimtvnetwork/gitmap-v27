@@ -30,8 +30,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/model"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/model"
 )
 
 // CloneCacheVersion is the on-disk schema version.

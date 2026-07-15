@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 // docsSiteDownloadSources returns the ordered list of URLs to try when

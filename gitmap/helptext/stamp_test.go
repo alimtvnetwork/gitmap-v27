@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/fixtureversion"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/fixtureversion"
 )
 
 // TestValidateStamp_UnstampedPasses confirms the opt-in contract:

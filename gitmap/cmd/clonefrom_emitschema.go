@@ -14,9 +14,9 @@ package cmd
 import (
 	"os"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/cliexit"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/clonefrom"
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/cliexit"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/clonefrom"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 // runCloneFromEmitSchema writes the requested JSON Schema to stdout

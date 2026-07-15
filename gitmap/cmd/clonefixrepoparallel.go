@@ -27,7 +27,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/alimtvnetwork/gitmap-v26/gitmap/constants"
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 )
 
 // splitCommaURLs splits a positional URL token on commas. Whitespace

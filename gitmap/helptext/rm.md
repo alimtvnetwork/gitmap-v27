@@ -58,7 +58,7 @@ skip: macro-utils
 $ gitmap rm macro*,gitmap* -y
 removed: macro-ahk (/home/me/code/macro-ahk)
 removed: macro-utils (/home/me/code/macro-utils)
-removed: gitmap-v26 (/home/me/code/gitmap-v26)
+removed: gitmap-v27 (/home/me/code/gitmap-v27)
 
 $ gitmap del .\macro-ahk
 Delete folder and untrack macro-ahk

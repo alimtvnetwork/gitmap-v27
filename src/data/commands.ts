@@ -1462,6 +1462,26 @@ export const commands: CommandDef[] = [
   },
   {
     category: "tools",
+    name: "commons", alias: "co", description: "One-shot shortcut for 'sync all'. Adds or dedupe-merges the curated .gitignore, .gitattributes, .prettierignore, .prettierrc baselines and runs 'git lfs install --local' + the lfs/common .gitattributes block. Existing lines/keys are preserved.",
+    usage: "gitmap commons [--dry-run] [--force]",
+    flags: [
+      { flag: "--dry-run, -n", description: "Print planned additions without touching disk" },
+      { flag: "--force, -f", description: "For .prettierrc only: overwrite conflicting keys instead of preserving them" },
+    ],
+    examples: [
+      { command: "gitmap commons", description: "Add or merge all curated hygiene files in one pass" },
+      { command: "gitmap commons --dry-run", description: "Preview every planned addition without writing" },
+      { command: "gitmap co -n", description: "Short alias, dry-run preview" },
+      { command: "gitmap commons --force", description: "Also overwrite conflicting .prettierrc keys with curated values" },
+    ],
+    seeAlso: [
+      { name: "sync", description: "Per-target union merge (ignore | attributes | prettier-ignore | prettier-rc | all)" },
+      { name: "add ignore", description: "Marker-block managed .gitignore (rewritten on each run)" },
+      { name: "templates init", description: "Scaffold from scratch when the files don't exist yet" },
+    ],
+  },
+  {
+    category: "tools",
     name: "templates list", alias: "tpl tl", description: "List every available template with its KIND, LANG, SOURCE (user/embed), and PATH",
     usage: "gitmap templates list",
     flags: [],

@@ -263,3 +263,19 @@ func printGroupChromeProfile() {
 	fmt.Println(constants.HelpChromeProfileList)
 	fmt.Println(constants.HelpChromeProfileDelete)
 }
+
+// printGroupTemplates surfaces `add ignore`, `add attributes`,
+// `add lfs-install` and the `templates` family so users can discover
+// the scaffolding commands from a bare `gitmap help`. Prior to this
+// group they were only reachable via `gitmap help add-ignore` etc.
+func printGroupTemplates() {
+	fmt.Println()
+	fmt.Println(colorGroupHeader(constants.HelpGroupTemplates))
+	fmt.Println(constants.HelpAddIgnore)
+	fmt.Println(constants.HelpAddAttributes)
+	fmt.Println(constants.HelpAddLFSInstall)
+	fmt.Println(constants.HelpTemplatesInit)
+	fmt.Println(constants.HelpTemplatesList)
+	fmt.Println(constants.HelpTemplatesShow)
+	fmt.Println(constants.HelpTemplatesDiff)
+}

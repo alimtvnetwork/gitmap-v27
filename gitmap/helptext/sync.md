@@ -19,13 +19,14 @@ sy
 
 ## Targets
 
-| Target | File | Merge strategy |
-|--------|------|----------------|
+| Target | File / Action | Merge strategy |
+|--------|---------------|----------------|
 | `ignore` | `.gitignore` | Line union (trim-compare) |
 | `attributes` | `.gitattributes` | Line union (trim-compare) |
+| `lfs-install` | `git lfs install --local` + `lfs/common` block in `.gitattributes` | Marker-block merge (delegates to `add lfs-install`) |
 | `prettier-ignore` | `.prettierignore` | Line union (trim-compare) |
 | `prettier-rc` | `.prettierrc` | JSON key union (existing keys win) |
-| `all` | all four above | Runs each target in order |
+| `all` | all of the above | Runs each target in order |
 
 ## Flags
 
@@ -96,6 +97,8 @@ patch in essentials.
 ```bash
 gitmap sync ignore
 gitmap sync attributes --dry-run
+gitmap sync lfs-install
+gitmap sync lfs-install --dry-run
 gitmap sync prettier-rc --force
 gitmap sync all
 ```

@@ -65,6 +65,11 @@ func allHelpRows() []helpRow {
 		constants.HelpChromeProfileCopy, constants.HelpChromeProfileExport,
 		constants.HelpChromeProfileImport, constants.HelpChromeProfileList,
 		constants.HelpChromeProfileDelete)
+	addGroup(&rows, constants.HelpGroupTemplates,
+		constants.HelpAddIgnore, constants.HelpAddAttributes,
+		constants.HelpAddLFSInstall, constants.HelpTemplatesInit,
+		constants.HelpTemplatesList, constants.HelpTemplatesShow,
+		constants.HelpTemplatesDiff)
 	addGroup(&rows, constants.HelpGroupUtilities,
 		constants.HelpSetup, constants.HelpDoctor, constants.HelpUpdate,
 		constants.HelpUpdateCleanup, constants.HelpVersion, constants.HelpCompletion,

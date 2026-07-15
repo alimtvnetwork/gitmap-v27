@@ -1387,6 +1387,61 @@ export const commands: CommandDef[] = [
   // ═══════════════════════════════════════════
   {
     category: "tools",
+    name: "add ignore", alias: undefined, description: "Merge a curated .gitignore template into a gitmap-managed marker block inside ./.gitignore. Always merges the `common` template plus any langs you list. Idempotent — re-runs with the same set are a byte-stable no-op.",
+    usage: "gitmap add ignore [langs...] [--dry-run]",
+    flags: [
+      { flag: "--dry-run", description: "Preview the merged .gitignore block without writing anything" },
+    ],
+    examples: [
+      { command: "gitmap add ignore go", description: "New Go repo — writes common + go blocks into ./.gitignore" },
+      { command: "gitmap add ignore go node python", description: "Multi-language monorepo — union of common + all three langs (deduped)" },
+      { command: "gitmap add ignore rust --dry-run", description: "Preview the exact block that would be written; touches no files" },
+      { command: "gitmap add ignore go node && gitmap add ignore go node", description: "Second run reports 'unchanged' — idempotent by design" },
+    ],
+    seeAlso: [
+      { name: "add attributes", description: "Same flow for .gitattributes" },
+      { name: "add lfs-install", description: "LFS hooks + curated binary patterns" },
+      { name: "templates list", description: "Discover which langs are available (overlay + embed)" },
+      { name: "templates diff", description: "Preview drift between on-disk blocks and curated templates" },
+    ],
+  },
+  {
+    category: "tools",
+    name: "add attributes", alias: undefined, description: "Merge a curated .gitattributes template into a gitmap-managed marker block inside ./.gitattributes. Always merges `common` (text eol=lf normalization) plus any langs you list. Idempotent.",
+    usage: "gitmap add attributes [langs...] [--dry-run]",
+    flags: [
+      { flag: "--dry-run", description: "Preview the merged .gitattributes block without writing anything" },
+    ],
+    examples: [
+      { command: "gitmap add attributes node", description: "TypeScript/Node repo — writes common + node blocks into ./.gitattributes" },
+      { command: "gitmap add attributes go && gitmap add lfs-install", description: "Pair with LFS: two separate marker blocks refresh independently" },
+      { command: "gitmap add attributes rust --dry-run", description: "Preview the block before committing" },
+    ],
+    seeAlso: [
+      { name: "add ignore", description: "Same flow for .gitignore" },
+      { name: "add lfs-install", description: "LFS hooks + curated binary patterns" },
+      { name: "templates show", description: "Print the exact curated bytes for one lang" },
+    ],
+  },
+  {
+    category: "tools",
+    name: "add lfs-install", alias: undefined, description: "Run `git lfs install --local` to wire per-repo LFS hooks, then merge the curated lfs/common .gitattributes block. Idempotent — the marker block interoperates with `templates init --lfs`.",
+    usage: "gitmap add lfs-install [--dry-run]",
+    flags: [
+      { flag: "--dry-run", description: "Preview the merged lfs/common block without writing anything or running git" },
+    ],
+    examples: [
+      { command: "gitmap add lfs-install", description: "One-shot: install LFS hooks + merge the binary-pattern block" },
+      { command: "gitmap add lfs-install --dry-run", description: "Preview what would land in .gitattributes; does not shell out to git" },
+    ],
+    seeAlso: [
+      { name: "add attributes", description: "Merge language attributes alongside the lfs/common block" },
+      { name: "templates init", description: "Pass --lfs during scaffolding for the same block, no shell-out" },
+      { name: "lfs-common", description: "Per-pattern `git lfs track` (no template)" },
+    ],
+  },
+  {
+    category: "tools",
     name: "templates list", alias: "tpl tl", description: "List every available template with its KIND, LANG, SOURCE (user/embed), and PATH",
     usage: "gitmap templates list",
     flags: [],

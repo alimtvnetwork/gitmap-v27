@@ -1,5 +1,17 @@
 # Changelog
 
+## v6.76.0 — 2026-07-16 — `cfr cg` / `cfrp cg` unit tests + modifier parser lock-in
+
+### Added
+- **Unit tests** `gitmap/cmd/clonefixrepo_modifiers_test.go` — 10-case table pinning the order-independent `cg` / `p` contract (duplicates idempotent, flags stop scan, unknown tokens stop scan, URL stops scan).
+- **Unit tests** `gitmap/cmd/codingguidelines_test.go` — success path via injected `Runner` (fake `true`), exit-code propagation via fake `false`, and `ErrCGShellNotFound` when PATH is empty. Banners `Installing coding guidelines` and `OK Coding guidelines` are asserted so the standardized stderr format cannot silently drift.
+
+### Fixed
+- **Build error** `gitmap/cmd/sync.go` — renamed local `jsonEqual` helper to `syncJSONEqual` to resolve a package-level redeclaration collision with `gitmap/cmd/chromeprofile_merge.go:245`. Unblocked `go test ./cmd/...`.
+
+### Changed
+- Pinned: README pinned-version block + version matrix moved to **v6.76.0**. Synced `gitmap/constants/constants.go` (`Version = "6.76.0"`) and `src/constants/index.ts` (`VERSION = "v6.76.0"`).
+
 ## v6.75.0 — 2026-07-12 — `fix-auth`: one-shot cure for the wrong-account SSH push failure
 
 ### Added

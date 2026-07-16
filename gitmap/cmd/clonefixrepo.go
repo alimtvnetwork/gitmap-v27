@@ -68,7 +68,7 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 		if makePublic {
 			subcmd = constants.CmdCloneFixRepoPub
 		}
-		passthrough := buildCFRPassthroughFlags(noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun)
+		passthrough := buildCFRPassthroughFlags(noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun, modifiers.NoCommit, modifiers.NoPush)
 		leadingMods := buildCFRLeadingModifiers(modifiers)
 		failed := runCloneFixRepoParallel(urls, subcmd, leadingMods, passthrough, parallel)
 		if failed > 0 {

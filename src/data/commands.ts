@@ -789,11 +789,24 @@ export const commands: CommandDef[] = [
   },
   {
     category: "tools",
-    name: "clone-fix-repo", alias: "cfr", description: "Clone a repo, then immediately run `fix-repo --all` inside the new folder. One-shot replacement for the manual sequence `gitmap clone <url>` → `cd <folder>` → `gitmap fix-repo --all`. Versioned URLs auto-flatten to the base name (e.g. `myrepo-v13.git` → `myrepo/`). Internally re-execs the gitmap binary for the fix-repo step so each step's exit code is propagated as-is; the pipeline halts on first failure.",
-    usage: "gitmap clone-fix-repo <url> [folder]",
+    name: "clone-fix-repo", alias: "cfr", description: "Clone a repo, then immediately run `fix-repo --all` inside the new folder. One-shot replacement for the manual sequence `gitmap clone <url>` → `cd <folder>` → `gitmap fix-repo --all`. Versioned URLs auto-flatten to the base name (e.g. `myrepo-v13.git` → `myrepo/`). Order-independent pre-URL modifiers `cg` (install Coding Guidelines v24 + auto-commit/push) and `p` (promote to public) may appear in any order before the URL. Internally re-execs the gitmap binary for each step so exit codes propagate as-is; the pipeline halts on first failure.",
+    usage: "gitmap clone-fix-repo [cg] [p] <url> [folder] [flags]",
+    flags: [
+      { flag: "--ssh", description: "Force SSH transport before clone (converts https:// URLs)" },
+      { flag: "--https", description: "Force HTTPS transport before clone (converts SSH URLs)" },
+      { flag: "--no-vscode-sync", description: "Skip writing the resolved folder into VS Code Project Manager" },
+      { flag: "--require-version", description: "Fail (exit 4) when the cloned repo has no `-vN` suffix instead of skipping fix-repo" },
+      { flag: "--dry-run", description: "Preview only, no clone or chdir" },
+      { flag: "--no-commit", description: "(cg only) Stage guideline files but do not commit" },
+      { flag: "--no-push", description: "(cg only) Commit locally but do not push (also implicit when no upstream)" },
+    ],
     examples: [
       { command: "gitmap clone-fix-repo https://github.com/acme/myrepo-v13.git", description: "Clone (auto-flatten to `myrepo/`) and rewrite all prior `myrepo-vN` tokens" },
       { command: "gitmap cfr git@github.com:acme/myrepo-v13.git myrepo-fresh", description: "SSH clone into an explicit folder, then fix-repo" },
+      { command: "gitmap cfr cg https://github.com/acme/myrepo-v13.git", description: "Clone + fix + install Coding Guidelines v24 (auto-commit + push)" },
+      { command: "gitmap cfr cg https://github.com/acme/myrepo-v13.git --no-commit", description: "Clone + fix + install guidelines; leave files staged for review" },
+      { command: "gitmap cfr cg https://github.com/acme/myrepo-v13.git --no-push", description: "Clone + fix + install + commit; skip the git push step" },
+      { command: "gitmap cfr p cg https://github.com/acme/myrepo-v13.git", description: "Order-independent: clone + fix + make-public + install guidelines" },
     ],
     seeAlso: [
       { name: "clone-fix-repo-pub", description: "Same pipeline plus `make-public --yes` at the end" },
@@ -803,11 +816,19 @@ export const commands: CommandDef[] = [
   },
   {
     category: "tools",
-    name: "clone-fix-repo-pub", alias: "cfrp", description: "Clone a repo, run `fix-repo --all`, then flip its visibility to public on GitHub or GitLab — all in one shot. Equivalent to `gitmap clone <url>` → `cd <folder>` → `gitmap fix-repo --all` → `gitmap make-public --yes`. Requires `gh` or `glab` installed and authenticated. Each step's exit code is propagated; the pipeline halts on the first non-zero exit.",
-    usage: "gitmap clone-fix-repo-pub <url> [folder]",
+    name: "clone-fix-repo-pub", alias: "cfrp", description: "Clone a repo, run `fix-repo --all`, then flip its visibility to public on GitHub or GitLab, all in one shot. Equivalent to `gitmap clone <url>` → `cd <folder>` → `gitmap fix-repo --all` → `gitmap make-public --yes`. Requires `gh` or `glab` installed and authenticated. Accepts the same pre-URL `cg` modifier as `cfr` to also install Coding Guidelines v24 (with auto-commit + push). Each step's exit code is propagated; the pipeline halts on the first non-zero exit.",
+    usage: "gitmap clone-fix-repo-pub [cg] <url> [folder] [flags]",
+    flags: [
+      { flag: "--ssh", description: "Force SSH transport before clone" },
+      { flag: "--https", description: "Force HTTPS transport before clone" },
+      { flag: "--no-commit", description: "(cg only) Stage guideline files but do not commit" },
+      { flag: "--no-push", description: "(cg only) Commit locally but do not push" },
+    ],
     examples: [
       { command: "gitmap clone-fix-repo-pub https://github.com/acme/myrepo-v13.git", description: "Clone, fix prior version tokens, then expose publicly" },
       { command: "gitmap cfrp git@github.com:acme/myrepo-v13.git myrepo-fresh", description: "Same pipeline with explicit destination folder" },
+      { command: "gitmap cfrp cg https://github.com/acme/myrepo-v13.git", description: "Clone + fix + make-public + install Coding Guidelines v24 (auto-commit + push)" },
+      { command: "gitmap cfrp cg https://github.com/acme/myrepo-v13.git --no-push", description: "Same, but commit guidelines locally without pushing" },
     ],
     seeAlso: [
       { name: "clone-fix-repo", description: "Same pipeline without the visibility flip" },

@@ -317,7 +317,7 @@ func runSyncPrettierRC(dry, force bool) {
 			added = append(added, k)
 			continue
 		}
-		if force && !jsonEqual(existing, v) {
+		if force && !syncJSONEqual(existing, v) {
 			current[k] = v
 			overwritten = append(overwritten, k)
 		}
@@ -359,9 +359,10 @@ func runSyncPrettierRC(dry, force bool) {
 	}
 }
 
-// jsonEqual compares two JSON-decoded values by re-marshaling. Small
-// payloads only — this is fine for .prettierrc scalars/arrays.
-func jsonEqual(a, b any) bool {
+// syncJSONEqual compares two JSON-decoded values by re-marshaling. Small
+// payloads only, fine for .prettierrc scalars/arrays. Named uniquely to
+// avoid colliding with the identically-shaped helper in chromeprofile_merge.go.
+func syncJSONEqual(a, b any) bool {
 	ab, _ := json.Marshal(a)
 	bb, _ := json.Marshal(b)
 	return string(ab) == string(bb)

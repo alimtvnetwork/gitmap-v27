@@ -165,7 +165,9 @@ func dispatchCodingGuidelinesModifier(absPath string, m CfrModifierFlags) {
 		absPath)
 }
 
+// applyCloneFixRepoScheme honours --ssh / --https (and short aliases
 // --sh / --ht) by rewriting the URL before the in-process clone runs.
+
 // Mirrors `gitmap clone --ssh` semantics: when both flags are set,
 // --ssh wins and a one-line stderr warning is printed. Unrecognised
 // URL shapes are returned unchanged so non-URL positionals still flow

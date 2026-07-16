@@ -145,18 +145,18 @@ jobs:
           log="$scratch/cfrp-cg.log"
 
           set +e
-          "$bin" cfrp cg "$repo_url" --no-commit --no-push 2>&1 | tee "$log"
+          "$bin" cfr cg "$repo_url" --no-commit --no-push 2>&1 | tee "$log"
           rc=${PIPESTATUS[0]}
           set -e
 
           if [ $rc -ne 0 ]; then
-            echo "::error::cfrp cg exited $rc"
+            echo "::error::cfr cg exited $rc"
             ls -la
             exit $rc
           fi
 
           test -d "$clone_dir/.git" || { echo "::error::clone missing at $clone_dir"; ls -la; exit 5; }
-          echo "OK: cfrp cg completed end-to-end (rc=$rc)"
+          echo "OK: cfr cg completed end-to-end (rc=$rc)"
 
       - name: Validate cfr cg outputs (URL / clone cmd / branch / notes)
         shell: bash
@@ -449,10 +449,10 @@ jobs:
 
           $log = Join-Path $scratch 'cfrp-cg.log'
 
-          & $bin cfrp cg $repoUrl --no-commit --no-push *>&1 | Tee-Object -FilePath $log
+          & $bin cfr cg $repoUrl --no-commit --no-push *>&1 | Tee-Object -FilePath $log
           $rc = $LASTEXITCODE
           if ($rc -ne 0) {
-            Write-Host "::error::cfrp cg exited $rc"
+            Write-Host "::error::cfr cg exited $rc"
             Get-ChildItem | Format-Table -AutoSize
             exit $rc
           }
@@ -461,7 +461,7 @@ jobs:
             Get-ChildItem | Format-Table -AutoSize
             exit 5
           }
-          Write-Host "OK: cfrp cg completed end-to-end (rc=$rc)"
+          Write-Host "OK: cfr cg completed end-to-end (rc=$rc)"
 
       - name: Validate cfr cg outputs (URL / clone cmd / branch / notes)
         shell: pwsh

@@ -1,5 +1,12 @@
 # Changelog
 
+## v6.79.0 — 2026-07-16 — Cloner LFS smudge auto-recovery
+
+### Added
+- **Automatic LFS smudge-failure recovery** in `gitmap/cloner`: when a clone fails with `smudge filter lfs failed` / `external filter 'git-lfs' failed` (typically a 404 on an LFS object), the cloner now cleans the partial destination and transparently retries with `GIT_LFS_SKIP_SMUDGE=1`, preserving LFS pointers so the checkout completes.
+- `CloneResult.Notes` annotated with `lfs-skip-smudge-retry` when the fallback path fires, so downstream reporting and CSV/JSON exports surface the recovery.
+- Unit tests in `gitmap/cloner/lfs_retry_test.go` covering `isLFSSmudgeFailure` detection and the retry cleanup path.
+
 ## v6.78.0 — 2026-07-16 — CG epic close: worked end-to-end example + goreleaser tag verification
 
 ### Added

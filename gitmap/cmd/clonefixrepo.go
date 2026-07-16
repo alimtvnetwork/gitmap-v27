@@ -55,7 +55,10 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 	if modifiers.PromotePublic {
 		makePublic = true
 	}
-	url, folderName, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun := parseCloneFixRepoArgs(args)
+	url, folderName, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun, noCommit, noPush := parseCloneFixRepoArgs(args)
+	modifiers.NoCommit = modifiers.NoCommit || noCommit
+	modifiers.NoPush = modifiers.NoPush || noPush
+
 	// Comma-separated URL fan-out: re-exec the single-URL pipeline
 	// per worker so chdir/fix-repo chaining stays isolated. The
 	// optional `folder` positional is forbidden in this mode — each
@@ -65,7 +68,7 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 		if makePublic {
 			subcmd = constants.CmdCloneFixRepoPub
 		}
-		passthrough := buildCFRPassthroughFlags(noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun)
+		passthrough := buildCFRPassthroughFlags(noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun, modifiers.NoCommit, modifiers.NoPush)
 		leadingMods := buildCFRLeadingModifiers(modifiers)
 		failed := runCloneFixRepoParallel(urls, subcmd, leadingMods, passthrough, parallel)
 		if failed > 0 {
@@ -153,10 +156,10 @@ func buildCFRLeadingModifiers(m CfrModifierFlags) []string {
 
 // dispatchCodingGuidelinesModifier invokes the v24 Coding Guidelines
 // installer against the freshly cloned working tree when the `cg`
-// modifier is present. Errors are already logged by
-// RunCodingGuidelinesInstall (zero-swallow policy); we surface a
-// non-zero exit so the pipeline halts and downstream auto-commit
-// (step 6) never runs against a half-installed tree.
+// modifier is present, then auto-commits (and optionally pushes) any
+// files the installer produced. Errors are already logged by the
+// underlying helpers (zero-swallow policy); we surface a non-zero
+// exit so the pipeline halts.
 func dispatchCodingGuidelinesModifier(absPath string, m CfrModifierFlags) {
 	if !m.InstallCodingGuidelines {
 		return
@@ -164,7 +167,12 @@ func dispatchCodingGuidelinesModifier(absPath string, m CfrModifierFlags) {
 	if err := RunCodingGuidelinesInstall(CodingGuidelinesOpts{WorkingDir: absPath}); err != nil {
 		os.Exit(constants.ExitCloneFixRepoChainFailed)
 	}
+	commitOpts := CGCommitOpts{WorkingDir: absPath, NoCommit: m.NoCommit, NoPush: m.NoPush}
+	if err := CommitCodingGuidelines(commitOpts); err != nil {
+		os.Exit(constants.ExitCloneFixRepoChainFailed)
+	}
 }
+
 
 
 // applyCloneFixRepoScheme honours --ssh / --https (and short aliases
@@ -235,12 +243,14 @@ func resolveCloneFixRepoName(absPath string) string {
 }
 
 // parseCloneFixRepoArgs returns (url, folderName, noVSCodeSync,
-// requireVersion, useSSH, useHTTPS). First non-flag arg is the URL;
-// second non-flag is the destination folder. Recognized flags:
+// requireVersion, useSSH, useHTTPS, autoYes, dryRun, noCommit,
+// noPush). First non-flag arg is the URL; second non-flag is the
+// destination folder. Recognized flags:
 // --no-vscode-sync, --require-version, --ssh/-ssh/--sh,
-// --https/-https/--ht. Single-dash forms are accepted to match Go's
-// stdlib `flag` package behaviour the user expects from `-ssh`.
-func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, bool, bool, bool) {
+// --https/-https/--ht, --no-commit, --no-push. Single-dash forms are
+// accepted to match Go's stdlib `flag` package behaviour the user
+// expects from `-ssh`.
+func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, bool, bool, bool, bool, bool) {
 	positional := make([]string, 0, len(args))
 	noVSCodeSync := false
 	requireVersion := false
@@ -248,6 +258,8 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, boo
 	useHTTPS := false
 	autoYes := false
 	dryRun := false
+	noCommit := false
+	noPush := false
 	syncFlag := constants.FlagNoVSCodeSync
 	reqFlag := constants.FlagRequireVersion
 	for _, a := range args {
@@ -271,6 +283,12 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, boo
 		case constants.FlagCloneDryRun, constants.FlagCloneDryRunShort:
 			dryRun = true
 			continue
+		case constants.FlagCGNoCommit:
+			noCommit = true
+			continue
+		case constants.FlagCGNoPush:
+			noPush = true
+			continue
 		}
 		if len(a) > 0 && a[0] != '-' {
 			positional = append(positional, a)
@@ -285,8 +303,9 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, boo
 		folder = positional[1]
 	}
 
-	return url, folder, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun
+	return url, folder, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun, noCommit, noPush
 }
+
 
 // resolveCloneTargetFolder mirrors the folder-naming logic in
 // executeDirectClone so we know which directory to cd into after

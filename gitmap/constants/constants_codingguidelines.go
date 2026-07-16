@@ -25,11 +25,21 @@ const (
 	CfrModifierPublic           = "p"
 )
 
+// Flag names that opt out of the auto-commit / auto-push step run
+// after the v24 installer finishes. Both accept the standard
+// `--no-commit` / `--no-push` long forms (single-dash also parsed
+// by parseCloneFixRepoArgs, matching the rest of the cfr flags).
+const (
+	FlagCGNoCommit = "no-commit"
+	FlagCGNoPush   = "no-push"
+)
+
 // Commit metadata used when auto-committing the installed guidelines.
 const (
 	CodingGuidelinesCommitMessage = "chore: install coding guidelines (v24)"
 	CodingGuidelinesCommitAuthor  = "gitmap"
 )
+
 
 // Runner status + error messages. All output is directed to os.Stderr per
 // the zero-swallow error policy; keep the format aligned with the rest of

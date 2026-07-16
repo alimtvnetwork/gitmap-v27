@@ -20,7 +20,14 @@ import "github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
 type CfrModifierFlags struct {
 	InstallCodingGuidelines bool
 	PromotePublic           bool
+	// NoCommit / NoPush are populated from `--no-commit` / `--no-push`
+	// flags parsed downstream in parseCloneFixRepoArgs. They only take
+	// effect when InstallCodingGuidelines is true; otherwise there is
+	// no auto-commit step to skip.
+	NoCommit bool
+	NoPush   bool
 }
+
 
 // ParseCfrModifiers walks args from the front, consuming known modifier
 // tokens (`cg`, `p`) in any order, and returns the parsed flags plus the

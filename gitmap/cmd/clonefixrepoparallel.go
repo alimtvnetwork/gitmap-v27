@@ -205,8 +205,8 @@ func atoiSafe(s string) int {
 // parseCloneFixRepoArgs so each worker sees the same semantics. The
 // --parallel flag is intentionally NOT forwarded — workers run a
 // single URL and must not recurse into another fan-out.
-func buildCFRPassthroughFlags(noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun bool) []string {
-	out := make([]string, 0, 6)
+func buildCFRPassthroughFlags(noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun, noCommit, noPush bool) []string {
+	out := make([]string, 0, 8)
 	if noVSCodeSync {
 		out = append(out, "--"+constants.FlagNoVSCodeSync)
 	}
@@ -225,5 +225,12 @@ func buildCFRPassthroughFlags(noVSCodeSync, requireVersion, useSSH, useHTTPS, au
 	if dryRun {
 		out = append(out, "--"+constants.FlagCloneDryRun)
 	}
+	if noCommit {
+		out = append(out, "--"+constants.FlagCGNoCommit)
+	}
+	if noPush {
+		out = append(out, "--"+constants.FlagCGNoPush)
+	}
 	return out
+
 }

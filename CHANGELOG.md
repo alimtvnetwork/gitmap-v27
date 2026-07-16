@@ -1,5 +1,48 @@
 # Changelog
 
+## v6.78.0 — 2026-07-16 — CG epic close: worked end-to-end example + goreleaser tag verification
+
+### Added
+- **CHANGELOG worked example** (this entry) — complete copy-pasteable `cfr cg` / `cfrp cg` walkthrough covering install, invocation, modifier ordering, and opt-out flags. Closes the 10-step Coding Guidelines v24 integration epic (Steps 1-9 shipped in v6.75.0 through v6.77.0).
+
+### Verified
+- **`.github/workflows/goreleaser.yml`** — tag-driven workflow (`v*.*.*`) audited against the new `gitmap/cmd/codingguidelines.go`, `codingguidelines_commit.go`, and `codingguidelines_test.go` files added across v6.75-v6.77. `main: .` in `gitmap/.goreleaser.yaml` compiles the entire `gitmap/cmd` package, so the new CG runner ships in every linux/darwin/windows (amd64+arm64) archive automatically. No config drift.
+- **`gitmap/.goreleaser.yaml`** — goreleaser v2 schema (`version: 2`, `formats: [tar.gz]`, `format_overrides` per `goos: windows` → `[zip]`) still valid. ldflags stamp `constants.Version` from the pushed tag, so `gitmap --version` on the published binary matches the release tag byte-for-byte.
+
+### Worked example: `cfr cg` end-to-end (v6.78.0)
+
+```bash
+# 1. Install v6.78.0 (Linux/macOS)
+curl -fsSL https://github.com/alimtvnetwork/gitmap-v27/releases/download/v6.78.0/release-version-v6.78.0.sh | bash
+
+# 2. Clone-fix-repo with Coding Guidelines v24 installer + auto commit + auto push (default)
+gitmap cfr cg https://github.com/you/your-repo.git
+
+# 3. Same, but keep changes local (skip push)
+gitmap cfr cg --no-push https://github.com/you/your-repo.git
+
+# 4. Same, but stage only (skip commit AND push)
+gitmap cfr cg --no-commit https://github.com/you/your-repo.git
+
+# 5. Promote-public + Coding Guidelines (order-independent: `p cg` == `cg p`)
+gitmap cfrp cg https://github.com/you/your-repo.git
+gitmap cfr p cg https://github.com/you/your-repo.git   # equivalent
+```
+
+Windows (PowerShell):
+
+```powershell
+irm https://github.com/alimtvnetwork/gitmap-v27/releases/download/v6.78.0/release-version-v6.78.0.ps1 | iex
+gitmap cfr cg https://github.com/you/your-repo.git
+```
+
+**Modifier contract** (locked by `clonefixrepo_modifiers_test.go` since v6.76.0): `cg` and `p` may appear in any order before the URL; duplicates are idempotent; the first non-modifier token (flag or URL) stops modifier scanning.
+
+### Changed
+- Pinned: README pinned-version block + version matrix moved to **v6.78.0**. Synced `gitmap/constants/constants.go` (`Version = "6.78.0"`) and `src/constants/index.ts` (`VERSION = "v6.78.0"`).
+
+
+
 ## v6.77.0 — 2026-07-16 — `cfr` / `cfrp` `cg` modifier surfaced in UI command registry
 
 ### Added

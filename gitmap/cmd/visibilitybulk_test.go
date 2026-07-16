@@ -49,20 +49,27 @@ func TestExtractBaseAndVersionFromArg_UnversionedURL(t *testing.T) {
 }
 
 func TestParseBulkRequest_TwoArgValid(t *testing.T) {
-	req, ok := parseBulkRequest([]string{"gitmap-v27", "3"})
+	// Derive both the input slug AND expected StartVer from the same int so
+	// a future `gitmap-vN` bump (fix-repo rewriter) updates them atomically.
+	// Hardcoding either side leaks the digit-capture desync bug.
+	const inputVer = 27
+	slug := fmt.Sprintf("gitmap-v%d", inputVer)
+	wantStartVer := inputVer - 1
+	req, ok := parseBulkRequest([]string{slug, "3"})
 	if !ok {
 		t.Fatal("expected ok=true for valid two-arg request")
 	}
 	if req.BaseRepo != "gitmap" {
 		t.Fatalf("expected BaseRepo=gitmap, got %s", req.BaseRepo)
 	}
-	if req.StartVer != 26 {
-		t.Fatalf("expected StartVer=26, got %d", req.StartVer)
+	if req.StartVer != wantStartVer {
+		t.Fatalf("expected StartVer=%d, got %d", wantStartVer, req.StartVer)
 	}
 	if req.Count != 3 {
 		t.Fatalf("expected Count=3, got %d", req.Count)
 	}
 }
+
 
 func TestParseBulkRequest_Empty(t *testing.T) {
 	_, ok := parseBulkRequest([]string{})

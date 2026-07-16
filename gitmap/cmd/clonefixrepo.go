@@ -133,10 +133,38 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 		runCFRPPriorVersionPrivatize(absPath, autoYes)
 	}
 
+	dispatchCodingGuidelinesModifier(absPath, modifiers)
+
 	fmt.Printf(constants.MsgCloneFixRepoDone, absPath)
 }
 
-// applyCloneFixRepoScheme honours --ssh / --https (and short aliases
+// buildCFRLeadingModifiers renders modifier flags back into their
+// positional-token form so parallel workers re-parse them via
+// ParseCfrModifiers. `p` is intentionally omitted here: the subcmd
+// (cfr vs cfrp) already encodes the public-visibility choice for
+// workers, so re-passing `p` would be redundant.
+func buildCFRLeadingModifiers(m CfrModifierFlags) []string {
+	out := make([]string, 0, 1)
+	if m.InstallCodingGuidelines {
+		out = append(out, constants.CfrModifierCodingGuidelines)
+	}
+	return out
+}
+
+// dispatchCodingGuidelinesModifier is the wiring seam for the `cg`
+// modifier. Step 5 of plan 04 replaces this stub with a call to
+// RunCodingGuidelinesInstall against absPath. Kept as a dedicated
+// function so the pipeline stays under the 15-line cap and the
+// installer swap-in is a one-file change.
+func dispatchCodingGuidelinesModifier(absPath string, m CfrModifierFlags) {
+	if !m.InstallCodingGuidelines {
+		return
+	}
+	fmt.Fprintf(os.Stderr,
+		"  note: `cg` modifier detected for %s; coding-guidelines v24 installer wiring lands in the next step.\n",
+		absPath)
+}
+
 // --sh / --ht) by rewriting the URL before the in-process clone runs.
 // Mirrors `gitmap clone --ssh` semantics: when both flags are set,
 // --ssh wins and a one-line stderr warning is printed. Unrecognised

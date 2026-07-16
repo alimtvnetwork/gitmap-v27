@@ -189,6 +189,21 @@ func runClone(rec model.ScanRecord, dest string) model.CloneResult {
 		return runInteractiveClone(cmd, rec, url, dest, strategy)
 	}
 	out, err := cmd.CombinedOutput()
+	notes := strategy.reason
+	if err != nil && isLFSSmudgeFailure(string(out)) {
+		// Broken/missing LFS object on remote: retry with smudge disabled
+		// so pointer files stay as pointers and checkout completes.
+		retryOut, retryErr := retryCloneSkipSmudge(constants.GitBin, args, dest)
+		if retryErr == nil {
+			if notes == "" {
+				notes = LFSRetryNote
+			} else {
+				notes = notes + "; " + LFSRetryNote
+			}
+			return model.CloneResult{Record: rec, Success: true, Notes: notes}
+		}
+		out, err = retryOut, retryErr
+	}
 	if err != nil {
 		msg := fmt.Sprintf(
 			"git clone failed for %s: url=%q branch=%q dest=%q: %v: %s",
@@ -198,7 +213,7 @@ func runClone(rec model.ScanRecord, dest string) model.CloneResult {
 		return model.CloneResult{Record: rec, Success: false, Error: msg, Notes: strategy.reason}
 	}
 
-	return model.CloneResult{Record: rec, Success: true, Notes: strategy.reason}
+	return model.CloneResult{Record: rec, Success: true, Notes: notes}
 }
 
 // (recordTag, pickURL, updateSummary, and updateSummarySkipped moved

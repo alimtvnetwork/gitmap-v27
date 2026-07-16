@@ -245,6 +245,102 @@ jobs:
           [ $fail -eq 0 ] || { echo '::error::output validation failed'; exit 6; }
           echo 'OK: all cfr cg output fields validated'
 
+      - name: Emit + exact-match smoke report (CSV + JSON)
+        shell: bash
+        run: |
+          set -euo pipefail
+          scratch="$RUNNER_TEMP/cfr-cg-smoke"
+          cd "$scratch"
+          repo_url="${{ steps.fixture.outputs.repo_url }}"
+          clone_dir="${{ steps.fixture.outputs.clone_dir }}"
+          log="$scratch/cfrp-cg.log"
+
+          # Expected exact values (fixture is fully deterministic).
+          expected_folder_abs="$scratch/$clone_dir"
+          expected_clone_cmd="git clone $repo_url $clone_dir"
+          expected_note='FIXTURE_NOTE_MARKER: cfr-cg smoke v1'
+
+          # Observed values.
+          observed_folder_abs=$(cd "$clone_dir" && pwd)
+          # First `git clone` line in the log, whitespace-normalized.
+          observed_clone_cmd=$(grep -Eo 'git( [^ ]+)? clone [^\r\n]+' "$log" \
+            | head -n1 | sed -E 's/[[:space:]]+/ /g' | sed -E 's/[[:space:]]+$//')
+          observed_note=$(cat "$clone_dir/fixture-note.txt")
+
+          # Emit CSV (header + one row) and JSON reports.
+          csv="$scratch/smoke-report.csv"
+          json="$scratch/smoke-report.json"
+          {
+            echo 'field,expected,observed'
+            printf 'folder_path,%s,%s\n'  "$expected_folder_abs" "$observed_folder_abs"
+            printf 'clone_command,"%s","%s"\n' "$expected_clone_cmd" "$observed_clone_cmd"
+            printf 'note_marker,"%s","%s"\n'   "$expected_note"     "$observed_note"
+          } > "$csv"
+          python3 - "$json" \
+            "$expected_folder_abs" "$observed_folder_abs" \
+            "$expected_clone_cmd"  "$observed_clone_cmd" \
+            "$expected_note"       "$observed_note" <<'PY'
+          import json, sys
+          out, ef, of, ec, oc, en, on = sys.argv[1:8]
+          json.dump({
+            "folder_path":   {"expected": ef, "observed": of},
+            "clone_command": {"expected": ec, "observed": oc},
+            "note_marker":   {"expected": en, "observed": on},
+          }, open(out, "w"), indent=2)
+          PY
+
+          echo '--- smoke-report.csv ---';  cat "$csv"
+          echo '--- smoke-report.json ---'; cat "$json"
+
+          fail=0
+          check_exact() { # $1=label $2=expected $3=observed
+            if [ "$2" != "$3" ]; then
+              echo "::error::$1 mismatch: expected='$2' observed='$3'"; fail=1
+            else
+              echo "  OK $1 exact match"
+            fi
+          }
+          check_exact 'folder_path'   "$expected_folder_abs" "$observed_folder_abs"
+          check_exact 'clone_command' "$expected_clone_cmd"  "$observed_clone_cmd"
+          check_exact 'note_marker'   "$expected_note"       "$observed_note"
+
+          # Re-parse the emitted CSV + JSON and assert the row values equal
+          # the expected values (guards against report-emitter bugs too).
+          python3 - "$csv" "$json" \
+            "$expected_folder_abs" "$expected_clone_cmd" "$expected_note" <<'PY'
+          import csv, json, sys
+          csv_path, json_path, ef, ec, en = sys.argv[1:6]
+          rows = {r['field']: r for r in csv.DictReader(open(csv_path))}
+          exp = {'folder_path': ef, 'clone_command': ec, 'note_marker': en}
+          bad = []
+          for k, v in exp.items():
+              got = rows.get(k, {}).get('observed')
+              if got != v:
+                  bad.append(f'CSV[{k}] observed={got!r} != expected={v!r}')
+          j = json.load(open(json_path))
+          for k, v in exp.items():
+              got = j.get(k, {}).get('observed')
+              if got != v:
+                  bad.append(f'JSON[{k}].observed={got!r} != expected={v!r}')
+          if bad:
+              print('\n'.join(f'::error::{b}' for b in bad)); sys.exit(7)
+          print('  OK CSV + JSON reports match expected values exactly')
+          PY
+
+          [ $fail -eq 0 ] || exit 6
+          echo 'OK: smoke-report.csv + smoke-report.json validated (exact match)'
+
+      - name: Upload smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfr-cg-smoke-report-${{ matrix.os }}
+          path: |
+            ${{ runner.temp }}/cfr-cg-smoke/smoke-report.csv
+            ${{ runner.temp }}/cfr-cg-smoke/smoke-report.json
+            ${{ runner.temp }}/cfr-cg-smoke/cfrp-cg.log
+          if-no-files-found: warn
+
   snapshot-smoke-windows:
     name: snapshot build + cfr cg smoke (windows-latest amd64)
     runs-on: windows-latest
@@ -450,3 +546,92 @@ jobs:
 
           if ($fail -ne 0) { Write-Host '::error::output validation failed'; exit 6 }
           Write-Host 'OK: all cfr cg output fields validated'
+
+      - name: Emit + exact-match smoke report (CSV + JSON)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scratch = Join-Path $env:RUNNER_TEMP 'cfr-cg-smoke'
+          Set-Location $scratch
+          $repoUrl  = '${{ steps.fixture.outputs.repo_url }}'
+          $cloneDir = '${{ steps.fixture.outputs.clone_dir }}'
+          $log = Join-Path $scratch 'cfrp-cg.log'
+
+          $expectedFolderAbs = (Resolve-Path $cloneDir).Path
+          $expectedCloneCmd  = "git clone $repoUrl $cloneDir"
+          $expectedNote      = 'FIXTURE_NOTE_MARKER: cfr-cg smoke v1'
+
+          $observedFolderAbs = (Resolve-Path $cloneDir).Path
+          $logText = Get-Content -Raw -LiteralPath $log
+          $m = [regex]::Match($logText, 'git(?:\s+\S+)?\s+clone\s+[^\r\n]+')
+          if (-not $m.Success) { Write-Host '::error::no git clone line found in log'; exit 6 }
+          $observedCloneCmd = ($m.Value -replace '\s+',' ').TrimEnd()
+          $observedNote = (Get-Content -Raw -LiteralPath (Join-Path $cloneDir 'fixture-note.txt')).TrimEnd("`r","`n")
+
+          $csv  = Join-Path $scratch 'smoke-report.csv'
+          $json = Join-Path $scratch 'smoke-report.json'
+
+          # CSV: header + one row per field. Quote values that may contain commas/spaces.
+          $csvLines = @(
+            'field,expected,observed',
+            ('folder_path,"{0}","{1}"'  -f $expectedFolderAbs, $observedFolderAbs),
+            ('clone_command,"{0}","{1}"' -f $expectedCloneCmd, $observedCloneCmd),
+            ('note_marker,"{0}","{1}"'   -f $expectedNote,     $observedNote)
+          )
+          Set-Content -LiteralPath $csv -Value $csvLines -Encoding utf8
+
+          $report = [ordered]@{
+            folder_path   = @{ expected = $expectedFolderAbs; observed = $observedFolderAbs }
+            clone_command = @{ expected = $expectedCloneCmd;  observed = $observedCloneCmd }
+            note_marker   = @{ expected = $expectedNote;      observed = $observedNote }
+          }
+          $report | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $json -Encoding utf8
+
+          Write-Host '--- smoke-report.csv ---';  Get-Content -LiteralPath $csv
+          Write-Host '--- smoke-report.json ---'; Get-Content -LiteralPath $json
+
+          $fail = 0
+          function CheckExact($label, $expected, $observed) {
+            if ($expected -ne $observed) {
+              Write-Host "::error::$label mismatch: expected='$expected' observed='$observed'"
+              $script:fail = 1
+            } else { Write-Host "  OK $label exact match" }
+          }
+          CheckExact 'folder_path'   $expectedFolderAbs $observedFolderAbs
+          CheckExact 'clone_command' $expectedCloneCmd  $observedCloneCmd
+          CheckExact 'note_marker'   $expectedNote      $observedNote
+
+          # Re-parse emitted CSV + JSON and assert exact matches (guards emitter bugs).
+          $rows = Import-Csv -LiteralPath $csv
+          $rowMap = @{}; foreach ($r in $rows) { $rowMap[$r.field] = $r }
+          $expected = @{
+            folder_path   = $expectedFolderAbs
+            clone_command = $expectedCloneCmd
+            note_marker   = $expectedNote
+          }
+          foreach ($k in $expected.Keys) {
+            if ($rowMap[$k].observed -ne $expected[$k]) {
+              Write-Host "::error::CSV[$k] observed='$($rowMap[$k].observed)' != expected='$($expected[$k])'"
+              $fail = 1
+            }
+          }
+          $j = Get-Content -Raw -LiteralPath $json | ConvertFrom-Json
+          foreach ($k in $expected.Keys) {
+            if ($j.$k.observed -ne $expected[$k]) {
+              Write-Host "::error::JSON[$k].observed='$($j.$k.observed)' != expected='$($expected[$k])'"
+              $fail = 1
+            }
+          }
+          if ($fail -ne 0) { exit 6 }
+          Write-Host 'OK: smoke-report.csv + smoke-report.json validated (exact match)'
+
+      - name: Upload smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfr-cg-smoke-report-windows
+          path: |
+            ${{ runner.temp }}/cfr-cg-smoke/smoke-report.csv
+            ${{ runner.temp }}/cfr-cg-smoke/smoke-report.json
+            ${{ runner.temp }}/cfr-cg-smoke/cfrp-cg.log
+          if-no-files-found: warn

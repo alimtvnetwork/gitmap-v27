@@ -151,19 +151,21 @@ func buildCFRLeadingModifiers(m CfrModifierFlags) []string {
 	return out
 }
 
-// dispatchCodingGuidelinesModifier is the wiring seam for the `cg`
-// modifier. Step 5 of plan 04 replaces this stub with a call to
-// RunCodingGuidelinesInstall against absPath. Kept as a dedicated
-// function so the pipeline stays under the 15-line cap and the
-// installer swap-in is a one-file change.
+// dispatchCodingGuidelinesModifier invokes the v24 Coding Guidelines
+// installer against the freshly cloned working tree when the `cg`
+// modifier is present. Errors are already logged by
+// RunCodingGuidelinesInstall (zero-swallow policy); we surface a
+// non-zero exit so the pipeline halts and downstream auto-commit
+// (step 6) never runs against a half-installed tree.
 func dispatchCodingGuidelinesModifier(absPath string, m CfrModifierFlags) {
 	if !m.InstallCodingGuidelines {
 		return
 	}
-	fmt.Fprintf(os.Stderr,
-		"  note: `cg` modifier detected for %s; coding-guidelines v24 installer wiring lands in the next step.\n",
-		absPath)
+	if err := RunCodingGuidelinesInstall(CodingGuidelinesOpts{WorkingDir: absPath}); err != nil {
+		os.Exit(constants.ExitCloneFixRepoChainFailed)
+	}
 }
+
 
 // applyCloneFixRepoScheme honours --ssh / --https (and short aliases
 // --sh / --ht) by rewriting the URL before the in-process clone runs.

@@ -95,21 +95,53 @@ jobs:
           done
           echo "OK: cfr + cfrp expose the cg modifier"
 
-      - name: End-to-end `cfr cg` against throwaway public repo
+      - name: Build local fixture git repo (offline remote)
+        id: fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Build a fully local "remote" so the smoke test does not depend on
+          # github.com being reachable, does not race against upstream branch
+          # renames, and gives validation known values for:
+          #   * origin URL   (file:// path we control)
+          #   * default branch (main, forced via git init -b)
+          #   * committed note content (fixture-note.txt marker)
+          fixroot="$RUNNER_TEMP/gitmap-fixture"
+          rm -rf "$fixroot" && mkdir -p "$fixroot"
+          src="$fixroot/src"
+          bare="$fixroot/fixture-repo.git"
+          mkdir -p "$src"
+          (
+            cd "$src"
+            git init -q -b main
+            git config user.email 'smoke@gitmap.local'
+            git config user.name  'gitmap smoke'
+            printf 'gitmap smoke fixture\n' > README.md
+            printf 'FIXTURE_NOTE_MARKER: cfr-cg smoke v1\n' > fixture-note.txt
+            git add .
+            git commit -q -m 'fixture: initial commit for cfr cg smoke'
+          )
+          git clone -q --bare "$src" "$bare"
+          repo_url="file://$bare"
+          echo "repo_url=$repo_url"       >> "$GITHUB_OUTPUT"
+          echo "clone_dir=fixture-repo"   >> "$GITHUB_OUTPUT"
+          echo "expected_branch=main"     >> "$GITHUB_OUTPUT"
+
+      - name: End-to-end `cfr cg` against local fixture repo
         shell: bash
         env:
-          # Fully offline w.r.t. remotes: no commit, no push.
-          # We still let the v24 installer hit raw.githubusercontent, which
-          # is a required part of the "release artifact works E2E" contract.
+          # No remotes required: fixture is a local file:// bare repo, and we
+          # pass --no-commit --no-push so nothing is written back either.
           GIT_TERMINAL_PROMPT: "0"
         run: |
           set -euo pipefail
           bin="${{ steps.extract.outputs.bin }}"
+          repo_url="${{ steps.fixture.outputs.repo_url }}"
+          clone_dir="${{ steps.fixture.outputs.clone_dir }}"
           scratch="$RUNNER_TEMP/cfr-cg-smoke"
           rm -rf "$scratch" && mkdir -p "$scratch"
           cd "$scratch"
 
-          repo_url='https://github.com/octocat/Hello-World'
           log="$scratch/cfrp-cg.log"
 
           set +e
@@ -123,7 +155,7 @@ jobs:
             exit $rc
           fi
 
-          test -d Hello-World/.git || { echo "::error::clone missing"; ls -la; exit 5; }
+          test -d "$clone_dir/.git" || { echo "::error::clone missing at $clone_dir"; ls -la; exit 5; }
           echo "OK: cfrp cg completed end-to-end (rc=$rc)"
 
       - name: Validate cfr cg outputs (URL / clone cmd / branch / notes)
@@ -132,7 +164,9 @@ jobs:
           set -euo pipefail
           scratch="$RUNNER_TEMP/cfr-cg-smoke"
           cd "$scratch"
-          repo_url='https://github.com/octocat/Hello-World'
+          repo_url="${{ steps.fixture.outputs.repo_url }}"
+          clone_dir="${{ steps.fixture.outputs.clone_dir }}"
+          expected_branch="${{ steps.fixture.outputs.expected_branch }}"
           log="$scratch/cfrp-cg.log"
 
           fail=0
@@ -145,10 +179,10 @@ jobs:
             fi
           }
 
-          # 1) Repo URL surfaced in the run log.
+          # 1) Repo URL (file:// fixture path) surfaced in run log.
           assert_contains "$repo_url" 'repo URL'
 
-          # 2) Clone command surfaced (cfr prints the underlying git clone).
+          # 2) Clone command trace.
           if ! grep -Eq 'git( .*)? clone' "$log"; then
             echo "::error::stdout missing 'git clone' command trace"
             fail=1
@@ -156,28 +190,38 @@ jobs:
             echo "  OK stdout contains clone command"
           fi
 
-          # 3) CG installer + Note section (constants: MsgCGRunningUnix, MsgCGSkipCommit, MsgCGSkipPush).
+          # 3) CG installer + Note section.
           assert_contains 'Installing coding guidelines (v24' 'CG installer banner'
           assert_contains 'Note: --no-commit set' 'no-commit note'
           assert_contains 'Note: --no-push set'   'no-push note'
 
-          # 4) Pipeline completion marker (MsgCloneFixRepoDone).
+          # 4) Pipeline completion marker.
           assert_contains 'clone-fix-repo: pipeline completed' 'pipeline done marker'
 
-          # 5) Git-level branch + remote validation on the cloned repo.
-          branch=$(git -C Hello-World rev-parse --abbrev-ref HEAD)
-          echo "  cloned branch=$branch"
-          case "$branch" in
-            master|main) echo "  OK branch is $branch" ;;
-            *) echo "::error::unexpected branch '$branch'"; fail=1 ;;
-          esac
-          remote=$(git -C Hello-World config --get remote.origin.url)
+          # 5) Branch + remote validation against known fixture values.
+          branch=$(git -C "$clone_dir" rev-parse --abbrev-ref HEAD)
+          echo "  cloned branch=$branch (expected=$expected_branch)"
+          if [ "$branch" != "$expected_branch" ]; then
+            echo "::error::branch '$branch' != expected '$expected_branch'"
+            fail=1
+          else
+            echo "  OK branch matches fixture"
+          fi
+          remote=$(git -C "$clone_dir" config --get remote.origin.url)
           echo "  cloned remote=$remote"
-          if [ "$remote" != "$repo_url" ] && [ "$remote" != "${repo_url}.git" ]; then
+          if [ "$remote" != "$repo_url" ]; then
             echo "::error::remote origin '$remote' != '$repo_url'"
             fail=1
           else
-            echo "  OK remote origin matches"
+            echo "  OK remote origin matches fixture URL"
+          fi
+
+          # 5b) Committed note content came through unmodified.
+          if ! grep -Fq 'FIXTURE_NOTE_MARKER: cfr-cg smoke v1' "$clone_dir/fixture-note.txt"; then
+            echo "::error::fixture-note.txt marker missing in clone"
+            fail=1
+          else
+            echo "  OK fixture note content preserved"
           fi
 
           # 6) Optional JSON checkpoint sidecar (.gitmap/cfrp/<batch>/state.json).
@@ -263,19 +307,50 @@ jobs:
           }
           Write-Host 'OK: cfr + cfrp expose the cg modifier'
 
-      - name: End-to-end `cfr cg` against throwaway public repo
+      - name: Build local fixture git repo (offline remote)
+        id: fixture
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # Local file:// bare repo so smoke test is offline + deterministic
+          # (known branch, known origin URL, known committed note content).
+          $fixroot = Join-Path $env:RUNNER_TEMP 'gitmap-fixture'
+          if (Test-Path $fixroot) { Remove-Item -Recurse -Force $fixroot }
+          New-Item -ItemType Directory -Force -Path $fixroot | Out-Null
+          $src  = Join-Path $fixroot 'src'
+          $bare = Join-Path $fixroot 'fixture-repo.git'
+          New-Item -ItemType Directory -Force -Path $src | Out-Null
+          Push-Location $src
+          & git init -q -b main
+          & git config user.email 'smoke@gitmap.local'
+          & git config user.name  'gitmap smoke'
+          Set-Content -Path README.md         -Value 'gitmap smoke fixture' -NoNewline:$false
+          Set-Content -Path fixture-note.txt  -Value 'FIXTURE_NOTE_MARKER: cfr-cg smoke v1' -NoNewline:$false
+          & git add .
+          & git commit -q -m 'fixture: initial commit for cfr cg smoke'
+          Pop-Location
+          & git clone -q --bare $src $bare
+          # Windows file URL: forward slashes, drive-letter form file:///C:/...
+          $barePosix = ($bare -replace '\\','/')
+          $repoUrl = "file:///$barePosix"
+          "repo_url=$repoUrl"       | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "clone_dir=fixture-repo"  | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "expected_branch=main"    | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: End-to-end `cfr cg` against local fixture repo
         shell: pwsh
         env:
           GIT_TERMINAL_PROMPT: "0"
         run: |
           $ErrorActionPreference = 'Stop'
           $bin = '${{ steps.extract.outputs.bin }}'
+          $repoUrl   = '${{ steps.fixture.outputs.repo_url }}'
+          $cloneDir  = '${{ steps.fixture.outputs.clone_dir }}'
           $scratch = Join-Path $env:RUNNER_TEMP 'cfr-cg-smoke'
           if (Test-Path $scratch) { Remove-Item -Recurse -Force $scratch }
           New-Item -ItemType Directory -Force -Path $scratch | Out-Null
           Set-Location $scratch
 
-          $repoUrl = 'https://github.com/octocat/Hello-World'
           $log = Join-Path $scratch 'cfrp-cg.log'
 
           & $bin cfrp cg $repoUrl --no-commit --no-push *>&1 | Tee-Object -FilePath $log
@@ -285,8 +360,8 @@ jobs:
             Get-ChildItem | Format-Table -AutoSize
             exit $rc
           }
-          if (-not (Test-Path 'Hello-World/.git')) {
-            Write-Host '::error::clone missing'
+          if (-not (Test-Path (Join-Path $cloneDir '.git'))) {
+            Write-Host "::error::clone missing at $cloneDir"
             Get-ChildItem | Format-Table -AutoSize
             exit 5
           }
@@ -298,7 +373,9 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $scratch = Join-Path $env:RUNNER_TEMP 'cfr-cg-smoke'
           Set-Location $scratch
-          $repoUrl = 'https://github.com/octocat/Hello-World'
+          $repoUrl         = '${{ steps.fixture.outputs.repo_url }}'
+          $cloneDir        = '${{ steps.fixture.outputs.clone_dir }}'
+          $expectedBranch  = '${{ steps.fixture.outputs.expected_branch }}'
           $log = Join-Path $scratch 'cfrp-cg.log'
           $text = Get-Content -Raw -LiteralPath $log
           $fail = 0
@@ -312,7 +389,7 @@ jobs:
             }
           }
 
-          # 1) Repo URL surfaced in the run log.
+          # 1) Fixture URL surfaced in the run log.
           Assert-Contains $repoUrl 'repo URL'
 
           # 2) Clone command trace.
@@ -323,26 +400,36 @@ jobs:
             Write-Host '  OK stdout contains clone command'
           }
 
-          # 3) CG installer + Note section (MsgCGRunningWindows, MsgCGSkipCommit, MsgCGSkipPush).
+          # 3) CG installer + Note section.
           Assert-Contains 'Installing coding guidelines (v24' 'CG installer banner'
           Assert-Contains 'Note: --no-commit set' 'no-commit note'
           Assert-Contains 'Note: --no-push set'   'no-push note'
 
-          # 4) Pipeline completion marker (MsgCloneFixRepoDone).
+          # 4) Pipeline completion marker.
           Assert-Contains 'clone-fix-repo: pipeline completed' 'pipeline done marker'
 
-          # 5) Branch + remote validation.
-          $branch = (& git -C Hello-World rev-parse --abbrev-ref HEAD).Trim()
-          Write-Host "  cloned branch=$branch"
-          if ($branch -notin @('master','main')) {
-            Write-Host "::error::unexpected branch '$branch'"; $fail = 1
-          } else { Write-Host "  OK branch is $branch" }
-          $remote = (& git -C Hello-World config --get remote.origin.url).Trim()
+          # 5) Branch + remote validation vs known fixture values.
+          $branch = (& git -C $cloneDir rev-parse --abbrev-ref HEAD).Trim()
+          Write-Host "  cloned branch=$branch (expected=$expectedBranch)"
+          if ($branch -ne $expectedBranch) {
+            Write-Host "::error::branch '$branch' != expected '$expectedBranch'"; $fail = 1
+          } else { Write-Host '  OK branch matches fixture' }
+          $remote = (& git -C $cloneDir config --get remote.origin.url).Trim()
           Write-Host "  cloned remote=$remote"
-          if ($remote -ne $repoUrl -and $remote -ne "$repoUrl.git") {
+          if ($remote -ne $repoUrl) {
             Write-Host "::error::remote origin '$remote' != '$repoUrl'"
             $fail = 1
-          } else { Write-Host '  OK remote origin matches' }
+          } else { Write-Host '  OK remote origin matches fixture URL' }
+
+          # 5b) Committed note content preserved through clone.
+          $noteFile = Join-Path $cloneDir 'fixture-note.txt'
+          if (-not (Test-Path $noteFile) -or
+              -not ((Get-Content -Raw -LiteralPath $noteFile) -match 'FIXTURE_NOTE_MARKER: cfr-cg smoke v1')) {
+            Write-Host '::error::fixture-note.txt marker missing in clone'
+            $fail = 1
+          } else {
+            Write-Host '  OK fixture note content preserved'
+          }
 
           # 6) Optional JSON checkpoint sidecar.
           $state = Get-ChildItem -Path .gitmap/cfrp -Recurse -Filter state.json -ErrorAction SilentlyContinue | Select-Object -First 1

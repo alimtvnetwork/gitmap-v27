@@ -60,7 +60,7 @@ func splitCommaURLs(raw string) []string {
 // each worker observes the same semantics.
 //
 // Returns the count of failed URLs (exit-non-zero from the re-exec).
-func runCloneFixRepoParallel(urls []string, subcmd string, passthroughFlags []string, workers int) int {
+func runCloneFixRepoParallel(urls []string, subcmd string, leadingMods, passthroughFlags []string, workers int) int {
 	if workers <= 0 {
 		workers = constants.CloneFixRepoDefaultParallel
 	}

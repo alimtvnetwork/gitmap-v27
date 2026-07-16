@@ -156,10 +156,10 @@ func buildCFRLeadingModifiers(m CfrModifierFlags) []string {
 
 // dispatchCodingGuidelinesModifier invokes the v24 Coding Guidelines
 // installer against the freshly cloned working tree when the `cg`
-// modifier is present. Errors are already logged by
-// RunCodingGuidelinesInstall (zero-swallow policy); we surface a
-// non-zero exit so the pipeline halts and downstream auto-commit
-// (step 6) never runs against a half-installed tree.
+// modifier is present, then auto-commits (and optionally pushes) any
+// files the installer produced. Errors are already logged by the
+// underlying helpers (zero-swallow policy); we surface a non-zero
+// exit so the pipeline halts.
 func dispatchCodingGuidelinesModifier(absPath string, m CfrModifierFlags) {
 	if !m.InstallCodingGuidelines {
 		return
@@ -167,7 +167,12 @@ func dispatchCodingGuidelinesModifier(absPath string, m CfrModifierFlags) {
 	if err := RunCodingGuidelinesInstall(CodingGuidelinesOpts{WorkingDir: absPath}); err != nil {
 		os.Exit(constants.ExitCloneFixRepoChainFailed)
 	}
+	commitOpts := CGCommitOpts{WorkingDir: absPath, NoCommit: m.NoCommit, NoPush: m.NoPush}
+	if err := CommitCodingGuidelines(commitOpts); err != nil {
+		os.Exit(constants.ExitCloneFixRepoChainFailed)
+	}
 }
+
 
 
 // applyCloneFixRepoScheme honours --ssh / --https (and short aliases

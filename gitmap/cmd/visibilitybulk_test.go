@@ -56,8 +56,8 @@ func TestParseBulkRequest_TwoArgValid(t *testing.T) {
 	if req.BaseRepo != "gitmap" {
 		t.Fatalf("expected BaseRepo=gitmap, got %s", req.BaseRepo)
 	}
-	if req.StartVer != 25 {
-		t.Fatalf("expected StartVer=25, got %d", req.StartVer)
+	if req.StartVer != 26 {
+		t.Fatalf("expected StartVer=26, got %d", req.StartVer)
 	}
 	if req.Count != 3 {
 		t.Fatalf("expected Count=3, got %d", req.Count)

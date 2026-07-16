@@ -546,3 +546,92 @@ jobs:
 
           if ($fail -ne 0) { Write-Host '::error::output validation failed'; exit 6 }
           Write-Host 'OK: all cfr cg output fields validated'
+
+      - name: Emit + exact-match smoke report (CSV + JSON)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scratch = Join-Path $env:RUNNER_TEMP 'cfr-cg-smoke'
+          Set-Location $scratch
+          $repoUrl  = '${{ steps.fixture.outputs.repo_url }}'
+          $cloneDir = '${{ steps.fixture.outputs.clone_dir }}'
+          $log = Join-Path $scratch 'cfrp-cg.log'
+
+          $expectedFolderAbs = (Resolve-Path $cloneDir).Path
+          $expectedCloneCmd  = "git clone $repoUrl $cloneDir"
+          $expectedNote      = 'FIXTURE_NOTE_MARKER: cfr-cg smoke v1'
+
+          $observedFolderAbs = (Resolve-Path $cloneDir).Path
+          $logText = Get-Content -Raw -LiteralPath $log
+          $m = [regex]::Match($logText, 'git(?:\s+\S+)?\s+clone\s+[^\r\n]+')
+          if (-not $m.Success) { Write-Host '::error::no git clone line found in log'; exit 6 }
+          $observedCloneCmd = ($m.Value -replace '\s+',' ').TrimEnd()
+          $observedNote = (Get-Content -Raw -LiteralPath (Join-Path $cloneDir 'fixture-note.txt')).TrimEnd("`r","`n")
+
+          $csv  = Join-Path $scratch 'smoke-report.csv'
+          $json = Join-Path $scratch 'smoke-report.json'
+
+          # CSV: header + one row per field. Quote values that may contain commas/spaces.
+          $csvLines = @(
+            'field,expected,observed',
+            ('folder_path,"{0}","{1}"'  -f $expectedFolderAbs, $observedFolderAbs),
+            ('clone_command,"{0}","{1}"' -f $expectedCloneCmd, $observedCloneCmd),
+            ('note_marker,"{0}","{1}"'   -f $expectedNote,     $observedNote)
+          )
+          Set-Content -LiteralPath $csv -Value $csvLines -Encoding utf8
+
+          $report = [ordered]@{
+            folder_path   = @{ expected = $expectedFolderAbs; observed = $observedFolderAbs }
+            clone_command = @{ expected = $expectedCloneCmd;  observed = $observedCloneCmd }
+            note_marker   = @{ expected = $expectedNote;      observed = $observedNote }
+          }
+          $report | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $json -Encoding utf8
+
+          Write-Host '--- smoke-report.csv ---';  Get-Content -LiteralPath $csv
+          Write-Host '--- smoke-report.json ---'; Get-Content -LiteralPath $json
+
+          $fail = 0
+          function CheckExact($label, $expected, $observed) {
+            if ($expected -ne $observed) {
+              Write-Host "::error::$label mismatch: expected='$expected' observed='$observed'"
+              $script:fail = 1
+            } else { Write-Host "  OK $label exact match" }
+          }
+          CheckExact 'folder_path'   $expectedFolderAbs $observedFolderAbs
+          CheckExact 'clone_command' $expectedCloneCmd  $observedCloneCmd
+          CheckExact 'note_marker'   $expectedNote      $observedNote
+
+          # Re-parse emitted CSV + JSON and assert exact matches (guards emitter bugs).
+          $rows = Import-Csv -LiteralPath $csv
+          $rowMap = @{}; foreach ($r in $rows) { $rowMap[$r.field] = $r }
+          $expected = @{
+            folder_path   = $expectedFolderAbs
+            clone_command = $expectedCloneCmd
+            note_marker   = $expectedNote
+          }
+          foreach ($k in $expected.Keys) {
+            if ($rowMap[$k].observed -ne $expected[$k]) {
+              Write-Host "::error::CSV[$k] observed='$($rowMap[$k].observed)' != expected='$($expected[$k])'"
+              $fail = 1
+            }
+          }
+          $j = Get-Content -Raw -LiteralPath $json | ConvertFrom-Json
+          foreach ($k in $expected.Keys) {
+            if ($j.$k.observed -ne $expected[$k]) {
+              Write-Host "::error::JSON[$k].observed='$($j.$k.observed)' != expected='$($expected[$k])'"
+              $fail = 1
+            }
+          }
+          if ($fail -ne 0) { exit 6 }
+          Write-Host 'OK: smoke-report.csv + smoke-report.json validated (exact match)'
+
+      - name: Upload smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfr-cg-smoke-report-windows
+          path: |
+            ${{ runner.temp }}/cfr-cg-smoke/smoke-report.csv
+            ${{ runner.temp }}/cfr-cg-smoke/smoke-report.json
+            ${{ runner.temp }}/cfr-cg-smoke/cfrp-cg.log
+          if-no-files-found: warn

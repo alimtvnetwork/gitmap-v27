@@ -195,7 +195,7 @@ jobs:
           print(f'  OK checkpoint validated (batch_id={cp["batch_id"]}, done={len(done)})')
           PY
           else
-            echo '  note: no checkpoint sidecar emitted (single-URL run) — skipping JSON validation'
+            echo '  note: no checkpoint sidecar emitted (single-URL run), skipping JSON validation'
           fi
 
           [ $fail -eq 0 ] || { echo '::error::output validation failed'; exit 6; }

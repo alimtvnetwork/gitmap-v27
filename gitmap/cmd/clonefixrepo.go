@@ -55,7 +55,10 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 	if modifiers.PromotePublic {
 		makePublic = true
 	}
-	url, folderName, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun := parseCloneFixRepoArgs(args)
+	url, folderName, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun, noCommit, noPush := parseCloneFixRepoArgs(args)
+	modifiers.NoCommit = modifiers.NoCommit || noCommit
+	modifiers.NoPush = modifiers.NoPush || noPush
+
 	// Comma-separated URL fan-out: re-exec the single-URL pipeline
 	// per worker so chdir/fix-repo chaining stays isolated. The
 	// optional `folder` positional is forbidden in this mode — each

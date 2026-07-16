@@ -60,7 +60,7 @@ func splitCommaURLs(raw string) []string {
 // each worker observes the same semantics.
 //
 // Returns the count of failed URLs (exit-non-zero from the re-exec).
-func runCloneFixRepoParallel(urls []string, subcmd string, passthroughFlags []string, workers int) int {
+func runCloneFixRepoParallel(urls []string, subcmd string, leadingMods, passthroughFlags []string, workers int) int {
 	if workers <= 0 {
 		workers = constants.CloneFixRepoDefaultParallel
 	}
@@ -95,7 +95,7 @@ func runCloneFixRepoParallel(urls []string, subcmd string, passthroughFlags []st
 		go func() {
 			defer wg.Done()
 			for j := range jobs {
-				ok := runOneCFRJob(bin, subcmd, j.url, j.i+1, total, passthroughFlags, &mu)
+				ok := runOneCFRJob(bin, subcmd, j.url, j.i+1, total, leadingMods, passthroughFlags, &mu)
 				if !ok {
 					mu.Lock()
 					failed++
@@ -112,8 +112,13 @@ func runCloneFixRepoParallel(urls []string, subcmd string, passthroughFlags []st
 // runOneCFRJob re-execs the binary with a single URL, captures both
 // streams into one buffer, and flushes under the shared mutex so
 // per-URL blocks stay contiguous. Returns true on exit code 0.
-func runOneCFRJob(bin, subcmd, url string, idx, total int, passthroughFlags []string, mu *sync.Mutex) bool {
-	args := append([]string{subcmd, url}, passthroughFlags...)
+func runOneCFRJob(bin, subcmd, url string, idx, total int, leadingMods, passthroughFlags []string, mu *sync.Mutex) bool {
+	args := make([]string, 0, 2+len(leadingMods)+len(passthroughFlags))
+	args = append(args, subcmd)
+	args = append(args, leadingMods...)
+	args = append(args, url)
+	args = append(args, passthroughFlags...)
+
 	buf := &bytes.Buffer{}
 	fmt.Fprintf(buf, constants.MsgCloneFixRepoParallelItem, idx, total, url)
 	start := time.Now()

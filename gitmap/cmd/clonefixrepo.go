@@ -238,12 +238,14 @@ func resolveCloneFixRepoName(absPath string) string {
 }
 
 // parseCloneFixRepoArgs returns (url, folderName, noVSCodeSync,
-// requireVersion, useSSH, useHTTPS). First non-flag arg is the URL;
-// second non-flag is the destination folder. Recognized flags:
+// requireVersion, useSSH, useHTTPS, autoYes, dryRun, noCommit,
+// noPush). First non-flag arg is the URL; second non-flag is the
+// destination folder. Recognized flags:
 // --no-vscode-sync, --require-version, --ssh/-ssh/--sh,
-// --https/-https/--ht. Single-dash forms are accepted to match Go's
-// stdlib `flag` package behaviour the user expects from `-ssh`.
-func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, bool, bool, bool) {
+// --https/-https/--ht, --no-commit, --no-push. Single-dash forms are
+// accepted to match Go's stdlib `flag` package behaviour the user
+// expects from `-ssh`.
+func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, bool, bool, bool, bool, bool) {
 	positional := make([]string, 0, len(args))
 	noVSCodeSync := false
 	requireVersion := false
@@ -251,6 +253,8 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, boo
 	useHTTPS := false
 	autoYes := false
 	dryRun := false
+	noCommit := false
+	noPush := false
 	syncFlag := constants.FlagNoVSCodeSync
 	reqFlag := constants.FlagRequireVersion
 	for _, a := range args {
@@ -274,6 +278,12 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, boo
 		case constants.FlagCloneDryRun, constants.FlagCloneDryRunShort:
 			dryRun = true
 			continue
+		case constants.FlagCGNoCommit:
+			noCommit = true
+			continue
+		case constants.FlagCGNoPush:
+			noPush = true
+			continue
 		}
 		if len(a) > 0 && a[0] != '-' {
 			positional = append(positional, a)
@@ -288,8 +298,9 @@ func parseCloneFixRepoArgs(args []string) (string, string, bool, bool, bool, boo
 		folder = positional[1]
 	}
 
-	return url, folder, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun
+	return url, folder, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun, noCommit, noPush
 }
+
 
 // resolveCloneTargetFolder mirrors the folder-naming logic in
 // executeDirectClone so we know which directory to cd into after

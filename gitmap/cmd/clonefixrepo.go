@@ -47,6 +47,14 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 	// v6.54.0: extract --parallel BEFORE positional parsing so it
 	// never leaks into the URL/folder positionals.
 	parallel, args := extractParallelFlag(args)
+	// v6.76.0: consume leading `cg` / `p` modifier tokens (order-
+	// independent) before flag/URL parsing. `p` upgrades this
+	// invocation to the public-visibility variant so `cfr p <url>`
+	// behaves exactly like `cfrp <url>`.
+	modifiers, args := ParseCfrModifiers(args)
+	if modifiers.PromotePublic {
+		makePublic = true
+	}
 	url, folderName, noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun := parseCloneFixRepoArgs(args)
 	// Comma-separated URL fan-out: re-exec the single-URL pipeline
 	// per worker so chdir/fix-repo chaining stays isolated. The
@@ -58,12 +66,14 @@ func runCloneFixRepoPipeline(args []string, makePublic bool) {
 			subcmd = constants.CmdCloneFixRepoPub
 		}
 		passthrough := buildCFRPassthroughFlags(noVSCodeSync, requireVersion, useSSH, useHTTPS, autoYes, dryRun)
-		failed := runCloneFixRepoParallel(urls, subcmd, passthrough, parallel)
+		leadingMods := buildCFRLeadingModifiers(modifiers)
+		failed := runCloneFixRepoParallel(urls, subcmd, leadingMods, passthrough, parallel)
 		if failed > 0 {
 			os.Exit(constants.ExitCloneFixRepoChainFailed)
 		}
 		return
 	}
+
 	SetCloneDryRun(dryRun)
 	SetCloneAssumeYes(autoYes)
 	applyCloneAssumeYesEnv(autoYes)

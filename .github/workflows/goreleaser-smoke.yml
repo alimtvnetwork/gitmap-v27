@@ -275,7 +275,10 @@ jobs:
           New-Item -ItemType Directory -Force -Path $scratch | Out-Null
           Set-Location $scratch
 
-          & $bin cfrp cg 'https://github.com/octocat/Hello-World' --no-commit --no-push
+          $repoUrl = 'https://github.com/octocat/Hello-World'
+          $log = Join-Path $scratch 'cfrp-cg.log'
+
+          & $bin cfrp cg $repoUrl --no-commit --no-push *>&1 | Tee-Object -FilePath $log
           $rc = $LASTEXITCODE
           if ($rc -ne 0) {
             Write-Host "::error::cfrp cg exited $rc"
@@ -288,3 +291,75 @@ jobs:
             exit 5
           }
           Write-Host "OK: cfrp cg completed end-to-end (rc=$rc)"
+
+      - name: Validate cfr cg outputs (URL / clone cmd / branch / notes)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scratch = Join-Path $env:RUNNER_TEMP 'cfr-cg-smoke'
+          Set-Location $scratch
+          $repoUrl = 'https://github.com/octocat/Hello-World'
+          $log = Join-Path $scratch 'cfrp-cg.log'
+          $text = Get-Content -Raw -LiteralPath $log
+          $fail = 0
+
+          function Assert-Contains($needle, $label) {
+            if ($script:text -notmatch [regex]::Escape($needle)) {
+              Write-Host "::error::stdout missing $label`: '$needle'"
+              $script:fail = 1
+            } else {
+              Write-Host "  OK stdout contains $label"
+            }
+          }
+
+          # 1) Repo URL surfaced in the run log.
+          Assert-Contains $repoUrl 'repo URL'
+
+          # 2) Clone command trace.
+          if ($text -notmatch 'git(\s.*)?\s+clone') {
+            Write-Host "::error::stdout missing 'git clone' command trace"
+            $fail = 1
+          } else {
+            Write-Host '  OK stdout contains clone command'
+          }
+
+          # 3) CG installer + Note section (MsgCGRunningWindows, MsgCGSkipCommit, MsgCGSkipPush).
+          Assert-Contains 'Installing coding guidelines (v24' 'CG installer banner'
+          Assert-Contains 'Note: --no-commit set' 'no-commit note'
+          Assert-Contains 'Note: --no-push set'   'no-push note'
+
+          # 4) Pipeline completion marker (MsgCloneFixRepoDone).
+          Assert-Contains 'clone-fix-repo: pipeline completed' 'pipeline done marker'
+
+          # 5) Branch + remote validation.
+          $branch = (& git -C Hello-World rev-parse --abbrev-ref HEAD).Trim()
+          Write-Host "  cloned branch=$branch"
+          if ($branch -notin @('master','main')) {
+            Write-Host "::error::unexpected branch '$branch'"; $fail = 1
+          } else { Write-Host "  OK branch is $branch" }
+          $remote = (& git -C Hello-World config --get remote.origin.url).Trim()
+          Write-Host "  cloned remote=$remote"
+          if ($remote -ne $repoUrl -and $remote -ne "$repoUrl.git") {
+            Write-Host "::error::remote origin '$remote' != '$repoUrl'"
+            $fail = 1
+          } else { Write-Host '  OK remote origin matches' }
+
+          # 6) Optional JSON checkpoint sidecar.
+          $state = Get-ChildItem -Path .gitmap/cfrp -Recurse -Filter state.json -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($state) {
+            Write-Host "  found checkpoint: $($state.FullName)"
+            $cp = Get-Content -Raw -LiteralPath $state.FullName | ConvertFrom-Json
+            if (-not $cp.batch_id) { Write-Host '::error::batch_id empty'; $fail = 1 }
+            $done = @($cp.done)
+            if (-not ($done | Where-Object { $_ -like "*$repoUrl*" })) {
+              Write-Host "::error::done[] missing $repoUrl (got: $($done -join ','))"
+              $fail = 1
+            }
+            if (($cp.total -as [int]) -lt 1) { Write-Host '::error::total < 1'; $fail = 1 }
+            Write-Host "  OK checkpoint validated (batch_id=$($cp.batch_id), done=$($done.Count))"
+          } else {
+            Write-Host '  note: no checkpoint sidecar emitted (single-URL run), skipping JSON validation'
+          }
+
+          if ($fail -ne 0) { Write-Host '::error::output validation failed'; exit 6 }
+          Write-Host 'OK: all cfr cg output fields validated'

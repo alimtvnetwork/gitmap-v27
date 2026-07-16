@@ -95,7 +95,7 @@ func runCloneFixRepoParallel(urls []string, subcmd string, leadingMods, passthro
 		go func() {
 			defer wg.Done()
 			for j := range jobs {
-				ok := runOneCFRJob(bin, subcmd, j.url, j.i+1, total, passthroughFlags, &mu)
+				ok := runOneCFRJob(bin, subcmd, j.url, j.i+1, total, leadingMods, passthroughFlags, &mu)
 				if !ok {
 					mu.Lock()
 					failed++

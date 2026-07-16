@@ -1,5 +1,13 @@
 # Changelog
 
+## v6.77.0 — 2026-07-16 — `cfr` / `cfrp` `cg` modifier surfaced in UI command registry
+
+### Added
+- **UI registry** `src/data/commands.ts` — `clone-fix-repo` and `clone-fix-repo-pub` entries now advertise the `cg` (Coding Guidelines v24) and `p` (promote-public) pre-URL modifiers, plus the `--no-commit` / `--no-push` opt-out flags. Four new worked examples per command cover the plain, `cg`, `cg --no-commit`, `cg --no-push`, and combined `p cg` invocations. Usage lines updated to `gitmap clone-fix-repo [cg] [p] <url> [folder] [flags]` so search-by-flag surfaces the modifiers.
+
+### Changed
+- Pinned: README pinned-version block + version matrix moved to **v6.77.0**. Synced `gitmap/constants/constants.go` (`Version = "6.77.0"`) and `src/constants/index.ts` (`VERSION = "v6.77.0"`).
+
 ## v6.76.0 — 2026-07-16 — `cfr cg` / `cfrp cg` unit tests + modifier parser lock-in
 
 ### Added

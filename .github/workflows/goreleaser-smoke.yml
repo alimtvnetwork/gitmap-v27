@@ -1,0 +1,127 @@
+name: GoReleaser Smoke (cfr cg)
+
+# End-to-end smoke: build a goreleaser snapshot artifact on Linux + macOS,
+# extract the archive as an end user would, then run a minimal `cfr cg`
+# flow against a throwaway public repo to confirm the release binary:
+#   1. runs at all (prints version),
+#   2. exposes the `cg` modifier on `cfr` / `cfrp` (helptext contains it),
+#   3. can drive a real clone-fix-repo pipeline with `cg` + `--no-commit`
+#      + `--no-push` end-to-end without touching remotes.
+#
+# Runs on PR + main pushes that touch the release surface, and can be
+# invoked manually from the Actions tab.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "gitmap/**"
+      - ".github/workflows/goreleaser-smoke.yml"
+      - ".goreleaser.yaml"
+      - "gitmap/.goreleaser.yaml"
+  pull_request:
+    paths:
+      - "gitmap/**"
+      - ".github/workflows/goreleaser-smoke.yml"
+      - "gitmap/.goreleaser.yaml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: goreleaser-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot-smoke:
+    name: snapshot build + cfr cg smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: gitmap/go.mod
+          cache-dependency-path: gitmap/go.sum
+
+      - name: Build snapshot via goreleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          workdir: gitmap
+          args: release --clean --snapshot --skip=publish
+
+      - name: Locate + extract host archive
+        id: extract
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ runner.os }}" in
+            Linux)  os_tag=linux  ;;
+            macOS)  os_tag=darwin ;;
+            *) echo "unsupported runner ${{ runner.os }}" >&2; exit 2 ;;
+          esac
+          arch_tag=amd64
+          # goreleaser snapshot names: gitmap-vX.Y.Z-next-<os>-<arch>.tar.gz
+          archive=$(ls gitmap/dist/gitmap-*-${os_tag}-${arch_tag}.tar.gz | head -n1)
+          echo "archive=$archive"
+          test -f "$archive" || { echo "no archive found" >&2; ls -la gitmap/dist >&2; exit 3; }
+          workdir="$RUNNER_TEMP/gitmap-smoke"
+          mkdir -p "$workdir"
+          tar -xzf "$archive" -C "$workdir"
+          bin="$workdir/gitmap"
+          test -x "$bin" || chmod +x "$bin"
+          "$bin" version
+          echo "bin=$bin" >> "$GITHUB_OUTPUT"
+
+      - name: Assert `cg` modifier is documented in cfr/cfrp help
+        shell: bash
+        run: |
+          set -euo pipefail
+          bin="${{ steps.extract.outputs.bin }}"
+          for cmd in cfr cfrp; do
+            out=$("$bin" "$cmd" --help 2>&1 || true)
+            printf '%s\n' "$out" | grep -qiE '(^|[^a-z])cg([^a-z]|$)' \
+              || { echo "::error::'$cmd --help' did not mention the 'cg' modifier"; \
+                   printf '%s\n' "$out"; exit 4; }
+          done
+          echo "OK: cfr + cfrp expose the cg modifier"
+
+      - name: End-to-end `cfr cg` against throwaway public repo
+        shell: bash
+        env:
+          # Fully offline w.r.t. remotes: no commit, no push.
+          # We still let the v24 installer hit raw.githubusercontent, which
+          # is a required part of the "release artifact works E2E" contract.
+          GIT_TERMINAL_PROMPT: "0"
+        run: |
+          set -euo pipefail
+          bin="${{ steps.extract.outputs.bin }}"
+          scratch="$RUNNER_TEMP/cfr-cg-smoke"
+          rm -rf "$scratch" && mkdir -p "$scratch"
+          cd "$scratch"
+
+          # Public, tiny, stable target. cfrp = public variant, cg = install
+          # coding-guidelines v24, --no-commit + --no-push keep the run local.
+          set +e
+          "$bin" cfrp cg https://github.com/octocat/Hello-World --no-commit --no-push
+          rc=$?
+          set -e
+
+          if [ $rc -ne 0 ]; then
+            echo "::error::cfrp cg exited $rc"
+            ls -la
+            exit $rc
+          fi
+
+          # Prove the clone actually happened.
+          test -d Hello-World/.git || { echo "::error::clone missing"; ls -la; exit 5; }
+          echo "OK: cfrp cg completed end-to-end (rc=$rc)"

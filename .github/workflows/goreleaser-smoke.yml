@@ -125,3 +125,91 @@ jobs:
           # Prove the clone actually happened.
           test -d Hello-World/.git || { echo "::error::clone missing"; ls -la; exit 5; }
           echo "OK: cfrp cg completed end-to-end (rc=$rc)"
+
+  snapshot-smoke-windows:
+    name: snapshot build + cfr cg smoke (windows-latest amd64)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: gitmap/go.mod
+          cache-dependency-path: gitmap/go.sum
+
+      - name: Build snapshot via goreleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          workdir: gitmap
+          args: release --clean --snapshot --skip=publish
+
+      - name: Locate + extract host archive (windows amd64)
+        id: extract
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # goreleaser snapshot names: gitmap-vX.Y.Z-next-windows-amd64.zip
+          $archive = Get-ChildItem -Path gitmap/dist -Filter 'gitmap-*-windows-amd64.zip' `
+            | Select-Object -First 1
+          if (-not $archive) {
+            Write-Host '::error::no windows-amd64 archive found'
+            Get-ChildItem gitmap/dist | Format-Table -AutoSize
+            exit 3
+          }
+          Write-Host "archive=$($archive.FullName)"
+          $workdir = Join-Path $env:RUNNER_TEMP 'gitmap-smoke'
+          New-Item -ItemType Directory -Force -Path $workdir | Out-Null
+          Expand-Archive -LiteralPath $archive.FullName -DestinationPath $workdir -Force
+          $bin = Join-Path $workdir 'gitmap.exe'
+          if (-not (Test-Path $bin)) {
+            Write-Host '::error::gitmap.exe missing after extract'
+            Get-ChildItem $workdir -Recurse | Format-Table -AutoSize
+            exit 3
+          }
+          & $bin version
+          "bin=$bin" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Assert `cg` modifier is documented in cfr/cfrp help
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $bin = '${{ steps.extract.outputs.bin }}'
+          foreach ($cmd in @('cfr','cfrp')) {
+            $out = & $bin $cmd --help 2>&1 | Out-String
+            if ($out -notmatch '(^|[^a-zA-Z])cg([^a-zA-Z]|$)') {
+              Write-Host "::error::'$cmd --help' did not mention the 'cg' modifier"
+              Write-Host $out
+              exit 4
+            }
+          }
+          Write-Host 'OK: cfr + cfrp expose the cg modifier'
+
+      - name: End-to-end `cfr cg` against throwaway public repo
+        shell: pwsh
+        env:
+          GIT_TERMINAL_PROMPT: "0"
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $bin = '${{ steps.extract.outputs.bin }}'
+          $scratch = Join-Path $env:RUNNER_TEMP 'cfr-cg-smoke'
+          if (Test-Path $scratch) { Remove-Item -Recurse -Force $scratch }
+          New-Item -ItemType Directory -Force -Path $scratch | Out-Null
+          Set-Location $scratch
+
+          & $bin cfrp cg 'https://github.com/octocat/Hello-World' --no-commit --no-push
+          $rc = $LASTEXITCODE
+          if ($rc -ne 0) {
+            Write-Host "::error::cfrp cg exited $rc"
+            Get-ChildItem | Format-Table -AutoSize
+            exit $rc
+          }
+          if (-not (Test-Path 'Hello-World/.git')) {
+            Write-Host '::error::clone missing'
+            Get-ChildItem | Format-Table -AutoSize
+            exit 5
+          }
+          Write-Host "OK: cfrp cg completed end-to-end (rc=$rc)"

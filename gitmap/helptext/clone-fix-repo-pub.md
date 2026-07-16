@@ -97,7 +97,6 @@ gitmap cfrp cg https://github.com/acme/myrepo-v13.git
 gitmap cfrp cg https://github.com/acme/myrepo-v13.git --no-push
 ```
 
-
 ## Exit codes
 
 | Code | Meaning |
@@ -105,21 +104,16 @@ gitmap cfrp cg https://github.com/acme/myrepo-v13.git --no-push
 | `0`  | ✅ ok |
 | `6`  | ❌ bad-flag (missing URL) |
 | `9`  | ❌ chdir failed |
-| `10` | ❌ chained step failed (forwards underlying `clone`, `fix-repo`, or `make-public` exit code) |
+| `10` | ❌ chained step failed (forwards underlying step's exit code) |
 
 ## See also
 
 - `gitmap clone-fix-repo` (`cfr`) — same pipeline, without the visibility flip.
-- `gitmap clone` — the underlying clone step (full `--ssh` / `--https` semantics live there).
-- `gitmap make-public` — the visibility step on its own.
-- `gitmap fix-repo` — the rewrite step on its own.
+- `gitmap clone` — the underlying clone step.
+- `gitmap make-public` / `gitmap fix-repo` — the individual steps.
 
 ## Scripting (JSON)
 
-Discover this command from a script using the machine-readable help payload:
+`gitmap help --json --filter clone-fix-repo-pub` — schema at
+`spec/08-json-schemas/help-json.schema.json` (v5.43.0+).
 
-```bash
-gitmap help --json --filter clone-fix-repo-pub
-```
-
-The JSON schema is published at `spec/08-json-schemas/help-json.schema.json` (v5.43.0+).

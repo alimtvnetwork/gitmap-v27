@@ -20,8 +20,8 @@ gitmap make-public --yes
 ## Synopsis
 
 ```
-gitmap clone-fix-repo-pub <url> [folder] [flags]
-gitmap cfrp               <url> [folder] [flags]
+gitmap clone-fix-repo-pub [modifiers...] <url> [folder] [flags]
+gitmap cfrp               [modifiers...] <url> [folder] [flags]
 ```
 
 ## Requirements
@@ -29,29 +29,42 @@ gitmap cfrp               <url> [folder] [flags]
 - `gh` or `glab` installed and authenticated (`gh auth login` /
   `glab auth login`). The `make-public` step wraps these CLIs.
 
+## Modifiers (v6.76.0+)
+
+Order-independent tokens that appear **before** the URL. Same
+semantics as `cfr`; see `cfr --help` for the full modifier table.
+`cfrp` implicitly behaves as `cfr p …`, so passing `p` explicitly is
+a no-op.
+
+| Token | Effect |
+|-------|--------|
+| 🧭 `cg` | After clone + fix-repo + make-public, run the OS-appropriate **Coding Guidelines v24** installer, then auto-commit + push. |
+| 🌍 `p`  | No-op on `cfrp` (already public). Accepted for parity with `cfr`. |
+
 ## Flags
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | 🔐 `--ssh` / `-ssh` / `--sh` | false | Force the URL into `git@host:owner/repo.git` SSH-shorthand form before clone runs. Auto-converts `https://…` and `ssh://git@…` URLs. Mutually exclusive with `--https` (`--ssh` wins with a one-line stderr warning). |
 | 🌐 `--https` / `-https` / `--ht` | false | Force the URL into `https://host/owner/repo.git` form. Converts SSH-shorthand and `ssh://…` URLs. Useful in CI where the SSH agent isn't unlocked. |
-| 🚫 `--no-vscode-sync` | false | Forwarded to the `clone` step — skips writing the resolved folder into VS Code Project Manager `projects.json`. The `fix-repo` and `make-public` steps are unaffected. |
-| 🤐 `--yes` / `-y` | false | Non-interactive: skip the prior-version privatize prompt (see §Behavior step 5) and auto-confirm any chained `make-public` confirmation. |
-| 🔒 `--require-version` | false | Strict mode: fail (exit 4) when the cloned repo identity has no `-vN` suffix instead of skipping the `fix-repo` step. |
-| 👁️ `--dry-run` / `-n` | false | Preview only — prints the exact `git clone <url> <dest>` command, the absolute target path, and the chained `fix-repo --all → make-public --yes` sequence that *would* run, without invoking git, chdir-ing, or touching remote visibility. (v6.49.0+) |
+| 🚫 `--no-vscode-sync` | false | Forwarded to the `clone` step — skips writing the resolved folder into VS Code Project Manager `projects.json`. |
+| 🤐 `--yes` / `-y` | false | Non-interactive: skip the prior-version privatize prompt and auto-confirm any chained `make-public` confirmation. |
+| 🔒 `--require-version` | false | Strict mode: fail (exit 4) when the cloned repo identity has no `-vN` suffix. |
+| 👁️ `--dry-run` / `-n` | false | Preview only — prints the chained sequence that *would* run without touching remote visibility. |
+| 🙈 `--no-commit` | false | (Only with `cg`.) Skip the auto-commit after the guidelines install. Files stay staged. |
+| 📵 `--no-push`   | false | (Only with `cg`.) Commit locally but do not push. Also implicit when no upstream is set. |
 
 Path canonicalization (Clean + EvalSymlinks for Windows 8.3 short
 names and symlinks, with soft-fail to the cleaned absolute path on
-resolver error) is inherited from the forwarded `clone` step. See
-`gitmap clone --help` "Windows path canonicalization & EvalSymlinks
-soft-fail" for the full rule set.
+resolver error) is inherited from the forwarded `clone` step.
 
 ## Behavior
 
-1. 📥 **Clone** — versioned URLs auto-flatten. `--ssh` / `--https` rewrite the URL before clone runs and print `↪ --ssh rewrite: <old> → <new>` to stdout.
+1. 📥 **Clone** — versioned URLs auto-flatten. `--ssh` / `--https` rewrite the URL before clone runs.
 2. 📂 **cd** — chdirs into the resolved folder.
-3. 🔧 **fix-repo** — re-execs `fix-repo --all`. Skipped (with a notice) when the repo identity has no `-vN` suffix, unless `--require-version` is set.
-4. 🌍 **make-public** — re-execs `make-public --yes` (non-interactive — no confirmation prompt, since the intent is explicit in the command name).
+3. 🔧 **fix-repo** — re-execs `fix-repo --all`. Skipped when the repo identity has no `-vN` suffix, unless `--require-version` is set.
+4. 🌍 **make-public** — re-execs `make-public --yes` (non-interactive).
+5. 🧭 **coding-guidelines** (only when `cg` modifier is present) — dispatches the v24 installer, then stages + commits + pushes. `--no-commit` / `--no-push` opt out of the commit / push sub-steps.
 
 > **v6.50.0+** — `cfrp` no longer scans sibling `-vN` repos nor prompts to privatize prior versions after `make-public`. Run `gitmap mapri <repo>` explicitly when you want bulk-privatize behavior.
 
@@ -76,7 +89,14 @@ gitmap cfrp git@github.com:acme/myrepo-v13.git --https
 
 # Explicit destination folder
 gitmap cfrp git@github.com:acme/myrepo-v13.git myrepo-fresh
+
+# 🧭 Publish + install coding-guidelines v24 (auto-commit + push)
+gitmap cfrp cg https://github.com/acme/myrepo-v13.git
+
+# 🧭 Publish + install guidelines, but skip the auto-push
+gitmap cfrp cg https://github.com/acme/myrepo-v13.git --no-push
 ```
+
 
 ## Exit codes
 

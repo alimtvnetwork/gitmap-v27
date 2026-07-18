@@ -40,7 +40,7 @@ jobs:
     # runs a local file:// remote which `cfrp` (visibility flip) cannot use,
     # so smoke jobs MUST use `cfr cg`. Helptext assertions and log/artifact
     # filenames that merely mention the token are allowed.
-    name: guard: no cfrp cg invocations
+    name: "guard: no cfrp cg invocations"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -154,6 +154,47 @@ jobs:
           echo "clone_dir=fixture-repo"   >> "$GITHUB_OUTPUT"
           echo "expected_branch=main"     >> "$GITHUB_OUTPUT"
 
+      - name: Cleanup stale gitmap.lock (pre-run)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # gitmap.lock is an advisory file lock (mem://tech/process-synchronization).
+          # A previous cached/interrupted run can leave one behind; without a
+          # holding process it will still block the next invocation. Scan the
+          # scratch + fixture + HOME roots and remove ONLY locks nobody holds
+          # (verified via `fuser`/`lsof` when available, else age fallback).
+          roots=(
+            "$RUNNER_TEMP/cfr-cg-smoke"
+            "$RUNNER_TEMP/gitmap-smoke"
+            "$RUNNER_TEMP/gitmap-fixture"
+            "$HOME/.gitmap"
+          )
+          removed=0; kept=0
+          for root in "${roots[@]}"; do
+            [ -d "$root" ] || continue
+            while IFS= read -r -d '' lock; do
+              held=""
+              if command -v fuser >/dev/null 2>&1; then
+                held=$(fuser "$lock" 2>/dev/null || true)
+              elif command -v lsof >/dev/null 2>&1; then
+                held=$(lsof -- "$lock" 2>/dev/null || true)
+              else
+                # No inspector available: only remove if mtime > 30s ago.
+                if [ -n "$(find "$lock" -mmin +0.5 -print 2>/dev/null)" ]; then
+                  held=""
+                else
+                  held="unknown-recent"
+                fi
+              fi
+              if [ -z "$held" ]; then
+                rm -f -- "$lock" && echo "  removed stale lock: $lock" && removed=$((removed+1))
+              else
+                echo "  kept held lock: $lock ($held)"; kept=$((kept+1))
+              fi
+            done < <(find "$root" -type f -name 'gitmap.lock' -print0 2>/dev/null)
+          done
+          echo "gitmap.lock cleanup: removed=$removed kept=$kept"
+
       - name: End-to-end `cfr cg` against local fixture repo
         shell: bash
         env:
@@ -171,10 +212,28 @@ jobs:
 
           log="$scratch/cfrp-cg.log"
 
-          set +e
-          "$bin" cfr cg "$repo_url" --no-commit --no-push 2>&1 | tee "$log"
-          rc=${PIPESTATUS[0]}
-          set -e
+          run_cfr_cg() {
+            set +e
+            "$bin" cfr cg "$repo_url" --no-commit --no-push 2>&1 | tee "$log"
+            rc=${PIPESTATUS[0]}
+            set -e
+          }
+
+          run_cfr_cg
+          if [ $rc -ne 0 ] && grep -qiE 'gitmap\.lock|already (locked|running)|another gitmap' "$log"; then
+            echo "::warning::first attempt hit a lock (rc=$rc); sweeping unheld gitmap.lock files and retrying once"
+            for root in "$RUNNER_TEMP/cfr-cg-smoke" "$RUNNER_TEMP/gitmap-smoke" "$RUNNER_TEMP/gitmap-fixture" "$HOME/.gitmap"; do
+              [ -d "$root" ] || continue
+              while IFS= read -r -d '' lock; do
+                held=""
+                if command -v fuser >/dev/null 2>&1; then held=$(fuser "$lock" 2>/dev/null || true); fi
+                if [ -z "$held" ] && command -v lsof >/dev/null 2>&1; then held=$(lsof -- "$lock" 2>/dev/null || true); fi
+                if [ -z "$held" ]; then rm -f -- "$lock" && echo "  retry: removed stale lock $lock"; fi
+              done < <(find "$root" -type f -name 'gitmap.lock' -print0 2>/dev/null)
+            done
+            rm -rf "$scratch"/* "$scratch"/.[!.]* 2>/dev/null || true
+            run_cfr_cg
+          fi
 
           if [ $rc -ne 0 ]; then
             echo "::error::cfr cg exited $rc"
@@ -463,6 +522,38 @@ jobs:
           "clone_dir=fixture-repo"  | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           "expected_branch=main"    | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
+      - name: Cleanup stale gitmap.lock (pre-run)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # gitmap.lock is advisory (mem://tech/process-synchronization). Sweep
+          # any leftover lock file no live process holds. On Windows we probe
+          # by attempting an exclusive open — if it succeeds, nobody holds it.
+          $roots = @(
+            (Join-Path $env:RUNNER_TEMP 'cfr-cg-smoke'),
+            (Join-Path $env:RUNNER_TEMP 'gitmap-smoke'),
+            (Join-Path $env:RUNNER_TEMP 'gitmap-fixture'),
+            (Join-Path $env:USERPROFILE '.gitmap')
+          )
+          $removed = 0; $kept = 0
+          foreach ($root in $roots) {
+            if (-not (Test-Path $root)) { continue }
+            Get-ChildItem -Path $root -Recurse -Filter 'gitmap.lock' -File -ErrorAction SilentlyContinue | ForEach-Object {
+              $lock = $_.FullName
+              try {
+                $fs = [System.IO.File]::Open($lock, 'Open', 'ReadWrite', 'None')
+                $fs.Close()
+                Remove-Item -LiteralPath $lock -Force
+                Write-Host "  removed stale lock: $lock"
+                $removed++
+              } catch {
+                Write-Host "  kept held lock: $lock ($($_.Exception.Message))"
+                $kept++
+              }
+            }
+          }
+          Write-Host "gitmap.lock cleanup: removed=$removed kept=$kept"
+
       - name: End-to-end `cfr cg` against local fixture repo
         shell: pwsh
         env:
@@ -479,8 +570,36 @@ jobs:
 
           $log = Join-Path $scratch 'cfrp-cg.log'
 
-          & $bin cfr cg $repoUrl --no-commit --no-push *>&1 | Tee-Object -FilePath $log
-          $rc = $LASTEXITCODE
+          function Invoke-CfrCg {
+            & $bin cfr cg $repoUrl --no-commit --no-push *>&1 | Tee-Object -FilePath $log
+            return $LASTEXITCODE
+          }
+
+          $rc = Invoke-CfrCg
+          if ($rc -ne 0) {
+            $logText = Get-Content -Raw -LiteralPath $log
+            if ($logText -match '(?i)gitmap\.lock|already (locked|running)|another gitmap') {
+              Write-Host "::warning::first attempt hit a lock (rc=$rc); sweeping unheld gitmap.lock files and retrying once"
+              $sweepRoots = @($scratch,
+                              (Join-Path $env:RUNNER_TEMP 'gitmap-smoke'),
+                              (Join-Path $env:RUNNER_TEMP 'gitmap-fixture'),
+                              (Join-Path $env:USERPROFILE '.gitmap'))
+              foreach ($r in $sweepRoots) {
+                if (-not (Test-Path $r)) { continue }
+                Get-ChildItem -Path $r -Recurse -Filter 'gitmap.lock' -File -ErrorAction SilentlyContinue | ForEach-Object {
+                  try {
+                    $fs = [System.IO.File]::Open($_.FullName, 'Open', 'ReadWrite', 'None')
+                    $fs.Close()
+                    Remove-Item -LiteralPath $_.FullName -Force
+                    Write-Host "  retry: removed stale lock $($_.FullName)"
+                  } catch { }
+                }
+              }
+              Get-ChildItem -Path $scratch -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+              $rc = Invoke-CfrCg
+            }
+          }
+
           if ($rc -ne 0) {
             Write-Host "::error::cfr cg exited $rc"
             Get-ChildItem | Format-Table -AutoSize

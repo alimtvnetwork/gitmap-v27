@@ -355,7 +355,7 @@ jobs:
 
           # Expected exact values (fixture is fully deterministic).
           expected_folder_abs="$scratch/$clone_dir"
-          expected_clone_cmd="git clone $repo_url $clone_dir"
+          expected_clone_cmd="git clone $repo_url $expected_folder_abs"
           expected_note='FIXTURE_NOTE_MARKER: cfr-cg smoke v1'
 
           # Observed values.

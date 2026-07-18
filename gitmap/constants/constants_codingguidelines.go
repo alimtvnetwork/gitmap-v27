@@ -50,7 +50,7 @@ const (
 	MsgCGCommitted      = "  OK Committed coding-guidelines changes: %s\n"
 	MsgCGPushed         = "  OK Pushed coding-guidelines commit to %s\n"
 	MsgCGSkipCommit     = "  Note: --no-commit set; leaving guideline files uncommitted.\n"
-	MsgCGSkipPush       = "  Note: --no-push set (or no upstream); commit created but not pushed.\n"
+	MsgCGSkipPush       = "  Note: --no-push set (or no upstream); push step skipped.\n"
 	MsgCGNoChanges      = "  Note: installer produced no working-tree changes; nothing to commit.\n"
 
 	ErrCGShellNotFoundWindows = "  ✗ PowerShell not found on PATH. Install PowerShell 7+ or run manually:\n      irm %s | iex\n"

@@ -41,10 +41,7 @@ type CGCommitOpts struct {
 func CommitCodingGuidelines(opts CGCommitOpts) error {
 	opts = withCGCommitDefaults(opts)
 	if opts.NoCommit {
-		fmt.Fprint(opts.Stderr, constants.MsgCGSkipCommit)
-		if opts.NoPush {
-			fmt.Fprint(opts.Stderr, constants.MsgCGSkipPush)
-		}
+		emitCGSkipNotes(opts, true, opts.NoPush)
 		return nil
 	}
 	if err := runGitStep(opts, "add", "-A"); err != nil {
@@ -107,12 +104,12 @@ func commitAndMaybePush(opts CGCommitOpts) error {
 	}
 	fmt.Fprintf(opts.Stderr, constants.MsgCGCommitted, constants.CodingGuidelinesCommitMessage)
 	if opts.NoPush {
-		fmt.Fprint(opts.Stderr, constants.MsgCGSkipPush)
+		emitCGSkipNotes(opts, false, true)
 		return nil
 	}
 	upstream, ok := detectUpstream(opts)
 	if !ok {
-		fmt.Fprint(opts.Stderr, constants.MsgCGSkipPush)
+		emitCGSkipNotes(opts, false, true)
 		return nil
 	}
 	if err := runGitStep(opts, "push"); err != nil {
@@ -139,4 +136,26 @@ func detectUpstream(opts CGCommitOpts) (string, bool) {
 		return "", false
 	}
 	return ref, true
+}
+
+// emitCGSkipNotes prints the --no-commit and --no-push skip notices
+// in a single atomic write so downstream CI captures (Tee-Object on
+// Windows, tee on POSIX) never lose the second message to pipe-drain
+// races. The notes are mirrored to Stdout as well because they are
+// user-facing status, not errors, and some CI runners buffer stderr
+// separately from stdout when interleaving through a merged pipe.
+func emitCGSkipNotes(opts CGCommitOpts, noCommit, noPush bool) {
+	var b strings.Builder
+	if noCommit {
+		b.WriteString(constants.MsgCGSkipCommit)
+	}
+	if noPush {
+		b.WriteString(constants.MsgCGSkipPush)
+	}
+	if b.Len() == 0 {
+		return
+	}
+	msg := b.String()
+	fmt.Fprint(opts.Stderr, msg)
+	fmt.Fprint(opts.Stdout, msg)
 }

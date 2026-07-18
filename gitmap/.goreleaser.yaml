@@ -4,9 +4,9 @@ version: 2
 
 project_name: gitmap
 
-before:
-  hooks:
-    - go mod tidy
+# Note: `go mod tidy` was removed from before-hooks. CI already runs
+# tidy elsewhere, and it was the slowest step of the Windows snapshot
+# path (frequent multi-minute stalls that caused runner cancellations).
 
 builds:
   - id: gitmap

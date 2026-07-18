@@ -519,6 +519,12 @@ jobs:
           & git config user.name  'gitmap smoke'
           Set-Content -Path README.md         -Value 'gitmap smoke fixture' -NoNewline:$false
           Set-Content -Path fixture-note.txt  -Value 'FIXTURE_NOTE_MARKER: cfr-cg smoke v1' -NoNewline:$false
+          # Pre-create the merge target folders the upstream v24
+          # installer expects; otherwise "Merging: spec" exits 1.
+          foreach ($d in @('spec','linters','linter-scripts','scripts/fix-repo','scripts/visibility-change','.lovable/coding-guidelines')) {
+            New-Item -ItemType Directory -Force -Path $d | Out-Null
+            Set-Content -Path (Join-Path $d '.gitkeep') -Value 'placeholder for cfr cg smoke' -NoNewline:$false
+          }
           & git add .
           & git commit -q -m 'fixture: initial commit for cfr cg smoke'
           Pop-Location

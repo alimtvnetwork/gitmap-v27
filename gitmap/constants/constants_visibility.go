@@ -64,13 +64,15 @@ const (
 
 // Visibility user-facing messages.
 const (
-	MsgVisAlreadyFmt  = "visibility: already %s on %s\n"
-	MsgVisChangedFmt  = "visibility: %s → %s on %s (%s)\n"
-	MsgVisDryRunFmt   = "[dry-run] visibility: %s → %s on %s (%s)\n"
-	MsgVisConfirmFmt  = "Make %s PUBLIC on %s? Type 'yes' to confirm: "
-	MsgVisVerboseExec = "+ %s %s\n"
-	MsgVisVerifyOK    = "  ✓ verified: visibility is now %s\n"
+	MsgVisAlreadyFmt   = "visibility: already %s on %s\n"
+	MsgVisChangedFmt   = "visibility: %s → %s on %s (%s)\n"
+	MsgVisDryRunFmt    = "[dry-run] visibility: %s → %s on %s (%s)\n"
+	MsgVisConfirmFmt   = "Make %s PUBLIC on %s? Type 'yes' to confirm: "
+	MsgVisVerboseExec  = "+ %s %s\n"
+	MsgVisVerifyOK     = "  ✓ verified: visibility is now %s\n"
+	MsgVisLocalSkipFmt = "visibility: skipping local remote %q (no provider CLI applies to file:// / local paths)\n"
 )
+
 
 // Visibility error messages.
 const (

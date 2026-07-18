@@ -51,8 +51,15 @@ func mustResolveVisibilityContext() visibilityContext {
 }
 
 // resolveProviderAndSlugOrExit classifies the URL and parses the slug.
-// Exits with ExitVisBadProvider if anything is unrecognized.
+// Exits with ExitVisBadProvider if anything is unrecognized. Local
+// remotes (file://, bare filesystem paths) warn-and-skip with exit 0
+// so CI fixtures using local bare repos never fail the visibility step.
 func resolveProviderAndSlugOrExit(url string) visibilityContext {
+	if isLocalRemote(url) {
+		fmt.Fprintf(os.Stderr, constants.MsgVisLocalSkipFmt, url)
+		os.Exit(constants.ExitVisOK)
+	}
+
 	provider := classifyProvider(url)
 	if len(provider) == 0 {
 		fmt.Fprintf(os.Stderr, constants.ErrVisBadProviderFmt, url)
@@ -67,6 +74,25 @@ func resolveProviderAndSlugOrExit(url string) visibilityContext {
 
 	return visibilityContext{URL: url, Provider: provider, Slug: slug}
 }
+
+// isLocalRemote reports whether url refers to a filesystem-local
+// remote — file:// scheme, an absolute Unix path, or a Windows drive
+// path. Local remotes have no provider API and should warn-and-skip.
+func isLocalRemote(url string) bool {
+	lower := strings.ToLower(strings.TrimSpace(url))
+	if strings.HasPrefix(lower, "file://") {
+		return true
+	}
+	if strings.HasPrefix(lower, "/") {
+		return true
+	}
+	if len(lower) >= 3 && lower[1] == ':' && (lower[2] == '/' || lower[2] == '\\') {
+		return true
+	}
+
+	return false
+}
+
 
 // classifyProvider returns "github", "gitlab", or "" for unknown.
 // Matches both HTTPS and SSH URL forms.

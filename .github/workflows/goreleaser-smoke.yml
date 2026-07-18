@@ -361,8 +361,13 @@ jobs:
           # Observed values.
           observed_folder_abs=$(cd "$clone_dir" && pwd)
           # First `git clone` line in the log, whitespace-normalized.
-          observed_clone_cmd=$(grep -Eo 'git( [^ ]+)? clone [^\r\n]+' "$log" \
-            | head -n1 | sed -E 's/[[:space:]]+/ /g' | sed -E 's/[[:space:]]+$//')
+          # Do not use grep char classes like [^\r\n] here: POSIX grep
+          # treats that as "not r or n", which truncates /home/runner paths.
+          observed_clone_cmd=$(grep -E 'git( [^ ]+)? clone ' "$log" \
+            | head -n1 \
+            | sed -E 's/^.*(git( [^ ]+)? clone .*)$/\1/' \
+            | sed -E 's/[[:space:]]+/ /g' \
+            | sed -E 's/[[:space:]]+$//')
           observed_note=$(cat "$clone_dir/fixture-note.txt")
 
           # Emit CSV (header + one row) and JSON reports.

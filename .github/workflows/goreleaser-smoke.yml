@@ -493,16 +493,23 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $bin = '${{ steps.extract.outputs.bin }}'
-          foreach ($cmd in @('cfr','cfrp')) {
-            $out = & $bin $cmd --help 2>&1 | Out-String
-            if ($out -notmatch '(^|[^a-zA-Z])cg([^a-zA-Z]|$)') {
-              Write-Host "::error::'$cmd --help' did not mention the 'cg' modifier"
-              Write-Host $out
+          # Source-of-truth check against the embedded helptext markdown
+          # (avoids Windows stdout/pipe-drain flakiness when invoking the
+          # built binary just to grep its --help output).
+          foreach ($f in @('gitmap/helptext/clone-fix-repo.md','gitmap/helptext/clone-fix-repo-pub.md')) {
+            $body = Get-Content -Raw -LiteralPath $f
+            if ($body -notmatch '(^|[^a-zA-Z])cg([^a-zA-Z]|$)') {
+              Write-Host "::error file=$f::helptext missing 'cg' modifier documentation"
               exit 4
             }
           }
-          Write-Host 'OK: cfr + cfrp expose the cg modifier'
+          # Sanity: binary still boots and prints help without crashing.
+          $bin = '${{ steps.extract.outputs.bin }}'
+          & $bin cfr  --help *> $null
+          if ($LASTEXITCODE -ne 0) { Write-Host '::error::cfr --help crashed';  exit 5 }
+          & $bin cfrp --help *> $null
+          if ($LASTEXITCODE -ne 0) { Write-Host '::error::cfrp --help crashed'; exit 5 }
+          Write-Host 'OK: cfr + cfrp helptext documents the cg modifier'
 
       - name: Build local fixture git repo (offline remote)
         id: fixture

@@ -102,3 +102,18 @@ func TestPatchCGArithmeticIncrements(t *testing.T) {
 		t.Fatalf("patched script mismatch:\nwant %q\n got %q", want, got)
 	}
 }
+
+func TestCommitCodingGuidelinesNoCommitNoPushPrintsBothNotes(t *testing.T) {
+	t.Parallel()
+
+	var stderr bytes.Buffer
+	err := CommitCodingGuidelines(CGCommitOpts{NoCommit: true, NoPush: true, Stderr: &stderr})
+	if err != nil {
+		t.Fatalf("expected success, got %v", err)
+	}
+	for _, want := range []string{"Note: --no-commit set", "Note: --no-push set"} {
+		if !strings.Contains(stderr.String(), want) {
+			t.Fatalf("stderr missing %q: %q", want, stderr.String())
+		}
+	}
+}

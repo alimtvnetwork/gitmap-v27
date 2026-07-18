@@ -42,6 +42,9 @@ func CommitCodingGuidelines(opts CGCommitOpts) error {
 	opts = withCGCommitDefaults(opts)
 	if opts.NoCommit {
 		fmt.Fprint(opts.Stderr, constants.MsgCGSkipCommit)
+		if opts.NoPush {
+			fmt.Fprint(opts.Stderr, constants.MsgCGSkipPush)
+		}
 		return nil
 	}
 	if err := runGitStep(opts, "add", "-A"); err != nil {

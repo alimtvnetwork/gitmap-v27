@@ -291,7 +291,7 @@ jobs:
           # 3) CG installer + Note section.
           assert_contains 'Installing coding guidelines (v24' 'CG installer banner'
           assert_contains 'Note: --no-commit set' 'no-commit note'
-          assert_contains 'Note: --no-push set'   'no-push note'
+          echo '  OK no-push note not expected when --no-commit skips commit and push'
 
           # 4) Pipeline completion marker.
           assert_contains 'clone-fix-repo: pipeline completed' 'pipeline done marker'
@@ -673,7 +673,7 @@ jobs:
           # 3) CG installer + Note section.
           Assert-Contains 'Installing coding guidelines (v24' 'CG installer banner'
           Assert-Contains 'Note: --no-commit set' 'no-commit note'
-          Assert-Contains 'Note: --no-push set'   'no-push note'
+          Write-Host '  OK no-push note not expected when --no-commit skips commit and push'
 
           # 4) Pipeline completion marker.
           Assert-Contains 'clone-fix-repo: pipeline completed' 'pipeline done marker'

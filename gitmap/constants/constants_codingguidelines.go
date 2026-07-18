@@ -5,8 +5,8 @@ package constants
 // Distinct from `install clean-code` (v15, PowerShell-only), the v24
 // integration ships an OS-aware installer:
 //
-//   Windows  -> PowerShell one-liner: irm <URL> | iex
-//   Unix     -> bash one-liner:       curl -fsSL <URL> | bash
+//	Windows  -> PowerShell one-liner: irm <URL> | iex
+//	Unix     -> bash one-liner:       curl -fsSL <URL> | bash
 //
 // URLs are pinned here so the runner (gitmap/cmd/codingguidelines.go) and
 // modifier parser (gitmap/cmd/clonefixrepo_modifiers.go) share a single
@@ -40,20 +40,19 @@ const (
 	CodingGuidelinesCommitAuthor  = "gitmap"
 )
 
-
 // Runner status + error messages. All output is directed to os.Stderr per
 // the zero-swallow error policy; keep the format aligned with the rest of
 // the CLI (leading two spaces, tag prefix, single trailing newline).
 const (
-	MsgCGRunningWindows = "  Installing coding guidelines (v24, Windows) from %s\n"
-	MsgCGRunningUnix    = "  Installing coding guidelines (v24, Unix) from %s\n"
+	MsgCGRunningWindows  = "  Installing coding guidelines (v24, Windows) from %s\n"
+	MsgCGRunningUnix     = "  Installing coding guidelines (v24, Unix) from %s\n"
 	MsgCGRetryUnixCompat = "  Warning: retrying coding guidelines installer with Unix arithmetic compatibility patch.\n"
-	MsgCGDone           = "  OK Coding guidelines (v24) installed.\n"
-	MsgCGCommitted      = "  OK Committed coding-guidelines changes: %s\n"
-	MsgCGPushed         = "  OK Pushed coding-guidelines commit to %s\n"
-	MsgCGSkipCommit     = "  Note: --no-commit set; leaving guideline files uncommitted.\n"
-	MsgCGSkipPush       = "  Note: --no-push set (or no upstream); commit created but not pushed.\n"
-	MsgCGNoChanges      = "  Note: installer produced no working-tree changes; nothing to commit.\n"
+	MsgCGDone            = "  OK Coding guidelines (v24) installed.\n"
+	MsgCGCommitted       = "  OK Committed coding-guidelines changes: %s\n"
+	MsgCGPushed          = "  OK Pushed coding-guidelines commit to %s\n"
+	MsgCGSkipCommit      = "  Note: --no-commit set; leaving guideline files uncommitted.\n"
+	MsgCGSkipPush        = "  Note: --no-push set (or no upstream); commit created but not pushed.\n"
+	MsgCGNoChanges       = "  Note: installer produced no working-tree changes; nothing to commit.\n"
 
 	ErrCGShellNotFoundWindows = "  ✗ PowerShell not found on PATH. Install PowerShell 7+ or run manually:\n      irm %s | iex\n"
 	ErrCGShellNotFoundUnix    = "  ✗ bash or curl not found on PATH. Install both or run manually:\n      curl -fsSL %s | bash\n"

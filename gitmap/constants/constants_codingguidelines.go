@@ -46,7 +46,6 @@ const (
 const (
 	MsgCGRunningWindows  = "  Installing coding guidelines (v24, Windows) from %s\n"
 	MsgCGRunningUnix     = "  Installing coding guidelines (v24, Unix) from %s\n"
-	MsgCGRetryUnixCompat = "  Warning: retrying coding guidelines installer with Unix arithmetic compatibility patch.\n"
 	MsgCGDone            = "  OK Coding guidelines (v24) installed.\n"
 	MsgCGCommitted       = "  OK Committed coding-guidelines changes: %s\n"
 	MsgCGPushed          = "  OK Pushed coding-guidelines commit to %s\n"

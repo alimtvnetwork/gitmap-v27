@@ -92,27 +92,26 @@ func dispatchCGUnix(opts CodingGuidelinesOpts, hasCustomRunner bool) error {
 	}
 	url := constants.DefaultCodingGuidelinesURLUnix
 	fmt.Fprintf(opts.Stderr, constants.MsgCGRunningUnix, url)
-	script := fmt.Sprintf("curl -fsSL %s | bash", url)
-	cmd := opts.Runner("bash", "-c", script)
-	if err := runCGInstaller(cmd, opts, runtime.GOOS, url); err != nil {
-		if hasCustomRunner {
-			return err
-		}
-		return retryCGUnixCompat(opts, url)
-	}
-
-	return nil
-}
-
-func retryCGUnixCompat(opts CodingGuidelinesOpts, url string) error {
-	path, cleanup, err := writeCGCompatScript(url)
+	cmd, cleanup, err := buildCGUnixCommand(opts, url, hasCustomRunner)
 	if err != nil {
 		fmt.Fprintf(opts.Stderr, constants.ErrCGCompatPrepareFailed, err)
 		return err
 	}
 	defer cleanup()
-	fmt.Fprint(opts.Stderr, constants.MsgCGRetryUnixCompat)
-	return runCGInstaller(opts.Runner("bash", path), opts, runtime.GOOS, url)
+
+	return runCGInstaller(cmd, opts, runtime.GOOS, url)
+}
+
+func buildCGUnixCommand(opts CodingGuidelinesOpts, url string, hasCustomRunner bool) (*exec.Cmd, func(), error) {
+	if hasCustomRunner {
+		script := fmt.Sprintf("curl -fsSL %s | bash", url)
+		return opts.Runner("bash", "-c", script), func() {}, nil
+	}
+	path, cleanup, err := writeCGCompatScript(url)
+	if err != nil {
+		return nil, cleanup, err
+	}
+	return opts.Runner("bash", path), cleanup, nil
 }
 
 func writeCGCompatScript(url string) (string, func(), error) {

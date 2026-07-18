@@ -49,13 +49,15 @@ jobs:
         run: |
           set -euo pipefail
           file=".github/workflows/goreleaser-smoke.yml"
-          # Match executable invocations only: `<bin> cfrp cg ...` in bash or
-          # `& $bin cfrp cg ...` in pwsh. `cfrp --help` / log filenames pass.
-          if grep -nE '(\$bin|\$\{[^}]*bin[^}]*\}|gitmap(\.exe)?)[[:space:]]+cfrp[[:space:]]+cg\b' "$file"; then
+          # Match executable invocations only; helptext + log filenames pass.
+          # Skip commented lines so this scanner does not flag its own docs.
+          if grep -vE '^[[:space:]]*#' "$file" \
+             | grep -nE '(\$bin|\$\{[^}]*bin[^}]*\}|gitmap(\.exe)?)[[:space:]]+cfrp[[:space:]]+cg\b'; then
             echo "::error file=$file::forbidden 'cfrp cg' invocation detected — use 'cfr cg' (fixture uses file:// remote)"
             exit 1
           fi
           echo "OK: no 'cfrp cg' invocations in $file"
+
 
   snapshot-smoke:
     name: snapshot build + cfr cg smoke (${{ matrix.os }})

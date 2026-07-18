@@ -137,3 +137,25 @@ func detectUpstream(opts CGCommitOpts) (string, bool) {
 	}
 	return ref, true
 }
+
+// emitCGSkipNotes prints the --no-commit and --no-push skip notices
+// in a single atomic write so downstream CI captures (Tee-Object on
+// Windows, tee on POSIX) never lose the second message to pipe-drain
+// races. The notes are mirrored to Stdout as well because they are
+// user-facing status, not errors, and some CI runners buffer stderr
+// separately from stdout when interleaving through a merged pipe.
+func emitCGSkipNotes(opts CGCommitOpts, noCommit, noPush bool) {
+	var b strings.Builder
+	if noCommit {
+		b.WriteString(constants.MsgCGSkipCommit)
+	}
+	if noPush {
+		b.WriteString(constants.MsgCGSkipPush)
+	}
+	if b.Len() == 0 {
+		return
+	}
+	msg := b.String()
+	fmt.Fprint(opts.Stderr, msg)
+	fmt.Fprint(opts.Stdout, msg)
+}

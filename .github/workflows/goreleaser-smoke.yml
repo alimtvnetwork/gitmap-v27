@@ -145,6 +145,14 @@ jobs:
             git config user.name  'gitmap smoke'
             printf 'gitmap smoke fixture\n' > README.md
             printf 'FIXTURE_NOTE_MARKER: cfr-cg smoke v1\n' > fixture-note.txt
+            # Pre-create the merge target folders the upstream v24
+            # installer expects. Without these the installer exits 1
+            # at the "Merging: spec" step on a minimal fixture repo.
+            for d in spec linters linter-scripts scripts/fix-repo \
+                     scripts/visibility-change .lovable/coding-guidelines; do
+              mkdir -p "$d"
+              printf 'placeholder for cfr cg smoke\n' > "$d/.gitkeep"
+            done
             git add .
             git commit -q -m 'fixture: initial commit for cfr cg smoke'
           )

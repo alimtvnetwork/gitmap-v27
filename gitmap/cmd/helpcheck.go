@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/alimtvnetwork/gitmap-v27/gitmap/cliexit"
 	"github.com/alimtvnetwork/gitmap-v27/gitmap/gitutil"
 	"github.com/alimtvnetwork/gitmap-v27/gitmap/helptext"
 )
@@ -11,13 +12,18 @@ import (
 // Honors --pretty / --no-pretty so users can force-enable rendering for
 // pagers (`gitmap foo --help --pretty | less -R`) or strip ANSI for
 // scripting (`gitmap foo --help --no-pretty > help.txt`).
+//
+// Uses cliexit.Exit so theme/glyphs pipe drainers run before the
+// process teardown. A bare os.Exit here would bypass the deferred
+// Drain calls in runDispatch and lose the final help bytes on
+// Windows (same failure class as the v6.74.0 version-mismatch bug).
 func checkHelp(command string, args []string) {
 	if !hasHelpFlag(args) {
 		return
 	}
 	_, mode := ParsePrettyFlag(args)
 	helptext.PrintWithMode(command, mode)
-	os.Exit(0)
+	cliexit.Exit(0)
 }
 
 // hasHelpFlag scans args for the standard help triggers.

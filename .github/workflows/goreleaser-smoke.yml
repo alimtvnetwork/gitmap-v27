@@ -522,6 +522,38 @@ jobs:
           "clone_dir=fixture-repo"  | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           "expected_branch=main"    | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
+      - name: Cleanup stale gitmap.lock (pre-run)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          # gitmap.lock is advisory (mem://tech/process-synchronization). Sweep
+          # any leftover lock file no live process holds. On Windows we probe
+          # by attempting an exclusive open — if it succeeds, nobody holds it.
+          $roots = @(
+            (Join-Path $env:RUNNER_TEMP 'cfr-cg-smoke'),
+            (Join-Path $env:RUNNER_TEMP 'gitmap-smoke'),
+            (Join-Path $env:RUNNER_TEMP 'gitmap-fixture'),
+            (Join-Path $env:USERPROFILE '.gitmap')
+          )
+          $removed = 0; $kept = 0
+          foreach ($root in $roots) {
+            if (-not (Test-Path $root)) { continue }
+            Get-ChildItem -Path $root -Recurse -Filter 'gitmap.lock' -File -ErrorAction SilentlyContinue | ForEach-Object {
+              $lock = $_.FullName
+              try {
+                $fs = [System.IO.File]::Open($lock, 'Open', 'ReadWrite', 'None')
+                $fs.Close()
+                Remove-Item -LiteralPath $lock -Force
+                Write-Host "  removed stale lock: $lock"
+                $removed++
+              } catch {
+                Write-Host "  kept held lock: $lock ($($_.Exception.Message))"
+                $kept++
+              }
+            }
+          }
+          Write-Host "gitmap.lock cleanup: removed=$removed kept=$kept"
+
       - name: End-to-end `cfr cg` against local fixture repo
         shell: pwsh
         env:
@@ -538,8 +570,36 @@ jobs:
 
           $log = Join-Path $scratch 'cfrp-cg.log'
 
-          & $bin cfr cg $repoUrl --no-commit --no-push *>&1 | Tee-Object -FilePath $log
-          $rc = $LASTEXITCODE
+          function Invoke-CfrCg {
+            & $bin cfr cg $repoUrl --no-commit --no-push *>&1 | Tee-Object -FilePath $log
+            return $LASTEXITCODE
+          }
+
+          $rc = Invoke-CfrCg
+          if ($rc -ne 0) {
+            $logText = Get-Content -Raw -LiteralPath $log
+            if ($logText -match '(?i)gitmap\.lock|already (locked|running)|another gitmap') {
+              Write-Host "::warning::first attempt hit a lock (rc=$rc); sweeping unheld gitmap.lock files and retrying once"
+              $sweepRoots = @($scratch,
+                              (Join-Path $env:RUNNER_TEMP 'gitmap-smoke'),
+                              (Join-Path $env:RUNNER_TEMP 'gitmap-fixture'),
+                              (Join-Path $env:USERPROFILE '.gitmap'))
+              foreach ($r in $sweepRoots) {
+                if (-not (Test-Path $r)) { continue }
+                Get-ChildItem -Path $r -Recurse -Filter 'gitmap.lock' -File -ErrorAction SilentlyContinue | ForEach-Object {
+                  try {
+                    $fs = [System.IO.File]::Open($_.FullName, 'Open', 'ReadWrite', 'None')
+                    $fs.Close()
+                    Remove-Item -LiteralPath $_.FullName -Force
+                    Write-Host "  retry: removed stale lock $($_.FullName)"
+                  } catch { }
+                }
+              }
+              Get-ChildItem -Path $scratch -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+              $rc = Invoke-CfrCg
+            }
+          }
+
           if ($rc -ne 0) {
             Write-Host "::error::cfr cg exited $rc"
             Get-ChildItem | Format-Table -AutoSize

@@ -5,8 +5,8 @@ package constants
 // Distinct from `install clean-code` (v15, PowerShell-only), the v24
 // integration ships an OS-aware installer:
 //
-//   Windows  -> PowerShell one-liner: irm <URL> | iex
-//   Unix     -> bash one-liner:       curl -fsSL <URL> | bash
+//	Windows  -> PowerShell one-liner: irm <URL> | iex
+//	Unix     -> bash one-liner:       curl -fsSL <URL> | bash
 //
 // URLs are pinned here so the runner (gitmap/cmd/codingguidelines.go) and
 // modifier parser (gitmap/cmd/clonefixrepo_modifiers.go) share a single
@@ -40,7 +40,6 @@ const (
 	CodingGuidelinesCommitAuthor  = "gitmap"
 )
 
-
 // Runner status + error messages. All output is directed to os.Stderr per
 // the zero-swallow error policy; keep the format aligned with the rest of
 // the CLI (leading two spaces, tag prefix, single trailing newline).
@@ -57,6 +56,7 @@ const (
 	ErrCGShellNotFoundWindows = "  ✗ PowerShell not found on PATH. Install PowerShell 7+ or run manually:\n      irm %s | iex\n"
 	ErrCGShellNotFoundUnix    = "  ✗ bash or curl not found on PATH. Install both or run manually:\n      curl -fsSL %s | bash\n"
 	ErrCGInstallFailed        = "  ✗ Coding guidelines (v24) install failed on %s: %v\n"
+	ErrCGCompatPrepareFailed  = "  ✗ Could not prepare coding-guidelines compatibility retry: %v\n"
 	ErrCGCommitFailed         = "  ✗ Failed to commit coding-guidelines changes: %v\n"
 	ErrCGPushFailed           = "  ✗ Failed to push coding-guidelines commit: %v\n"
 )

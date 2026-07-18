@@ -47,6 +47,7 @@ const (
 const (
 	MsgCGRunningWindows = "  Installing coding guidelines (v24, Windows) from %s\n"
 	MsgCGRunningUnix    = "  Installing coding guidelines (v24, Unix) from %s\n"
+	MsgCGRetryUnixCompat = "  Warning: retrying coding guidelines installer with Unix arithmetic compatibility patch.\n"
 	MsgCGDone           = "  OK Coding guidelines (v24) installed.\n"
 	MsgCGCommitted      = "  OK Committed coding-guidelines changes: %s\n"
 	MsgCGPushed         = "  OK Pushed coding-guidelines commit to %s\n"
@@ -57,6 +58,7 @@ const (
 	ErrCGShellNotFoundWindows = "  ✗ PowerShell not found on PATH. Install PowerShell 7+ or run manually:\n      irm %s | iex\n"
 	ErrCGShellNotFoundUnix    = "  ✗ bash or curl not found on PATH. Install both or run manually:\n      curl -fsSL %s | bash\n"
 	ErrCGInstallFailed        = "  ✗ Coding guidelines (v24) install failed on %s: %v\n"
+	ErrCGCompatPrepareFailed  = "  ✗ Could not prepare coding-guidelines compatibility retry: %v\n"
 	ErrCGCommitFailed         = "  ✗ Failed to commit coding-guidelines changes: %v\n"
 	ErrCGPushFailed           = "  ✗ Failed to push coding-guidelines commit: %v\n"
 )

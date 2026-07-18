@@ -6,6 +6,8 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"regexp"
 	"runtime"
 
 	"github.com/alimtvnetwork/gitmap-v27/gitmap/constants"
@@ -29,17 +31,20 @@ type CodingGuidelinesOpts struct {
 // actionable copy-paste fallback.
 var ErrCGShellNotFound = errors.New("coding-guidelines: required shell not found on PATH")
 
+var cgPostfixIncrementPattern = regexp.MustCompile(`\(\(([A-Za-z_][A-Za-z0-9_]*)\+\+\)\)`)
+
 // RunCodingGuidelinesInstall dispatches to the OS-appropriate installer
 // (PowerShell on Windows, bash on Unix) and streams stdout/stderr through
 // the provided writers. All failures are logged to opts.Stderr per the
 // zero-swallow error policy before being returned.
 func RunCodingGuidelinesInstall(opts CodingGuidelinesOpts) error {
+	hasCustomRunner := opts.Runner != nil
 	opts = withCGDefaults(opts)
 	if runtime.GOOS == "windows" {
 		return dispatchCGWindows(opts)
 	}
 
-	return dispatchCGUnix(opts)
+	return dispatchCGUnix(opts, hasCustomRunner)
 }
 
 // withCGDefaults fills in real-exec + os stdio for any zero-value fields.
@@ -76,7 +81,7 @@ func dispatchCGWindows(opts CodingGuidelinesOpts) error {
 }
 
 // dispatchCGUnix runs the v24 bash installer via `curl -fsSL | bash`.
-func dispatchCGUnix(opts CodingGuidelinesOpts) error {
+func dispatchCGUnix(opts CodingGuidelinesOpts, hasCustomRunner bool) error {
 	if _, err := exec.LookPath("bash"); err != nil {
 		fmt.Fprintf(opts.Stderr, constants.ErrCGShellNotFoundUnix, constants.DefaultCodingGuidelinesURLUnix)
 		return ErrCGShellNotFound
@@ -89,8 +94,56 @@ func dispatchCGUnix(opts CodingGuidelinesOpts) error {
 	fmt.Fprintf(opts.Stderr, constants.MsgCGRunningUnix, url)
 	script := fmt.Sprintf("curl -fsSL %s | bash", url)
 	cmd := opts.Runner("bash", "-c", script)
+	if err := runCGInstaller(cmd, opts, runtime.GOOS, url); err != nil {
+		if hasCustomRunner {
+			return err
+		}
+		return retryCGUnixCompat(opts, url)
+	}
 
-	return runCGInstaller(cmd, opts, runtime.GOOS, url)
+	return nil
+}
+
+func retryCGUnixCompat(opts CodingGuidelinesOpts, url string) error {
+	path, cleanup, err := writeCGCompatScript(url)
+	if err != nil {
+		fmt.Fprintf(opts.Stderr, constants.ErrCGCompatPrepareFailed, err)
+		return err
+	}
+	defer cleanup()
+	fmt.Fprint(opts.Stderr, constants.MsgCGRetryUnixCompat)
+	return runCGInstaller(opts.Runner("bash", path), opts, runtime.GOOS, url)
+}
+
+func writeCGCompatScript(url string) (string, func(), error) {
+	dir, err := os.MkdirTemp("", "gitmap-cg-*")
+	if err != nil {
+		return "", func() {}, err
+	}
+	path := filepath.Join(dir, "install.sh")
+	if err := downloadCGScript(url, path); err != nil {
+		_ = os.RemoveAll(dir)
+		return "", func() {}, err
+	}
+	return path, func() { _ = os.RemoveAll(dir) }, patchCGScriptFile(path)
+}
+
+func downloadCGScript(url, path string) error {
+	cmd := exec.Command("curl", "-fsSL", url, "-o", path)
+	return cmd.Run()
+}
+
+func patchCGScriptFile(path string) error {
+	body, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	patched := patchCGArithmeticIncrements(string(body))
+	return os.WriteFile(path, []byte(patched), 0o700)
+}
+
+func patchCGArithmeticIncrements(script string) string {
+	return cgPostfixIncrementPattern.ReplaceAllString(script, `((${1}+=1))`)
 }
 
 // runCGInstaller wires stdio + working dir onto the prepared command and

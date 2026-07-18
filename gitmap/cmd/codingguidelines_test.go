@@ -91,3 +91,14 @@ func TestRunCodingGuidelinesInstall_ExitCodePropagates(t *testing.T) {
 		t.Fatalf("stderr missing failure banner: %q", stderr.String())
 	}
 }
+
+func TestPatchCGArithmeticIncrements(t *testing.T) {
+	t.Parallel()
+
+	in := "((WROTE_NEW++))\n((COPIED++))\n((count + 1))\n"
+	got := patchCGArithmeticIncrements(in)
+	want := "((WROTE_NEW+=1))\n((COPIED+=1))\n((count + 1))\n"
+	if got != want {
+		t.Fatalf("patched script mismatch:\nwant %q\n got %q", want, got)
+	}
+}

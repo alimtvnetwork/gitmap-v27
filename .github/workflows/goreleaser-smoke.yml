@@ -34,30 +34,55 @@ permissions:
   contents: read
 
 jobs:
+  guard-no-cfrp:
+    # Fail fast (before spending goreleaser build minutes) if any executable
+    # `cfrp cg` invocation sneaks back into this workflow. The smoke fixture
+    # runs a local file:// remote which `cfrp` (visibility flip) cannot use,
+    # so smoke jobs MUST use `cfr cg`. Helptext assertions and log/artifact
+    # filenames that merely mention the token are allowed.
+    name: guard: no cfrp cg invocations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Scan workflow for cfrp cg invocations
+        shell: bash
+        run: |
+          set -euo pipefail
+          file=".github/workflows/goreleaser-smoke.yml"
+          # Match executable invocations only: `<bin> cfrp cg ...` in bash or
+          # `& $bin cfrp cg ...` in pwsh. `cfrp --help` / log filenames pass.
+          if grep -nE '(\$bin|\$\{[^}]*bin[^}]*\}|gitmap(\.exe)?)[[:space:]]+cfrp[[:space:]]+cg\b' "$file"; then
+            echo "::error file=$file::forbidden 'cfrp cg' invocation detected — use 'cfr cg' (fixture uses file:// remote)"
+            exit 1
+          fi
+          echo "OK: no 'cfrp cg' invocations in $file"
+
   snapshot-smoke:
     name: snapshot build + cfr cg smoke (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    needs: guard-no-cfrp
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           go-version-file: gitmap/go.mod
           cache-dependency-path: gitmap/go.sum
 
       - name: Build snapshot via goreleaser
-        uses: goreleaser/goreleaser-action@v6
+        uses: goreleaser/goreleaser-action@9c156ee8a17a598857849441385a2041ef570552 # v6.1.0
         with:
           distribution: goreleaser
           version: "~> v2"
           workdir: gitmap
           args: release --clean --snapshot --skip=publish
+
 
       - name: Locate + extract host archive
         id: extract

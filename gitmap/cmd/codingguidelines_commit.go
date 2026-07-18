@@ -104,12 +104,12 @@ func commitAndMaybePush(opts CGCommitOpts) error {
 	}
 	fmt.Fprintf(opts.Stderr, constants.MsgCGCommitted, constants.CodingGuidelinesCommitMessage)
 	if opts.NoPush {
-		fmt.Fprint(opts.Stderr, constants.MsgCGSkipPush)
+		emitCGSkipNotes(opts, false, true)
 		return nil
 	}
 	upstream, ok := detectUpstream(opts)
 	if !ok {
-		fmt.Fprint(opts.Stderr, constants.MsgCGSkipPush)
+		emitCGSkipNotes(opts, false, true)
 		return nil
 	}
 	if err := runGitStep(opts, "push"); err != nil {

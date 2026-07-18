@@ -737,7 +737,7 @@ jobs:
           $log = Join-Path $scratch 'cfrp-cg.log'
 
           $expectedFolderAbs = (Resolve-Path $cloneDir).Path
-          $expectedCloneCmd  = "git clone $repoUrl $cloneDir"
+          $expectedCloneCmd  = "git clone $repoUrl $expectedFolderAbs"
           $expectedNote      = 'FIXTURE_NOTE_MARKER: cfr-cg smoke v1'
 
           $observedFolderAbs = (Resolve-Path $cloneDir).Path
